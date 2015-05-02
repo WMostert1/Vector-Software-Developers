@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  1 MAY 2015 20:55
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  2 MAY 2015 09:15
 entering extended mode
  %&-line parsing enabled.
 **DriveStats.tex
@@ -277,7 +277,7 @@ File: microtype.cfg 2008/06/04 v2.3b microtype main configuration file (RS)
 \newparindent=\skip46
 \doubleparindent=\skip47
 )
-No file DriveStats.aux.
+(./DriveStats.aux (./werner_mostert.aux))
 \openout1 = `DriveStats.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
@@ -295,6 +295,7 @@ LaTeX Font Info:    ... okay on input line 53.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 53.
 LaTeX Font Info:    ... okay on input line 53.
 LaTeX Font Info:    Try loading font information for OT1+qpl on input line 53.
+
 (/usr/local/texlive/2008/texmf-dist/tex/latex/tex-gyre/ot1qpl.fd
 File: ot1qpl.fd 2006/11/01 v1.0 font definition file for OT1/qpl
 )
@@ -362,6 +363,8 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 LaTeX Info: Redefining \ref on input line 53.
 LaTeX Info: Redefining \pageref on input line 53.
+
+(./DriveStats.out) (./DriveStats.out)
 \@outlinefile=\write3
 \openout3 = `DriveStats.out'.
 
@@ -462,10 +465,10 @@ LaTeX Font Info:    Font shape `OT1/qpl/bx/n' in size <8> not available
 
  <./images/werner.jpg>]) [3] (./DriveStats.aux (./werner_mostert.aux)) ) 
 Here is how much of TeX's memory you used:
- 6710 strings out of 493886
- 101407 string characters out of 1151099
+ 6719 strings out of 493886
+ 101552 string characters out of 1151099
  212104 words of memory out of 3000000
- 9848 multiletter control sequences out of 10000+50000
+ 9849 multiletter control sequences out of 10000+50000
  53312 words of font info for 60 fonts, out of 3000000 for 5000
  715 hyphenation exceptions out of 8191
  43i,5n,37p,997b,354s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -476,7 +479,7 @@ ive/2008/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm-sc.enc}</usr/local/texlive/20
 dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2008/texmf-dist/f
 onts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2008/texmf-dist/fonts/t
 ype1/public/tex-gyre/qplri.pfb>
-Output written on DriveStats.pdf (3 pages, 204766 bytes).
+Output written on DriveStats.pdf (3 pages, 204765 bytes).
 PDF statistics:
  57 PDF objects out of 1000 (max. 8388607)
  10 named destinations out of 1000 (max. 131072)
