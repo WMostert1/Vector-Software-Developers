@@ -1,0 +1,28 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9) (preloaded format=pdflatex 2015.2.24)  4 MAY 2015 22:02
+entering extended mode
+**"D:/Michelle/Downloads/Universiteit/3de Jaar/Semester 1/COS 301/Project/MainP
+roject/Documentation/Eavesdropping/michelle_swanepoel.tex"
+
+("D:/Michelle/Downloads/Universiteit/3de Jaar/Semester 1/COS 301/Project/MainPr
+oject/Documentation/Eavesdropping/michelle_swanepoel.tex"
+LaTeX2e <2014/05/01>
+Babel <3.9l> and hyphenation patterns for 68 languages loaded.
+! Undefined control sequence.
+l.8 \maintitle
+              {Michelle Swnepoel}{February 1,1994}{Last update on \today}
+? 
+! Emergency stop.
+l.8 \maintitle
+              {Michelle Swnepoel}{February 1,1994}{Last update on \today}
+End of file on the terminal!
+
+ 
+Here is how much of TeX's memory you used:
+ 7 strings out of 493698
+ 477 string characters out of 3146021
+ 52149 words of memory out of 3000000
+ 3432 multiletter control sequences out of 15000+200000
+ 3640 words of font info for 14 fonts, out of 3000000 for 9000
+ 1025 hyphenation exceptions out of 8191
+ 5i,0n,1p,208b,8s stack positions out of 5000i,500n,10000p,200000b,50000s
+!  ==> Fatal error occurred, no output PDF file produced!
