@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  4 MAY 2015 19:09
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  4 MAY 2015 19:22
 entering extended mode
  %&-line parsing enabled.
 **DriveStats.tex
@@ -280,21 +280,21 @@ File: microtype.cfg 2008/06/04 v2.3b microtype main configuration file (RS)
 (./DriveStats.aux (./werner_mostert.aux) (./projectExecution.aux))
 \openout1 = `DriveStats.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Try loading font information for OT1+qpl on input line 53.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Try loading font information for OT1+qpl on input line 56.
 
 (/usr/local/texlive/2008/texmf-dist/tex/latex/tex-gyre/ot1qpl.fd
 File: ot1qpl.fd 2006/11/01 v1.0 font definition file for OT1/qpl
@@ -352,7 +352,7 @@ driver: pdftex
 \MPnumerator=\count112
 \everyMPtoPDFconversion=\toks19
 )
-Package hyperref Info: Link coloring ON on input line 53.
+Package hyperref Info: Link coloring ON on input line 56.
  (/usr/local/texlive/2008/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
@@ -361,15 +361,15 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 \c@section@level=\count113
 )
-LaTeX Info: Redefining \ref on input line 53.
-LaTeX Info: Redefining \pageref on input line 53.
+LaTeX Info: Redefining \ref on input line 56.
+LaTeX Info: Redefining \pageref on input line 56.
 
 (./DriveStats.out) (./DriveStats.out)
 \@outlinefile=\write3
 \openout3 = `DriveStats.out'.
 
 \AtBeginShipoutBox=\box53
-LaTeX Info: Redefining \microtypecontext on input line 53.
+LaTeX Info: Redefining \microtypecontext on input line 56.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -389,13 +389,17 @@ Package microtype Info: Character `013' is missing
 Package microtype Info: Character `013' is missing
 (microtype)             in font `OT1/qpl/m/sc/14.4'.
 (microtype)             Ignoring protrusion settings for this character.
- [1
 
-{/usr/local/texlive/2008/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+<images/group.jpg, id=31, 2814.515pt x 2308.625pt>
+File: images/group.jpg Graphic file (type jpg)
+ <use images/group.jpg>
+[1
+
+{/usr/local/texlive/2008/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./image
+s/group.jpg>]
 \openout2 = `werner_mostert.aux'.
 
-
-(./werner_mostert.tex
+ (./werner_mostert.tex
 Overfull \vbox (5.09949pt too high) detected at line 8
  []
 
@@ -439,9 +443,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 12--20
 
 LaTeX Font Info:    Font shape `OT1/qpl/bx/n' in size <12> not available
 (Font)              Font shape `OT1/qpl/b/n' tried instead on input line 23.
-<images/werner.jpg, id=37, 762.85pt x 762.85pt>
+<images/werner.jpg, id=42, 3276.24pt x 2457.18pt>
 File: images/werner.jpg Graphic file (type jpg)
  <use images/werner.jpg>
+Overfull \hbox (6.79999pt too wide) in paragraph at lines 30--31
+[] 
+ []
+
 LaTeX Font Info:    Font shape `OT1/qpl/bx/n' in size <10> not available
 (Font)              Font shape `OT1/qpl/b/n' tried instead on input line 44.
 
@@ -489,22 +497,22 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 6767 strings out of 493886
- 102278 string characters out of 1151099
+ 6775 strings out of 493886
+ 102406 string characters out of 1151099
  212104 words of memory out of 3000000
- 9868 multiletter control sequences out of 10000+50000
- 59019 words of font info for 62 fonts, out of 3000000 for 5000
+ 9873 multiletter control sequences out of 10000+50000
+ 59153 words of font info for 63 fonts, out of 3000000 for 5000
  715 hyphenation exceptions out of 8191
- 43i,5n,38p,997b,354s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 43i,6n,38p,1004b,352s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2008/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm.enc}{/usr/l
 ocal/texlive/2008/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm-sc.enc}</usr/local/t
 exlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmsy10.pfb></usr/local/texlive/20
 08/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2008/tex
 mf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2008/texmf-dis
 t/fonts/type1/public/tex-gyre/qplri.pfb>
-Output written on DriveStats.pdf (4 pages, 213154 bytes).
+Output written on DriveStats.pdf (4 pages, 5165696 bytes).
 PDF statistics:
- 93 PDF objects out of 1000 (max. 8388607)
+ 97 PDF objects out of 1000 (max. 8388607)
  24 named destinations out of 1000 (max. 131072)
- 19518 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 19531 words of extra memory for PDF output out of 20736 (max. 10000000)
 
