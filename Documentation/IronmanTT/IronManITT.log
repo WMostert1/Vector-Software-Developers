@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.3.3)  4 MAY 2015 22:11
 entering extended mode
 **IronManITT.tex
@@ -17,6 +18,21 @@ ishmax, welsh, loaded.
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\size10.clo"
 File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+=======
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9) (preloaded format=pdflatex 2015.2.24)  4 MAY 2015 22:03
+entering extended mode
+**"D:/Michelle/Downloads/Universiteit/3de Jaar/Semester 1/COS 301/Project/MainP
+roject/Documentation/IronmanTT/IronManITT.tex"
+
+("D:/Michelle/Downloads/Universiteit/3de Jaar/Semester 1/COS 301/Project/MainPr
+oject/Documentation/IronmanTT/IronManITT.tex"
+LaTeX2e <2014/05/01>
+Babel <3.9l> and hyphenation patterns for 68 languages loaded.
+("D:\Program Files\MiKTeX\tex\latex\base\article.cls"
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+("D:\Program Files\MiKTeX\tex\latex\base\size10.clo"
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 )
 \c@part=\count79
 \c@section=\count80
@@ -30,6 +46,7 @@ File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty"
 Package: geometry 2010/09/12 v5.6 Page Geometry
 
@@ -46,6 +63,24 @@ Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
 Package ifvtex Info: VTeX not detected.
 )
 ("C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
+=======
+("D:\Program Files\MiKTeX\tex\latex\geometry\geometry.sty"
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+("D:\Program Files\MiKTeX\tex\latex\graphics\keyval.sty"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+("D:\Program Files\MiKTeX\tex\generic\oberdiek\ifpdf.sty"
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+("D:\Program Files\MiKTeX\tex\generic\oberdiek\ifvtex.sty"
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+("D:\Program Files\MiKTeX\tex\generic\ifxetex\ifxetex.sty"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 )
 \Gm@cnth=\count87
@@ -61,6 +96,7 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@layoutvoffset=\dimen110
 \Gm@dimlist=\toks15
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
@@ -72,10 +108,24 @@ Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+=======
+("D:\Program Files\MiKTeX\tex\latex\geometry\geometry.cfg"))
+("D:\Program Files\MiKTeX\tex\latex\graphics\graphicx.sty"
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+("D:\Program Files\MiKTeX\tex\latex\graphics\graphics.sty"
+Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
+
+("D:\Program Files\MiKTeX\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("D:\Program Files\MiKTeX\tex\latex\00miktex\graphics.cfg"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: pdftex.def on input line 91.
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
 File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
 
@@ -83,6 +133,15 @@ File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
 Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 )
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+=======
+("D:\Program Files\MiKTeX\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+("D:\Program Files\MiKTeX\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+("D:\Program Files\MiKTeX\tex\generic\oberdiek\ltxcmds.sty"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
 \Gread@gobject=\count90
@@ -90,12 +149,18 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen111
 \Gin@req@width=\dimen112
 )
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\generic\babel\babel.sty"
 Package: babel 2008/07/08 v3.8m The Babel package
+=======
+("D:\Program Files\MiKTeX\tex\latex\babel\babel.sty"
+Package: babel 2014/09/25 3.9l The Babel package
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 
 *************************************
 * Local config file bblopts.cfg used
 *
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\bblopts.cfg"
 File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
 )
@@ -104,12 +169,23 @@ Language: english 2005/03/30 v3.3o English support from the babel system
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\babel\babel.def"
 File: babel.def 2008/07/08 v3.8m Babel common definitions
+=======
+("D:\Program Files\MiKTeX\tex\latex\00miktex\bblopts.cfg"
+File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
+)
+("D:\Program Files\MiKTeX\tex\latex\babel-english\english.ldf"
+Language: english 2012/08/20 v3.3p English support from the babel system
+
+("D:\Program Files\MiKTeX\tex\latex\babel\babel.def"
+File: babel.def 2014/09/25 3.9l Babel common definitions
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 \babel@savecnt=\count91
 \U@D=\dimen113
 )
 \l@canadian = a dialect from \language\l@american 
 \l@australian = a dialect from \language\l@british 
 \l@newzealand = a dialect from \language\l@british 
+<<<<<<< HEAD
 ))
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\resume.sty
 ("C:\Program Files\MiKTeX 2.9\tex\latex\mdwtools\mdwlist.sty"
@@ -117,6 +193,14 @@ Package: mdwlist 1996/05/02 1.1 Various list-related things
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\tools\multicol.sty"
 Package: multicol 2011/06/27 v1.7a multicolumn formatting (FMi)
+=======
+)) (resume.sty
+("D:\Program Files\MiKTeX\tex\latex\mdwtools\mdwlist.sty"
+Package: mdwlist 1996/05/02 1.1 Various list-related things
+)
+("D:\Program Files\MiKTeX\tex\latex\tools\multicol.sty"
+Package: multicol 2014/10/28 v1.8i multicolumn formatting (FMi)
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 \c@tracingmulticols=\count92
 \mult@box=\box26
 \multicol@leftmargin=\dimen114
@@ -133,6 +217,7 @@ Package: multicol 2011/06/27 v1.7a multicolumn formatting (FMi)
 \multicolbaselineskip=\skip44
 \partial@page=\box27
 \last@line=\box28
+\maxbalancingoverflow=\dimen119
 \mult@rightbox=\box29
 \mult@grightbox=\box30
 \mult@gfirstbox=\box31
@@ -156,6 +241,7 @@ Package: multicol 2011/06/27 v1.7a multicolumn formatting (FMi)
 \@tempa=\box49
 \c@columnbadness=\count98
 \c@finalcolumnbadness=\count99
+<<<<<<< HEAD
 \last@try=\dimen119
 \multicolovershoot=\dimen120
 \multicolundershoot=\dimen121
@@ -174,6 +260,26 @@ Package: hobsub-hyperref 2012/04/25 v1.12 Bundle oberdiek, subset hyperref (HO)
 
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty"
+=======
+\last@try=\dimen120
+\multicolovershoot=\dimen121
+\multicolundershoot=\dimen122
+\mult@nat@firstbox=\box50
+\colbreak@box=\box51
+\mc@col@check@num=\count100
+)
+("D:\Program Files\MiKTeX\tex\latex\ltxmisc\relsize.sty"
+Package: relsize 2003/07/04 ver 3.1
+)
+("D:\Program Files\MiKTeX\tex\latex\hyperref\hyperref.sty"
+Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
+
+("D:\Program Files\MiKTeX\tex\generic\oberdiek\hobsub-hyperref.sty"
+Package: hobsub-hyperref 2012/04/25 v1.12 Bundle oberdiek, subset hyperref (HO)
+
+
+("D:\Program Files\MiKTeX\tex\generic\oberdiek\hobsub-generic.sty"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 Package: hobsub-generic 2012/04/25 v1.12 Bundle oberdiek, subset generic (HO)
 Package: hobsub 2012/04/25 v1.12 Construct package bundles (HO)
 Package hobsub Info: Skipping package `infwarerr' (already loaded).
@@ -212,6 +318,7 @@ Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
 Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
 Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
 )
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty"
 Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
 )
@@ -223,11 +330,28 @@ Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
 \Hy@pagecounter=\count102
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def"
+=======
+("D:\Program Files\MiKTeX\tex\latex\oberdiek\auxhook.sty"
+Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
+)
+("D:\Program Files\MiKTeX\tex\latex\oberdiek\kvoptions.sty"
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+)
+\@linkdim=\dimen123
+\Hy@linkcounter=\count101
+\Hy@pagecounter=\count102
+
+("D:\Program Files\MiKTeX\tex\latex\hyperref\pd1enc.def"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
 )
 \Hy@SavedSpaceFactor=\count103
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg"
+=======
+("D:\Program Files\MiKTeX\tex\latex\00miktex\hyperref.cfg"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
 Package hyperref Info: Hyper figures OFF on input line 4443.
@@ -239,15 +363,26 @@ Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4688.
 \c@Hy@tempcnt=\count104
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\url\url.sty"
+=======
+("D:\Program Files\MiKTeX\tex\latex\url\url.sty"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 \Urlmuskip=\muskip10
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 5041.
+<<<<<<< HEAD
 \XeTeXLinkMargin=\dimen123
 \Fld@menulength=\count105
 \Field@Width=\dimen124
 \Fld@charsize=\dimen125
+=======
+\XeTeXLinkMargin=\dimen124
+\Fld@menulength=\count105
+\Field@Width=\dimen125
+\Fld@charsize=\dimen126
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 Package hyperref Info: Hyper figures OFF on input line 6295.
 Package hyperref Info: Link nesting OFF on input line 6300.
 Package hyperref Info: Hyper index ON on input line 6303.
@@ -264,22 +399,37 @@ LaTeX Info: Redefining \pageref on input line 6369.
 
 Package hyperref Message: Driver (autodetected): hpdftex.
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def"
+=======
+("D:\Program Files\MiKTeX\tex\latex\hyperref\hpdftex.def"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
 \Fld@listcount=\count109
 \c@bookmark@seq@number=\count110
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty"
+=======
+("D:\Program Files\MiKTeX\tex\latex\oberdiek\rerunfilecheck.sty"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 82.
 )
 \Hy@SectionHShift=\skip45
 )
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty"
 Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+=======
+("D:\Program Files\MiKTeX\tex\latex\xcolor\xcolor.sty"
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+("D:\Program Files\MiKTeX\tex\latex\00miktex\color.cfg"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package xcolor Info: Driver file: pdftex.def on input line 225.
@@ -295,19 +445,34 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 55.
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\tex-gyre\tgpagella.sty"
 Package: tgpagella 2009/09/27 v1.2 TeX Gyre Pagella as default roman family
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\microtype.sty"
+=======
+("D:\Program Files\MiKTeX\tex\latex\tex-gyre\tgpagella.sty"
+Package: tgpagella 2009/09/27 v1.2 TeX Gyre Pagella as default roman family
+)
+("D:\Program Files\MiKTeX\tex\latex\microtype\microtype.sty"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 Package: microtype 2013/05/23 v2.5a Micro-typographical refinements (RS)
 \MT@toks=\toks16
 \MT@count=\count111
 LaTeX Info: Redefining \textls on input line 766.
+<<<<<<< HEAD
 \MT@outer@kern=\dimen126
 LaTeX Info: Redefining \textmicrotypecontext on input line 1285.
 \MT@listname@count=\count112
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\microtype-pdftex.def"
+=======
+\MT@outer@kern=\dimen127
+LaTeX Info: Redefining \textmicrotypecontext on input line 1285.
+\MT@listname@count=\count112
+
+("D:\Program Files\MiKTeX\tex\latex\microtype\microtype-pdftex.def"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: microtype-pdftex.def 2013/05/23 v2.5a Definitions specific to pdftex (RS)
 
 LaTeX Info: Redefining \lsstyle on input line 915.
@@ -316,11 +481,16 @@ LaTeX Info: Redefining \lslig on input line 915.
 )
 Package microtype Info: Loading configuration file microtype.cfg.
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\microtype.cfg"
+=======
+("D:\Program Files\MiKTeX\tex\latex\microtype\microtype.cfg"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: microtype.cfg 2013/05/23 v2.5a microtype main configuration file (RS)
 ))
 \newparindent=\skip47
 \doubleparindent=\skip48
+<<<<<<< HEAD
 )
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\IronManITT.aux
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\werner_mostert.a
@@ -329,6 +499,10 @@ ux)
 aux)
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\projectExecution
 .aux))
+=======
+) (IronManITT.aux (werner_mostert.aux) (michelle_swanepoel.aux) (projectExecuti
+on.aux))
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
@@ -344,7 +518,12 @@ LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Try loading font information for OT1+qpl on input line 56.
+<<<<<<< HEAD
  ("C:\Program Files\MiKTeX 2.9\tex\latex\tex-gyre\ot1qpl.fd"
+=======
+
+("D:\Program Files\MiKTeX\tex\latex\tex-gyre\ot1qpl.fd"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: ot1qpl.fd 2009/09/25 v1.2 font definition file for OT1/qpl
 )
 *geometry* driver: auto-detecting
@@ -381,26 +560,44 @@ File: ot1qpl.fd 2009/09/25 v1.2 font definition file for OT1/qpl
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count113
 \scratchdimen=\dimen127
+=======
+("D:\Program Files\MiKTeX\tex\context\base\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count113
+\scratchdimen=\dimen128
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 \scratchbox=\box52
 \nofMPsegments=\count114
 \nofMParguments=\count115
 \everyMPshowfont=\toks17
 \MPscratchCnt=\count116
+<<<<<<< HEAD
 \MPscratchDim=\dimen128
+=======
+\MPscratchDim=\dimen129
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 \MPnumerator=\count117
 \makeMPintoPDFobject=\count118
 \everyMPtoPDFconversion=\toks18
 )
 \AtBeginShipoutBox=\box53
 Package hyperref Info: Link coloring ON on input line 56.
+<<<<<<< HEAD
  ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
+=======
+ ("D:\Program Files\MiKTeX\tex\latex\hyperref\nameref.sty"
+Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
+
+("D:\Program Files\MiKTeX\tex\generic\oberdiek\gettitlestring.sty"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count119
@@ -409,8 +606,12 @@ LaTeX Info: Redefining \ref on input line 56.
 LaTeX Info: Redefining \pageref on input line 56.
 LaTeX Info: Redefining \nameref on input line 56.
 
+<<<<<<< HEAD
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\IronManITT.out)
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\IronManITT.out)
+=======
+(IronManITT.out) (IronManITT.out)
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 \@outlinefile=\write3
 LaTeX Info: Redefining \microtypecontext on input line 56.
 Package microtype Info: Generating PDF output.
@@ -423,7 +624,11 @@ Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\mt-ppl.cfg"
+=======
+("D:\Program Files\MiKTeX\tex\latex\microtype\mt-ppl.cfg"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: mt-ppl.cfg 2005/11/16 v1.6 microtype config. file: Palatino (RS)
 )
 Package microtype Info: Character `013' is missing
@@ -441,10 +646,15 @@ Package pdftex.def Info: images/group.jpg used on input line 60.
 
 [1
 
+<<<<<<< HEAD
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map} <C:/Users/Keagan/Documents
 /MainProject/Documentation/IronmanTT/images/group.jpg>]
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\werner_mostert.t
 ex
+=======
+{C:/Users/User01/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./images/g
+roup.jpg>] (werner_mostert.tex
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 Overfull \vbox (5.09949pt too high) detected at line 8
  []
 
@@ -452,7 +662,11 @@ Overfull \vbox (5.09949pt too high) detected at line 8
 Package relsize Warning: Size requested is too large.
 (relsize)                Using 24.88pt instead on input line 12.
 
+<<<<<<< HEAD
 ("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\mt-cmr.cfg"
+=======
+("D:\Program Files\MiKTeX\tex\latex\microtype\mt-cmr.cfg"
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
@@ -511,15 +725,21 @@ Underfull \hbox (badness 10000) in paragraph at lines 61--61
 
 [2
 
+<<<<<<< HEAD
  <C:/Users/Keagan/Documents/MainProject/Documentation/IronmanTT/images/werner.j
 pg>]) [3]
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\keagan_thompson.
 tex
 Overfull \vbox (5.09949pt too high) detected at line 6
+=======
+ <./images/werner.jpg>]) [3] (michelle_swanepoel.tex
+Overfull \vbox (5.09949pt too high) detected at line 8
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
  []
 
 
 Package relsize Warning: Size requested is too large.
+<<<<<<< HEAD
 (relsize)                Using 24.88pt instead on input line 10.
 
 
@@ -533,12 +753,16 @@ Package relsize Warning: Size requested is too large.
 
 Package relsize Warning: Size requested is too large.
 (relsize)                Using 24.88pt instead on input line 14.
+=======
+(relsize)                Using 24.88pt instead on input line 12.
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 
 
 Package relsize Warning: Size requested is too large.
 (relsize)                Using 24.88pt instead on input line 15.
 
 
+<<<<<<< HEAD
 Underfull \hbox (badness 10000) in paragraph at lines 10--17
 
  []
@@ -551,17 +775,35 @@ Package pdftex.def Info: images/keagan.jpg used on input line 27.
 
 Underfull \hbox (badness 10000) in paragraph at lines 40--40
 
+=======
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 16.
+
+<images/michelle.jpg, id=55, 1720.4275pt x 2292.565pt>
+File: images/michelle.jpg Graphic file (type jpg)
+
+<use images/michelle.jpg>
+Package pdftex.def Info: images/michelle.jpg used on input line 28.
+(pdftex.def)             Requested size: 156.36761pt x 208.35088pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
+
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
  []
 
 ) [4
 
 
+<<<<<<< HEAD
  <C:/Users/Keagan/Documents/MainProject/Documentation/IronmanTT/images/keagan.j
 pg>]
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\projectExecution
 .tex
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\ideasAndTechnolo
 gies.tex
+=======
+ <./images/michelle.jpg>] (projectExecution.tex (ideasAndTechnologies.tex
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 LaTeX Font Info:    Try loading font information for OMS+qpl on input line 7.
 LaTeX Font Info:    No file OMSqpl.fd. on input line 7.
 
@@ -575,6 +817,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 27--30
 
  []
 
+<<<<<<< HEAD
 )
 (C:\Users\Keagan\Documents\MainProject\Documentation\IronmanTT\deliverables.tex
 )) [5
@@ -602,12 +845,28 @@ Package rerunfilecheck Warning: File `IronManITT.out' has changed.
 Package rerunfilecheck Info: Checksums for `IronManITT.out':
 (rerunfilecheck)             Before: 328B9B09CFEC488CFF49AA205ADFEE01;371
 (rerunfilecheck)             After:  7F063AE0A47A11FDD304D56E4F2A7391;433.
+=======
+)) [5
+
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 70.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 70.
+ (IronManITT.aux (werner_mostert.aux) (michelle_swanepoel.aux)
+(projectExecution.aux))
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 70.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 70.
+Package rerunfilecheck Info: File `IronManITT.out' has not changed.
+(rerunfilecheck)             Checksum: 328B9B09CFEC488CFF49AA205ADFEE01;371.
+
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 70.
  ) 
 Here is how much of TeX's memory you used:
+<<<<<<< HEAD
  8071 strings out of 493921
  123525 string characters out of 3147280
  252080 words of memory out of 3000000
@@ -625,5 +884,23 @@ Output written on IronManITT.pdf (5 pages, 7856613 bytes).
 PDF statistics:
  102 PDF objects out of 1000 (max. 8388607)
  29 named destinations out of 1000 (max. 500000)
+=======
+ 8164 strings out of 493698
+ 122800 string characters out of 3146021
+ 261219 words of memory out of 3000000
+ 11286 multiletter control sequences out of 15000+200000
+ 61015 words of font info for 77 fonts, out of 3000000 for 9000
+ 1026 hyphenation exceptions out of 8191
+ 37i,6n,37p,1113b,397s stack positions out of 5000i,500n,10000p,200000b,50000s
+{D:/Program Files/MiKTeX/fonts/enc/dvips/tex-gyre/q-rm.enc}{D:/Program Files/
+MiKTeX/fonts/enc/dvips/tex-gyre/q-rm-sc.enc}<D:/Program Files/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmsy10.pfb><D:/Program Files/MiKTeX/fonts/type1/public/tex
+-gyre/qplb.pfb><D:/Program Files/MiKTeX/fonts/type1/public/tex-gyre/qplr.pfb><D
+:/Program Files/MiKTeX/fonts/type1/public/tex-gyre/qplri.pfb>
+Output written on IronManITT.pdf (5 pages, 6285349 bytes).
+PDF statistics:
+ 95 PDF objects out of 1000 (max. 8388607)
+ 23 named destinations out of 1000 (max. 500000)
+>>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
  19512 words of extra memory for PDF output out of 20736 (max. 10000000)
 
