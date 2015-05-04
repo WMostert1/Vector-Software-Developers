@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 \BOOKMARK [1][-]{section.1}{Project Execution}{}% 1
 \BOOKMARK [2][-]{subsection.1.1}{Ideas and Technologies}{section.1}% 2
 \BOOKMARK [3][-]{subsubsection.1.1.1}{Technologies to be Used}{subsection.1.1}% 3
@@ -7,3 +8,10 @@
 \BOOKMARK [2][-]{subsection.1.2}{Deliverables}{section.1}% 6
 =======
 >>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
+=======
+\BOOKMARK [1][-]{section.1}{Project Execution}{}
+\BOOKMARK [2][-]{subsection.1.1}{Ideas and Technologies}{section.1}
+\BOOKMARK [3][-]{subsubsection.1.1.1}{Technologies to be Used}{subsection.1.1}
+\BOOKMARK [3][-]{subsubsection.1.1.2}{Implementation Ideas}{subsection.1.1}
+\BOOKMARK [3][-]{subsubsection.1.1.3}{Project Extension Ideas}{subsection.1.1}
+>>>>>>> Stashed changes
