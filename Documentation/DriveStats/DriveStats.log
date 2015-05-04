@@ -1,41 +1,4 @@
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.3.3)  4 MAY 2015 21:41
-entering extended mode
-**DriveStats.tex
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\DriveStats.tex
-LaTeX2e <2011/06/27>
-Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
-abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
-croatian, czech, danish, dutch, esperanto, estonian, farsi, finnish, french, ga
-lician, german, german-x-2013-05-26, greek, gujarati, hindi, hungarian, iceland
-ic, indonesian, interlingua, irish, italian, kannada, kurmanji, latin, latvian,
- lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerman, n
-german-x-2013-05-26, nynorsk, oriya, panjabi, pinyin, polish, portuguese, roman
-ian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swissgerm
-an, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, usengl
-ishmax, welsh, loaded.
-("C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls"
-Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-("C:\Program Files\MiKTeX 2.9\tex\latex\base\size10.clo"
-File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
-=======
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9) (preloaded format=pdflatex 2015.2.24)  4 MAY 2015 22:01
-entering extended mode
-**"D:/Michelle/Downloads/Universiteit/3de Jaar/Semester 1/COS 301/Project/MainP
-roject/Documentation/DriveStats/DriveStats.tex"
-
-("D:/Michelle/Downloads/Universiteit/3de Jaar/Semester 1/COS 301/Project/MainPr
-oject/Documentation/DriveStats/DriveStats.tex"
-LaTeX2e <2014/05/01>
-Babel <3.9l> and hyphenation patterns for 68 languages loaded.
-("D:\Program Files\MiKTeX\tex\latex\base\article.cls"
-Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
-("D:\Program Files\MiKTeX\tex\latex\base\size10.clo"
-File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  4 MAY 2015 22:07
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  4 MAY 2015 23:02
 entering extended mode
  %&-line parsing enabled.
 **DriveStats.tex
@@ -53,7 +16,6 @@ h, ukrainian, uppersorbian, welsh, loaded.
 Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
 (/usr/local/texlive/2008/texmf-dist/tex/latex/base/size10.clo
 File: size10.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
->>>>>>> Stashed changes
 )
 \c@part=\count79
 \c@section=\count80
@@ -67,51 +29,13 @@ File: size10.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty"
-Package: geometry 2010/09/12 v5.6 Page Geometry
-
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
-Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
-\KV@toks@=\toks14
-)
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
-)
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty"
-Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
-Package ifvtex Info: VTeX not detected.
-)
-("C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
-=======
-("D:\Program Files\MiKTeX\tex\latex\geometry\geometry.sty"
-Package: geometry 2010/09/12 v5.6 Page Geometry
-=======
 (/usr/local/texlive/2008/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2002/07/08 v3.2 Page Geometry
->>>>>>> Stashed changes
 
 (/usr/local/texlive/2008/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks14
 )
-<<<<<<< Updated upstream
-("D:\Program Files\MiKTeX\tex\generic\oberdiek\ifpdf.sty"
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
-)
-("D:\Program Files\MiKTeX\tex\generic\oberdiek\ifvtex.sty"
-Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
-Package ifvtex Info: VTeX not detected.
-)
-("D:\Program Files\MiKTeX\tex\generic\ifxetex\ifxetex.sty"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
-)
-=======
->>>>>>> Stashed changes
 \Gm@cnth=\count87
 \Gm@cntv=\count88
 \c@Gm@tempcnt=\count89
@@ -121,28 +45,9 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@even@mp=\dimen106
 \Gm@dimlist=\toks15
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
-Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
-
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
-Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
-
-("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty"
-Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
-=======
-("D:\Program Files\MiKTeX\tex\latex\geometry\geometry.cfg"))
-("D:\Program Files\MiKTeX\tex\latex\graphics\graphicx.sty"
-Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
-=======
 (/usr/local/texlive/2008/texmf-dist/tex/xelatex/xetexconfig/geometry.cfg))
 (/usr/local/texlive/2008/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
->>>>>>> Stashed changes
 
 (/usr/local/texlive/2008/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
@@ -150,77 +55,18 @@ Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 (/usr/local/texlive/2008/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-<<<<<<< Updated upstream
-("D:\Program Files\MiKTeX\tex\latex\00miktex\graphics.cfg"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
 (/usr/local/texlive/2008/texmf/tex/latex/config/graphics.cfg
->>>>>>> Stashed changes
 File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: pdftex.def on input line 90.
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
-File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
-
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
-Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
-)
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
-=======
-("D:\Program Files\MiKTeX\tex\latex\pdftex-def\pdftex.def"
-File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
-
-("D:\Program Files\MiKTeX\tex\generic\oberdiek\infwarerr.sty"
-Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
-)
-("D:\Program Files\MiKTeX\tex\generic\oberdiek\ltxcmds.sty"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
-)
-=======
 (/usr/local/texlive/2008/texmf-dist/tex/latex/pdftex-def/pdftex.def
 File: pdftex.def 2008/07/16 v0.04k Graphics/color for pdfTeX
->>>>>>> Stashed changes
 \Gread@gobject=\count90
 ))
 \Gin@req@height=\dimen107
 \Gin@req@width=\dimen108
 )
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\generic\babel\babel.sty"
-Package: babel 2008/07/08 v3.8m The Babel package
-=======
-("D:\Program Files\MiKTeX\tex\latex\babel\babel.sty"
-Package: babel 2014/09/25 3.9l The Babel package
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-
-*************************************
-* Local config file bblopts.cfg used
-*
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\bblopts.cfg"
-File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
-)
-("C:\Program Files\MiKTeX 2.9\tex\generic\babel\english.ldf"
-Language: english 2005/03/30 v3.3o English support from the babel system
-
-("C:\Program Files\MiKTeX 2.9\tex\generic\babel\babel.def"
-File: babel.def 2008/07/08 v3.8m Babel common definitions
-=======
-("D:\Program Files\MiKTeX\tex\latex\00miktex\bblopts.cfg"
-File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
-)
-("D:\Program Files\MiKTeX\tex\latex\babel-english\english.ldf"
-Language: english 2012/08/20 v3.3p English support from the babel system
-
-("D:\Program Files\MiKTeX\tex\latex\babel\babel.def"
-File: babel.def 2014/09/25 3.9l Babel common definitions
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
 (/usr/local/texlive/2008/texmf-dist/tex/generic/babel/babel.sty
 Package: babel 2008/07/06 v3.8l The Babel package
 
@@ -229,31 +75,12 @@ Language: english 2005/03/30 v3.3o English support from the babel system
 
 (/usr/local/texlive/2008/texmf-dist/tex/generic/babel/babel.def
 File: babel.def 2008/07/06 v3.8l Babel common definitions
->>>>>>> Stashed changes
 \babel@savecnt=\count91
 \U@D=\dimen109
 )
 \l@canadian = a dialect from \language\l@american 
 \l@australian = a dialect from \language\l@british 
 \l@newzealand = a dialect from \language\l@british 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-))
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\resume.sty
-("C:\Program Files\MiKTeX 2.9\tex\latex\mdwtools\mdwlist.sty"
-Package: mdwlist 1996/05/02 1.1 Various list-related things
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\tools\multicol.sty"
-Package: multicol 2011/06/27 v1.7a multicolumn formatting (FMi)
-=======
-)) (resume.sty
-("D:\Program Files\MiKTeX\tex\latex\mdwtools\mdwlist.sty"
-Package: mdwlist 1996/05/02 1.1 Various list-related things
-)
-("D:\Program Files\MiKTeX\tex\latex\tools\multicol.sty"
-Package: multicol 2014/10/28 v1.8i multicolumn formatting (FMi)
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
 ))
 (./resume.sty
 (/usr/local/texlive/2008/texmf-dist/tex/latex/mdwtools/mdwlist.sty
@@ -261,7 +88,6 @@ Package: mdwlist 1996/05/02 1.1 Various list-related things
 )
 (/usr/local/texlive/2008/texmf-dist/tex/latex/tools/multicol.sty
 Package: multicol 2006/05/18 v1.6g multicolumn formatting (FMi)
->>>>>>> Stashed changes
 \c@tracingmulticols=\count92
 \mult@box=\box26
 \multicol@leftmargin=\dimen110
@@ -301,35 +127,9 @@ Package: multicol 2006/05/18 v1.6g multicolumn formatting (FMi)
 \@tempa=\box49
 \c@columnbadness=\count98
 \c@finalcolumnbadness=\count99
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-\last@try=\dimen119
-\multicolovershoot=\dimen120
-\multicolundershoot=\dimen121
-\mult@nat@firstbox=\box50
-\colbreak@box=\box51
-\multicol@sort@counter=\count100
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\ltxmisc\relsize.sty"
-Package: relsize 2003/07/04 ver 3.1
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty"
-Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
-
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty"
-Package: hobsub-hyperref 2012/04/25 v1.12 Bundle oberdiek, subset hyperref (HO)
-
-
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty"
-=======
-\last@try=\dimen120
-\multicolovershoot=\dimen121
-\multicolundershoot=\dimen122
-=======
 \last@try=\dimen115
 \multicolovershoot=\dimen116
 \multicolundershoot=\dimen117
->>>>>>> Stashed changes
 \mult@nat@firstbox=\box50
 \colbreak@box=\box51
 )
@@ -367,91 +167,15 @@ File: pd1enc.def 2008/08/14 v6.78f Hyperref: PDFDocEncoding definition (HO)
 (/usr/local/texlive/2008/texmf-dist/tex/generic/oberdiek/etexcmds.sty
 Package: etexcmds 2007/12/12 v1.2 Prefix for e-TeX command names (HO)
 
-<<<<<<< Updated upstream
-("D:\Program Files\MiKTeX\tex\generic\oberdiek\hobsub-generic.sty"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-Package: hobsub-generic 2012/04/25 v1.12 Bundle oberdiek, subset generic (HO)
-Package: hobsub 2012/04/25 v1.12 Construct package bundles (HO)
-Package hobsub Info: Skipping package `infwarerr' (already loaded).
-Package hobsub Info: Skipping package `ltxcmds' (already loaded).
-Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
-Package ifluatex Info: LuaTeX not detected.
-Package hobsub Info: Skipping package `ifvtex' (already loaded).
-Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
-Package hobsub Info: Skipping package `ifpdf' (already loaded).
-Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
-=======
 (/usr/local/texlive/2008/texmf-dist/tex/generic/oberdiek/infwarerr.sty
 Package: infwarerr 2007/09/09 v1.2 Providing info/warning/message (HO)
 )
->>>>>>> Stashed changes
 Package etexcmds Info: Could not find \expanded.
 (etexcmds)             That can mean that you are not using pdfTeX 1.50 or
 (etexcmds)             that some package has redefined \expanded.
 (etexcmds)             In the latter case, load this package earlier.
-<<<<<<< Updated upstream
-Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
-Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
-Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
-)
-Package pdftexcmds Info: LuaTeX not detected.
-Package pdftexcmds Info: \pdf@primitive is available.
-Package pdftexcmds Info: \pdf@ifprimitive is available.
-Package pdftexcmds Info: \pdfdraftmode found.
-Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
-Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
-)
-Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
-Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
-)
-Package hobsub Info: Skipping package `hobsub' (already loaded).
-Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
-Package: hopatch 2011/06/24 v1.1 Wrapper for package hooks (HO)
-Package: xcolor-patch 2011/01/30 xcolor patch
-Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
-Package atveryend Info: \enddocument detected (standard20110627).
-Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
-Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
-Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
-)
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty"
-Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty"
-Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
-)
-\@linkdim=\dimen122
-\Hy@linkcounter=\count101
-\Hy@pagecounter=\count102
-
-("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def"
-=======
-("D:\Program Files\MiKTeX\tex\latex\oberdiek\auxhook.sty"
-Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
-)
-("D:\Program Files\MiKTeX\tex\latex\oberdiek\kvoptions.sty"
-Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
-)
-\@linkdim=\dimen123
-\Hy@linkcounter=\count101
-\Hy@pagecounter=\count102
-
-("D:\Program Files\MiKTeX\tex\latex\hyperref\pd1enc.def"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
-)
-\Hy@SavedSpaceFactor=\count103
-
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg"
-=======
-("D:\Program Files\MiKTeX\tex\latex\00miktex\hyperref.cfg"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
 )
 (/usr/local/texlive/2008/texmf/tex/latex/config/hyperref.cfg
->>>>>>> Stashed changes
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
 (/usr/local/texlive/2008/texmf-dist/tex/latex/oberdiek/kvoptions.sty
@@ -463,75 +187,6 @@ Package hyperref Info: Hyper index ON on input line 2884.
 Package hyperref Info: Plain pages OFF on input line 2891.
 Package hyperref Info: Backreferencing OFF on input line 2896.
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\url\url.sty"
-=======
-("D:\Program Files\MiKTeX\tex\latex\url\url.sty"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-\Urlmuskip=\muskip10
-Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
-)
-LaTeX Info: Redefining \url on input line 5041.
-<<<<<<< HEAD
-\XeTeXLinkMargin=\dimen123
-\Fld@menulength=\count105
-\Field@Width=\dimen124
-\Fld@charsize=\dimen125
-=======
-\XeTeXLinkMargin=\dimen124
-\Fld@menulength=\count105
-\Field@Width=\dimen125
-\Fld@charsize=\dimen126
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-Package hyperref Info: Hyper figures OFF on input line 6295.
-Package hyperref Info: Link nesting OFF on input line 6300.
-Package hyperref Info: Hyper index ON on input line 6303.
-Package hyperref Info: backreferencing OFF on input line 6310.
-Package hyperref Info: Link coloring OFF on input line 6315.
-Package hyperref Info: Link coloring with OCG OFF on input line 6320.
-Package hyperref Info: PDF/A mode OFF on input line 6325.
-LaTeX Info: Redefining \ref on input line 6365.
-LaTeX Info: Redefining \pageref on input line 6369.
-\Hy@abspage=\count106
-\c@Item=\count107
-\c@Hfootnote=\count108
-)
-
-Package hyperref Message: Driver (autodetected): hpdftex.
-
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def"
-=======
-("D:\Program Files\MiKTeX\tex\latex\hyperref\hpdftex.def"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
-\Fld@listcount=\count109
-\c@bookmark@seq@number=\count110
-
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty"
-=======
-("D:\Program Files\MiKTeX\tex\latex\oberdiek\rerunfilecheck.sty"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
-Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
-82.
-)
-\Hy@SectionHShift=\skip45
-)
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty"
-Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
-
-("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
-=======
-("D:\Program Files\MiKTeX\tex\latex\xcolor\xcolor.sty"
-Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
-
-("D:\Program Files\MiKTeX\tex\latex\00miktex\color.cfg"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
 Implicit mode ON; LaTeX internals redefined
 Package hyperref Info: Bookmarks ON on input line 3086.
 (/usr/local/texlive/2008/texmf-dist/tex/latex/ltxmisc/url.sty
@@ -586,7 +241,6 @@ File: hpdftex.def 2008/08/14 v6.78f Hyperref driver for pdfTeX
 Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
 
 (/usr/local/texlive/2008/texmf/tex/latex/config/color.cfg
->>>>>>> Stashed changes
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package xcolor Info: Driver file: pdftex.def on input line 225.
@@ -602,68 +256,6 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 55.
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\tex-gyre\tgpagella.sty"
-Package: tgpagella 2009/09/27 v1.2 TeX Gyre Pagella as default roman family
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\microtype.sty"
-=======
-("D:\Program Files\MiKTeX\tex\latex\tex-gyre\tgpagella.sty"
-Package: tgpagella 2009/09/27 v1.2 TeX Gyre Pagella as default roman family
-)
-("D:\Program Files\MiKTeX\tex\latex\microtype\microtype.sty"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-Package: microtype 2013/05/23 v2.5a Micro-typographical refinements (RS)
-\MT@toks=\toks16
-\MT@count=\count111
-LaTeX Info: Redefining \textls on input line 766.
-<<<<<<< HEAD
-\MT@outer@kern=\dimen126
-LaTeX Info: Redefining \textmicrotypecontext on input line 1285.
-\MT@listname@count=\count112
-
-("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\microtype-pdftex.def"
-=======
-\MT@outer@kern=\dimen127
-LaTeX Info: Redefining \textmicrotypecontext on input line 1285.
-\MT@listname@count=\count112
-
-("D:\Program Files\MiKTeX\tex\latex\microtype\microtype-pdftex.def"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-File: microtype-pdftex.def 2013/05/23 v2.5a Definitions specific to pdftex (RS)
-
-LaTeX Info: Redefining \lsstyle on input line 915.
-LaTeX Info: Redefining \lslig on input line 915.
-\MT@outer@space=\skip46
-)
-Package microtype Info: Loading configuration file microtype.cfg.
-
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\microtype.cfg"
-=======
-("D:\Program Files\MiKTeX\tex\latex\microtype\microtype.cfg"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-File: microtype.cfg 2013/05/23 v2.5a microtype main configuration file (RS)
-))
-\newparindent=\skip47
-\doubleparindent=\skip48
-<<<<<<< HEAD
-)
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\DriveStats.aux
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\werner_mostert.
-aux)
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\michelle_swanep
-oel.aux)
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\keagan_thompson
-.aux)
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\projectExecutio
-n.aux))
-=======
-) (DriveStats.aux (werner_mostert.aux) (michelle_swanepoel.aux) (projectExecuti
-on.aux))
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
 (/usr/local/texlive/2008/texmf-dist/tex/latex/tex-gyre/tgpagella.sty
 Package: tgpagella 2006/11/01 v1.0 TeX Gyre Pagella as default roman family
 )
@@ -686,10 +278,9 @@ File: microtype.cfg 2008/06/04 v2.3b microtype main configuration file (RS)
 \doubleparindent=\skip47
 )
 (./DriveStats.aux (./werner_mostert.aux) (./michelle_swanepoel.aux)
-(./projectExecution.aux))
+(./keagan_thompson.aux) (./projectExecution.aux))
 \openout1 = `DriveStats.aux'.
 
->>>>>>> Stashed changes
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
@@ -705,74 +296,7 @@ LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
 LaTeX Font Info:    ... okay on input line 56.
 LaTeX Font Info:    Try loading font information for OT1+qpl on input line 56.
-<<<<<<< HEAD
- ("C:\Program Files\MiKTeX 2.9\tex\latex\tex-gyre\ot1qpl.fd"
-=======
 
-<<<<<<< Updated upstream
-("D:\Program Files\MiKTeX\tex\latex\tex-gyre\ot1qpl.fd"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-File: ot1qpl.fd 2009/09/25 v1.2 font definition file for OT1/qpl
-)
-*geometry* driver: auto-detecting
-*geometry* detected driver: pdftex
-*geometry* verbose mode - [ preamble ] result:
-* driver: pdftex
-* paper: a4paper
-* layout: <same size as paper>
-* layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: 
-* h-part:(L,W,R)=(54.2025pt, 489.10287pt, 54.2025pt)
-* v-part:(T,H,B)=(54.2025pt, 736.64185pt, 54.2025pt)
-* \paperwidth=597.50787pt
-* \paperheight=845.04684pt
-* \textwidth=489.10287pt
-* \textheight=736.64185pt
-* \oddsidemargin=-18.06749pt
-* \evensidemargin=-18.06749pt
-* \topmargin=-55.06749pt
-* \headheight=12.0pt
-* \headsep=25.0pt
-* \topskip=10.0pt
-* \footskip=30.0pt
-* \marginparwidth=57.0pt
-* \marginparsep=11.0pt
-* \columnsep=10.0pt
-* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
-* \hoffset=0.0pt
-* \voffset=0.0pt
-* \mag=1000
-* \@twocolumnfalse
-* \@twosidefalse
-* \@mparswitchfalse
-* \@reversemarginfalse
-* (1in=72.27pt=25.4mm, 1cm=28.453pt)
-
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
-[Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count113
-\scratchdimen=\dimen127
-=======
-("D:\Program Files\MiKTeX\tex\context\base\supp-pdf.mkii"
-[Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count113
-\scratchdimen=\dimen128
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-\scratchbox=\box52
-\nofMPsegments=\count114
-\nofMParguments=\count115
-\everyMPshowfont=\toks17
-\MPscratchCnt=\count116
-<<<<<<< HEAD
-\MPscratchDim=\dimen128
-=======
-\MPscratchDim=\dimen129
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-\MPnumerator=\count117
-\makeMPintoPDFobject=\count118
-\everyMPtoPDFconversion=\toks18
-=======
 (/usr/local/texlive/2008/texmf-dist/tex/latex/tex-gyre/ot1qpl.fd
 File: ot1qpl.fd 2006/11/01 v1.0 font definition file for OT1/qpl
 )
@@ -828,45 +352,20 @@ driver: pdftex
 \MPscratchDim=\dimen123
 \MPnumerator=\count112
 \everyMPtoPDFconversion=\toks19
->>>>>>> Stashed changes
 )
 Package hyperref Info: Link coloring ON on input line 56.
-<<<<<<< Updated upstream
-<<<<<<< HEAD
- ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
-Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
-
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
-=======
- ("D:\Program Files\MiKTeX\tex\latex\hyperref\nameref.sty"
-Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
-
-("D:\Program Files\MiKTeX\tex\generic\oberdiek\gettitlestring.sty"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
-=======
  (/usr/local/texlive/2008/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
 (/usr/local/texlive/2008/texmf-dist/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
->>>>>>> Stashed changes
 )
 \c@section@level=\count113
 )
 LaTeX Info: Redefining \ref on input line 56.
 LaTeX Info: Redefining \pageref on input line 56.
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\DriveStats.out)
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\DriveStats.out)
-=======
-(DriveStats.out) (DriveStats.out)
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
 (./DriveStats.out) (./DriveStats.out)
->>>>>>> Stashed changes
 \@outlinefile=\write3
 \openout3 = `DriveStats.out'.
 
@@ -881,16 +380,8 @@ Package microtype Info: Using default expansion set `basictext'.
 Package microtype Info: No tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\mt-ppl.cfg"
-=======
 
-<<<<<<< Updated upstream
-("D:\Program Files\MiKTeX\tex\latex\microtype\mt-ppl.cfg"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
 (/usr/local/texlive/2008/texmf-dist/tex/latex/microtype/mt-ppl.cfg
->>>>>>> Stashed changes
 File: mt-ppl.cfg 2005/11/16 v1.6 microtype config. file: Palatino (RS)
 )
 Package microtype Info: Character `013' is missing
@@ -905,23 +396,11 @@ File: images/group.jpg Graphic file (type jpg)
  <use images/group.jpg>
 [1
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map} <C:/Users/Keagan/Documents
-/MainProject/Documentation/DriveStats/images/group.jpg>]
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\werner_mostert.
-tex
-=======
-{C:/Users/User01/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./images/g
-roup.jpg>] (werner_mostert.tex
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
 {/usr/local/texlive/2008/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./image
 s/group.jpg>]
 \openout2 = `werner_mostert.aux'.
 
  (./werner_mostert.tex
->>>>>>> Stashed changes
 Overfull \vbox (5.09949pt too high) detected at line 8
  []
 
@@ -931,19 +410,9 @@ LaTeX Font Info:    Font shape `OT1/qpl/bx/n' in size <17.28> not available
 Package relsize Warning: Size requested is too large.
 (relsize)                Using 24.88pt instead on input line 12.
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\mt-cmr.cfg"
-=======
-("D:\Program Files\MiKTeX\tex\latex\microtype\mt-cmr.cfg"
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
-(RS)
-=======
 (/usr/local/texlive/2008/texmf-dist/tex/latex/microtype/mt-cmr.cfg
 File: mt-cmr.cfg 2008/02/29 v1.9a microtype config. file: Computer Modern Roman
  (RS)
->>>>>>> Stashed changes
 )
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <24.88> on input line 12.
@@ -1003,18 +472,10 @@ LaTeX Font Info:    Font shape `OT1/qpl/bx/n' in size <8> not available
 (Font)              Font shape `OT1/qpl/b/n' tried instead on input line 70.
 [2
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
- <C:/Users/Keagan/Documents/MainProject/Documentation/DriveStats/images/werner.
-jpg>]) [3]
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\keagan_thompson
-.tex
-=======
  <./images/werner.jpg>]) [3]
 \openout2 = `michelle_swanepoel.aux'.
 
  (./michelle_swanepoel.tex
->>>>>>> Stashed changes
 Overfull \vbox (5.09949pt too high) detected at line 8
  []
 
@@ -1030,56 +491,7 @@ Package relsize Warning: Size requested is too large.
 Package relsize Warning: Size requested is too large.
 (relsize)                Using 24.88pt instead on input line 16.
 
-<<<<<<< Updated upstream
-
-Package relsize Warning: Size requested is too large.
-(relsize)                Using 24.88pt instead on input line 17.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 12--19
-
- []
-
-<images/keagan.jpg, id=59, 3276.24pt x 2457.18pt>
-File: images/keagan.jpg Graphic file (type jpg)
- <use images/keagan.jpg>
-Package pdftex.def Info: images/keagan.jpg used on input line 29.
-(pdftex.def)             Requested size: 156.36761pt x 117.24217pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 42--42
-
- []
-
-) [4
-
-
- <C:/Users/Keagan/Documents/MainProject/Documentation/DriveStats/images/keagan.
-jpg>]
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\projectExecutio
-n.tex
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\ideasAndTechnol
-ogies.tex
-=======
- <./images/werner.jpg>]) [3] (michelle_swanepoel.tex
-Overfull \vbox (5.09949pt too high) detected at line 8
- []
-
-
-Package relsize Warning: Size requested is too large.
-(relsize)                Using 24.88pt instead on input line 12.
-
-
-Package relsize Warning: Size requested is too large.
-(relsize)                Using 24.88pt instead on input line 15.
-
-
-Package relsize Warning: Size requested is too large.
-(relsize)                Using 24.88pt instead on input line 16.
-
-<images/michelle.jpg, id=59, 1720.4275pt x 2292.565pt>
-=======
 <images/michelle.jpg, id=63, 1720.4275pt x 2292.565pt>
->>>>>>> Stashed changes
 File: images/michelle.jpg Graphic file (type jpg)
 
 <use images/michelle.jpg>
@@ -1111,11 +523,141 @@ Underfull \hbox (badness 10000) in paragraph at lines 45--45
 ) [4
 
 
-<<<<<<< Updated upstream
- <./images/michelle.jpg>] (projectExecution.tex (ideasAndTechnologies.tex
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
  <./images/michelle.jpg>]
+\openout2 = `kaleab_tessera.aux'.
+
+ (./kaleab_tessera.tex
+Overfull \vbox (5.09949pt too high) detected at line 9
+ []
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 13.
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 14.
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 16.
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 17.
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 18.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 13--20
+
+ []
+
+File: images/werner.jpg Graphic file (type jpg)
+<use images/werner.jpg>
+Underfull \hbox (badness 7203) in paragraph at lines 30--31
+\OT1/qpl/m/n/10 (+20) build on pre-vi-ous knowl-edge.
+ []
+
+
+Overfull \vbox (47.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (46.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (45.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (44.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (43.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (42.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (41.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (40.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (39.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (38.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (37.24217pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (36.24217pt too high) has occurred while \output is active []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--44
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--53
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--63
+
+ []
+
+[5
+
+
+]) [6]
+\openout2 = `keagan_thompson.aux'.
+
+ (./keagan_thompson.tex
+Overfull \vbox (5.09949pt too high) detected at line 8
+ []
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 12.
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 13.
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 15.
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 16.
+
+
+Package relsize Warning: Size requested is too large.
+(relsize)                Using 24.88pt instead on input line 17.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--19
+
+ []
+
+<images/keagan.jpg, id=94, 3276.24pt x 2457.18pt>
+File: images/keagan.jpg Graphic file (type jpg)
+ <use images/keagan.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 42--42
+
+ []
+
+[7
+
+
+ <./images/keagan.jpg>]) [8]
 \openout2 = `projectExecution.aux'.
 
  (./projectExecution.tex
@@ -1123,7 +665,6 @@ LaTeX Font Info:    Font shape `OT1/qpl/bx/n' in size <14.4> not available
 (Font)              Font shape `OT1/qpl/b/n' tried instead on input line 1.
 
 (./ideasAndTechnologies.tex
->>>>>>> Stashed changes
 Underfull \hbox (badness 10000) in paragraph at lines 20--23
 
  []
@@ -1150,95 +691,33 @@ Underfull \hbox (badness 10000) in paragraph at lines 38--40
 
  []
 
-[5
+[9
 
-<<<<<<< HEAD
 
-])
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\deliverables.te
-x)) [6]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 70.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 70.
-
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\DriveStats.aux
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\werner_mostert.
-aux)
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\keagan_thompson
-.aux)
-(C:\Users\Keagan\Documents\MainProject\Documentation\DriveStats\projectExecutio
-n.aux))
-=======
-
-<<<<<<< Updated upstream
-]) (deliverables.tex)) [6]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 70.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 70.
- (DriveStats.aux (werner_mostert.aux)
-(michelle_swanepoel.aux) (projectExecution.aux))
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 70.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 70.
-Package rerunfilecheck Info: File `DriveStats.out' has not changed.
-(rerunfilecheck)             Checksum: 7F063AE0A47A11FDD304D56E4F2A7391;433.
-
-=======
-]) (./deliverables.tex)) [6] (./DriveStats.aux (./werner_mostert.aux)
-(./michelle_swanepoel.aux) (./projectExecution.aux))
->>>>>>> Stashed changes
+]) (./deliverables.tex)) [10] (./DriveStats.aux (./werner_mostert.aux)
+(./michelle_swanepoel.aux) (./kaleab_tessera.aux) (./keagan_thompson.aux)
+(./projectExecution.aux))
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
-<<<<<<< Updated upstream
-<<<<<<< HEAD
- 8079 strings out of 493921
- 123803 string characters out of 3147280
- 252380 words of memory out of 3000000
- 11141 multiletter control sequences out of 15000+200000
- 62087 words of font info for 85 fonts, out of 3000000 for 9000
- 842 hyphenation exceptions out of 8191
- 37i,6n,37p,1559b,398s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/tex-gyre/q-rm.enc}{C:/Program Fi
-les/MiKTeX 2.9/fonts/enc/dvips/tex-gyre/q-rm-sc.enc}<C:/Program Files/MiKTeX 2.
-9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/
-type1/public/tex-gyre/qplb.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/
-tex-gyre/qplr.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/tex-gyre/qplr
-i.pfb>
-Output written on DriveStats.pdf (6 pages, 7860427 bytes).
-=======
- 8181 strings out of 493698
- 122963 string characters out of 3146021
- 261211 words of memory out of 3000000
- 11287 multiletter control sequences out of 15000+200000
- 61283 words of font info for 79 fonts, out of 3000000 for 9000
- 1026 hyphenation exceptions out of 8191
- 37i,6n,37p,1114b,398s stack positions out of 5000i,500n,10000p,200000b,50000s
-{D:/Program Files/MiKTeX/fonts/enc/dvips/tex-gyre/q-rm.enc}{D:/Program Files/
-MiKTeX/fonts/enc/dvips/tex-gyre/q-rm-sc.enc}<D:/Program Files/MiKTeX/fonts/type
-1/public/amsfonts/cm/cmsy10.pfb><D:/Program Files/MiKTeX/fonts/type1/public/tex
--gyre/qplb.pfb><D:/Program Files/MiKTeX/fonts/type1/public/tex-gyre/qplr.pfb><D
-:/Program Files/MiKTeX/fonts/type1/public/tex-gyre/qplri.pfb>
-Output written on DriveStats.pdf (6 pages, 6289949 bytes).
->>>>>>> 46a30da919c458b20d869ab54e1b6345846b4e4b
-=======
- 6800 strings out of 493886
- 102854 string characters out of 1151099
+ 6832 strings out of 493886
+ 103282 string characters out of 1151099
  213104 words of memory out of 3000000
- 9882 multiletter control sequences out of 10000+50000
- 59153 words of font info for 63 fonts, out of 3000000 for 5000
+ 9883 multiletter control sequences out of 10000+50000
+ 59297 words of font info for 64 fonts, out of 3000000 for 5000
  715 hyphenation exceptions out of 8191
- 43i,6n,38p,1004b,353s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 43i,6n,38p,1559b,353s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2008/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm.enc}{/usr/l
 ocal/texlive/2008/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm-sc.enc}</usr/local/t
 exlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmsy10.pfb></usr/local/texlive/20
 08/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2008/tex
 mf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2008/texmf-dis
 t/fonts/type1/public/tex-gyre/qplri.pfb>
-Output written on DriveStats.pdf (6 pages, 6293569 bytes).
->>>>>>> Stashed changes
+Output written on DriveStats.pdf (10 pages, 8999333 bytes).
 PDF statistics:
- 116 PDF objects out of 1000 (max. 8388607)
- 32 named destinations out of 1000 (max. 131072)
- 19536 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 157 PDF objects out of 1000 (max. 8388607)
+ 48 named destinations out of 1000 (max. 131072)
+ 19541 words of extra memory for PDF output out of 20736 (max. 10000000)
 
