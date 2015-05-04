@@ -2,7 +2,7 @@
 \subsubsection{Technologies to be Used}
 After due consideration and taking into account the received requirements, the following technologies will possibly be used:
 \begin{description}
-	\item[In order to develop the back end of the system (API and Web Server):]
+	\item[In order to develop the back end of the system (API and Web Server):]\hfill
 		\begin{itemize}
 			\item{NodeJS}\hfill\\
 			Node JS is a very popular web server hosting technology at this moment due 
@@ -17,13 +17,24 @@ After due consideration and taking into account the received requirements, the f
 	\begin{itemize}
 		\item{Xamarin or Android Studio}\hfill\\
 		The decision has yet to be made on whether the C\# Xamarin approach will be used or the traditional Java in Android Studio approach, to develop an Android application. One of these two will however reign supreme.
+	
+	
+	\item{Near Field Communication (NFC)}\\
+	NFC is a very important part of this project. Luckily it is not necessary to reinvent the wheel. NFCTools is a collection of libraries and tools for NFC in Java. The targeted devices are desktop Reader/Writer and Android smart phones. These libraries are open source and available for use in a project such as ours.
 	\end{itemize}
-		
 	
 \end{description}
 	
-\subsubsection{Implementation Ideas}	
-
+\subsubsection{Implementation Ideas}
+The project, from a development point of view, can be regarded as consisting of three individual parts.
+\begin{enumerate}
+	\item{Malware component}\\
+Since malware should technically not be known to the user as being installed, some research will need to be done on how to hide an app from a user, as well as getting the malware installed on the user's device without the user's proper consent and knowledge.
+	\item{Android App using NFC Component}\\
+The most challenging part of this component will most probably be the NFC interaction and user identification.
+	\item{Web Server / GUI Component}\\
+In order for the android app to communicate with the server, some sort of hosting solution will need to be investigated. There are however many freely available service for Node hosting.
+\end{enumerate}
 	
 \subsubsection{Project Extension Ideas}
 The following was considered as possible future extensions on the current project specifications:
