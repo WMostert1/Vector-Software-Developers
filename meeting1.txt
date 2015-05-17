@@ -1,0 +1,45 @@
+Questions to ask:
+---------------------
+
+1. Do the data capturers have any internet signal in the field?
+2. The current infrastructure that they are using at the moment (Database related, any other technological infrastructure).
+3. What are the hierarchy of roles currently in the organization (to establish User roles), such as Grower, Data Collector etc.
+4. Do we want the project to be solely Android or to have a web component for analysis?
+5. Get the functional requirements:
+	A.) Android App
+	B.) Web Interface
+6. Explain and help set-up github
+
+
+
+Current Functional Requirements Suggestions:
+--------------------------------------------
+
+Android App:
+------------
+	Login : A user should be able to login using a username and password
+	Register: A user should be able to register a username and password (using a cell number?)
+	Lost Account : A user should be able to reover a lost account
+	Input Field Data: A user should be able to input certain field related to the current scouting
+	Identification: A user should identify a particular life stage/ species of the specimen.
+	Geotagging: A user should be able to geotag a specimen location.
+
+Web Interface:
+--------------
+	Login : A user should be able to login using a username and password
+	Register: A user should be able to register a username and password (using a cell number?)
+	Lost Account : A user should be able to reover a lost account
+
+Timeline:
+--------------
+
+1.) Function requirements : present - 22 May
+2.) Research: 23 May - 23 June
+3.) Non-functional requirements: 24 June - 1 July
+4.) Development: 2 July - end
+
+
+	
+	
+
+
