@@ -9,6 +9,7 @@ Questions to ask:
 	A.) Android App
 	B.) Web Interface
 6. Explain and help set-up github
+7. Ask how the geotagging system will be used.
 
 
 
