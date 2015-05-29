@@ -4,9 +4,16 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{titling}
 \usepackage{graphicx}
+\usepackage{titlesec}
 
 \graphicspath{ {./Images/} }
 
+\setcounter{secnumdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
 \begin{document}
 %\title{ \huge Functional Requirements for the SAMBUG}
@@ -69,31 +76,86 @@ An innovative approach to handling the management and acquisition of scout data 
 \section{Scope}
 \includegraphics[width=\linewidth]{scope}
 
-\section{Architecture requirements}
-	\subsection{Access channel requirements}
-	\subsection{Quality requirements}
-	\subsection{Integration requirements}
-	\subsection{Architecture constraints}
+%\section{Architecture requirements}
+%	\subsection{Access channel requirements}
+%	\subsection{Quality requirements}
+%	\subsection{Integration requirements}
+%	\subsection{Architecture constraints}
 \section{Functional Requirements and Application Design}
 	\subsection{Domain Model}
+	
+%------------------------------------------------------------------------------------------%
+
 	\subsection{BugScouting}
+		The BugScouting module has the following functionality:
+		\begin{enumerate}
+			\item It provides the functionality for a user to be able to enter data related to a scouting trip - entering data such as the number of trees scouted, the average number of bugs per tree and the different kind of bugs specified. After which a summary should be displayed.
+			\item It provides the ability for a user to record the details related to spraying.
+		\end{enumerate}
 		\subsubsection{Module Scope}
 		\subsubsection{Use Cases}
+		\paragraph{getBugInfo\dotfill [Priority - Medium]}
+		\paragraph{updateInfo\dotfill [Priority - Medium]}
+		\paragraph{showTripSummary\dotfill [Priority - High]}
+		\paragraph{enterTreatmentData\dotfill [Priority - Critical]}
+		\paragraph{enterScoutingData\dotfill [Priority - Critical]}
+		
+		
+%------------------------------------------------------------------------------------------%	
+	
 	\subsection{BugIntelligence}
+		The BugIntelligence module has the following functionality:
+		\begin{enumerate}		
+			\item It provides a pluggable method to classify a specimen according to species and life stage.
+			\item It provides an interface which can be used to obtain information related to any specific specimen which is identifiable by the system
+			\item It provides CRUD(Create Read Update Delete) functionality for bug information for specimens identifiable by the identification method
+		\end{enumerate}
 		\subsubsection{Module Scope}
 		\subsubsection{Use Cases}
+		\paragraph{classifyBug\dotfill [Priority - Critical]}
+		\paragraph{updateBugKnowledgeBase\dotfill [Priority - Low]}
+		\paragraph{readBugKnowledgeBase\dotfill [Priority - Critical]}
+		
+		
+%------------------------------------------------------------------------------------------%		
 	\subsection{BugSecurity}
+	The BugSecurity module allows the following functionality:
+	\begin{enumerate}
+		\item It provides functionality related to user accounts and user roles in order to login, register and recover your account within the capacity of a user role.
+		\item It provides functionality to determine whether a specific service request should be allowed.
+	\end{enumerate}
 		\subsubsection{Module Scope}
 		\subsubsection{Use Cases}
+		\paragraph{login\dotfill [Priority - Critical]}
+		\paragraph{register\dotfill [Priority - Critical]}
+		\paragraph{logout\dotfill [Priority - Medium]}
+		\paragraph{recoverAccount\dotfill [Priority - Low]}
+		\paragraph{isAuthorised\dotfill [Priority - High]}
+		\paragraph{authoriseUser\dotfill [Priority - Medium]}
+		\paragraph{deauthoriseUser\dotfill [Priority - Medium]}
+		
+		
+		
+%------------------------------------------------------------------------------------------%		
 	\subsection{BugReporting}
+	The BugReporting module allows the following functionality:
+	\begin{enumerate}
+		\item It provides functionality to generate historical data in a usable, tabular - as used by Microsoft Excel and similar software, format.
+		\item It provides functionality to generate a visual representation of historical data in the form of a dynamically chosen set of graphs.
+		\item It provides functionality to generate a heat map of the farm with regards to the population of stink bugs identified.
+	\end{enumerate}
 		\subsubsection{Module Scope}
+			\includegraphics[width=\linewidth]{ReportingScope}
 		\subsubsection{Use Cases}
+		\paragraph{viewMap \dotfill [Priority - Medium]}
+		\paragraph{viewGraph \dotfill [Priority - Medium]}
+		\paragraph{viewHistoricalData \dotfill [Priority - Medium]}
 
 	
 		
 		
 	
-\section{Open Issues}
+%\section{Open Issues}
 
 
 %\pagebreak
