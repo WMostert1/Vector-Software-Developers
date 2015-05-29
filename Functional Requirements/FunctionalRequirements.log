@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  29 MAY 2015 20:50
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  29 MAY 2015 22:53
 entering extended mode
  %&-line parsing enabled.
 **FunctionalRequirements.tex
@@ -197,27 +197,311 @@ Missing character: There is no ™ in font cmr10!
 <./Images/scope.jpg, id=16, 1258.7025pt x 667.49374pt>
 File: ./Images/scope.jpg Graphic file (type jpg)
 
-<use ./Images/scope.jpg> [2 <./Images/scope.jpg>] [3]
-<./Images/ReportingScope.jpg, id=23, 723.70375pt x 351.3125pt>
+<use ./Images/scope.jpg> [2 <./Images/scope.jpg>]
+<./Images/ScopeBugScouting.jpg, id=20, 626.34pt x 324.21124pt>
+File: ./Images/ScopeBugScouting.jpg Graphic file (type jpg)
+
+<use ./Images/ScopeBugScouting.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 96--99
+
+ []
+
+<./Images/getInfo.jpg, id=21, 861.2175pt x 584.1825pt>
+File: ./Images/getInfo.jpg Graphic file (type jpg)
+
+<use ./Images/getInfo.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 103--106
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 103--106
+
+ []
+
+[3 <./Images/ScopeBugScouting.jpg>]
+<./Images/updateInfo.jpg, id=26, 917.4275pt x 544.0325pt>
+File: ./Images/updateInfo.jpg Graphic file (type jpg)
+
+<use ./Images/updateInfo.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 108--111
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--111
+
+ []
+
+<./Images/showTripSummary.jpg, id=27, 836.12375pt x 684.5575pt>
+File: ./Images/showTripSummary.jpg Graphic file (type jpg)
+
+<use ./Images/showTripSummary.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 113--116
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 113--116
+
+ []
+
+[4 <./Images/getInfo.jpg> <./Images/updateInfo.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 118--119
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--119
+
+ []
+
+<./Images/EnterTreatmentData.jpg, id=31, 819.06pt x 537.00626pt>
+File: ./Images/EnterTreatmentData.jpg Graphic file (type jpg)
+
+<use ./Images/EnterTreatmentData.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 120--122
+
+ []
+
+[5 <./Images/showTripSummary.jpg>]
+<./Images/enterScoutingData.jpg, id=35, 1440.38126pt x 716.6775pt>
+File: ./Images/enterScoutingData.jpg Graphic file (type jpg)
+
+<use ./Images/enterScoutingData.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 124--127
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 124--127
+
+ []
+
+[6 <./Images/EnterTreatmentData.jpg> <./Images/enterScoutingData.jpg>]
+<./Images/scopeBugIntel.jpg, id=40, 632.3625pt x 245.91875pt>
+File: ./Images/scopeBugIntel.jpg Graphic file (type jpg)
+
+<use ./Images/scopeBugIntel.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 139--142
+
+ []
+
+<./Images/classifyBug.jpg, id=41, 779.91376pt x 487.8225pt>
+File: ./Images/classifyBug.jpg Graphic file (type jpg)
+
+<use ./Images/classifyBug.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 146--149
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 146--149
+
+ []
+
+[7 <./Images/scopeBugIntel.jpg>]
+<./Images/updateBugKnowledgeBase.jpg, id=45, 838.13126pt x 477.785pt>
+File: ./Images/updateBugKnowledgeBase.jpg Graphic file (type jpg)
+
+<use ./Images/updateBugKnowledgeBase.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 151--154
+
+ []
+
+<./Images/readKnowledgeBase.jpg, id=46, 861.2175pt x 495.8525pt>
+File: ./Images/readKnowledgeBase.jpg Graphic file (type jpg)
+
+<use ./Images/readKnowledgeBase.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 156--159
+
+ []
+
+[8 <./Images/classifyBug.jpg> <./Images/updateBugKnowledgeBase.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 169--171
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--171
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 175--177
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 175--177
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 175--177
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--180
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--180
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--180
+
+ []
+
+[9 <./Images/readKnowledgeBase.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 181--183
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 181--183
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 181--183
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 184--186
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 184--186
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 184--186
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 187--189
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 187--189
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 187--189
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--192
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--192
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--192
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--195
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--195
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--195
+
+ []
+
+[10] <./Images/ReportingScope.jpg, id=56, 723.70375pt x 351.3125pt>
 File: ./Images/ReportingScope.jpg Graphic file (type jpg)
 
-<use ./Images/ReportingScope.jpg> [4 <./Images/ReportingScope.jpg>]
-(./FunctionalRequirements.aux) ) 
+<use ./Images/ReportingScope.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 207--210
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 213--215
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 213--215
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 213--215
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--219
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--219
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--219
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--223
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--223
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--223
+
+ []
+
+[11 <./Images/ReportingScope.jpg>] (./FunctionalRequirements.aux) ) 
 Here is how much of TeX's memory you used:
- 1633 strings out of 493886
- 22534 string characters out of 1151099
- 79538 words of memory out of 3000000
- 4918 multiletter control sequences out of 10000+50000
- 8204 words of font info for 29 fonts, out of 3000000 for 5000
+ 1689 strings out of 493886
+ 24100 string characters out of 1151099
+ 77538 words of memory out of 3000000
+ 4963 multiletter control sequences out of 10000+50000
+ 8550 words of font info for 30 fonts, out of 3000000 for 5000
  714 hyphenation exceptions out of 8191
- 32i,4n,32p,414b,178s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/local/texlive/2008/texmf-dist/fonts/type1
-/bluesky/cm/cmbx10.pfb></usr/local/texlive/2008/texmf-dist/fonts/type1/bluesky/
-cm/cmbx12.pfb></usr/local/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmr10.
-pfb>
-Output written on FunctionalRequirements.pdf (5 pages, 449182 bytes).
+ 32i,4n,32p,414b,180s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/local/
+texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmbx10.pfb></usr/local/texlive/2
+008/texmf-dist/fonts/type1/bluesky/cm/cmbx12.pfb></usr/local/texlive/2008/texmf
+-dist/fonts/type1/bluesky/cm/cmr10.pfb></usr/local/texlive/2008/texmf-dist/font
+s/type1/bluesky/cm/cmti10.pfb>
+Output written on FunctionalRequirements.pdf (12 pages, 1688637 bytes).
 PDF statistics:
- 37 PDF objects out of 1000 (max. 8388607)
+ 74 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 71 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -6,30 +6,30 @@
 \contentsline {subsection}{\numberline {4.2}BugScouting}{2}
 \contentsline {subsubsection}{\numberline {4.2.1}Module Scope}{3}
 \contentsline {subsubsection}{\numberline {4.2.2}Use Cases}{3}
-\contentsline {paragraph}{\numberline {4.2.2.1}getBugInfo\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{3}
-\contentsline {paragraph}{\numberline {4.2.2.2}updateInfo\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{3}
-\contentsline {paragraph}{\numberline {4.2.2.3}showTripSummary\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - High]}{3}
-\contentsline {paragraph}{\numberline {4.2.2.4}enterTreatmentData\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{3}
-\contentsline {paragraph}{\numberline {4.2.2.5}enterScoutingData\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{3}
-\contentsline {subsection}{\numberline {4.3}BugIntelligence}{3}
-\contentsline {subsubsection}{\numberline {4.3.1}Module Scope}{3}
-\contentsline {subsubsection}{\numberline {4.3.2}Use Cases}{3}
-\contentsline {paragraph}{\numberline {4.3.2.1}classifyBug\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{3}
-\contentsline {paragraph}{\numberline {4.3.2.2}updateBugKnowledgeBase\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Low]}{3}
-\contentsline {paragraph}{\numberline {4.3.2.3}readBugKnowledgeBase\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{3}
-\contentsline {subsection}{\numberline {4.4}BugSecurity}{3}
-\contentsline {subsubsection}{\numberline {4.4.1}Module Scope}{4}
-\contentsline {subsubsection}{\numberline {4.4.2}Use Cases}{4}
-\contentsline {paragraph}{\numberline {4.4.2.1}login\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{4}
-\contentsline {paragraph}{\numberline {4.4.2.2}register\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{4}
-\contentsline {paragraph}{\numberline {4.4.2.3}logout\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{4}
-\contentsline {paragraph}{\numberline {4.4.2.4}recoverAccount\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Low]}{4}
-\contentsline {paragraph}{\numberline {4.4.2.5}isAuthorised\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - High]}{4}
-\contentsline {paragraph}{\numberline {4.4.2.6}authoriseUser\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{4}
-\contentsline {paragraph}{\numberline {4.4.2.7}deauthoriseUser\unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{4}
-\contentsline {subsection}{\numberline {4.5}BugReporting}{4}
-\contentsline {subsubsection}{\numberline {4.5.1}Module Scope}{4}
-\contentsline {subsubsection}{\numberline {4.5.2}Use Cases}{4}
-\contentsline {paragraph}{\numberline {4.5.2.1}viewMap \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{4}
-\contentsline {paragraph}{\numberline {4.5.2.2}viewGraph \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{4}
-\contentsline {paragraph}{\numberline {4.5.2.3}viewHistoricalData \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{4}
+\contentsline {paragraph}{\numberline {4.2.2.1}getBugInfo \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{3}
+\contentsline {paragraph}{\numberline {4.2.2.2}updateInfo \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{4}
+\contentsline {paragraph}{\numberline {4.2.2.3}showTripSummary \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - High]}{5}
+\contentsline {paragraph}{\numberline {4.2.2.4}enterTreatmentData \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{5}
+\contentsline {paragraph}{\numberline {4.2.2.5}enterScoutingData \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{6}
+\contentsline {subsection}{\numberline {4.3}BugIntelligence}{7}
+\contentsline {subsubsection}{\numberline {4.3.1}Module Scope}{7}
+\contentsline {subsubsection}{\numberline {4.3.2}Use Cases}{7}
+\contentsline {paragraph}{\numberline {4.3.2.1}classifyBug \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{7}
+\contentsline {paragraph}{\numberline {4.3.2.2}updateBugKnowledgeBase \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Low]}{8}
+\contentsline {paragraph}{\numberline {4.3.2.3}readBugKnowledgeBase \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{8}
+\contentsline {subsection}{\numberline {4.4}BugSecurity}{9}
+\contentsline {subsubsection}{\numberline {4.4.1}Module Scope}{9}
+\contentsline {subsubsection}{\numberline {4.4.2}Use Cases}{9}
+\contentsline {paragraph}{\numberline {4.4.2.1}login \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{9}
+\contentsline {paragraph}{\numberline {4.4.2.2}register \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Critical]}{9}
+\contentsline {paragraph}{\numberline {4.4.2.3}logout \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{10}
+\contentsline {paragraph}{\numberline {4.4.2.4}recoverAccount \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Low]}{10}
+\contentsline {paragraph}{\numberline {4.4.2.5}isAuthorised \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - High]}{10}
+\contentsline {paragraph}{\numberline {4.4.2.6}authoriseUser \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{10}
+\contentsline {paragraph}{\numberline {4.4.2.7}deauthoriseUser \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{10}
+\contentsline {subsection}{\numberline {4.5}BugReporting}{10}
+\contentsline {subsubsection}{\numberline {4.5.1}Module Scope}{11}
+\contentsline {subsubsection}{\numberline {4.5.2}Use Cases}{11}
+\contentsline {paragraph}{\numberline {4.5.2.1}viewMap \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{11}
+\contentsline {paragraph}{\numberline {4.5.2.2}viewGraph \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{11}
+\contentsline {paragraph}{\numberline {4.5.2.3}viewHistoricalData \unhbox \voidb@x \cleaders \hbox to.44em{\hss .\hss }\hfill \kern \z@ [Priority - Medium]}{11}

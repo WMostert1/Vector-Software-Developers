@@ -93,12 +93,37 @@ An innovative approach to handling the management and acquisition of scout data 
 			\item It provides the ability for a user to record the details related to spraying.
 		\end{enumerate}
 		\subsubsection{Module Scope}
+		The scope of the \textit{BugScouting} module is shown below:\\
+		\hfill\\
+		\includegraphics[width=\linewidth]{ScopeBugScouting}
+		
 		\subsubsection{Use Cases}
-		\paragraph{getBugInfo\dotfill [Priority - Medium]}
-		\paragraph{updateInfo\dotfill [Priority - Medium]}
-		\paragraph{showTripSummary\dotfill [Priority - High]}
-		\paragraph{enterTreatmentData\dotfill [Priority - Critical]}
-		\paragraph{enterScoutingData\dotfill [Priority - Critical]}
+		The concrete use cases for the \textit{BugScouting} module follow:
+		\paragraph{getBugInfo \dotfill [Priority - Medium]}
+		This use case uses the BugIntelligence module to retrieve information on a specific specimen which will be used to display to the user a "wiki" like piece which has the purpose of informing the user.\\\hfill\\
+		The Service Contract for the \textit{getBugInfo} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{getInfo}
+		
+		\paragraph{updateInfo \dotfill [Priority - Medium]}
+		The objective of this use case is to provide functionality to retrieve updated bug information and identification method updates.\\\hfill\\
+		The Service Contract for the \textit{getBugInfo} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{updateInfo}
+		
+		\paragraph{showTripSummary \dotfill [Priority - High]}
+		After completing a full scouting trip, this use case should provide a summary of the entire scouting trip. One scouting trip may consist of many scouting stops. The averages for the scouting trip data is used in the summary.\\\hfill\\
+		The Service Contract for the \textit{showTripSummary} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{showTripSummary}
+		
+		\paragraph{enterTreatmentData \dotfill [Priority - Critical]}
+		This use case is for entering data related to spraying chemicals (pesticide). This allows for the type of chemical, the date and the block or orchard number to be recorded.\\\hfill\\
+		
+		The Service Contract for the \textit{enterTreatmentData} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{EnterTreatmentData}
+		
+		\paragraph{enterScoutingData \dotfill [Priority - Critical]}
+		This is the core use case of this module. This use case allows entering data related to a scouting stop. Data captured should include the number of trees observed, number of bugs counter and the block or orchard number where the scouting took place. After entering the data, the specimen should be identified (classified) before successfully submitting it for persistence.\\\hfill\\
+		The Service Contract for the \textit{enterScoutingData} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{enterScoutingData}
 		
 		
 %------------------------------------------------------------------------------------------%	
@@ -111,10 +136,26 @@ An innovative approach to handling the management and acquisition of scout data 
 			\item It provides CRUD(Create Read Update Delete) functionality for bug information for specimens identifiable by the identification method
 		\end{enumerate}
 		\subsubsection{Module Scope}
+		The scope of the \textit{BugIntelligence} module is shown below:\\
+		\hfill\\
+		\includegraphics[width=\linewidth]{scopeBugIntel}
 		\subsubsection{Use Cases}
-		\paragraph{classifyBug\dotfill [Priority - Critical]}
-		\paragraph{updateBugKnowledgeBase\dotfill [Priority - Low]}
-		\paragraph{readBugKnowledgeBase\dotfill [Priority - Critical]}
+		The concrete use cases for the \textit{BugIntelligence} module follow:
+		
+		\paragraph{classifyBug \dotfill [Priority - Critical]}
+		This use case supplies a method to classify the bug according to life stage and species. The classification method used is pluggable.\\\hfill\\
+		The Service Contract for the \textit{classifyBug} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{classifyBug}
+		
+		\paragraph{updateBugKnowledgeBase \dotfill [Priority - Low]}		
+		This use case provides the functionality to edit the information used for classification. As in the example of a neural network being used as a classification method, the training examples may be edited.		
+		The Service Contract for the \textit{updateBugKnowledgeBase} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{updateBugKnowledgeBase}
+		
+		\paragraph{readBugKnowledgeBase \dotfill [Priority - Critical]}
+				This use case provides the functionality to get the information used for classification. As in the example of a neural network being used as a classification method, the training examples may be retrieved.	
+		The Service Contract for the \textit{readBugKnowledgeBase} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{readKnowledgeBase}
 		
 		
 %------------------------------------------------------------------------------------------%		
@@ -125,14 +166,32 @@ An innovative approach to handling the management and acquisition of scout data 
 		\item It provides functionality to determine whether a specific service request should be allowed.
 	\end{enumerate}
 		\subsubsection{Module Scope}
+		The scope of the \textit{BugSecurity} module is shown below:\\
+		\hfill\\
 		\subsubsection{Use Cases}
-		\paragraph{login\dotfill [Priority - Critical]}
-		\paragraph{register\dotfill [Priority - Critical]}
-		\paragraph{logout\dotfill [Priority - Medium]}
-		\paragraph{recoverAccount\dotfill [Priority - Low]}
-		\paragraph{isAuthorised\dotfill [Priority - High]}
-		\paragraph{authoriseUser\dotfill [Priority - Medium]}
-		\paragraph{deauthoriseUser\dotfill [Priority - Medium]}
+		The concrete use cases for the \textit{BugSecurity} module follow:
+		
+		\paragraph{login \dotfill [Priority - Critical]}
+		This use cases allows one to login with username and password credentials which will be validated and thus allowing the user to be authenticated.\\\hfill\\
+		The Service Contract for the \textit{login} use case is shown below:\\\hfill\\
+		\paragraph{register \dotfill [Priority - Critical]}
+		This use case caters for registration as a new user. A user account is created which is associated with a unique user name. Currently, there are no password format requirements.\\\hfill\\
+		The Service Contract for the \textit{register} use case is shown below:\\\hfill\\
+		\paragraph{logout \dotfill [Priority - Medium]}
+		This use case provides functionality to log out of the system.\\\hfill\\
+		The Service Contract for the \textit{logout} use case is shown below:\\\hfill\\
+		\paragraph{recoverAccount \dotfill [Priority - Low]}
+		In the case where a user forgets or has lost his/her credentials to access the system, this use case provides functionality to recover or to generate a new password. User verification is done via the email address associated with the account.\\\hfill\\ 
+		The Service Contract for the \textit{recoverAccount} use case is shown below:\\\hfill\\
+		\paragraph{isAuthorised \dotfill [Priority - High]}
+		Whenever a service which should not be accessibility to entire plethora of users is requested, authorization is required. This use case makes provision for this.\\\hfill\\
+		The Service Contract for the \textit{isAuthorised} use case is shown below:\\\hfill\\
+		\paragraph{authoriseUser \dotfill [Priority - Medium]}
+		This use case allows for an authorization restriction for a service to be added/\\\hfill\\
+		The Service Contract for the \textit{authoriseUser} use case is shown below:\\\hfill\\
+		\paragraph{deauthoriseUser \dotfill [Priority - Medium]}
+				This use case allows for an authorization restriction for a service to be removed/\\\hfill\\
+		The Service Contract for the \textit{deauthoriseUser} use case is shown below:\\\hfill\\
 		
 		
 		
@@ -145,11 +204,22 @@ An innovative approach to handling the management and acquisition of scout data 
 		\item It provides functionality to generate a heat map of the farm with regards to the population of stink bugs identified.
 	\end{enumerate}
 		\subsubsection{Module Scope}
+		The scope of the \textit{BugReporting} module is shown below:\\
+		\hfill\\
 			\includegraphics[width=\linewidth]{ReportingScope}
 		\subsubsection{Use Cases}
+		The concrete use cases for the \textit{BugReporting} module follow:
 		\paragraph{viewMap \dotfill [Priority - Medium]}
+		This use case allows for the generation of a heat map based on historical data.\\\hfill\\
+		The Service Contract for the \textit{viewMap} use case is shown below:\\\hfill\\		
+		
 		\paragraph{viewGraph \dotfill [Priority - Medium]}
+		This use case allows for the generation of a graphs based on historical data.\\\hfill\\
+		The Service Contract for the \textit{viewGraph} use case is shown below:\\\hfill\\		
+		
 		\paragraph{viewHistoricalData \dotfill [Priority - Medium]}
+		This use case allows for the generation of historical data.\\\hfill\\
+		The Service Contract for the \textit{viewHistoricalData} use case is shown below:\\\hfill\\
 
 	
 		
