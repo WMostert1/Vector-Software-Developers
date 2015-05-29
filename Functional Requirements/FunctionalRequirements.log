@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  29 MAY 2015 22:53
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2008.8.22)  29 MAY 2015 23:33
 entering extended mode
  %&-line parsing enabled.
 **FunctionalRequirements.tex
@@ -265,243 +265,251 @@ Underfull \hbox (badness 10000) in paragraph at lines 120--122
  []
 
 [5 <./Images/showTripSummary.jpg>]
-<./Images/enterScoutingData.jpg, id=35, 1440.38126pt x 716.6775pt>
+<./Images/enterScoutingData.jpg, id=35, 1651.16875pt x 716.6775pt>
 File: ./Images/enterScoutingData.jpg Graphic file (type jpg)
 
 <use ./Images/enterScoutingData.jpg>
-Underfull \hbox (badness 10000) in paragraph at lines 124--127
+<./Images/enterScoutingDataPS.jpg, id=36, 1713.40125pt x 873.2625pt>
+File: ./Images/enterScoutingDataPS.jpg Graphic file (type jpg)
+
+<use ./Images/enterScoutingDataPS.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 124--129
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 124--127
+Underfull \hbox (badness 10000) in paragraph at lines 124--129
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 124--129
 
  []
 
 [6 <./Images/EnterTreatmentData.jpg> <./Images/enterScoutingData.jpg>]
-<./Images/scopeBugIntel.jpg, id=40, 632.3625pt x 245.91875pt>
+<./Images/scopeBugIntel.jpg, id=41, 632.3625pt x 245.91875pt>
 File: ./Images/scopeBugIntel.jpg Graphic file (type jpg)
 
 <use ./Images/scopeBugIntel.jpg>
-Underfull \hbox (badness 10000) in paragraph at lines 139--142
+Underfull \hbox (badness 10000) in paragraph at lines 143--146
 
  []
 
-<./Images/classifyBug.jpg, id=41, 779.91376pt x 487.8225pt>
+<./Images/classifyBug.jpg, id=42, 779.91376pt x 487.8225pt>
 File: ./Images/classifyBug.jpg Graphic file (type jpg)
 
 <use ./Images/classifyBug.jpg>
-Underfull \hbox (badness 10000) in paragraph at lines 146--149
+Underfull \hbox (badness 10000) in paragraph at lines 150--153
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 146--149
+Underfull \hbox (badness 10000) in paragraph at lines 150--153
 
  []
 
-[7 <./Images/scopeBugIntel.jpg>]
-<./Images/updateBugKnowledgeBase.jpg, id=45, 838.13126pt x 477.785pt>
+[7 <./Images/enterScoutingDataPS.jpg> <./Images/scopeBugIntel.jpg>]
+<./Images/classfyBugPS.jpg, id=46, 957.5775pt x 513.92pt>
+File: ./Images/classfyBugPS.jpg Graphic file (type jpg)
+
+<use ./Images/classfyBugPS.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 154--156
+
+ []
+
+<./Images/updateBugKnowledgeBase.jpg, id=47, 838.13126pt x 477.785pt>
 File: ./Images/updateBugKnowledgeBase.jpg Graphic file (type jpg)
 
 <use ./Images/updateBugKnowledgeBase.jpg>
-Underfull \hbox (badness 10000) in paragraph at lines 151--154
+Underfull \hbox (badness 10000) in paragraph at lines 158--161
 
  []
 
-<./Images/readKnowledgeBase.jpg, id=46, 861.2175pt x 495.8525pt>
+[8 <./Images/classifyBug.jpg> <./Images/classfyBugPS.jpg>]
+<./Images/readKnowledgeBase.jpg, id=51, 861.2175pt x 495.8525pt>
 File: ./Images/readKnowledgeBase.jpg Graphic file (type jpg)
 
 <use ./Images/readKnowledgeBase.jpg>
-Underfull \hbox (badness 10000) in paragraph at lines 156--159
+Underfull \hbox (badness 10000) in paragraph at lines 163--166
 
  []
 
-[8 <./Images/classifyBug.jpg> <./Images/updateBugKnowledgeBase.jpg>]
-Underfull \hbox (badness 10000) in paragraph at lines 169--171
+[9 <./Images/updateBugKnowledgeBase.jpg> <./Images/readKnowledgeBase.jpg>]
+<./Images/SecurityScope.jpg, id=55, 1124.2pt x 470.75874pt>
+File: ./Images/SecurityScope.jpg Graphic file (type jpg)
+
+<use ./Images/SecurityScope.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 176--179
 
  []
 
+<./Images/LoginSC.jpg, id=56, 871.255pt x 463.7325pt>
+File: ./Images/LoginSC.jpg Graphic file (type jpg)
 
-Underfull \hbox (badness 10000) in paragraph at lines 169--171
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 175--177
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 175--177
+<use ./Images/LoginSC.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 183--185
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 175--177
+Underfull \hbox (badness 10000) in paragraph at lines 183--185
+
+ []
+
+[10 <./Images/SecurityScope.jpg>]
+<./Images/RegisterSC.jpg, id=60, 836.12375pt x 491.8375pt>
+File: ./Images/RegisterSC.jpg Graphic file (type jpg)
+
+<use ./Images/RegisterSC.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 187--190
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 178--180
+Underfull \hbox (badness 10000) in paragraph at lines 187--190
+
+ []
+
+<./Images/LogoutSC.jpg, id=61, 653.44125pt x 316.18124pt>
+File: ./Images/LogoutSC.jpg Graphic file (type jpg)
+
+<use ./Images/LogoutSC.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 192--195
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 178--180
+Underfull \hbox (badness 10000) in paragraph at lines 192--195
+
+ []
+
+[11 <./Images/LoginSC.jpg> <./Images/RegisterSC.jpg>]
+<./Images/RecoverAccountSC.jpg, id=65, 913.4125pt x 469.755pt>
+File: ./Images/RecoverAccountSC.jpg Graphic file (type jpg)
+
+<use ./Images/RecoverAccountSC.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 197--200
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 178--180
-
- []
-
-[9 <./Images/readKnowledgeBase.jpg>]
-Underfull \hbox (badness 10000) in paragraph at lines 181--183
+Underfull \hbox (badness 10000) in paragraph at lines 197--200
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 181--183
+Underfull \hbox (badness 10000) in paragraph at lines 202--205
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 181--183
+Underfull \hbox (badness 10000) in paragraph at lines 202--205
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 184--186
+Underfull \hbox (badness 10000) in paragraph at lines 202--205
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 184--186
+Underfull \hbox (badness 10000) in paragraph at lines 206--209
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 184--186
+Underfull \hbox (badness 10000) in paragraph at lines 206--209
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 187--189
+Underfull \hbox (badness 10000) in paragraph at lines 206--209
+
+ []
+
+[12 <./Images/LogoutSC.jpg> <./Images/RecoverAccountSC.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 210--213
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 187--189
+Underfull \hbox (badness 10000) in paragraph at lines 210--213
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 187--189
+Underfull \hbox (badness 10000) in paragraph at lines 210--213
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 190--192
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 190--192
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 190--192
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 193--195
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 193--195
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 193--195
-
- []
-
-[10] <./Images/ReportingScope.jpg, id=56, 723.70375pt x 351.3125pt>
+<./Images/ReportingScope.jpg, id=70, 723.70375pt x 351.3125pt>
 File: ./Images/ReportingScope.jpg Graphic file (type jpg)
 
 <use ./Images/ReportingScope.jpg>
-Underfull \hbox (badness 10000) in paragraph at lines 207--210
+Underfull \hbox (badness 10000) in paragraph at lines 225--228
+
+ []
+
+<./Images/viewMapSC.jpg, id=71, 653.44125pt x 407.5225pt>
+File: ./Images/viewMapSC.jpg Graphic file (type jpg)
+
+<use ./Images/viewMapSC.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 231--234
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 213--215
+Underfull \hbox (badness 10000) in paragraph at lines 231--234
+
+ []
+
+[13 <./Images/ReportingScope.jpg>]
+<./Images/viewGraphSC.jpg, id=75, 667.49374pt x 428.60126pt>
+File: ./Images/viewGraphSC.jpg Graphic file (type jpg)
+
+<use ./Images/viewGraphSC.jpg>
+Underfull \hbox (badness 10000) in paragraph at lines 236--239
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 213--215
+Underfull \hbox (badness 10000) in paragraph at lines 236--239
+
+ []
+
+[14 <./Images/viewMapSC.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 241--243
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 213--215
+Underfull \hbox (badness 10000) in paragraph at lines 241--243
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 217--219
+Underfull \hbox (badness 10000) in paragraph at lines 241--243
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 217--219
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 217--219
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 221--223
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 221--223
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 221--223
-
- []
-
-[11 <./Images/ReportingScope.jpg>] (./FunctionalRequirements.aux) ) 
+[15 <./Images/viewGraphSC.jpg>] (./FunctionalRequirements.aux) ) 
 Here is how much of TeX's memory you used:
- 1689 strings out of 493886
- 24100 string characters out of 1151099
- 77538 words of memory out of 3000000
- 4963 multiletter control sequences out of 10000+50000
+ 1734 strings out of 493886
+ 25300 string characters out of 1151099
+ 76538 words of memory out of 3000000
+ 4999 multiletter control sequences out of 10000+50000
  8550 words of font info for 30 fonts, out of 3000000 for 5000
  714 hyphenation exceptions out of 8191
- 32i,4n,32p,414b,180s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/local/
-texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmbx10.pfb></usr/local/texlive/2
-008/texmf-dist/fonts/type1/bluesky/cm/cmbx12.pfb></usr/local/texlive/2008/texmf
--dist/fonts/type1/bluesky/cm/cmr10.pfb></usr/local/texlive/2008/texmf-dist/font
-s/type1/bluesky/cm/cmti10.pfb>
-Output written on FunctionalRequirements.pdf (12 pages, 1688637 bytes).
+ 32i,4n,32p,414b,178s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/local/tex
+live/2008/texmf-dist/fonts/type1/bluesky/cm/cmbx10.pfb></usr/local/texlive/2008
+/texmf-dist/fonts/type1/bluesky/cm/cmbx12.pfb></usr/local/texlive/2008/texmf-di
+st/fonts/type1/bluesky/cm/cmr10.pfb></usr/local/texlive/2008/texmf-dist/fonts/t
+ype1/bluesky/cm/cmti10.pfb>
+Output written on FunctionalRequirements.pdf (16 pages, 2763908 bytes).
 PDF statistics:
- 74 PDF objects out of 1000 (max. 8388607)
+ 96 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 71 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 116 words of extra memory for PDF output out of 10000 (max. 10000000)
 

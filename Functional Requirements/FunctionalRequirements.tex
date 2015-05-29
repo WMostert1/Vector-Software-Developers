@@ -22,7 +22,7 @@
     \centering
     \vfill
     {\bfseries\Huge
-         Functional Requirements for the SAMBUG project\\
+         Functional Requirements for the SAMBUG Project\\
       \hfill\\
          \Large COS301
         \vskip2cm
@@ -124,6 +124,10 @@ An innovative approach to handling the management and acquisition of scout data 
 		This is the core use case of this module. This use case allows entering data related to a scouting stop. Data captured should include the number of trees observed, number of bugs counter and the block or orchard number where the scouting took place. After entering the data, the specimen should be identified (classified) before successfully submitting it for persistence.\\\hfill\\
 		The Service Contract for the \textit{enterScoutingData} use case is shown below:\\\hfill\\
 		\includegraphics[width=\linewidth]{enterScoutingData}
+		The Process Specification for the \textit{enterScoutingData} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{enterScoutingDataPS}
+		
+		
 		
 		
 %------------------------------------------------------------------------------------------%	
@@ -147,6 +151,9 @@ An innovative approach to handling the management and acquisition of scout data 
 		The Service Contract for the \textit{classifyBug} use case is shown below:\\\hfill\\
 		\includegraphics[width=\linewidth]{classifyBug}
 		
+		The Process Specification for the \textit{classifyBug} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{classfyBugPS}
+		
 		\paragraph{updateBugKnowledgeBase \dotfill [Priority - Low]}		
 		This use case provides the functionality to edit the information used for classification. As in the example of a neural network being used as a classification method, the training examples may be edited.		
 		The Service Contract for the \textit{updateBugKnowledgeBase} use case is shown below:\\\hfill\\
@@ -168,30 +175,41 @@ An innovative approach to handling the management and acquisition of scout data 
 		\subsubsection{Module Scope}
 		The scope of the \textit{BugSecurity} module is shown below:\\
 		\hfill\\
+		\includegraphics[width=\linewidth]{SecurityScope}
 		\subsubsection{Use Cases}
 		The concrete use cases for the \textit{BugSecurity} module follow:
 		
 		\paragraph{login \dotfill [Priority - Critical]}
 		This use cases allows one to login with username and password credentials which will be validated and thus allowing the user to be authenticated.\\\hfill\\
-		The Service Contract for the \textit{login} use case is shown below:\\\hfill\\
+		The Service Contract for the \textit{login} use case is shown below:\\\hfill\\\includegraphics[width=\linewidth]{LoginSC}
+		
 		\paragraph{register \dotfill [Priority - Critical]}
 		This use case caters for registration as a new user. A user account is created which is associated with a unique user name. Currently, there are no password format requirements.\\\hfill\\
 		The Service Contract for the \textit{register} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{RegisterSC}		
+		
 		\paragraph{logout \dotfill [Priority - Medium]}
 		This use case provides functionality to log out of the system.\\\hfill\\
 		The Service Contract for the \textit{logout} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{LogoutSC}
+		
 		\paragraph{recoverAccount \dotfill [Priority - Low]}
 		In the case where a user forgets or has lost his/her credentials to access the system, this use case provides functionality to recover or to generate a new password. User verification is done via the email address associated with the account.\\\hfill\\ 
 		The Service Contract for the \textit{recoverAccount} use case is shown below:\\\hfill\\
+		\includegraphics[width=\linewidth]{RecoverAccountSC}
+		
 		\paragraph{isAuthorised \dotfill [Priority - High]}
 		Whenever a service which should not be accessibility to entire plethora of users is requested, authorization is required. This use case makes provision for this.\\\hfill\\
 		The Service Contract for the \textit{isAuthorised} use case is shown below:\\\hfill\\
+		%\includegraphics[width=\linewidth]{}
 		\paragraph{authoriseUser \dotfill [Priority - Medium]}
 		This use case allows for an authorization restriction for a service to be added/\\\hfill\\
 		The Service Contract for the \textit{authoriseUser} use case is shown below:\\\hfill\\
+		%\includegraphics[width=\linewidth]{}
 		\paragraph{deauthoriseUser \dotfill [Priority - Medium]}
 				This use case allows for an authorization restriction for a service to be removed/\\\hfill\\
 		The Service Contract for the \textit{deauthoriseUser} use case is shown below:\\\hfill\\
+		%\includegraphics[width=\linewidth]{}
 		
 		
 		
@@ -212,10 +230,12 @@ An innovative approach to handling the management and acquisition of scout data 
 		\paragraph{viewMap \dotfill [Priority - Medium]}
 		This use case allows for the generation of a heat map based on historical data.\\\hfill\\
 		The Service Contract for the \textit{viewMap} use case is shown below:\\\hfill\\		
+		\includegraphics[width=\linewidth]{viewMapSC}
 		
 		\paragraph{viewGraph \dotfill [Priority - Medium]}
 		This use case allows for the generation of a graphs based on historical data.\\\hfill\\
-		The Service Contract for the \textit{viewGraph} use case is shown below:\\\hfill\\		
+		The Service Contract for the \textit{viewGraph} use case is shown below:\\\hfill\\	
+		\includegraphics[width=\linewidth]{viewGraphSC}	
 		
 		\paragraph{viewHistoricalData \dotfill [Priority - Medium]}
 		This use case allows for the generation of historical data.\\\hfill\\
