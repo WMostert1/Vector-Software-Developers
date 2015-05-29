@@ -1,0 +1,68 @@
+package org.eclipse.e4.core.internal.tests;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+public class MyTests {
+
+  package org.eclipse.e4.core.internal.tests;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+public class MyTests {
+
+  @Test
+  public void updateInfo() {
+
+    // MyClass is tested
+    MyClass tester = new MyClass();
+
+    // assert statements
+    assertEquals("updateInfoResult is not null", updateInfoResult, tester.updateInfo(updateInfoRequest));
+    assertEquals("updateInfoResult is null", 0, tester.updateInfo(updateInfoRequest));
+  }
+
+@Test
+  public void updateInfo() {
+
+    // MyClass is tested
+    MyClass tester = new MyClass();
+
+    // assert statements
+    assertEquals("updateInfoResult is not null", updateInfoResult, tester.updateInfo(updateInfoRequest));
+    assertEquals("updateInfoResult is null", 0, tester.updateInfo(updateInfoRequest));
+  }
+
+@Test
+  public void enterTreatmentData() {
+
+    // MyClass is tested
+    MyClass tester = new MyClass();
+
+    // assert statements
+    assertEquals("enterTreatmentDataResult is not null", enterTreatmentDataResult, tester.enterTreatmentData(enterTreatmentDataRequest));
+    assertEquals("enterTreatmentDataResult is null", 0, tester.enterTreatmentData(enterTreatmentDataRequest));
+  }
+
+@Test
+  public void classifyBug() {
+
+    // MyClass is tested
+    MyClass tester = new MyClass();
+
+    // assert statements
+    assertEquals("classifyBugResult is not null", classifyBug, tester.classifyBugclassifyBugRequest));
+    assertEquals("classifyBugResult is null", 0, tester.classifyBug(classifyBugRequest));
+  }
+
+
+} 
+
+
+
+} 
+
+
