@@ -1,0 +1,23 @@
+\contentsline {section}{\numberline {1}Background}{2}
+\contentsline {section}{\numberline {2}Vision}{2}
+\contentsline {section}{\numberline {3}Scope}{2}
+\contentsline {section}{\numberline {4}Architecture requirements}{3}
+\contentsline {subsection}{\numberline {4.1}Access channel requirements}{3}
+\contentsline {subsection}{\numberline {4.2}Quality requirements}{3}
+\contentsline {subsection}{\numberline {4.3}Integration requirements}{3}
+\contentsline {subsection}{\numberline {4.4}Architecture constraints}{3}
+\contentsline {section}{\numberline {5}Functional Requirements and Application Design}{3}
+\contentsline {subsection}{\numberline {5.1}Domain Model}{3}
+\contentsline {subsection}{\numberline {5.2}BugScouting}{3}
+\contentsline {subsubsection}{\numberline {5.2.1}Module Scope}{3}
+\contentsline {subsubsection}{\numberline {5.2.2}Use Cases}{3}
+\contentsline {subsection}{\numberline {5.3}BugIntelligence}{3}
+\contentsline {subsubsection}{\numberline {5.3.1}Module Scope}{3}
+\contentsline {subsubsection}{\numberline {5.3.2}Use Cases}{3}
+\contentsline {subsection}{\numberline {5.4}BugSecurity}{3}
+\contentsline {subsubsection}{\numberline {5.4.1}Module Scope}{3}
+\contentsline {subsubsection}{\numberline {5.4.2}Use Cases}{3}
+\contentsline {subsection}{\numberline {5.5}BugReporting}{3}
+\contentsline {subsubsection}{\numberline {5.5.1}Module Scope}{3}
+\contentsline {subsubsection}{\numberline {5.5.2}Use Cases}{3}
+\contentsline {section}{\numberline {6}Open Issues}{3}
