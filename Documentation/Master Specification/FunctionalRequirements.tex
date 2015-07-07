@@ -246,28 +246,28 @@ An innovative approach to handling the management and acquisition of scout data 
 		
 		
 \section{Architectural Requirements}
-\subsection{Quality Requirements}
-	\subsubsection{Maintainability}
-		As a standard requirement for all projects, SAMBUG needs to be maintainable. This is especially due to the fact that the project has very high expansion potential. SUBTROP has shown interest in further maintaining the project after completion.
-	\subsubsection{Scalability}
-		Since the user base for the system will be comparatively small, scalability is not a great issue. The load on the system will not under any foreseeable circumstances be extremely high.
-	\subsubsection{Performance Requirements}
-		Performance is a very important requirement for the system. The goal of the system is to provide an efficient service rendered. Users of the system will be subject to high pressure environments where time is an issue.
-	\subsubsection{Reliability and Availability}
-		Since users will be relying heavily on this system to make important business decisions the system must be available to be used at all times. As such, a reliable system is of paramount importance.
-	\subsubsection{Security}
-		As specified by the client, for the sake of reducing usage complexity of the system, the security may be relaxed in this case due to the fact that the users are generally not comfortable with using technological products.
-	\subsubsection{Auditability}
-		There is no specific auditability requirement for the system since there will be no business value in tracking user activity.
-	\subsubsection{Testability}
-		Every service offered by the system should be testable via:\\
-		1. Unit tests\\
-		2. Integration tests\\
-	\subsubsection{Usability}
-		Usability is the main quality requirement for the system. In order for the system to have any actual business value it should be easy to use and effective.
-	\subsubsection{Deployability}
-		The system must be deployable to any cloud hosted virtual machine or locally hosted server.
-\subsection{Architecture responsibilities}
+	\subsection{Quality Requirements}
+		\subsubsection{Maintainability}
+			As a standard requirement for all projects, SAMBUG needs to be maintainable. This is especially due to the fact that the project has very high expansion potential. SUBTROP has shown interest in further maintaining the project after completion.
+		\subsubsection{Scalability}
+			Since the user base for the system will be comparatively small, scalability is not a great issue. The load on the system will not under any foreseeable circumstances be extremely high.
+		\subsubsection{Performance Requirements}
+			Performance is a very important requirement for the system. The goal of the system is to provide an efficient service rendered. Users of the system will be subject to high pressure environments where time is an issue.
+		\subsubsection{Reliability and Availability}
+			Since users will be relying heavily on this system to make important business decisions the system must be available to be used at all times. As such, a reliable system is of paramount importance.
+		\subsubsection{Security}
+			As specified by the client, for the sake of reducing usage complexity of the system, the security may be relaxed in this case due to the fact that the users are generally not comfortable with using technological products.
+		\subsubsection{Auditability}
+			There is no specific auditability requirement for the system since there will be no business value in tracking user activity.
+		\subsubsection{Testability}
+			Every service offered by the system should be testable via:\\
+			1. Unit tests\\
+			2. Integration tests
+		\subsubsection{Usability}
+			Usability is the main quality requirement for the system. In order for the system to have any actual business value it should be easy to use and effective.
+		\subsubsection{Deployability}
+			The system must be deployable to any cloud hosted virtual machine or locally hosted server.
+	\subsection{Architecture responsibilities}
 	The architectural responsibilities of the system include providing infrastructure for the following:
 		\begin{itemize}
 			\item A web access channel
@@ -275,7 +275,6 @@ An innovative approach to handling the management and acquisition of scout data 
 			\item Hosting for business logic and services offered by the system
 			\item Relational database persistence
 			\item Sending emails for recovering of accounts
-			
 		\end{itemize}
 \section{Architectural Design}
 	\subsection{Overview}
@@ -283,7 +282,7 @@ An innovative approach to handling the management and acquisition of scout data 
 			\begin{itemize}
 				\item Access Layer
 					\begin{itemize}
-						\item Test
+						\item 
 					\end{itemize}
 				\item Services Layer
 				\item Data Access Layer
@@ -291,9 +290,25 @@ An innovative approach to handling the management and acquisition of scout data 
 	\subsection{Infrastructure Layout}
 		\includegraphics[width=\linewidth]{SystemComponents}	
 	\subsection{Database Design}
+	\includegraphics[width=\linewidth]{ERD}	
 	\subsection{Process Flow}
 		\includegraphics[width=\linewidth]{ProcessFlow}	
 	\subsection{Technologies}
+		\subsubsection{Mobile Application}
+			\paragraph{Android Studio}
+		\subsubsection{Web Backend}
+			\paragraph{.NET REST Services}
+			\paragraph{SQL Server}
+		\subsubsection{Web Frontend}
+			\paragraph{Aurelia.io}
+		\subsubsection{Builds}		
+			\paragraph{TeamCity}
+			\paragraph{Gradle}
+			\paragraph{MSBuild}
+		\subsubsection{Testing}
+			\paragraph{JUnit}
+			\paragraph{NUnit}
+	
 	
 
 %\section{Open Issues}
