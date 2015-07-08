@@ -17,11 +17,15 @@
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
-        <activity
+        <!--activity
             android:name=".enterScoutingData"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_enter_scouting_data"
             android:theme="@style/FullscreenTheme" >
+        </activity-->
+        <activity
+            android:name=".ScoutTripActivity"
+            android:label="@string/title_activity_scout_trip" >
         </activity>
     </application>
 
