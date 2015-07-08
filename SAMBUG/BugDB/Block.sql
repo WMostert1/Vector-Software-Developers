@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[Block]
+(
+	[BlockID] INT NOT NULL PRIMARY KEY ,
+	[FarmID] INT NOT NULL,
+	[BlockName] VARCHAR(50) NOT NULL,
+	[UsrID] INT ,
+	[TMStamp] DATETIME,
+	CONSTRAINT [FK_Farm_ToBlock] FOREIGN KEY (FarmID) REFERENCES [Farm]([FarmID])
+)
+
