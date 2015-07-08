@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[Block]
+(
+	[BlockID] INT NOT NULL PRIMARY KEY ,
+	[FarmID] INT NOT NULL,
+	[BlockName] VARCHAR(50) NOT NULL,
+	[UsrID] INT ,
+	[TMStamp] DATETIME
+)
+
