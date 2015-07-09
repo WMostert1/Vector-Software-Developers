@@ -25,7 +25,8 @@
         </activity>
         <activity
             android:name=".ScoutTripActivity"
-            android:label="SAMBUGApp" ></activity>
+            android:label="SAMBUGApp" >
+        </activity>
         <activity
             android:name=".IdentificationActivity"
             android:label="@string/title_activity_identification"

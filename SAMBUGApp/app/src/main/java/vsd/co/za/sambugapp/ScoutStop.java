@@ -40,4 +40,9 @@ public class ScoutStop {
     public void addBugEntry(BugEntry bugEntry) {
         mBugs.add(bugEntry);
     }
+
+    public double getPestsPerTree(){
+        //calc bug count and divide by tree amount
+        return 0.8;
+    }
 }
