@@ -24,7 +24,7 @@ public class enterDataActivity extends ActionBarActivity {
         populateSpinner();
        // receiveGeoLocation();
 
-        doS();
+        receiveGeoLocation();
     }
 
     @Override
@@ -81,35 +81,7 @@ public class enterDataActivity extends ActionBarActivity {
     }
 
 
-    private void receiveGeoLocation(){
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
-                makeUseOfNewLocation(location);
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-        };
-
-
-        String locationProvider = LocationManager.GPS_PROVIDER;
-// Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
-       // locationManager.removeUpdates(locationListener);
-
-    }
-
-    private void makeUseOfNewLocation(Location location){
-        Log.d("herer",location.toString() );
-        System.out.println("Here " + location);
-    }
-
-    public void doS(){
+    public void receiveGeoLocation(){
 
         LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
