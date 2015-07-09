@@ -1,9 +1,13 @@
 package vsd.co.za.sambugapp;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 
 public class enterDataActivity extends ActionBarActivity {
@@ -12,6 +16,7 @@ public class enterDataActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
+        populateSpinner();
     }
 
     @Override
@@ -34,5 +39,36 @@ public class enterDataActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void populateSpinner(){
+        Spinner mySpin = (Spinner) findViewById(R.id.spnBlocks);
+        ArrayAdapter<String> dataAdapter;
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.arrBlocks, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mySpin.setAdapter(adapter);
+
+       // toList = (Spinner) findViewById(R.id.toList);
+        //dataAdapter = new ArrayAdapter<String>(this,
+         //       android.R.layout.simple_spinner_item, new ArrayList<String>());
+        //dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+       // toList.setAdapter(dataAdapter);
+
+       // Button add = (Button) findViewById(R.id.add);
+       // add.setOnClickListener(this);
+       // Button remove = (Button) findViewById(R.id.remove);
+       // remove.setOnClickListener(this);
+    }
+
+    public void sendToScoutTripActivity(View view){
+        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
+        startActivity(intent);
+    }
+
+    public void sendToManualActivity(View view){
+//        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
+//        startActivity(intent);
     }
 }
