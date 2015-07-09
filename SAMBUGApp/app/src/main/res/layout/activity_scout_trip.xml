@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -6,6 +6,38 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
+                android:orientation="vertical"
+                android:weightSum="90"
                 tools:context="vsd.co.za.sambugapp.ScoutTripActivity">
+        <Button
+            android:id="@+id/btnAddStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:layout_gravity="right"
+            android:layout_weight="5"
+            android:layout_marginBottom="10dp"
+            android:text="+"/>
 
-</RelativeLayout>
+    <ListView
+        android:id="@+id/lstTrips"
+        android:layout_width="match_parent"
+        android:layout_weight="50"
+        android:layout_height="0dp"
+        android:layout_marginBottom="15dp"></ListView>
+    <ListView
+        android:id="@+id/lstPestsPerTree"
+        android:layout_width="match_parent"
+        android:layout_weight="30"
+        android:layout_height="0dp"></ListView>
+    <Button
+        android:id="@+id/btnFinishTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Finish"
+        android:layout_gravity="center"
+        android:layout_weight="5"
+        android:layout_marginTop="15dp"/>
+
+</LinearLayout>
