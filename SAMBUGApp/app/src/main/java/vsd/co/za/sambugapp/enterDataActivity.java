@@ -12,19 +12,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 
 public class enterDataActivity extends ActionBarActivity {
+    ScoutStop stop;
+    Spinner mySpin;
+    // Spinner
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
         populateSpinner();
-       // receiveGeoLocation();
-
+        initializeNumberPickers();
         receiveGeoLocation();
+        createScoutStop();
     }
 
     @Override
@@ -50,7 +54,7 @@ public class enterDataActivity extends ActionBarActivity {
     }
 
     private void populateSpinner(){
-        Spinner mySpin = (Spinner) findViewById(R.id.spnBlocks);
+        mySpin = (Spinner) findViewById(R.id.spnBlocks);
         ArrayAdapter<String> dataAdapter;
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -70,14 +74,32 @@ public class enterDataActivity extends ActionBarActivity {
        // remove.setOnClickListener(this);
     }
 
+    public void initializeNumberPickers(){
+        NumberPicker npTrees = (NumberPicker)findViewById(R.id.npNumTrees);
+        NumberPicker npBugs = (NumberPicker)findViewById(R.id.npNumBugs);
+
+        npTrees.setMinValue(1);
+        npTrees.setMaxValue(100);
+        npTrees.setWrapSelectorWheel(false);
+
+        npBugs.setMinValue(0);
+        npBugs.setMaxValue(100);
+        npBugs.setWrapSelectorWheel(false);
+
+    }
     public void sendToScoutTripActivity(View view){
+
+        stop.setBlockName();
         Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
         startActivity(intent);
     }
 
     public void sendToManualActivity(View view){
+
 //        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
 //        startActivity(intent);
+      //  int numTrees =
+       // stop.setNumTrees();
     }
 
 
@@ -88,6 +110,11 @@ public class enterDataActivity extends ActionBarActivity {
         MyLocationListener locationListener = new MyLocationListener();
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+    }
+
+    public void createScoutStop(){
+        stop = new ScoutStop();
 
     }
 }
