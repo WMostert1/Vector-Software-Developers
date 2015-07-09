@@ -8,6 +8,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_enter_data">enterDataActivity</string>
+    <string name="title_activity_identification">IdentificationActivity</string>
 
         <!--<string-array name="blocks">-->
             <!--<item>Piesang</item>-->
