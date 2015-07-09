@@ -24,6 +24,9 @@
             android:label="@string/title_activity_enter_data" >
         </activity>
         <activity
+            android:name=".ScoutTripActivity"
+            android:label="SAMBUGApp" ></activity>
+        <activity
             android:name=".IdentificationActivity"
             android:label="@string/title_activity_identification"
             android:parentActivityName=".enterDataActivity" >
