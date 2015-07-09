@@ -9,71 +9,93 @@
     <Spinner
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/spinner"
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="69dp" />
-
-    <EditText
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:inputType="number"
-    android:ems="10"
-    android:id="@+id/editText"
-    android:layout_below="@+id/spinner"
-    android:layout_alignRight="@+id/spinner"
-    android:layout_alignEnd="@+id/spinner" />
+    android:id="@+id/spnBlocks"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="42dp"
+        android:layout_toEndOf="@+id/btnDone"
+        android:layout_toRightOf="@+id/btnDone" />
 
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    android:text="Medium Text"
-    android:id="@+id/textView"
-    android:layout_alignBottom="@+id/editText"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" />
+    android:text="Number of Trees"
+    android:id="@+id/tvNumberOfTrees"
+        android:textSize="24dp"
+        android:layout_below="@+id/spnBlocks"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="65dp" />
 
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    android:text="Medium Text"
-    android:id="@+id/textView2"
-    android:layout_centerVertical="true"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" />
+    android:text="Number of Bugs"
+    android:id="@+id/tvNumberOfBugs"
+        android:textSize="24dp"
+        android:layout_alignTop="@+id/npNumBugs"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="42dp" />
 
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceMedium"
-    android:text="Medium Text"
-    android:id="@+id/textView3"
-    android:layout_below="@+id/textView2"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_marginTop="48dp" />
+    android:text="Bug Type"
+    android:id="@+id/tvBugType"
+        android:textSize="24dp"
+        android:layout_alignTop="@+id/btnSelectBug"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
     style="?android:attr/buttonStyleSmall"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="New Button"
-    android:id="@+id/button"
-    android:layout_alignTop="@+id/textView3"
-    android:layout_alignRight="@+id/editText"
-    android:layout_alignEnd="@+id/editText" />
+    android:text="@string/btnSelectBug"
+    android:id="@+id/btnSelectBug"
+        android:onClick="sendToManualActivity"
+        android:layout_above="@+id/btnDone"
+        android:layout_alignRight="@+id/spnBlocks"
+        android:layout_alignEnd="@+id/spnBlocks" />
 
     <Button
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="New Button"
-    android:id="@+id/button2"
-    android:layout_alignParentBottom="true"
-    android:layout_toLeftOf="@+id/button"
-    android:layout_toStartOf="@+id/button"
-    android:layout_marginBottom="39dp" />
+    android:text="@string/btnDoneStop"
+    android:id="@+id/btnDone"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="sendToScoutTripActivity" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Block"
+        android:id="@+id/tvBlock"
+        android:textSize="24dp"
+        android:layout_alignBottom="@+id/spnBlocks"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/npNumTrees"
+        android:layout_below="@+id/spnBlocks"
+        android:layout_alignLeft="@+id/btnSelectBug"
+        android:layout_alignStart="@+id/btnSelectBug" />
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/npNumBugs"
+        android:layout_below="@+id/npNumTrees"
+        android:layout_alignLeft="@+id/npNumTrees"
+        android:layout_alignStart="@+id/npNumTrees" />
 
 
 </RelativeLayout>

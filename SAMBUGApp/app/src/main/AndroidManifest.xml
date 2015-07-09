@@ -9,8 +9,7 @@
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,9 +20,12 @@
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
+
         <activity
             android:name=".enterDataActivity"
-            android:label="@string/title_activity_enter_data" >
+            android:label="@string/title_activity_enter_data"
+            android:exported="true">
+          
         </activity>
         <activity
             android:name=".ScoutTripActivity"
@@ -38,6 +40,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vsd.co.za.sambugapp.enterDataActivity" />
         </activity>
+        
+        
     </application>
 
 </manifest>
