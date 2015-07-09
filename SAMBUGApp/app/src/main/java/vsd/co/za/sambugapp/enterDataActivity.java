@@ -1,6 +1,8 @@
 package vsd.co.za.sambugapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,10 +17,15 @@ import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+
 
 public class enterDataActivity extends ActionBarActivity {
     ScoutStop stop;
     Spinner mySpin;
+    NumberPicker npTrees;
+    NumberPicker npBugs;
+    ScoutBug currBug;
     // Spinner
 
     @Override
@@ -75,8 +82,8 @@ public class enterDataActivity extends ActionBarActivity {
     }
 
     public void initializeNumberPickers(){
-        NumberPicker npTrees = (NumberPicker)findViewById(R.id.npNumTrees);
-        NumberPicker npBugs = (NumberPicker)findViewById(R.id.npNumBugs);
+        npTrees = (NumberPicker)findViewById(R.id.npNumTrees);
+        npBugs = (NumberPicker)findViewById(R.id.npNumBugs);
 
         npTrees.setMinValue(1);
         npTrees.setMaxValue(100);
@@ -89,7 +96,9 @@ public class enterDataActivity extends ActionBarActivity {
     }
     public void sendToScoutTripActivity(View view){
 
-        stop.setBlockName();
+        stop.setBlockName(mySpin.getSelectedItem().toString());
+        stop.setNumTrees(npTrees.getValue());
+        stop.addBugEntry(currBug);
         Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
         startActivity(intent);
     }
@@ -111,6 +120,37 @@ public class enterDataActivity extends ActionBarActivity {
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            //Do what you need if enabled...
+        }else{
+            createErrorMessage();
+        }
+
+    }
+
+    public void createErrorMessage(){
+        new AlertDialog.Builder(this)
+                .setTitle("Switch on gps")
+                .setMessage("Please ensure your gps is switched on.")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        moveGPSScreen();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
+    }
+
+    public void moveGPSScreen(){
+        Intent gpsOptionsIntent = new Intent(
+                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(gpsOptionsIntent);
     }
 
     public void createScoutStop(){
