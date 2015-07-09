@@ -9,7 +9,10 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_enter_data">enterDataActivity</string>
     <string name="title_activity_identification">IdentificationActivity</string>
-    <string name="description_image_view">This is a picture of the bug to identify</string>
+    <string name="identification_activity_description_image_view">This is a picture of the bug to identify</string>
+    <string name="identification_activity_speciesSpecificationDescription">A picture of a stinkbug species @ instar</string>
+    <string name="identification_activity_autoClassifyButtonText">Choose Automatically</string>
+    <string name="identification_activity_doneButtonText">Done</string>
         <!--<string-array name="blocks">-->
             <!--<item>Piesang</item>-->
             <!--<item>Nda</item>-->

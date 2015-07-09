@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="vsd.co.za.sambugapp.IdentificationActivity">
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_centerInParent="true"
@@ -13,19 +13,176 @@
         android:id="@+id/linearLayout">
         <ImageView
             android:layout_width = "140dp"
-            android:layout_height= "96dp"
+            android:layout_height= "120dp"
             android:id="@+id/ivFieldPicture"
             android:layout_marginTop="5dp"
-            android:contentDescription="@string/description_image_view"
-            android:layout_weight="3.20" />
-    </LinearLayout>
+            android:contentDescription="@string/identification_activity_description_image_view"
+            android:layout_centerHorizontal="true"
+             />
 
-    <ImageButton
-        android:layout_width="wrap_content"
+        <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/imageButton"
-        android:layout_below="@+id/linearLayout"
-        android:layout_alignLeft="@+id/linearLayout"
-        android:layout_alignStart="@+id/linearLayout" />
+        android:id="@+id/species1"
+        android:layout_below="@id/ivFieldPicture"
+        >
+
+        <ImageButton
+            android:src="@drawable/coconut"
+            android:scaleType="fitXY"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/galleryPicHeight"
+            android:layout_weight="1"
+            android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+        <ImageButton
+            android:src="@drawable/coconut"
+            android:scaleType="fitXY"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/galleryPicHeight"
+            android:layout_weight="1"
+            android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+        <ImageButton
+            android:src="@drawable/coconut"
+            android:scaleType="fitXY"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/galleryPicHeight"
+            android:layout_weight="1"
+            android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+        <ImageButton
+            android:src="@drawable/coconut"
+            android:scaleType="fitXY"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/galleryPicHeight"
+            android:layout_weight="1"
+            android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/species2"
+            android:layout_below="@id/species1"
+            >
+
+            <ImageButton
+                android:src="@drawable/green_veg"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            <ImageButton
+                android:src="@drawable/green_veg"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            <ImageButton
+                android:src="@drawable/green_veg"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            <ImageButton
+                android:src="@drawable/green_veg"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/species3"
+            android:layout_below="@id/species2"
+            >
+
+            <ImageButton
+                android:src="@drawable/yellowed_edged"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            <ImageButton
+                android:src="@drawable/yellowed_edged"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            <ImageButton
+                android:src="@drawable/yellowed_edged"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            <ImageButton
+                android:src="@drawable/yellowed_edged"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/species4"
+            android:layout_below="@id/species3"
+            >
+
+            <ImageButton
+                android:src="@drawable/two_spotted"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            <ImageButton
+                android:src="@drawable/two_spotted"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            <ImageButton
+                android:src="@drawable/two_spotted"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            <ImageButton
+                android:src="@drawable/two_spotted"
+                android:scaleType="fitXY"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/galleryPicHeight"
+                android:layout_weight="1"
+                android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/species4">
+            <Button
+            android:layout_width="0dp"
+                android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text="@string/identification_activity_autoClassifyButtonText"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/identification_activity_doneButtonText"
+                />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
 
 </RelativeLayout>
