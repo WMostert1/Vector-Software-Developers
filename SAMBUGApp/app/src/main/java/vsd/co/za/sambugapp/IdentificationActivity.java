@@ -4,33 +4,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 public class IdentificationActivity extends AppCompatActivity {
-    String mCurrentPhotoPath;
     static final int REQUEST_TAKE_PHOTO = 1;
-    private boolean picTaken = false;
     private ImageView mImageView;
     private Bitmap bitmap;
+    private Species currentEntry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +67,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 bitmap = BitmapFactory.decodeStream(stream);
 
                 mImageView.setImageBitmap(bitmap);
+
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
@@ -89,36 +81,13 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     }
 
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        // TODO Auto-generated method stub
-//        super.onWindowFocusChanged(hasFocus);
-//        setPic();
-//    }
-
-    private void dispatchTakePictureIntent() {
+    private void dispatchTakePictureIntent(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
         }
     }
 
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = DateFormat.getDateTimeInstance().format(new Date());
-        String imageFileName = "FieldPic_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-        return image;
-    }
 
 
 }

@@ -9,7 +9,7 @@ public class ScoutStop {
 
     private String mBlockName;
     private int mNumTrees;
-    private ArrayList<BugEntry> mBugs;
+    private ArrayList<Species> mBugs;
 
     public ScoutStop() {
         mBlockName="";
@@ -33,11 +33,11 @@ public class ScoutStop {
         mNumTrees = numTrees;
     }
 
-    public ArrayList<BugEntry> getBugs() {
+    public ArrayList<Species> getBugs() {
         return mBugs;
     }
 
-    public void addBugEntry(BugEntry bugEntry) {
-        mBugs.add(bugEntry);
+    public void addBugEntry(Species species) {
+        mBugs.add(species);
     }
 }
