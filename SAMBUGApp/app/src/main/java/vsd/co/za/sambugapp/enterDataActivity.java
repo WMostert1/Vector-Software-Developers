@@ -1,8 +1,13 @@
 package vsd.co.za.sambugapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +22,9 @@ public class enterDataActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
         populateSpinner();
+       // receiveGeoLocation();
+
+        doS();
     }
 
     @Override
@@ -70,5 +78,44 @@ public class enterDataActivity extends ActionBarActivity {
     public void sendToManualActivity(View view){
 //        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
 //        startActivity(intent);
+    }
+
+
+    private void receiveGeoLocation(){
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                makeUseOfNewLocation(location);
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+
+
+        String locationProvider = LocationManager.GPS_PROVIDER;
+// Register the listener with the Location Manager to receive location updates
+        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
+       // locationManager.removeUpdates(locationListener);
+
+    }
+
+    private void makeUseOfNewLocation(Location location){
+        Log.d("herer",location.toString() );
+        System.out.println("Here " + location);
+    }
+
+    public void doS(){
+
+        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        MyLocationListener locationListener = new MyLocationListener();
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
     }
 }
