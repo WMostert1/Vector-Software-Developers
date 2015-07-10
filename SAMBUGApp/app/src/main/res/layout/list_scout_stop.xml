@@ -21,5 +21,16 @@
         android:paddingTop="4dp"
         android:layout_alignParentRight="true"
         android:text="Tree Amount"/>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/hscrollBugInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"></LinearLayout>
+    </HorizontalScrollView>
+
+
 
 </RelativeLayout>

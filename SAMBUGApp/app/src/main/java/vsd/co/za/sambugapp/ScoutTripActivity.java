@@ -1,6 +1,8 @@
 package vsd.co.za.sambugapp;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +13,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -105,6 +111,13 @@ public class ScoutTripActivity extends ActionBarActivity {
             TextView lblTreeAmount =
                     (TextView)convertView.findViewById(R.id.lblTreeAmount);
             lblTreeAmount.setText(stop.getNumTrees()+"");
+            LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
+            ImageView img=new ImageView(this.getContext());
+            //img.setImageResource(R.drawable.st);
+            hscrollBugInfo.removeAllViews();
+            img.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.st));
+            img.setLayoutParams(new RelativeLayout.LayoutParams(25,25));
+            hscrollBugInfo.addView(img);
             return convertView;
         }
     }
