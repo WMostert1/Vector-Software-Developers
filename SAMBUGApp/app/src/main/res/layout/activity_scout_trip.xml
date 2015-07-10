@@ -17,7 +17,8 @@
             android:layout_gravity="right"
             android:layout_weight="5"
             android:layout_marginBottom="10dp"
-            android:text="+"/>
+            android:text="+"
+            android:onClick="addStop"/>
 
     <ListView
         android:id="@+id/lstTrips"

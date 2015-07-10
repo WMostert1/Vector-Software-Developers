@@ -54,21 +54,12 @@ public class ScoutTripActivity extends ActionBarActivity {
         lstPestsPerTreeAdapter=new PestsPerTreeAdapter(mScoutTrip.getList());
         mLstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
 
-        mBtnAddStop = (Button) findViewById(R.id.btnAddStop);
-        mBtnAddStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Intent intent = new Intent(ScoutTripActivity.this,enterDataActivity.class);
-                //startActivity(intent);
-                ScoutStop newObj=new ScoutStop();
-                newObj.setBlockName("Banana");
-                newObj.setNumTrees(16);
-                mScoutTrip.addStop(newObj);
-                lstStopsAdapter.notifyDataSetChanged();
-                lstPestsPerTreeAdapter.notifyDataSetChanged();
-            }
-        });
+    }
 
+    public void addStop(){
+        Intent intent=new Intent(this,enterDataActivity.class);
+        startActivityForResult(intent,0);
+        //handle new stop object
     }
 
     @Override
