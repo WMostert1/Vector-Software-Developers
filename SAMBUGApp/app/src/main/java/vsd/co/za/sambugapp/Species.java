@@ -2,10 +2,12 @@ package vsd.co.za.sambugapp;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * Created by keaganthompson on 7/8/15.
  */
-public class Species {
+public class Species implements Serializable {
     private Bitmap fieldPic;
     private boolean isPest;
     private String speciesName;
@@ -45,5 +47,12 @@ public class Species {
         this.lifestage = lifestage;
     }
 
-
+    @Override
+    public String toString() {
+        return "Species : " +
+                "fieldPic=" + fieldPic +
+                ", isPest=" + isPest +
+                ", speciesName='" + speciesName + '\'' +
+                ", lifestage=" + lifestage;
+    }
 }

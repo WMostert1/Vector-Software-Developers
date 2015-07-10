@@ -115,8 +115,8 @@ public class ScoutTripActivity extends ActionBarActivity {
             ImageView img=new ImageView(this.getContext());
             //img.setImageResource(R.drawable.st);
             hscrollBugInfo.removeAllViews();
-            img.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.st));
-            img.setLayoutParams(new RelativeLayout.LayoutParams(25,25));
+            // img.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.st));
+            img.setLayoutParams(new RelativeLayout.LayoutParams(25, 25));
             hscrollBugInfo.addView(img);
             return convertView;
         }
