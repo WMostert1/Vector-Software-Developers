@@ -121,6 +121,7 @@ public class enterDataActivity extends ActionBarActivity {
             Bundle speciesReceived = data.getExtras();
             Species species = (Species) speciesReceived.get("Species");
             createBug(species);
+            Log.e("Look", species.getSpeciesName());
         }
     }
 
@@ -189,5 +190,15 @@ public class enterDataActivity extends ActionBarActivity {
         }
         else usePassedStop(sp);
         Log.e("Look",stop.getBlockName() );
+    }
+
+    public void sendResultBack(View view) {
+        Intent output = new Intent();
+        Bundle b = new Bundle();
+        b.putSerializable("ScoutStop",stop);
+        output.putExtras(b);
+        setResult(RESULT_OK, output);
+        finish();
+
     }
 }
