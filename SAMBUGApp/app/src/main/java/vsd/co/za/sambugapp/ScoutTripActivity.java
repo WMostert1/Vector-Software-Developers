@@ -2,6 +2,7 @@ package vsd.co.za.sambugapp;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -25,6 +28,7 @@ public class ScoutTripActivity extends ActionBarActivity {
     private final String TAG="ScoutTripActivity";
     private ScoutTrip mScoutTrip;
     private ListView mLstStops;
+    private Button mBtnAddStop;
     private ListView mLstPestsPerTree;
     private ScoutStopAdapter lstStopsAdapter;
     private PestsPerTreeAdapter lstPestsPerTreeAdapter;
@@ -48,9 +52,13 @@ public class ScoutTripActivity extends ActionBarActivity {
         lstPestsPerTreeAdapter = new PestsPerTreeAdapter(mScoutTrip.getList());
         mLstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
     }
+>>>>>>> Temporary merge branch 2
 
     public void addStop(View v){
         Intent intent=new Intent(this,enterDataActivity.class);
+        Bundle b = new Bundle();
+        b.putSerializable("ScoutStop",null);
+        intent.putExtras(b);
         startActivityForResult(intent, 0);
         //handle new stop object
     }
@@ -87,7 +95,7 @@ public class ScoutTripActivity extends ActionBarActivity {
 
     private class ScoutStopAdapter extends ArrayAdapter<ScoutStop> {
         public ScoutStopAdapter(ArrayList<ScoutStop> stops) {
-            super(ScoutTripActivity.this, 0, stops);
+            super(getApplication().getApplicationContext(), 0, stops);
         }
 
         @Override

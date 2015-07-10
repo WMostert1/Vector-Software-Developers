@@ -88,6 +88,13 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     public void sendResultBack(View view) {
+        Intent output = new Intent();
+        Bundle b = new Bundle();
+        Species species = new Species();
+        species.setSpeciesName("Keagan a bitch ;)");
+        b.putSerializable("Species",species);
+        output.putExtras(b);
+        setResult(RESULT_OK, output);
         finish();
 
     }
