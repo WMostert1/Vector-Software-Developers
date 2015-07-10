@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Role]
 (
-	[RoleID] INT NOT NULL PRIMARY KEY,
-	[RoleDescription] VARCHAR(20) NOT NULL,
+	[RoleID] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR [dbo].[Role_RoleID_Sequence],
+	[RoleDescription] VARCHAR(50) NOT NULL,
 	[LastModifiedID] INT,
 	[TMStamp] DATETIME
 )

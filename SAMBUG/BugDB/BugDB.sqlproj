@@ -70,6 +70,14 @@
     <Build Include="ScoutStop.sql" />
     <Build Include="ScoutBug.sql" />
     <Build Include="Species.sql" />
+    <Build Include="dbo\Sequences\Block_BlockID_Sequence.sql" />
+    <Build Include="dbo\Sequences\ScoutBug_ScoutBugID_Sequence.sql" />
+    <Build Include="dbo\Sequences\Role_RoleID_Sequence.sql" />
+    <Build Include="dbo\Sequences\Farm_FarmID_Sequence.sql" />
+    <Build Include="dbo\Sequences\User_UserID_Sequence.sql" />
+    <Build Include="dbo\Sequences\Treatment_TreatmentID_Sequence.sql" />
+    <Build Include="dbo\Sequences\ScoutStop_ScoutStopID_Sequence.sql" />
+    <Build Include="dbo\Sequences\Species_SpeciesID_Sequence.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="BugDB.refactorlog" />
