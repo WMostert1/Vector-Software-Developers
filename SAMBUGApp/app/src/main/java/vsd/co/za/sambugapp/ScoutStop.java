@@ -1,11 +1,12 @@
 package vsd.co.za.sambugapp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by keaganthompson on 7/8/15.
  */
-public class ScoutStop {
+public class ScoutStop implements Serializable{
 
     private String mBlockName;
     private int mNumTrees;
@@ -43,5 +44,14 @@ public class ScoutStop {
 
     public double getPestsPerTree() {
         return 0.8;
+    }
+
+    public void duplicateStop(ScoutStop sp){
+        setNumTrees(sp.getNumTrees());
+        setBlockName(sp.getBlockName());
+
+        for(ScoutBug sb:sp.getBugs()){
+            addBugEntry(sb);
+        }
     }
 }

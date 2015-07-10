@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 public class enterDataActivity extends ActionBarActivity {
     ScoutStop stop;
+    Species species;
     Spinner mySpin;
     NumberPicker npTrees;
     NumberPicker npBugs;
@@ -32,6 +33,7 @@ public class enterDataActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
+        acceptStop();
         populateSpinner();
         initializeNumberPickers();
         receiveGeoLocation();
@@ -107,12 +109,26 @@ public class enterDataActivity extends ActionBarActivity {
     public void sendToIdentificationActivity(View view) {
 
         Intent intent = new Intent(enterDataActivity.this, IdentificationActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
+        //startActivity(intent);
         //  int numTrees =
         // stop.setNumTrees();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+            Bundle speciesReceived = data.getExtras();
+            Species species = (Species) speciesReceived.get("Species");
+            createBug(species);
+        }
+    }
 
+    private void createBug(Species spec){
+        ScoutBug sb = new ScoutBug();
+        sb.setSpecies(spec);
+        stop.addBugEntry(sb);
+    }
     public void receiveGeoLocation() {
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -157,5 +173,20 @@ public class enterDataActivity extends ActionBarActivity {
     public void createScoutStop() {
         stop = new ScoutStop();
 
+    }
+
+    private void usePassedStop(ScoutStop sp){
+        stop.duplicateStop(sp);
+    }
+
+    private void acceptStop(){
+        Intent iReceive = getIntent();
+        Bundle scoutStop = iReceive.getExtras();
+        ScoutStop sp = (ScoutStop) scoutStop.get("ScoutStop");
+        if(sp == null){
+            createScoutStop();
+        }
+        else usePassedStop(ScoutStop sp);
+        Log.e("Look",sp.getBlockName() );
     }
 }
