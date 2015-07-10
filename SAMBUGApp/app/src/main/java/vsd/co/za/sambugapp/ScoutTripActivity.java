@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 public class ScoutTripActivity extends ActionBarActivity {
 
+    public static final String SCOUT_STOP="za.co.vsd.scout_stop";
     private final String TAG="ScoutTripActivity";
     private ScoutTrip mScoutTrip;
     private ListView mLstStops;
@@ -56,7 +57,7 @@ public class ScoutTripActivity extends ActionBarActivity {
     public void addStop(View v){
         Intent intent=new Intent(this,enterDataActivity.class);
         Bundle b = new Bundle();
-        b.putSerializable("ScoutStop",null);
+        b.putSerializable(SCOUT_STOP,null);
         intent.putExtras(b);
         startActivityForResult(intent, 0);
         //handle new stop object
@@ -66,10 +67,20 @@ public class ScoutTripActivity extends ActionBarActivity {
         //Enter EnterDataActivity for editing the stop
         Intent intent=new Intent(this,enterDataActivity.class);
         Bundle bundle=new Bundle();
-        bundle.putSerializable("ScoutStop",mScoutTrip.getStop(position));
+        bundle.putSerializable(SCOUT_STOP,mScoutTrip.getStop(position));
         intent.putExtras(bundle);
-        startActivityForResult(intent,0);
+        startActivityForResult(intent, 1);
         Log.d(TAG, "Updated");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode, Intent intent){
+        if (requestCode==0 && resultCode==RESULT_OK){
+            Bundle bundle=intent.getExtras();
+            mScoutTrip.addStop((ScoutStop)bundle.get(SCOUT_STOP));
+            lstStopsAdapter.notifyDataSetChanged();
+            lstPestsPerTreeAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
