@@ -7,4 +7,25 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[LastModifiedID]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="003d1ddd-6491-433c-a618-941fb1615060" ChangeDateTime="07/10/2015 10:57:19">
+    <Property Name="ElementName" Value="[dbo].[Block].[UsrID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Block]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LastModifiedID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3aafb009-5782-45d1-9ef8-965db2e749ad" ChangeDateTime="07/10/2015 11:07:44">
+    <Property Name="ElementName" Value="[dbo].[ScoutStop].[TreeAmount]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ScoutStop]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NumberOfTrees" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ad8a9bd0-2a7e-40d8-8600-33942e634ae2" ChangeDateTime="07/10/2015 11:10:17">
+    <Property Name="ElementName" Value="[dbo].[ScoutBug].[SpeciesCount]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ScoutBug]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NumberOfBugs" />
+  </Operation>
 </Operations>

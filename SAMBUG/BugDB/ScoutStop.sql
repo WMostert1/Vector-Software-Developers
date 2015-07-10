@@ -1,10 +1,11 @@
 ﻿CREATE TABLE [dbo].[ScoutStop]
 (
-	[ScoutStopID] INT NOT NULL PRIMARY KEY,
+	[ScoutStopID] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR [dbo].[ScoutStop_ScoutStopID_Sequence],
 	[UserID] INT NOT NULL,
 	[BlockID] INT NOT NULL,
-	[TreeAmount] INT NOT NULL,
-	[Geolocation] VARCHAR(30) NOT NULL,
+	[NumberOfTrees] INT NOT NULL,
+	[Latitude] REAL NOT NULL,
+	[Longitude] REAL NOT NULL,
 	[Date] DATETIME NOT NULL,
 	[LastModifiedID] INT,
 	[TMStamp] DATETIME,
