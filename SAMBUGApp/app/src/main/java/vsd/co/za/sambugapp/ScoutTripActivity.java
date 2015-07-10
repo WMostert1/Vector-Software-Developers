@@ -26,6 +26,8 @@ import java.util.ArrayList;
 public class ScoutTripActivity extends ActionBarActivity {
 
     public static final String SCOUT_STOP="za.co.vsd.scout_stop";
+    private final int NEW_STOP=0,UPDATE_STOP=1;
+    private final String UPDATE_INDEX="za.co.vsd.update_index";
     private final String TAG="ScoutTripActivity";
     private ScoutTrip mScoutTrip;
     private ListView mLstStops;
@@ -33,9 +35,14 @@ public class ScoutTripActivity extends ActionBarActivity {
     private ListView mLstPestsPerTree;
     private ScoutStopAdapter lstStopsAdapter;
     private PestsPerTreeAdapter lstPestsPerTreeAdapter;
+    private int updateIndex=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState!=null){
+            updateIndex=savedInstanceState.getInt(UPDATE_INDEX);
+        }
+        Log.d(TAG,"Creating");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scout_trip);
         mScoutTrip = new ScoutTrip();
@@ -54,30 +61,43 @@ public class ScoutTripActivity extends ActionBarActivity {
         mLstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt(UPDATE_INDEX, updateIndex);
+    }
+
     public void addStop(View v){
         Intent intent=new Intent(this,enterDataActivity.class);
         Bundle b = new Bundle();
         b.putSerializable(SCOUT_STOP,null);
         intent.putExtras(b);
-        startActivityForResult(intent, 0);
+        startActivityForResult(intent, NEW_STOP);
         //handle new stop object
     }
 
     public void updateStop(int position){
         //Enter EnterDataActivity for editing the stop
+        updateIndex=position;
         Intent intent=new Intent(this,enterDataActivity.class);
         Bundle bundle=new Bundle();
         bundle.putSerializable(SCOUT_STOP,mScoutTrip.getStop(position));
         intent.putExtras(bundle);
-        startActivityForResult(intent, 1);
-        Log.d(TAG, "Updated");
+        startActivityForResult(intent, UPDATE_STOP);
+        Log.d(TAG, "Updated"+position);
     }
 
     @Override
     protected void onActivityResult(int requestCode,int resultCode, Intent intent){
-        if (requestCode==0 && resultCode==RESULT_OK){
-            Bundle bundle=intent.getExtras();
-            mScoutTrip.addStop((ScoutStop)bundle.get(SCOUT_STOP));
+        if (intent!=null) {
+            Bundle bundle = intent.getExtras();
+            ScoutStop stop=(ScoutStop) bundle.get(SCOUT_STOP);
+            if (requestCode == NEW_STOP && resultCode == RESULT_OK) {
+                mScoutTrip.addStop(stop);
+            } else if (requestCode == UPDATE_STOP && resultCode == RESULT_OK) {
+                mScoutTrip.updateStop(stop,updateIndex);
+                updateIndex=-1;
+            }
             lstStopsAdapter.notifyDataSetChanged();
             lstPestsPerTreeAdapter.notifyDataSetChanged();
         }
@@ -125,7 +145,6 @@ public class ScoutTripActivity extends ActionBarActivity {
             lblTreeAmount.setText(stop.getNumTrees()+"");
             LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
             ImageView img=new ImageView(this.getContext());
-            //img.setImageResource(R.drawable.st);
             hscrollBugInfo.removeAllViews();
             img.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.st));
             img.setLayoutParams(new RelativeLayout.LayoutParams(50,50));

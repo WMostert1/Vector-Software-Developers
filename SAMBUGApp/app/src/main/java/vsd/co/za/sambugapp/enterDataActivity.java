@@ -101,9 +101,10 @@ public class enterDataActivity extends ActionBarActivity {
 
         stop.setBlockName(mySpin.getSelectedItem().toString());
         stop.setNumTrees(npTrees.getValue());
-        stop.addBugEntry(currBug);
-        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
-        startActivity(intent);
+        //stop.addBugEntry(currBug);
+        //Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
+        //startActivity(intent);
+        sendResultBack(view);
     }
 
     public void sendToIdentificationActivity(View view) {
@@ -184,7 +185,7 @@ public class enterDataActivity extends ActionBarActivity {
     private void acceptStop(){
         Intent iReceive = getIntent();
         Bundle scoutStop = iReceive.getExtras();
-        ScoutStop sp = (ScoutStop) scoutStop.get("ScoutStop");
+        ScoutStop sp = (ScoutStop) scoutStop.get(ScoutTripActivity.SCOUT_STOP);
         if(sp == null){
             createScoutStop();
         }
@@ -195,7 +196,7 @@ public class enterDataActivity extends ActionBarActivity {
     public void sendResultBack(View view) {
         Intent output = new Intent();
         Bundle b = new Bundle();
-        b.putSerializable("ScoutStop",stop);
+        b.putSerializable(ScoutTripActivity.SCOUT_STOP,stop);
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();

@@ -43,7 +43,14 @@ public class ScoutStop implements Serializable{
     }
 
     public double getPestsPerTree() {
-        return 0.8;
+        double averagePests=0;
+        for (ScoutBug bug:mBugs){
+            if (bug.getSpecies().isPest()){
+                averagePests+=bug.getNumberOfBugs();
+            }
+        }
+        averagePests/=mNumTrees;
+        return averagePests;
     }
 
     public void duplicateStop(ScoutStop sp){

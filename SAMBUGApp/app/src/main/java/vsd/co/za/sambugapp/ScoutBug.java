@@ -1,9 +1,11 @@
 package vsd.co.za.sambugapp;
 
+import java.io.Serializable;
+
 /**
  * Created by Kale-ab on 2015-07-09.
  */
-public class ScoutBug {
+public class ScoutBug implements Serializable{
     Species species;
     int numberOfBugs;
 

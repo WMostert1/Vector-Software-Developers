@@ -29,6 +29,10 @@ public class ScoutTrip {
         scoutStops.add(scoutStop);
     }
 
+    public void updateStop(ScoutStop scoutStop,int index){
+        scoutStops.set(index,scoutStop);
+    }
+
     public ScoutStop getStop(int index){
         return scoutStops.get(index);
     }
