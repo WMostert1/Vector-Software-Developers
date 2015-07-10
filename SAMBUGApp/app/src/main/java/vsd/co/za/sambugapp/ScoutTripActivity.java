@@ -54,8 +54,6 @@ public class ScoutTripActivity extends ActionBarActivity {
         lstPestsPerTreeAdapter=new PestsPerTreeAdapter(mScoutTrip.getList());
         mLstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
 
-    }
-
     public void addStop(){
         Intent intent=new Intent(this,enterDataActivity.class);
         startActivityForResult(intent,0);

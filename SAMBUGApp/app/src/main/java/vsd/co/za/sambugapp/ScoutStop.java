@@ -9,7 +9,7 @@ public class ScoutStop {
 
     private String mBlockName;
     private int mNumTrees;
-    private ArrayList<BugEntry> mBugs;
+    private ArrayList<ScoutBug> mBugs;
 
     public ScoutStop() {
         mBlockName="";
@@ -33,16 +33,15 @@ public class ScoutStop {
         mNumTrees = numTrees;
     }
 
-    public ArrayList<BugEntry> getBugs() {
+    public ArrayList<ScoutBug> getBugs() {
         return mBugs;
     }
 
-    public void addBugEntry(BugEntry bugEntry) {
+    public void addBugEntry(ScoutBug bugEntry) {
         mBugs.add(bugEntry);
     }
 
-    public double getPestsPerTree(){
-        //calc bug count and divide by tree amount
+    public double getPestsPerTree() {
         return 0.8;
     }
 }
