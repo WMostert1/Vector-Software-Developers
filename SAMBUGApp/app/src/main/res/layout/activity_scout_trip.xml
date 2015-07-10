@@ -21,7 +21,7 @@
             android:onClick="addStop"/>
 
     <ListView
-        android:id="@+id/lstTrips"
+        android:id="@+id/lstStops"
         android:layout_width="match_parent"
         android:layout_weight="50"
         android:layout_height="0dp"

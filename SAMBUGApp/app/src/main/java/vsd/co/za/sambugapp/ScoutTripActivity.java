@@ -2,7 +2,6 @@ package vsd.co.za.sambugapp;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -28,7 +25,6 @@ public class ScoutTripActivity extends ActionBarActivity {
     private final String TAG="ScoutTripActivity";
     private ScoutTrip mScoutTrip;
     private ListView mLstStops;
-    private Button mBtnAddStop;
     private ListView mLstPestsPerTree;
     private ScoutStopAdapter lstStopsAdapter;
     private PestsPerTreeAdapter lstPestsPerTreeAdapter;
@@ -37,27 +33,34 @@ public class ScoutTripActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scout_trip);
-        mScoutTrip=new ScoutTrip();
-
-        mLstStops =(ListView)findViewById(R.id.lstTrips);
+        mScoutTrip = new ScoutTrip();
+        mLstStops = (ListView) findViewById(R.id.lstStops);
         mLstStops.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Enter EnterDataActivity for editing the stop
-                Log.d(TAG, "CLICK! " + position);
+                updateStop(position);
             }
         });
-        lstStopsAdapter=new ScoutStopAdapter(mScoutTrip.getList());
+        lstStopsAdapter = new ScoutStopAdapter(mScoutTrip.getList());
         mLstStops.setAdapter(lstStopsAdapter);
 
-        mLstPestsPerTree=(ListView)findViewById(R.id.lstPestsPerTree);
-        lstPestsPerTreeAdapter=new PestsPerTreeAdapter(mScoutTrip.getList());
+        mLstPestsPerTree = (ListView) findViewById(R.id.lstPestsPerTree);
+        lstPestsPerTreeAdapter = new PestsPerTreeAdapter(mScoutTrip.getList());
         mLstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
+    }
 
-    public void addStop(){
+    public void addStop(View v){
         Intent intent=new Intent(this,enterDataActivity.class);
-        startActivityForResult(intent,0);
+        startActivityForResult(intent, 0);
         //handle new stop object
+    }
+
+    public void updateStop(int position){
+        //Enter EnterDataActivity for editing the stop
+        Intent intent=new Intent(this,enterDataActivity.class);
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("ScoutStop",mScoutTrip.getStop(position));
+        Log.d(TAG, "Updated");
     }
 
     @Override
@@ -84,7 +87,7 @@ public class ScoutTripActivity extends ActionBarActivity {
 
     private class ScoutStopAdapter extends ArrayAdapter<ScoutStop> {
         public ScoutStopAdapter(ArrayList<ScoutStop> stops) {
-            super(getApplication().getApplicationContext(), 0, stops);
+            super(ScoutTripActivity.this, 0, stops);
         }
 
         @Override
@@ -105,7 +108,7 @@ public class ScoutTripActivity extends ActionBarActivity {
             //img.setImageResource(R.drawable.st);
             hscrollBugInfo.removeAllViews();
             img.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.st));
-            img.setLayoutParams(new RelativeLayout.LayoutParams(25,25));
+            img.setLayoutParams(new RelativeLayout.LayoutParams(50,50));
             hscrollBugInfo.addView(img);
             return convertView;
         }

@@ -92,6 +92,4 @@ public class IdentificationActivity extends AppCompatActivity {
 
     }
 
-
-
 }
