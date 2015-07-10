@@ -186,7 +186,7 @@ public class enterDataActivity extends ActionBarActivity {
         if(sp == null){
             createScoutStop();
         }
-        else usePassedStop(ScoutStop sp);
+        else usePassedStop(sp);
         Log.e("Look",sp.getBlockName() );
     }
 }
