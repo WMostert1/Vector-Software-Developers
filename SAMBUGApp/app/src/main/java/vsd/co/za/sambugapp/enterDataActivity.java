@@ -60,7 +60,7 @@ public class enterDataActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void populateSpinner(){
+    private void populateSpinner() {
         mySpin = (Spinner) findViewById(R.id.spnBlocks);
         ArrayAdapter<String> dataAdapter;
 
@@ -69,21 +69,21 @@ public class enterDataActivity extends ActionBarActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mySpin.setAdapter(adapter);
 
-       // toList = (Spinner) findViewById(R.id.toList);
+        // toList = (Spinner) findViewById(R.id.toList);
         //dataAdapter = new ArrayAdapter<String>(this,
-         //       android.R.layout.simple_spinner_item, new ArrayList<String>());
+        //       android.R.layout.simple_spinner_item, new ArrayList<String>());
         //dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-       // toList.setAdapter(dataAdapter);
+        // toList.setAdapter(dataAdapter);
 
-       // Button add = (Button) findViewById(R.id.add);
-       // add.setOnClickListener(this);
-       // Button remove = (Button) findViewById(R.id.remove);
-       // remove.setOnClickListener(this);
+        // Button add = (Button) findViewById(R.id.add);
+        // add.setOnClickListener(this);
+        // Button remove = (Button) findViewById(R.id.remove);
+        // remove.setOnClickListener(this);
     }
 
-    public void initializeNumberPickers(){
-        npTrees = (NumberPicker)findViewById(R.id.npNumTrees);
-        npBugs = (NumberPicker)findViewById(R.id.npNumBugs);
+    public void initializeNumberPickers() {
+        npTrees = (NumberPicker) findViewById(R.id.npNumTrees);
+        npBugs = (NumberPicker) findViewById(R.id.npNumBugs);
 
         npTrees.setMinValue(1);
         npTrees.setMaxValue(100);
@@ -94,7 +94,8 @@ public class enterDataActivity extends ActionBarActivity {
         npBugs.setWrapSelectorWheel(false);
 
     }
-    public void sendToScoutTripActivity(View view){
+
+    public void sendToScoutTripActivity(View view) {
 
         stop.setBlockName(mySpin.getSelectedItem().toString());
         stop.setNumTrees(npTrees.getValue());
@@ -103,32 +104,32 @@ public class enterDataActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
-    public void sendToManualActivity(View view){
+    public void sendToIdentificationActivity(View view) {
 
-//        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
-//        startActivity(intent);
-      //  int numTrees =
-       // stop.setNumTrees();
+        Intent intent = new Intent(enterDataActivity.this, IdentificationActivity.class);
+        startActivity(intent);
+        //  int numTrees =
+        // stop.setNumTrees();
     }
 
 
-    public void receiveGeoLocation(){
+    public void receiveGeoLocation() {
 
-        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         MyLocationListener locationListener = new MyLocationListener();
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             //Do what you need if enabled...
-        }else{
+        } else {
             createErrorMessage();
         }
 
     }
 
-    public void createErrorMessage(){
+    public void createErrorMessage() {
         new AlertDialog.Builder(this)
                 .setTitle("Switch on gps")
                 .setMessage("Please ensure your gps is switched on.")
@@ -147,13 +148,13 @@ public class enterDataActivity extends ActionBarActivity {
 
     }
 
-    public void moveGPSScreen(){
+    public void moveGPSScreen() {
         Intent gpsOptionsIntent = new Intent(
                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivity(gpsOptionsIntent);
     }
 
-    public void createScoutStop(){
+    public void createScoutStop() {
         stop = new ScoutStop();
 
     }

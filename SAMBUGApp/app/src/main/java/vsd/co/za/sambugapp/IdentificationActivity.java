@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.io.FileNotFoundException;
@@ -67,8 +68,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 bitmap = BitmapFactory.decodeStream(stream);
 
                 mImageView.setImageBitmap(bitmap);
-
-
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
@@ -86,6 +85,11 @@ public class IdentificationActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
         }
+    }
+
+    public void sendResultBack(View view) {
+        finish();
+
     }
 
 

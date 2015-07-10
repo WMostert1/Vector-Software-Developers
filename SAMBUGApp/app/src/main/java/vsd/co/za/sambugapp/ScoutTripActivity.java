@@ -52,8 +52,8 @@ public class ScoutTripActivity extends ActionBarActivity {
         mBtnAddStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(ScoutTripActivity.this,enterDataActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(ScoutTripActivity.this, enterDataActivity.class);
+                startActivity(intent);
                 ScoutStop newObj=new ScoutStop();
                 newObj.setBlockName("Banana");
                 newObj.setNumTrees(16);

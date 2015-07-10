@@ -19,13 +19,17 @@
             android:name=".LoginActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <activity
             android:name=".enterDataActivity"
             android:label="@string/title_activity_enter_data"
             android:exported="true">
-          
+
         </activity>
         <activity
             android:name=".ScoutTripActivity"
@@ -40,8 +44,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vsd.co.za.sambugapp.enterDataActivity" />
         </activity>
-        
-        
+
+
     </application>
 
 </manifest>

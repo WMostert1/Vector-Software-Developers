@@ -11,31 +11,31 @@ import android.util.Log;
 public class MyLocationListener implements LocationListener {
 
 
-        @Override
-        public void onLocationChanged(Location location) {
-            location.getLatitude();
-            location.getLongitude();
+    @Override
+    public void onLocationChanged(Location location) {
+        location.getLatitude();
+        location.getLongitude();
 
-            String myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
+        String myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
 
-            //I make a log to see the results
-            Log.e("MY CURRENT LOCATION", myLocation);
+        //I make a log to see the results
+        Log.e("MY CURRENT LOCATION", myLocation);
 
-        }
+    }
 
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
 
-        }
+    }
 
-        @Override
-        public void onProviderEnabled(String s) {
+    @Override
+    public void onProviderEnabled(String s) {
 
-        }
+    }
 
-        @Override
-        public void onProviderDisabled(String s) {
+    @Override
+    public void onProviderDisabled(String s) {
 
-        }
+    }
 
 }
