@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[Farm]
+(
+	[FarmID] INT NOT NULL PRIMARY KEY,
+	[UserID] INT NOT NULL,
+	[FarmName] VARCHAR(50) NOT NULL,
+	[LastModifiedID] INT NULL,
+	[TMStamp] DATETIME, 
+    CONSTRAINT [FK_Farm_ToUser] FOREIGN KEY (UserID) REFERENCES [User]([UserID]) 
+)
