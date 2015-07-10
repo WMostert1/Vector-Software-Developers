@@ -52,7 +52,6 @@ public class ScoutTripActivity extends ActionBarActivity {
         lstPestsPerTreeAdapter = new PestsPerTreeAdapter(mScoutTrip.getList());
         mLstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
     }
->>>>>>> Temporary merge branch 2
 
     public void addStop(View v){
         Intent intent=new Intent(this,enterDataActivity.class);
@@ -68,6 +67,8 @@ public class ScoutTripActivity extends ActionBarActivity {
         Intent intent=new Intent(this,enterDataActivity.class);
         Bundle bundle=new Bundle();
         bundle.putSerializable("ScoutStop",mScoutTrip.getStop(position));
+        intent.putExtras(bundle);
+        startActivityForResult(intent,0);
         Log.d(TAG, "Updated");
     }
 
