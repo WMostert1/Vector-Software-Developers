@@ -176,7 +176,8 @@ public class enterDataActivity extends ActionBarActivity {
     }
 
     private void usePassedStop(ScoutStop sp){
-        stop.duplicateStop(sp);
+        //stop.duplicateStop(sp);
+        stop=sp;
     }
 
     private void acceptStop(){
@@ -186,7 +187,7 @@ public class enterDataActivity extends ActionBarActivity {
         if(sp == null){
             createScoutStop();
         }
-        else usePassedStop(ScoutStop sp);
-        Log.e("Look",sp.getBlockName() );
+        else usePassedStop(sp);
+        Log.e("Look",stop.getBlockName() );
     }
 }
