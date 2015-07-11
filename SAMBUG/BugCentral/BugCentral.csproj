@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -204,7 +205,49 @@
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Block.cs">
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C__RefactorLog.cs">
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DomainModels.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DomainModels.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DomainModels.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DomainModels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DomainModels.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Farm.cs">
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Role.cs">
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ScoutBug.cs">
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ScoutStop.cs">
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Species.cs">
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Treatment.cs">
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>DomainModels.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
@@ -238,6 +281,23 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <EntityDeploy Include="Models\DomainModels.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DomainModels.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DomainModels.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DomainModels.edmx</DependentUpon>
+      <LastGenOutput>DomainModels.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DomainModels.edmx.diagram">
+      <DependentUpon>DomainModels.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\DomainModels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DomainModels.edmx</DependentUpon>
+      <LastGenOutput>DomainModels.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -275,6 +335,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

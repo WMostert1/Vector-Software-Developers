@@ -33,5 +33,6 @@ namespace BugDataAccessLayer
         public virtual DbSet<Species> Species { get; set; }
         public virtual DbSet<Treatment> Treatments { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<C__RefactorLog> C__RefactorLog { get; set; }
     }
 }

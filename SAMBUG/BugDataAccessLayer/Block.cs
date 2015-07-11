@@ -25,6 +25,7 @@ namespace BugDataAccessLayer
         public string BlockName { get; set; }
         public Nullable<int> UsrID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }
+        public Nullable<int> LastModifiedID { get; set; }
     
         public virtual Farm Farm { get; set; }
         public virtual ICollection<ScoutStop> ScoutStops { get; set; }

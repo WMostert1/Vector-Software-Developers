@@ -27,6 +27,9 @@ namespace BugDataAccessLayer
         public System.DateTime Date { get; set; }
         public Nullable<int> LastModifiedID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }
+        public int NumberOfTrees { get; set; }
+        public float Latitude { get; set; }
+        public float Longitude { get; set; }
     
         public virtual Block Block { get; set; }
         public virtual ICollection<ScoutBug> ScoutBugs { get; set; }

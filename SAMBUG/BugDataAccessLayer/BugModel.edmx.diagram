@@ -21,6 +21,7 @@
         <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToScoutStop" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToSpecies" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_ScoutStop_ToUser" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BugDBModel.C__RefactorLog" Width="1.5" PointX="0.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

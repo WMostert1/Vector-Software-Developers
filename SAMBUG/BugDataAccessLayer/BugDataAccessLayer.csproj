@@ -67,6 +67,9 @@
       <DependentUpon>BugModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="AuthenticationDataAccess.cs" />
+    <Compile Include="C__RefactorLog.cs">
+      <DependentUpon>BugModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Farm.cs">
       <DependentUpon>BugModel.tt</DependentUpon>
     </Compile>

@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import vsd.co.za.sambugapp.util.SystemUiHider;
+
 
 public class IdentificationActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
