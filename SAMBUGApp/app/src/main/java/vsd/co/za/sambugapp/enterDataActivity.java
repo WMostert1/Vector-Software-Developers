@@ -19,6 +19,9 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 
 
 public class enterDataActivity extends ActionBarActivity {
@@ -103,7 +106,7 @@ public class enterDataActivity extends ActionBarActivity {
 
         stop.setBlockName(mySpin.getSelectedItem().toString());
         stop.setNumTrees(npTrees.getValue());
-        stop.addBugEntry(currBug);
+        stop.
         Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
         startActivity(intent);
     }
@@ -143,38 +146,11 @@ public class enterDataActivity extends ActionBarActivity {
     LocationManager mLocationManager;
     Location myLocation = null;//= getLastKnownLocation();
     public void receiveGeoLocation() {
-
-        //LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-       // LocationManagerHelper lmh = new LocationManagerHelper();
-
-        //MyLocationListener locationListener = new MyLocationListener();
-       // MyLocationListener locationListener = new MyLocationListener();
         myLocation = getLastKnownLocation();
         String sLocation = "Latitude = " + myLocation.getLatitude() + " Longitude = " + myLocation.getLongitude();
-
-        //I make a log to see the results
         Log.d("MY CURRENT LOCATION", sLocation);
 
-        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-        //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,locationListener,null);
-       // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-       // Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-       // locationManager.removeUpdates(locationListener);
-       // if(currentLocation == null){
-          //  Log.d("FURK","Bitch");
-       // }
-//        double currentLatitude = currentLocation.getLatitude();
-//        double currentLongitude = currentLocation.getLongitude();
-//        String myLocation = "Latitude = " + currentLocation.getLatitude() + " Longitude = " + currentLocation.getLongitude();
-
-        //I make a log to see the results
-       // Log.d("MY CURRENT LOCATION", myLocation);
-
-//        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//            //Do what you need if enabled...
-//        } else {
-//            createErrorMessage();
-//        }
+//
 
     }
   //  LocationManager mLocationManager;
@@ -182,6 +158,11 @@ public class enterDataActivity extends ActionBarActivity {
     private Location getLastKnownLocation() {
         mLocationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
         List<String> providers = mLocationManager.getProviders(true);
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            //Do what you need if enabled...
+        } else {
+            createErrorMessage();
+        }
         Location bestLocation = null;
         for (String provider : providers) {
             Location l = mLocationManager.getLastKnownLocation(provider);
