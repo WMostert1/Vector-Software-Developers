@@ -19,6 +19,9 @@ public class ScoutTrip {
         for (int i=0;i<5;i++) {
             objects[i] = new ScoutStop();
             objects[i].setNumberOfTrees(i+1);
+            Block obj=new Block();
+            obj.setBlockName("Block #"+i);
+            objects[i].setBlock(obj);
             scoutStops.add(objects[i]);
         }
 
