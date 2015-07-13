@@ -12,20 +12,15 @@ namespace DataAccess.MSSQL
     using System;
     using System.Collections.Generic;
     
-    public partial class Role
+    public partial class UserRole
     {
-        public Role()
-        {
-            this.Users = new HashSet<User>();
-            this.UserRoles = new HashSet<UserRole>();
-        }
-    
+        public int UserRoleID { get; set; }
+        public int UserID { get; set; }
         public int RoleID { get; set; }
-        public string RoleDescription { get; set; }
         public Nullable<int> LastModifiedID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }
     
-        public virtual ICollection<User> Users { get; set; }
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public virtual Role Role { get; set; }
+        public virtual User User { get; set; }
     }
 }

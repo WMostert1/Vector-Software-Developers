@@ -18,6 +18,7 @@ namespace DataAccess.MSSQL
         {
             this.Farms = new HashSet<Farm>();
             this.ScoutStops = new HashSet<ScoutStop>();
+            this.UserRoles = new HashSet<UserRole>();
         }
     
         public int UserID { get; set; }
@@ -30,5 +31,6 @@ namespace DataAccess.MSSQL
         public virtual ICollection<Farm> Farms { get; set; }
         public virtual Role Role { get; set; }
         public virtual ICollection<ScoutStop> ScoutStops { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }
