@@ -59,7 +59,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         mLstPestsPerTree = (ListView) findViewById(R.id.lstPestsPerTree);
         lstPestsPerTreeAdapter = new PestsPerTreeAdapter(mScoutTrip.getList());
         mLstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
-    }
+    
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
@@ -85,22 +85,6 @@ public class ScoutTripActivity extends ActionBarActivity {
         intent.putExtras(bundle);
         startActivityForResult(intent, UPDATE_STOP);
         Log.d(TAG, "Updated"+position);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode,int resultCode, Intent intent){
-        if (intent!=null) {
-            Bundle bundle = intent.getExtras();
-            ScoutStop stop=(ScoutStop) bundle.get(SCOUT_STOP);
-            if (requestCode == NEW_STOP && resultCode == RESULT_OK) {
-                mScoutTrip.addStop(stop);
-            } else if (requestCode == UPDATE_STOP && resultCode == RESULT_OK) {
-                mScoutTrip.updateStop(stop,updateIndex);
-                updateIndex=-1;
-            }
-            lstStopsAdapter.notifyDataSetChanged();
-            lstPestsPerTreeAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override
@@ -145,9 +129,10 @@ public class ScoutTripActivity extends ActionBarActivity {
             lblTreeAmount.setText(stop.getNumTrees()+"");
             LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
             ImageView img=new ImageView(this.getContext());
+            //img.setImageResource(R.drawable.st);
             hscrollBugInfo.removeAllViews();
             img.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.st));
-            img.setLayoutParams(new RelativeLayout.LayoutParams(50,50));
+            img.setLayoutParams(new RelativeLayout.LayoutParams(25,25));
             hscrollBugInfo.addView(img);
             return convertView;
         }

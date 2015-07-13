@@ -47,5 +47,12 @@ public class Species implements Serializable{
         this.lifestage = lifestage;
     }
 
-
+    @Override
+    public String toString() {
+        return "Species : " +
+                "fieldPic=" + fieldPic +
+                ", isPest=" + isPest +
+                ", speciesName='" + speciesName + '\'' +
+                ", lifestage=" + lifestage;
+    }
 }

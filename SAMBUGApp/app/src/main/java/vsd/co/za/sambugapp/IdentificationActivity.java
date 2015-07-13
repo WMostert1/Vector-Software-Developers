@@ -4,13 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -59,6 +63,7 @@ public class IdentificationActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         InputStream stream = null;
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
+
             try {
                 // recyle unused bitmaps
                 if (bitmap != null) {
@@ -66,8 +71,11 @@ public class IdentificationActivity extends AppCompatActivity {
                 }
                 stream = getContentResolver().openInputStream(data.getData());
                 bitmap = BitmapFactory.decodeStream(stream);
+                Log.e("BMap", bitmap.toString());
+                //TODO: Rotate the image
 
                 mImageView.setImageBitmap(bitmap);
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
@@ -87,7 +95,101 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     }
 
+    public void speciesSelectionClick(View view) {
+
+        Species identification = new Species();
+        String c = "Coconut";
+        String gV = "Green Vegetable";
+        String tS = "Two Spotted";
+        String yE = "Yellow Edged";
+        identification.setIsPest(true);
+        identification.setFieldPic(bitmap);
+
+        //TODO: Replace this with proper dynamic code when DB is up
+        switch (view.getId()) {
+            case R.id.coconut_1:
+                identification.setSpeciesName(c);
+                identification.setLifestage(1);
+                break;
+            case R.id.coconut_2:
+                identification.setSpeciesName(c);
+                identification.setLifestage(2);
+                break;
+            case R.id.coconut_3:
+                identification.setSpeciesName(c);
+                identification.setLifestage(3);
+                break;
+            case R.id.coconut_4:
+                identification.setSpeciesName(c);
+                identification.setLifestage(4);
+                break;
+
+            case R.id.green_veg_1:
+                identification.setSpeciesName(gV);
+                identification.setLifestage(1);
+                break;
+
+            case R.id.green_veg_2:
+                identification.setSpeciesName(gV);
+                identification.setLifestage(2);
+                break;
+
+            case R.id.green_veg_3:
+                identification.setSpeciesName(gV);
+                identification.setLifestage(3);
+                break;
+
+            case R.id.green_veg_4:
+                identification.setSpeciesName(gV);
+                identification.setLifestage(4);
+                break;
+
+            case R.id.two_spot_1:
+                identification.setSpeciesName(tS);
+                identification.setLifestage(1);
+                break;
+
+            case R.id.two_spot_2:
+                identification.setSpeciesName(tS);
+                identification.setLifestage(2);
+                break;
+
+            case R.id.two_spot_3:
+                identification.setSpeciesName(tS);
+                identification.setLifestage(3);
+                break;
+
+            case R.id.two_spot_4:
+                identification.setSpeciesName(tS);
+                identification.setLifestage(4);
+                break;
+
+            case R.id.yellow_edged_1:
+                identification.setSpeciesName(yE);
+                identification.setLifestage(1);
+                break;
+
+            case R.id.yellow_edged_2:
+                identification.setSpeciesName(yE);
+                identification.setLifestage(2);
+                break;
+
+            case R.id.yellow_edged_3:
+                identification.setSpeciesName(yE);
+                identification.setLifestage(3);
+                break;
+
+            case R.id.yellow_edged_4:
+                identification.setSpeciesName(yE);
+                identification.setLifestage(4);
+                break;
+        }
+
+
+    }
+
     public void sendResultBack(View view) {
+
         Intent output = new Intent();
         Bundle b = new Bundle();
         Species species = new Species();
@@ -98,5 +200,7 @@ public class IdentificationActivity extends AppCompatActivity {
         finish();
 
     }
+
+
 
 }
