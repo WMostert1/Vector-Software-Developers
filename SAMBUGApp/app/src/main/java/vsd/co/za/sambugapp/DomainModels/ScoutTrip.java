@@ -1,6 +1,8 @@
-package vsd.co.za.sambugapp;
+package vsd.co.za.sambugapp.DomainModels;
 
 import java.util.ArrayList;
+
+import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 
 /**
  * Created by keaganthompson on 7/9/15.

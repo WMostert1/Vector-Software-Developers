@@ -1,4 +1,4 @@
-package vsd.co.za.sambugapp;
+package vsd.co.za.sambugapp.DomainModels;
 
 import java.util.ArrayList;
 

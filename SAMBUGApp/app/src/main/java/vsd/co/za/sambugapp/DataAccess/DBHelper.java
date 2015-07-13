@@ -1,4 +1,4 @@
-package vsd.co.za.sambugapp;
+package vsd.co.za.sambugapp.DataAccess;
 
 import android.content.Context;
 import android.database.DatabaseErrorHandler;
@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 
 
 import java.util.ArrayList;
+
+import vsd.co.za.sambugapp.R;
 
 
 /**

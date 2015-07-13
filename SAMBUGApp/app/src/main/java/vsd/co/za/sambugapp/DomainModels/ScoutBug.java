@@ -1,4 +1,4 @@
-package vsd.co.za.sambugapp;
+package vsd.co.za.sambugapp.DomainModels;
 
 /**
  * Created by Kale-ab on 2015-07-09.
