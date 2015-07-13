@@ -11,7 +11,7 @@ public class ScoutTrip {
 
     private ArrayList<ScoutStop> scoutStops;
 
-    public ScoutTrip(){
+    public ScoutTrip() {
         //TODO: Refactor with new models
 //        scoutStops=new ArrayList<>();
 //        ScoutStop[] objects=new ScoutStop[5];
@@ -28,19 +28,19 @@ public class ScoutTrip {
 
     }
 
-    public void addStop(ScoutStop scoutStop){
+    public void addStop(ScoutStop scoutStop) {
         scoutStops.add(scoutStop);
     }
 
-    public ScoutStop getStop(int index){
+    public ScoutStop getStop(int index) {
         return scoutStops.get(index);
     }
 
-    public ArrayList<ScoutStop> getList(){
+    public ArrayList<ScoutStop> getList() {
         return scoutStops;
     }
 
-    public int getNumStops(){
+    public int getNumStops() {
         return scoutStops.size();
     }
 
