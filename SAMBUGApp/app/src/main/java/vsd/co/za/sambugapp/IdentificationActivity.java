@@ -102,7 +102,7 @@ public class IdentificationActivity extends AppCompatActivity {
         String tS = "Two Spotted";
         String yE = "Yellow Edged";
         identification.setIsPest(true);
-        identification.setFieldPic(bitmap);
+        // identification.setFieldPic(bitmap);
 
         //TODO: Replace this with proper dynamic code when DB is up
         switch (view.getId()) {
