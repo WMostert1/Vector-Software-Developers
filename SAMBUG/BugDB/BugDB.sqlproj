@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{deacefde-7a02-43aa-a012-a06f6c122ca0}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql120DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql110DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -23,6 +23,7 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <GenerateCreateScript>True</GenerateCreateScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -57,5 +58,35 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Sequences\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="User.sql" />
+    <Build Include="Farm.sql" />
+    <Build Include="Block.sql" />
+    <Build Include="Treatment.sql" />
+    <Build Include="Role.sql" />
+    <Build Include="ScoutStop.sql" />
+    <Build Include="ScoutBug.sql" />
+    <Build Include="Species.sql" />
+    <Build Include="dbo\Sequences\Block_BlockID_Sequence.sql" />
+    <Build Include="dbo\Sequences\ScoutBug_ScoutBugID_Sequence.sql" />
+    <Build Include="dbo\Sequences\Role_RoleID_Sequence.sql" />
+    <Build Include="dbo\Sequences\Farm_FarmID_Sequence.sql" />
+    <Build Include="dbo\Sequences\User_UserID_Sequence.sql" />
+    <Build Include="dbo\Sequences\Treatment_TreatmentID_Sequence.sql" />
+    <Build Include="dbo\Sequences\ScoutStop_ScoutStopID_Sequence.sql" />
+    <Build Include="dbo\Sequences\Species_SpeciesID_Sequence.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="BugDB.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
+    </ArtifactReference>
   </ItemGroup>
 </Project>

@@ -4,12 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
-import java.util.ArrayList;
+import vsd.co.za.sambugapp.DomainModels.ScoutBug;
+import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 
 
 public class enterDataActivity extends ActionBarActivity {
