@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by keaganthompson on 7/8/15.
  */
-public class Species implements Serializable{
+public class Species implements Serializable {
     private Bitmap fieldPic;
     private boolean isPest;
     private String speciesName;
@@ -47,5 +47,12 @@ public class Species implements Serializable{
         this.lifestage = lifestage;
     }
 
-
+    @Override
+    public String toString() {
+        return "Species : " +
+                "fieldPic=" + fieldPic +
+                ", isPest=" + isPest +
+                ", speciesName='" + speciesName + '\'' +
+                ", lifestage=" + lifestage;
+    }
 }
