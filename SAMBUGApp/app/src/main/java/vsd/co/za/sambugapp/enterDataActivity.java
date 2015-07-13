@@ -18,11 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class enterDataActivity extends ActionBarActivity {

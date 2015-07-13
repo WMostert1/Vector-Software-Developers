@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_block">
+        CREATE TABLE Block
+(
+	BlockID INTEGER PRIMARY KEY AUTOINCREMENT,
+	FarmID INTEGER NOT NULL,
+	BlockName TEXT NOT NULL,
+	LastModifiedID INTEGER ,
+	TMStamp TEXT,
+	FOREIGN KEY (FarmID) REFERENCES Farm(FarmID)
+)
+    </string>
+	
+	<string name="create_farm">
+		CREATE TABLE Farm
+(
+	FarmID INTEGER PRIMARY KEY AUTOINCREMENT,
+	UserID INTEGER NOT NULL,
+	FarmName TEXT NOT NULL,
+	LastModifiedID INTEGER NULL,
+	TMStamp TEXT,
+    FOREIGN KEY (UserID) REFERENCES User(UserID)
+)
+	</string>
+
+	<string name="create_role">
+		CREATE TABLE Role
+(
+	RoleID INTEGER PRIMARY KEY AUTOINCREMENT,
+	RoleDescription TEXT NOT NULL,
+	LastModifiedID INTEGER,
+	TMStamp TEXT
+)
+	</string>
+
+	<string name="create_scoutbug">
+		CREATE TABLE ScoutBug
+(
+	ScoutBugID INTEGER PRIMARY KEY AUTOINCREMENT,
+	ScoutStopID INTEGER NOT NULL,
+	SpeciesID INTEGER NOT NULL,
+	NumberOfBugs INTEGER NOT NULL,
+	FieldPicture BLOB NOT NULL,
+	Comments TEXT,
+	LastModifiedID INTEGER,
+	TMStamp TEXT,
+	FOREIGN KEY (ScoutStopID) REFERENCES ScoutStop(ScoutStopID),
+	FOREIGN KEY (SpeciesID) REFERENCES Species(SpeciesID)
+)
+	</string>
+
+	<string name="create_scoutstop">
+		CREATE TABLE ScoutStop
+(
+	ScoutStopID INTEGER PRIMARY KEY AUTOINCREMENT,
+	UserID INTEGER NOT NULL,
+	BlockID INTEGER NOT NULL,
+	NumberOfTrees INTEGER NOT NULL,
+	Latitude REAL NOT NULL,
+	Longitude REAL NOT NULL,
+	Date TEXT NOT NULL,
+	LastModifiedID INTEGER,
+	TMStamp TEXT,
+	FOREIGN KEY (UserID) REFERENCES User(UserID),
+	FOREIGN KEY (BlockID) REFERENCES Block(BlockID)
+)
+	</string>
+
+	<string name="create_species">
+		CREATE TABLE Species
+(
+	SpeciesID INTEGER PRIMARY KEY AUTOINCREMENT,
+	SpeciesName TEXT NOT NULL,
+	Lifestage INTEGER NOT NULL,
+	IdealPicture BLOB NOT NULL,
+	IsPest BIT NOT NULL,
+	LastModifiedID INTEGER,
+	TMStamp TEXT
+)
+	</string>
+
+	<string name="create_treatment">
+		CREATE TABLE Treatment
+(
+	TreatmentID INTEGER PRIMARY KEY AUTOINCREMENT,
+	BlockID INTEGER NOT NULL,
+	Date TEXT NOT NULL,
+	Comments TEXT,
+	LastModifiedID INTEGER,
+	TMStamp TEXT,
+	FOREIGN KEY (BlockID) REFERENCES Block(BlockID)
+)
+	</string>
+
+	<string name="create_user">
+		CREATE TABLE User
+(
+	UserID INTEGER PRIMARY KEY AUTOINCREMENT,
+	RoleID INTEGER NOT NULL,
+	Email TEXT NOT NULL,
+	Password TEXT NOT NULL,
+	LastModifiedID INTEGER NULL,
+	TMStamp TEXT,
+	FOREIGN KEY (RoleID) REFERENCES Role(RoleID)
+)
+	</string>
+
+</resources>

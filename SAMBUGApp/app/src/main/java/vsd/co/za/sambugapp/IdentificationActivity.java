@@ -21,6 +21,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import vsd.co.za.sambugapp.DomainModels.Species;
+
 
 public class IdentificationActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
@@ -86,7 +88,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-            }
+        }
     }
 
     private void dispatchTakePictureIntent(){
@@ -190,6 +192,9 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     public void sendResultBack(View view) {
+<<<<<<< Temporary merge branch 1
+
+=======
         Intent output = new Intent();
         Bundle b = new Bundle();
         Species species = new Species();
@@ -204,6 +209,7 @@ public class IdentificationActivity extends AppCompatActivity {
         output.putExtras(b);
         //output.putExtra("Image",cp);
         setResult(RESULT_OK, output);
+>>>>>>> Temporary merge branch 2
         finish();
 
     }
