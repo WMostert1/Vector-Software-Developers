@@ -296,7 +296,6 @@
           <Property Name="RoleDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastModifiedID" Type="Int32" />
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_User_ToRole" FromRole="Role" ToRole="User" />
           <NavigationProperty Name="UserRoles" Relationship="BugDBModel.FK_UserRole_ToRole" FromRole="Role" ToRole="UserRole" />
         </EntityType>
         <EntityType Name="ScoutBug">
@@ -361,13 +360,11 @@
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="RoleID" Type="Int32" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastModifiedID" Type="Int32" />
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Farms" Relationship="Self.FK_Farm_ToUser" FromRole="User" ToRole="Farm" />
-          <NavigationProperty Name="Role" Relationship="Self.FK_User_ToRole" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="ScoutStops" Relationship="Self.FK_ScoutStop_ToUser" FromRole="User" ToRole="ScoutStop" />
           <NavigationProperty Name="UserRoles" Relationship="BugDBModel.FK_UserRole_ToUser" FromRole="User" ToRole="UserRole" />
         </EntityType>
@@ -416,18 +413,6 @@
             </Principal>
             <Dependent Role="Farm">
               <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_User_ToRole">
-          <End Role="Role" Type="Self.Role" Multiplicity="1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="RoleID" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="RoleID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -491,10 +476,6 @@
           <AssociationSet Name="FK_Farm_ToUser" Association="Self.FK_Farm_ToUser">
             <End Role="User" EntitySet="Users" />
             <End Role="Farm" EntitySet="Farms" />
-          </AssociationSet>
-          <AssociationSet Name="FK_User_ToRole" Association="Self.FK_User_ToRole">
-            <End Role="Role" EntitySet="Roles" />
-            <End Role="User" EntitySet="Users" />
           </AssociationSet>
           <AssociationSet Name="FK_ScoutBug_ToScoutStop" Association="Self.FK_ScoutBug_ToScoutStop">
             <End Role="ScoutStop" EntitySet="ScoutStops" />

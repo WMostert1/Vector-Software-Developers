@@ -22,14 +22,12 @@ namespace DataAccess.MSSQL
         }
     
         public int UserID { get; set; }
-        public int RoleID { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public Nullable<int> LastModifiedID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }
     
         public virtual ICollection<Farm> Farms { get; set; }
-        public virtual Role Role { get; set; }
         public virtual ICollection<ScoutStop> ScoutStops { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
     }

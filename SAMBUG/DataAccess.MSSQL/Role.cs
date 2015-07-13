@@ -16,7 +16,6 @@ namespace DataAccess.MSSQL
     {
         public Role()
         {
-            this.Users = new HashSet<User>();
             this.UserRoles = new HashSet<UserRole>();
         }
     
@@ -25,7 +24,6 @@ namespace DataAccess.MSSQL
         public Nullable<int> LastModifiedID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }
     
-        public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }
