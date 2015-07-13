@@ -188,11 +188,9 @@ public class IdentificationActivity extends AppCompatActivity {
                 break;
         }
 
-
     }
 
     public void sendResultBack(View view) {
-
         Intent output = new Intent();
         Bundle b = new Bundle();
         Species species = new Species();
@@ -208,9 +206,6 @@ public class IdentificationActivity extends AppCompatActivity {
         //output.putExtra("Image",cp);
         setResult(RESULT_OK, output);
         finish();
-
     }
-
-
 
 }

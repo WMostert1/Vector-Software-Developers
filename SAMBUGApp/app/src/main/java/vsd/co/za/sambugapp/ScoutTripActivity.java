@@ -126,9 +126,13 @@ public class ScoutTripActivity extends ActionBarActivity {
         ScoutStop stop=(ScoutStop)bundle.get(SCOUT_STOP);
         if (requestCode == NEW_STOP && resultCode == RESULT_OK) {
             addStop(stop);
+            Log.d(TAG,"Added");
         } else if (requestCode==UPDATE_STOP && resultCode==RESULT_OK){
             updateStop(stop);
+            Log.d(TAG,"Updated");
         }
+        lstStopsAdapter.notifyDataSetChanged();
+        lstPestsPerTreeAdapter.notifyDataSetChanged();
     }
 
     @Override
