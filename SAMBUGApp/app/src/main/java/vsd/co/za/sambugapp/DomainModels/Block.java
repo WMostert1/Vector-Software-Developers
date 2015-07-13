@@ -88,4 +88,9 @@ public class Block implements Serializable{
     public HashSet<Treatment> getTreatments() {
         return Treatments;
     }
+
+    @Override
+    public String toString(){
+        return getBlockName();
+    }
 }
