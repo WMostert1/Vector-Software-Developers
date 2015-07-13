@@ -17,10 +17,12 @@
         <AssociationConnector Association="BugDBModel.FK_ScoutStop_ToBlock" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_Treatment_ToBlock" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_Farm_ToUser" ManuallyRouted="false" />
-        <AssociationConnector Association="BugDBModel.FK_User_ToRole" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToScoutStop" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToSpecies" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_ScoutStop_ToUser" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BugDBModel.UserRole" Width="1.5" PointX="5.25" PointY="0.875" />
+        <AssociationConnector Association="BugDBModel.FK_UserRole_ToRole" />
+        <AssociationConnector Association="BugDBModel.FK_UserRole_ToUser" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

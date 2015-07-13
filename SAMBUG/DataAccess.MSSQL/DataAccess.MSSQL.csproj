@@ -89,6 +89,9 @@
     <Compile Include="User.cs">
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="UserRole.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="EntityFrameworkModel.edmx">
