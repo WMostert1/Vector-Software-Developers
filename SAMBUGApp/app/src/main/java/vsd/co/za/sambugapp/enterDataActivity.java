@@ -19,9 +19,16 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
+import vsd.co.za.sambugapp.DomainModels.Block;
+import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
+import vsd.co.za.sambugapp.DomainModels.ScoutStop;
+import vsd.co.za.sambugapp.DomainModels.Species;
 
 
 public class enterDataActivity extends ActionBarActivity {
@@ -31,14 +38,17 @@ public class enterDataActivity extends ActionBarActivity {
     NumberPicker npTrees;
     NumberPicker npBugs;
     ScoutBug currBug;
-    CapturedImage imageTaken;
+    Farm farm;
     // Spinner
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
-        acceptStop();
+        Intent iReceive = getIntent();
+       // Bundle scoutStop = iReceive.getExtras();
+        acceptStop(iReceive);
+        acceptBlocks(iReceive);
         populateSpinner();
         initializeNumberPickers();
         receiveGeoLocation();
@@ -71,21 +81,19 @@ public class enterDataActivity extends ActionBarActivity {
         mySpin = (Spinner) findViewById(R.id.spnBlocks);
         ArrayAdapter<String> dataAdapter;
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.arrBlocks, android.R.layout.simple_spinner_item);
+        HashSet<Block> blockArray = new HashSet<>();
+        blockArray = farm.getBlocks();
+       // Iterator iterator = blockArray.iterator();
+
+//        while(iterator.hasNext()){
+//            mySpin.add
+//        }
+
+        ArrayAdapter<Block> adapter = new ArrayAdapter<Block>(this, android.R.layout.simple_spinner_item, (List<Block>) blockArray);// (this, android.R.layout.simple_spinner_item,blockArray);
+        //ArrayAdapter.createFromResource(this,
+                //R.array.arrBlocks, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mySpin.setAdapter(adapter);
-
-        // toList = (Spinner) findViewById(R.id.toList);
-        //dataAdapter = new ArrayAdapter<String>(this,
-        //       android.R.layout.simple_spinner_item, new ArrayList<String>());
-        //dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // toList.setAdapter(dataAdapter);
-
-        // Button add = (Button) findViewById(R.id.add);
-        // add.setOnClickListener(this);
-        // Button remove = (Button) findViewById(R.id.remove);
-        // remove.setOnClickListener(this);
     }
 
     public void initializeNumberPickers() {
@@ -104,8 +112,8 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void sendToScoutTripActivity(View view) {
 
-        stop.setBlockName(mySpin.getSelectedItem().toString());
-        stop.setNumTrees(npTrees.getValue());
+        stop.Block.setBlockName(mySpin.getSelectedItem().toString());
+        stop.setNumberOfTrees(npTrees.getValue());
        // stop.
         Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
         startActivity(intent);
@@ -134,13 +142,13 @@ public class enterDataActivity extends ActionBarActivity {
         }
     }
 
-    public void addImage(Bitmap im){
-        stop.setImageCaptured(im);
-    }
+//    //public void addImage(Bitmap im){
+//        stop.setImageCaptured(im);
+//    }
     private void createBug(Species spec){
         ScoutBug sb = new ScoutBug();
         sb.setSpecies(spec);
-        stop.addBugEntry(sb);
+        stop.ScoutBugs.add(sb); //addBugEntry(sb);
     }
 
     LocationManager mLocationManager;
@@ -212,15 +220,20 @@ public class enterDataActivity extends ActionBarActivity {
         stop=sp;
     }
 
-    private void acceptStop(){
-        Intent iReceive = getIntent();
+    private void acceptStop(Intent iReceive){
         Bundle scoutStop = iReceive.getExtras();
         ScoutStop sp = (ScoutStop) scoutStop.get("ScoutStop");
         if(sp == null){
             createScoutStop();
         }
         else usePassedStop(sp);
-        Log.e("Look",stop.getBlockName() );
+       // Log.e("Look",stop.getBlockName() );
+    }
+
+    private void acceptBlocks(Intent iReceive){
+        Bundle scoutStop = iReceive.getExtras();
+        Farm frm = (Farm) scoutStop.get("Farm");
+        farm = frm;
     }
 
     public void sendResultBack(View view) {

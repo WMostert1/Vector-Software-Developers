@@ -1,12 +1,13 @@
 package vsd.co.za.sambugapp.DomainModels;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 
 /**
  * Created by keaganthompson on 7/8/15.
  */
-public class ScoutStop {
+public class ScoutStop implements Serializable{
 
     public int ScoutStopID;
     public int UserID;
