@@ -115,9 +115,23 @@ public class enterDataActivity extends ActionBarActivity {
 
         stop.Block.setBlockName(mySpin.getSelectedItem().toString());
         stop.setNumberOfTrees(npTrees.getValue());
-       // stop.
-        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
-        startActivity(intent);
+//       // stop.
+////        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
+////        startActivity(intent);
+//
+//        Intent output = new Intent();
+//        Bundle b = new Bundle();
+//        b.putSerializable("ScoutStop",stop);
+//        output.putExtras(b);
+//        setResult(RESULT_OK, output);
+//        finish();
+
+        Intent output = new Intent();
+        Bundle b = new Bundle();
+        b.putSerializable(ScoutTripActivity.SCOUT_STOP,stop);
+        output.putExtras(b);
+        setResult(RESULT_OK, output);
+        finish();
     }
 
     public void sendToIdentificationActivity(View view) {
