@@ -55,7 +55,8 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/galleryPicHeight"
             android:layout_weight="1"
-            android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
+            android:contentDescription="@string/identification_activity_speciesSpecificationDescription"
+            android:focusable="false" />
         <ImageButton
             android:src="@drawable/coconut_inst_4"
             android:id="@+id/coconut_4"

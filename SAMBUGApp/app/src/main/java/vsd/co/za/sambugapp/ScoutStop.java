@@ -1,5 +1,7 @@
 package vsd.co.za.sambugapp;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -11,6 +13,16 @@ public class ScoutStop implements Serializable{
     private String mBlockName;
     private int mNumTrees;
     private ArrayList<ScoutBug> mBugs;
+
+    public Bitmap getImageCaptured() {
+        return imageCaptured;
+    }
+
+    public void setImageCaptured(Bitmap imageCaptured) {
+        this.imageCaptured = imageCaptured;
+    }
+
+    private Bitmap imageCaptured;
 
     public ScoutStop() {
         mBlockName="";

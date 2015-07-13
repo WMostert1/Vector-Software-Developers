@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,7 +18,11 @@ import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class enterDataActivity extends ActionBarActivity {
@@ -27,6 +32,7 @@ public class enterDataActivity extends ActionBarActivity {
     NumberPicker npTrees;
     NumberPicker npBugs;
     ScoutBug currBug;
+    CapturedImage imageTaken;
     // Spinner
 
     @Override
@@ -117,33 +123,81 @@ public class enterDataActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("Look", "here1");
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+            Log.e("Look", "here2");
             Bundle speciesReceived = data.getExtras();
             Species species = (Species) speciesReceived.get("Species");
-            createBug(species);
+            Bitmap imageTaken2 = (Bitmap)speciesReceived.getParcelable("Image");
+          //  addImage(imageTaken);
+           // createBug(species);
             Log.e("Look", species.getSpeciesName());
         }
     }
 
+    public void addImage(Bitmap im){
+        stop.setImageCaptured(im);
+    }
     private void createBug(Species spec){
         ScoutBug sb = new ScoutBug();
         sb.setSpecies(spec);
         stop.addBugEntry(sb);
     }
+
+    LocationManager mLocationManager;
+    Location myLocation = null;//= getLastKnownLocation();
     public void receiveGeoLocation() {
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+       // LocationManagerHelper lmh = new LocationManagerHelper();
 
-        MyLocationListener locationListener = new MyLocationListener();
+        //MyLocationListener locationListener = new MyLocationListener();
+       // MyLocationListener locationListener = new MyLocationListener();
+        myLocation = getLastKnownLocation();
+        String sLocation = "Latitude = " + myLocation.getLatitude() + " Longitude = " + myLocation.getLongitude();
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        //I make a log to see the results
+        Log.d("MY CURRENT LOCATION", sLocation);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            //Do what you need if enabled...
-        } else {
-            createErrorMessage();
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        //locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,locationListener,null);
+       // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+       // Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+       // locationManager.removeUpdates(locationListener);
+       // if(currentLocation == null){
+          //  Log.d("FURK","Bitch");
+       // }
+//        double currentLatitude = currentLocation.getLatitude();
+//        double currentLongitude = currentLocation.getLongitude();
+//        String myLocation = "Latitude = " + currentLocation.getLatitude() + " Longitude = " + currentLocation.getLongitude();
+
+        //I make a log to see the results
+       // Log.d("MY CURRENT LOCATION", myLocation);
+
+//        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//            //Do what you need if enabled...
+//        } else {
+//            createErrorMessage();
+//        }
+
+    }
+  //  LocationManager mLocationManager;
+   // Location myLocation = getLastKnownLocation();
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            else {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
         }
-
+        return bestLocation;
     }
 
     public void createErrorMessage() {
