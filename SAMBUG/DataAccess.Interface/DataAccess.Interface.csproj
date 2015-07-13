@@ -41,6 +41,8 @@
   <ItemGroup>
     <Compile Include="DTOModels\LoginRequest.cs" />
     <Compile Include="DTOModels\LoginResponse.cs" />
+    <Compile Include="DTOModels\RegisterRequest.cs" />
+    <Compile Include="DTOModels\RegisterResponse.cs" />
     <Compile Include="IAuthentication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
