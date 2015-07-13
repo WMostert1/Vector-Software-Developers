@@ -88,8 +88,9 @@ public class enterDataActivity extends ActionBarActivity {
 //        while(iterator.hasNext()){
 //            mySpin.add
 //        }
+        List<Block> list = new ArrayList<Block>(blockArray);
 
-        ArrayAdapter<Block> adapter = new ArrayAdapter<Block>(this, android.R.layout.simple_spinner_item, (List<Block>) blockArray);// (this, android.R.layout.simple_spinner_item,blockArray);
+        ArrayAdapter<Block> adapter = new ArrayAdapter<Block>(this, android.R.layout.simple_spinner_item, list);// (this, android.R.layout.simple_spinner_item,blockArray);
         //ArrayAdapter.createFromResource(this,
                 //R.array.arrBlocks, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -114,9 +115,23 @@ public class enterDataActivity extends ActionBarActivity {
 
         stop.Block.setBlockName(mySpin.getSelectedItem().toString());
         stop.setNumberOfTrees(npTrees.getValue());
-       // stop.
-        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
-        startActivity(intent);
+//       // stop.
+////        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
+////        startActivity(intent);
+//
+//        Intent output = new Intent();
+//        Bundle b = new Bundle();
+//        b.putSerializable("ScoutStop",stop);
+//        output.putExtras(b);
+//        setResult(RESULT_OK, output);
+//        finish();
+
+        Intent output = new Intent();
+        Bundle b = new Bundle();
+        b.putSerializable(ScoutTripActivity.SCOUT_STOP,stop);
+        output.putExtras(b);
+        setResult(RESULT_OK, output);
+        finish();
     }
 
     public void sendToIdentificationActivity(View view) {
@@ -222,7 +237,7 @@ public class enterDataActivity extends ActionBarActivity {
 
     private void acceptStop(Intent iReceive){
         Bundle scoutStop = iReceive.getExtras();
-        ScoutStop sp = (ScoutStop) scoutStop.get("ScoutStop");
+        ScoutStop sp = (ScoutStop) scoutStop.get(ScoutTripActivity.SCOUT_STOP);
         if(sp == null){
             createScoutStop();
         }
@@ -232,7 +247,7 @@ public class enterDataActivity extends ActionBarActivity {
 
     private void acceptBlocks(Intent iReceive){
         Bundle scoutStop = iReceive.getExtras();
-        Farm frm = (Farm) scoutStop.get("Farm");
+        Farm frm = (Farm) scoutStop.get(ScoutTripActivity.USER_FARM);
         farm = frm;
     }
 
