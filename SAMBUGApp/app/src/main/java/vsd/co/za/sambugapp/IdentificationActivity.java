@@ -192,9 +192,7 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     public void sendResultBack(View view) {
-<<<<<<< Temporary merge branch 1
 
-=======
         Intent output = new Intent();
         Bundle b = new Bundle();
         Species species = new Species();
@@ -209,7 +207,6 @@ public class IdentificationActivity extends AppCompatActivity {
         output.putExtras(b);
         //output.putExtra("Image",cp);
         setResult(RESULT_OK, output);
->>>>>>> Temporary merge branch 2
         finish();
 
     }

@@ -106,7 +106,7 @@ public class enterDataActivity extends ActionBarActivity {
 
         stop.setBlockName(mySpin.getSelectedItem().toString());
         stop.setNumTrees(npTrees.getValue());
-        stop.
+       // stop.
         Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
         startActivity(intent);
     }
