@@ -9,6 +9,6 @@ namespace DataAccess.Interface.DTOModels
     public class LoginResponse
     {
         public int Id { get; set; }
-        public List<string> Role { get; set; }
+        public int Role { get; set; }
     }
 }
