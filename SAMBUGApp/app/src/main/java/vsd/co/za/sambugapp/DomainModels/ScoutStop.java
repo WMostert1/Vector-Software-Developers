@@ -1,12 +1,13 @@
 package vsd.co.za.sambugapp.DomainModels;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 
 /**
  * Created by keaganthompson on 7/8/15.
  */
-public class ScoutStop {
+public class ScoutStop implements Serializable{
 
     public int ScoutStopID;
     public int UserID;
@@ -22,6 +23,26 @@ public class ScoutStop {
     public Block Block;
     public HashSet<ScoutBug> ScoutBugs;
     public User User;
+
+    public ScoutStop() {
+        NumberOfTrees=0;
+        Latitude=0;
+        Longitude=0;
+        Block=new Block();
+        ScoutBugs=new HashSet<>();
+        User=new User();
+    }
+
+    public double getPestsPerTree(){
+        double average=0;
+        for (ScoutBug bug : ScoutBugs){
+            if (bug.getSpecies().isPest()){
+                average+=bug.getNumberOfBugs();
+            }
+        }
+        average/=getNumberOfTrees();
+        return average;
+    }
 
     public int getScoutStopID() {
         return ScoutStopID;
