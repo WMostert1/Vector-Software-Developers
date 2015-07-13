@@ -9,9 +9,9 @@ namespace DataAccess.Interface.DTOModels
     class RegisterRequest
     {
         public string Email { get; set; }
-        public string EmailConfirm { get; set; }
+        public string EmailConfirmation { get; set; }
         public string Password { get; set; }
-        public string PasswordConfirm { get; set; }
+        public string PasswordConfirmation { get; set; }
         public string FarmName { get; set; }
     }
 }
