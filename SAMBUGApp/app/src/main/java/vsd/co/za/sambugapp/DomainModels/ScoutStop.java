@@ -28,7 +28,9 @@ public class ScoutStop implements Serializable{
         NumberOfTrees=0;
         Latitude=0;
         Longitude=0;
-        Block.setBlockName("Piesang");
+        Block=new Block();
+        ScoutBugs=new HashSet<>();
+        User=new User();
     }
 
     public double getPestsPerTree(){

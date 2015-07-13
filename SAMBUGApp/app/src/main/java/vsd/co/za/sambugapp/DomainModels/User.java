@@ -1,12 +1,13 @@
 package vsd.co.za.sambugapp.DomainModels;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 
 /**
  * Created by Aeolus on 2015-07-13.
  */
-public class User {
+public class User implements Serializable{
     public User() {
         this.Farms = new HashSet<Farm>();
         this.ScoutStops = new HashSet<ScoutStop>();

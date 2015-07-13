@@ -1,5 +1,6 @@
 package vsd.co.za.sambugapp.DomainModels;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
@@ -12,6 +13,7 @@ public class ScoutTrip {
     private ArrayList<ScoutStop> scoutStops;
 
     public ScoutTrip(){
+        //mock generation
         scoutStops=new ArrayList<>();
         ScoutStop[] objects=new ScoutStop[5];
         for (int i=0;i<5;i++) {
@@ -30,7 +32,7 @@ public class ScoutTrip {
         return scoutStops.get(index);
     }
 
-    public ArrayList<ScoutStop> getList(){
+    public ArrayList<ScoutStop> getStopList(){
         return scoutStops;
     }
 
