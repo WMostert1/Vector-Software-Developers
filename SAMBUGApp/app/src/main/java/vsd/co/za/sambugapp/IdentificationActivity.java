@@ -23,7 +23,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
 
+import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
 import vsd.co.za.sambugapp.DomainModels.Species;
 
 
@@ -37,7 +40,7 @@ public class IdentificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
-        dispatchTakePictureIntent();
+        // dispatchTakePictureIntent();
         mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
     }
 
@@ -110,7 +113,12 @@ public class IdentificationActivity extends AppCompatActivity {
         String yE = "Yellow Edged";
         identification.setIsPest(true);
 
-
+        SpeciesDAO dao = new SpeciesDAO(getApplicationContext());
+        try {
+            dao.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //TODO: Replace this with proper dynamic code when DB is up
         switch (view.getId()) {
             case R.id.coconut_1:
@@ -121,11 +129,18 @@ public class IdentificationActivity extends AppCompatActivity {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 identification.setIdealPicture(stream.toByteArray());
+                identification.setTMStamp(new Date());
+                identification.setLastModifiedID(1);
                 //identification.setIdealPicture(R.);
+
+
+                dao.insert(identification);
+
                 break;
             case R.id.coconut_2:
                 identification.setSpeciesName(c);
                 identification.setLifestage(2);
+                ArrayList<Species> entries = (ArrayList) dao.getAllSpecies();
                 break;
             case R.id.coconut_3:
                 identification.setSpeciesName(c);
@@ -197,7 +212,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 break;
         }
 
-
+        dao.close();
     }
 
     public void sendResultBack(View view) {
@@ -208,11 +223,11 @@ public class IdentificationActivity extends AppCompatActivity {
         species.setSpeciesName("Keagan a bitch ;)");
         b.putSerializable("Species", species);
 
-        Bitmap cp      = mImageView.getDrawingCache();
-        if(cp == null){
+        Bitmap cp = mImageView.getDrawingCache();
+        if (cp == null) {
             Log.e("Look", "Bitch");
         }
-        b.putParcelable("Image",cp);
+        b.putParcelable("Image", cp);
         output.putExtras(b);
         //output.putExtra("Image",cp);
         setResult(RESULT_OK, output);

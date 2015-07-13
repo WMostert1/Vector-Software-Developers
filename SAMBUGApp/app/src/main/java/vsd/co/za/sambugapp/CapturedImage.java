@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by Kale-ab on 2015-07-10.
  */
-public class CapturedImage implements Serializable{
+public class CapturedImage implements Serializable {
     public Drawable getImage() {
         return image;
     }

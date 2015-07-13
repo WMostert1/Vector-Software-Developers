@@ -7,7 +7,7 @@ import java.util.HashSet;
 /**
  * Created by Aeolus on 2015-07-13.
  */
-public class User implements Serializable{
+public class User implements Serializable {
     public User() {
         this.Farms = new HashSet<Farm>();
         this.ScoutStops = new HashSet<ScoutStop>();

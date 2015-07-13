@@ -7,7 +7,7 @@ import java.util.HashSet;
 /**
  * Created by Aeolus on 2015-07-13.
  */
-public class Farm implements Serializable{
+public class Farm implements Serializable {
     public Farm() {
         this.Blocks = new HashSet<Block>();
     }

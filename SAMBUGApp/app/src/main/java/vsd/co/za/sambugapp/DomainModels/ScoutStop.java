@@ -7,7 +7,7 @@ import java.util.HashSet;
 /**
  * Created by keaganthompson on 7/8/15.
  */
-public class ScoutStop implements Serializable{
+public class ScoutStop implements Serializable {
 
     public int ScoutStopID;
     public int UserID;
@@ -25,22 +25,22 @@ public class ScoutStop implements Serializable{
     public User User;
 
     public ScoutStop() {
-        NumberOfTrees=0;
-        Latitude=0;
-        Longitude=0;
-        Block=new Block();
-        ScoutBugs=new HashSet<>();
-        User=new User();
+        NumberOfTrees = 0;
+        Latitude = 0;
+        Longitude = 0;
+        Block = new Block();
+        ScoutBugs = new HashSet<>();
+        User = new User();
     }
 
-    public double getPestsPerTree(){
-        double average=0;
-        for (ScoutBug bug : ScoutBugs){
-            if (bug.getSpecies().isPest()){
-                average+=bug.getNumberOfBugs();
+    public double getPestsPerTree() {
+        double average = 0;
+        for (ScoutBug bug : ScoutBugs) {
+            if (bug.getSpecies().isPest()) {
+                average += bug.getNumberOfBugs();
             }
         }
-        average/=getNumberOfTrees();
+        average /= getNumberOfTrees();
         return average;
     }
 

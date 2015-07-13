@@ -58,6 +58,7 @@ public class SpeciesDAO extends DataSourceAdapter {
     }
 
     public Species cursorToSpecies(Cursor cursor) {
+        //TODO: Do the queries propery
         Species species = new Species();
         species.setSpeciesID(cursor.getInt(0));
         species.setSpeciesName(cursor.getString(0));
