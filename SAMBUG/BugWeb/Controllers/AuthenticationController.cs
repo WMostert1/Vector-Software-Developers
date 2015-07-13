@@ -26,6 +26,8 @@ namespace BugWeb.Controllers
             nameValCollection.Add("Password", loginViewModel.Password); 
 
             webClient.UploadValues("api/authentication/login", nameValCollection);
+
+            return null;
         }
     }
 }

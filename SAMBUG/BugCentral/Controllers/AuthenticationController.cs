@@ -18,7 +18,7 @@ namespace BugCentral.Controllers
         [Route("login")]
         public IHttpActionResult Login(LoginRequest loginRequest)
         {
-            
+            return null;
         }
 
     }

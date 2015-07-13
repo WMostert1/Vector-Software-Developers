@@ -12,7 +12,7 @@ namespace DataAccess.MSSQL
     {
         public LoginResponse Login(LoginRequest loginRequest)
         {
-            
+            return null;
         }
     }
 }
