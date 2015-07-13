@@ -18,7 +18,7 @@
             android:layout_weight="5"
             android:layout_marginBottom="10dp"
             android:text="+"
-            android:onClick="addStop"/>
+            android:onClick="addStopActivityStart"/>
 
     <ListView
         android:id="@+id/lstStops"

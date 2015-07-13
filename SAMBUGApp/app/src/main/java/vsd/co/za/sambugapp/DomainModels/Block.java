@@ -1,5 +1,7 @@
 package vsd.co.za.sambugapp.DomainModels;
 
+import java.io.Serializable;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.List;
 /**
  * Created by Aeolus on 2015-07-13.
  */
-public class Block {
+public class Block implements Serializable{
     public Block() {
         this.ScoutStops = new HashSet<ScoutStop>();
         this.Treatments = new HashSet<Treatment>();
