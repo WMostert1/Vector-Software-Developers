@@ -3,56 +3,88 @@ package vsd.co.za.sambugapp.DomainModels;
 import android.graphics.Bitmap;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
 
 /**
  * Created by keaganthompson on 7/8/15.
  */
 public class Species implements Serializable {
-    private Bitmap fieldPic;
-    private boolean isPest;
-    private String speciesName;
-    private int lifestage;
-
-    public Bitmap getFieldPic() {
-        return fieldPic;
+    public Species() {
+        this.ScoutBugs = new HashSet<ScoutBug>();
     }
 
-    public boolean isPest() {
-        return isPest;
+    public int SpeciesID;
+    public String SpeciesName;
+    public int Lifestage;
+    public byte[] IdealPicture;
+    public boolean IsPest;
+    public Integer LastModifiedID;
+    public Date TMStamp;
+
+    public HashSet<ScoutBug> ScoutBugs;
+
+    public int getSpeciesID() {
+        return SpeciesID;
     }
 
-    public void setIsPest(boolean isPest) {
-        this.isPest = isPest;
-    }
-
-    public void setSpeciesName(String speciesName) {
-        this.speciesName = speciesName;
+    public void setSpeciesID(int speciesID) {
+        SpeciesID = speciesID;
     }
 
     public String getSpeciesName() {
-        return speciesName;
+        return SpeciesName;
     }
 
+    public void setSpeciesName(String speciesName) {
+        SpeciesName = speciesName;
+    }
 
     public int getLifestage() {
-        return lifestage;
+        return Lifestage;
     }
-
-    public void setFieldPic(Bitmap fieldPic) {
-        this.fieldPic = fieldPic;
-    }
-
 
     public void setLifestage(int lifestage) {
-        this.lifestage = lifestage;
+        Lifestage = lifestage;
     }
 
-    @Override
-    public String toString() {
-        return "Species : " +
-                "fieldPic=" + fieldPic +
-                ", isPest=" + isPest +
-                ", speciesName='" + speciesName + '\'' +
-                ", lifestage=" + lifestage;
+    public byte[] getIdealPicture() {
+        return IdealPicture;
+    }
+
+    public void setIdealPicture(byte[] idealPicture) {
+        IdealPicture = idealPicture;
+    }
+
+    public boolean isPest() {
+        return IsPest;
+    }
+
+    public void setIsPest(boolean isPest) {
+        IsPest = isPest;
+    }
+
+    public Integer getLastModifiedID() {
+        return LastModifiedID;
+    }
+
+    public void setLastModifiedID(Integer lastModifiedID) {
+        LastModifiedID = lastModifiedID;
+    }
+
+    public Date getTMStamp() {
+        return TMStamp;
+    }
+
+    public void setTMStamp(Date TMStamp) {
+        this.TMStamp = TMStamp;
+    }
+
+    public HashSet<ScoutBug> getScoutBugs() {
+        return ScoutBugs;
+    }
+
+    public void setScoutBugs(HashSet<ScoutBug> scoutBugs) {
+        ScoutBugs = scoutBugs;
     }
 }
