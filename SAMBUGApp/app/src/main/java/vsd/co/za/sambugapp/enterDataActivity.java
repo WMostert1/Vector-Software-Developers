@@ -16,6 +16,7 @@ import android.widget.Spinner;
 
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
+import vsd.co.za.sambugapp.DomainModels.Species;
 
 
 public class enterDataActivity extends ActionBarActivity {

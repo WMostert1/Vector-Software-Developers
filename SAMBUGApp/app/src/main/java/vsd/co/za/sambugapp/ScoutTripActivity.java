@@ -1,6 +1,7 @@
 package vsd.co.za.sambugapp;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,13 +40,14 @@ public class ScoutTripActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState!=null){
-            updateIndex=savedInstanceState.getInt(UPDATE_INDEX);
-        }
-        Log.d(TAG,"Creating");
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            updateIndex = savedInstanceState.getInt(UPDATE_INDEX);
+        }
         setContentView(R.layout.activity_scout_trip);
+
         mScoutTrip = new ScoutTrip();
+
         mLstStops = (ListView) findViewById(R.id.lstStops);
         mLstStops.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -59,7 +61,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         mLstPestsPerTree = (ListView) findViewById(R.id.lstPestsPerTree);
         lstPestsPerTreeAdapter = new PestsPerTreeAdapter(mScoutTrip.getList());
         mLstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
-    
+    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
@@ -123,15 +125,15 @@ public class ScoutTripActivity extends ActionBarActivity {
             ScoutStop stop = getItem(position);
             TextView lblBlockName =
                     (TextView)convertView.findViewById(R.id.lblBlockName);
-            lblBlockName.setText(stop.getBlockName());
+            lblBlockName.setText(stop.Block.getBlockName());
             TextView lblTreeAmount =
                     (TextView)convertView.findViewById(R.id.lblTreeAmount);
-            lblTreeAmount.setText(stop.getNumTrees()+"");
+            lblTreeAmount.setText(stop.getNumberOfTrees()+"");
             LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
             ImageView img=new ImageView(this.getContext());
             //img.setImageResource(R.drawable.st);
             hscrollBugInfo.removeAllViews();
-            img.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.st));
+            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.st));
             img.setLayoutParams(new RelativeLayout.LayoutParams(25,25));
             hscrollBugInfo.addView(img);
             return convertView;
@@ -150,7 +152,7 @@ public class ScoutTripActivity extends ActionBarActivity {
             }
             ScoutStop stop = getItem(position);
             TextView lblBlockName=(TextView)convertView.findViewById(R.id.lblBlockName);
-            lblBlockName.setText(stop.getBlockName());
+            lblBlockName.setText(stop.getBlock().getBlockName());
             TextView lblPestsPerTree=(TextView)convertView.findViewById(R.id.lblPestsPerTree);
             lblPestsPerTree.setText(stop.getPestsPerTree() + "");
             return convertView;
