@@ -15,6 +15,14 @@ public class ScoutStop {
     public float Latitude;
     public float Longitude;
 
+    public java.util.Date Date;
+    public Integer LastModifiedID;
+    public Date TMStamp;
+
+    public Block Block;
+    public HashSet<ScoutBug> ScoutBugs;
+    public User User;
+
     public int getScoutStopID() {
         return ScoutStopID;
     }
@@ -110,12 +118,4 @@ public class ScoutStop {
     public void setUser(vsd.co.za.sambugapp.DomainModels.User user) {
         User = user;
     }
-
-    public java.util.Date Date;
-    public Integer LastModifiedID;
-    public Date TMStamp;
-
-    public Block Block;
-    public HashSet<ScoutBug> ScoutBugs;
-    public User User;
 }

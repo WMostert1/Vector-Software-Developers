@@ -97,8 +97,8 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void sendToScoutTripActivity(View view) {
 
-        stop.setBlockName(mySpin.getSelectedItem().toString());
-        stop.setNumTrees(npTrees.getValue());
+        //  stop.setBlockName(mySpin.getSelectedItem().toString());
+        //  stop.setNumTrees(npTrees.getValue());
         //stop.addBugEntry(currBug);
         //Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
         //startActivity(intent);
@@ -120,14 +120,14 @@ public class enterDataActivity extends ActionBarActivity {
             Bundle speciesReceived = data.getExtras();
             Species species = (Species) speciesReceived.get("Species");
             createBug(species);
-            Log.e("Look", species.getSpeciesName());
+            // Log.e("Look", species.getSpeciesName());
         }
     }
 
     private void createBug(Species spec){
         ScoutBug sb = new ScoutBug();
         sb.setSpecies(spec);
-        stop.addBugEntry(sb);
+        // stop.addBugEntry(sb);
     }
     public void receiveGeoLocation() {
 
@@ -188,13 +188,13 @@ public class enterDataActivity extends ActionBarActivity {
             createScoutStop();
         }
         else usePassedStop(sp);
-        Log.e("Look",stop.getBlockName() );
+        // Log.e("Look",stop.getBlockName() );
     }
 
     public void sendResultBack(View view) {
         Intent output = new Intent();
         Bundle b = new Bundle();
-        b.putSerializable(ScoutTripActivity.SCOUT_STOP,stop);
+        // b.putSerializable(ScoutTripActivity.SCOUT_STOP,stop);
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();
