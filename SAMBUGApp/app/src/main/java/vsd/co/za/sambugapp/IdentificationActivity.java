@@ -205,7 +205,6 @@ public class IdentificationActivity extends AppCompatActivity {
         }
         b.putParcelable("Image",cp);
         output.putExtras(b);
-        //output.putExtra("Image",cp);
         setResult(RESULT_OK, output);
         finish();
 
