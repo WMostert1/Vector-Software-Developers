@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +13,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -84,7 +88,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-            }
+        }
     }
 
     private void dispatchTakePictureIntent(){
@@ -102,7 +106,7 @@ public class IdentificationActivity extends AppCompatActivity {
         String tS = "Two Spotted";
         String yE = "Yellow Edged";
         identification.setIsPest(true);
-        identification.setFieldPic(bitmap);
+        // identification.setFieldPic(bitmap);
 
         //TODO: Replace this with proper dynamic code when DB is up
         switch (view.getId()) {
@@ -189,6 +193,19 @@ public class IdentificationActivity extends AppCompatActivity {
 
     public void sendResultBack(View view) {
 
+        Intent output = new Intent();
+        Bundle b = new Bundle();
+        Species species = new Species();
+        species.setSpeciesName("Keagan a bitch ;)");
+        b.putSerializable("Species", species);
+
+        Bitmap cp      = mImageView.getDrawingCache();
+        if(cp == null){
+            Log.e("Look", "Bitch");
+        }
+        b.putParcelable("Image",cp);
+        output.putExtras(b);
+        setResult(RESULT_OK, output);
         finish();
 
     }

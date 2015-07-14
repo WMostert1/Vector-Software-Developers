@@ -1,5 +1,6 @@
 package vsd.co.za.sambugapp.DomainModels;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
@@ -12,19 +13,14 @@ public class ScoutTrip {
     private ArrayList<ScoutStop> scoutStops;
 
     public ScoutTrip(){
-        //TODO: Refactor with new models
-//        scoutStops=new ArrayList<>();
-//        ScoutStop[] objects=new ScoutStop[5];
-//        for (int i=0;i<5;i++) {
-//            objects[i] = new ScoutStop();
-//            objects[i].setNumTrees(i+1);
-//            scoutStops.add(objects[i]);
-//        }
-//        objects[0].setBlockName("Piesang");
-//        objects[1].setBlockName("Crinkle");
-//        objects[2].setBlockName("Kaleab needs a Michelle");
-//        objects[3].setBlockName("Hate typing");
-//        objects[4].setBlockName("BBD");
+        //mock generation
+        scoutStops=new ArrayList<>();
+        ScoutStop[] objects=new ScoutStop[5];
+        for (int i=0;i<5;i++) {
+            objects[i] = new ScoutStop();
+            objects[i].setNumberOfTrees(i+1);
+            scoutStops.add(objects[i]);
+        }
 
     }
 
@@ -36,7 +32,7 @@ public class ScoutTrip {
         return scoutStops.get(index);
     }
 
-    public ArrayList<ScoutStop> getList(){
+    public ArrayList<ScoutStop> getStopList(){
         return scoutStops;
     }
 

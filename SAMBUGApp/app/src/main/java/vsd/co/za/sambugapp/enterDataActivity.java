@@ -4,9 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,22 +18,37 @@ import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+
+import vsd.co.za.sambugapp.DomainModels.Block;
+import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
+import vsd.co.za.sambugapp.DomainModels.Species;
 
 
 public class enterDataActivity extends ActionBarActivity {
     ScoutStop stop;
+    Species species;
     Spinner mySpin;
     NumberPicker npTrees;
     NumberPicker npBugs;
     ScoutBug currBug;
+    Farm farm;
     // Spinner
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
+        Intent iReceive = getIntent();
+       // Bundle scoutStop = iReceive.getExtras();
+        acceptStop(iReceive);
+        acceptBlocks(iReceive);
         populateSpinner();
         initializeNumberPickers();
         receiveGeoLocation();
@@ -62,21 +81,20 @@ public class enterDataActivity extends ActionBarActivity {
         mySpin = (Spinner) findViewById(R.id.spnBlocks);
         ArrayAdapter<String> dataAdapter;
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.arrBlocks, android.R.layout.simple_spinner_item);
+        HashSet<Block> blockArray = new HashSet<>();
+        blockArray = farm.getBlocks();
+       // Iterator iterator = blockArray.iterator();
+
+//        while(iterator.hasNext()){
+//            mySpin.add
+//        }
+        List<Block> list = new ArrayList<Block>(blockArray);
+
+        ArrayAdapter<Block> adapter = new ArrayAdapter<Block>(this, android.R.layout.simple_spinner_item, list);// (this, android.R.layout.simple_spinner_item,blockArray);
+        //ArrayAdapter.createFromResource(this,
+                //R.array.arrBlocks, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mySpin.setAdapter(adapter);
-
-        // toList = (Spinner) findViewById(R.id.toList);
-        //dataAdapter = new ArrayAdapter<String>(this,
-        //       android.R.layout.simple_spinner_item, new ArrayList<String>());
-        //dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // toList.setAdapter(dataAdapter);
-
-        // Button add = (Button) findViewById(R.id.add);
-        // add.setOnClickListener(this);
-        // Button remove = (Button) findViewById(R.id.remove);
-        // remove.setOnClickListener(this);
     }
 
     public void initializeNumberPickers() {
@@ -95,36 +113,91 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void sendToScoutTripActivity(View view) {
 
-        stop.setBlockName(mySpin.getSelectedItem().toString());
-        stop.setNumTrees(npTrees.getValue());
-        stop.addBugEntry(currBug);
-        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
-        startActivity(intent);
+        stop.Block.setBlockName(mySpin.getSelectedItem().toString());
+        stop.setNumberOfTrees(npTrees.getValue());
+//       // stop.
+////        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
+////        startActivity(intent);
+//
+//        Intent output = new Intent();
+//        Bundle b = new Bundle();
+//        b.putSerializable("ScoutStop",stop);
+//        output.putExtras(b);
+//        setResult(RESULT_OK, output);
+//        finish();
+
+        Intent output = new Intent();
+        Bundle b = new Bundle();
+        b.putSerializable(ScoutTripActivity.SCOUT_STOP,stop);
+        output.putExtras(b);
+        setResult(RESULT_OK, output);
+        finish();
     }
 
     public void sendToIdentificationActivity(View view) {
 
         Intent intent = new Intent(enterDataActivity.this, IdentificationActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
+        //startActivity(intent);
         //  int numTrees =
         // stop.setNumTrees();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("Look", "here1");
+        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+            Log.e("Look", "here2");
+            Bundle speciesReceived = data.getExtras();
+            Species species = (Species) speciesReceived.get("Species");
+            Bitmap imageTaken2 = (Bitmap)speciesReceived.getParcelable("Image");
+          //  addImage(imageTaken);
+           // createBug(species);
+            Log.e("Look", species.getSpeciesName());
+        }
+    }
 
+//    //public void addImage(Bitmap im){
+//        stop.setImageCaptured(im);
+//    }
+    private void createBug(Species spec){
+        ScoutBug sb = new ScoutBug();
+        sb.setSpecies(spec);
+        stop.ScoutBugs.add(sb); //addBugEntry(sb);
+    }
+
+    LocationManager mLocationManager;
+    Location myLocation = null;//= getLastKnownLocation();
     public void receiveGeoLocation() {
+        myLocation = getLastKnownLocation();
+        String sLocation = "Latitude = " + myLocation.getLatitude() + " Longitude = " + myLocation.getLongitude();
+        Log.d("MY CURRENT LOCATION", sLocation);
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//
 
-        MyLocationListener locationListener = new MyLocationListener();
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+    }
+  //  LocationManager mLocationManager;
+   // Location myLocation = getLastKnownLocation();
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             //Do what you need if enabled...
         } else {
             createErrorMessage();
         }
-
+        Location bestLocation = null;
+        for (String provider : providers) {
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            else {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
     }
 
     public void createErrorMessage() {
@@ -154,6 +227,37 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void createScoutStop() {
         stop = new ScoutStop();
+
+    }
+
+    private void usePassedStop(ScoutStop sp){
+        //stop.duplicateStop(sp);
+        stop=sp;
+    }
+
+    private void acceptStop(Intent iReceive){
+        Bundle scoutStop = iReceive.getExtras();
+        ScoutStop sp = (ScoutStop) scoutStop.get(ScoutTripActivity.SCOUT_STOP);
+        if(sp == null){
+            createScoutStop();
+        }
+        else usePassedStop(sp);
+       // Log.e("Look",stop.getBlockName() );
+    }
+
+    private void acceptBlocks(Intent iReceive){
+        Bundle scoutStop = iReceive.getExtras();
+        Farm frm = (Farm) scoutStop.get(ScoutTripActivity.USER_FARM);
+        farm = frm;
+    }
+
+    public void sendResultBack(View view) {
+        Intent output = new Intent();
+        Bundle b = new Bundle();
+        b.putSerializable("ScoutStop",stop);
+        output.putExtras(b);
+        setResult(RESULT_OK, output);
+        finish();
 
     }
 }
