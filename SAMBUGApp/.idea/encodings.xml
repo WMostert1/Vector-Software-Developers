@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/sample_0.jpg" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/sample_1.jpg" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/sample_2.jpg" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/sample_3.jpg" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/sample_4.jpg" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/sample_5.jpg" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/sample_6.jpg" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/sample_7.jpg" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
