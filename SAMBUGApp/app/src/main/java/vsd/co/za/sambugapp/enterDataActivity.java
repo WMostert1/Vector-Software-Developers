@@ -322,7 +322,7 @@ public class enterDataActivity extends ActionBarActivity {
 
 
         TableRow emptyRow = new TableRow(this);
-        table.addView(emptyRow);
+       // table.addView(emptyRow);
         table.addView(row);
         table.addView(row2);
         table.addView(delRow);
@@ -330,12 +330,18 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void storeCurrentBug(){
         ScoutBug currBug = new ScoutBug();
-        currBug.setSpecies(species);
-        currBug.setFieldPicture(imageTaken);
-        TableRow rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
-        NumberPicker currNumberPicker = (NumberPicker) rowNumberPicker.getChildAt(2);
-        //NumberPicker currNumberPicker = (NumberPicker)findViewById(R.id.npNumBugs1);
-        currBug.setNumberOfBugs(currNumberPicker.getValue());
+        if(species != null){
+            currBug.setFieldPicture(imageTaken);
+        }
+        //currBug.setSpecies(species);
+        if(imageTaken != null){
+            currBug.setFieldPicture(imageTaken);
+        }
+
+//        TableRow rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
+//        NumberPicker currNumberPicker = (NumberPicker) rowNumberPicker.getChildAt(1);
+//        //NumberPicker currNumberPicker = (NumberPicker)findViewById(R.id.npNumBugs1);
+//        currBug.setNumberOfBugs(currNumberPicker.getValue());
         allBugs.add(currBug);
        // currBug
     }
