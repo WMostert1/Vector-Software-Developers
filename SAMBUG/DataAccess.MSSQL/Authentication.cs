@@ -25,14 +25,12 @@ namespace DataAccess.MSSQL
                 return null;
 
             var rolesQuery = from usrRole in context.UserRoles
-                join rle in context.Roles on usrRole.RoleID equals rle.RoleID 
+                join role in context.Roles on usrRole.RoleID equals role.RoleID 
                           where usrRole.UserID == userIdQuery
-                select rle;
+                select role;
+
 
             
-                
-
-
 /*            var loginResponse = new LoginResponse
             {
                 Id = result.UserID,

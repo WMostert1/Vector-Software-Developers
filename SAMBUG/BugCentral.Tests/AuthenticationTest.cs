@@ -14,8 +14,8 @@ namespace BugCentral.Tests
         {
             var loginRequest = new LoginRequest()
             {
-                Username = "Michelle",
-                Password = "Abrie"
+                Username = "michelle@gmail.com",
+                Password = "321"
             };
 
             var controller = new AuthenticationController();
