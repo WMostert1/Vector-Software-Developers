@@ -108,7 +108,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         farm.setFarmID(1);
         farm.setFarmName("DEEZ NUTS");
         HashSet<Block> blocks=new HashSet<>();
-        for (int j=1;j<=5;j++){
+        for (int j=1;j<=10;j++){
             Block obj=new Block();
             obj.setBlockID(j);
             obj.setBlockName("Block #" + j);

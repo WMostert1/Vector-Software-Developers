@@ -31,6 +31,10 @@ public class ScoutTrip {
         scoutStops.add(scoutStop);
     }
 
+    public void updateStop(ScoutStop scoutStop, int position){
+        scoutStops.set(position,scoutStop);
+    }
+
     public ScoutStop getStop(int index){
         return scoutStops.get(index);
     }
