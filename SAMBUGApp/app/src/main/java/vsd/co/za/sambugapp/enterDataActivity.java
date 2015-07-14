@@ -175,6 +175,9 @@ public class enterDataActivity extends ActionBarActivity {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         fieldImg.compress(Bitmap.CompressFormat.JPEG,100,stream);
         sb.setFieldPicture(stream.toByteArray());
+        //TODO: change to user id eventually
+        sb.setLastModifiedID(1);
+        sb.setTMStamp(new Date());
         stop.ScoutBugs.add(sb); //addBugEntry(sb);
     }
 
@@ -240,6 +243,7 @@ public class enterDataActivity extends ActionBarActivity {
     public void createScoutStop() {
         stop = new ScoutStop();
         stop.setDate(new Date());
+        //TODO:change to user id eventually
         stop.setLastModifiedID(1);
         stop.setTMStamp(new Date());
         stop.setLatitude(12);

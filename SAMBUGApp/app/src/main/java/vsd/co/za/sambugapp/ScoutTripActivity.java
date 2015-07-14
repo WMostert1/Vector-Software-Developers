@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import vsd.co.za.sambugapp.DataAccess.ScoutBugDAO;
 import vsd.co.za.sambugapp.DataAccess.ScoutStopDAO;
 import vsd.co.za.sambugapp.DomainModels.*;
 
@@ -125,12 +126,18 @@ public class ScoutTripActivity extends ActionBarActivity {
 
     public void finishTrip(View v){
         ScoutStopDAO scoutStopDAO=new ScoutStopDAO(getApplicationContext());
+        ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
         try{
             scoutStopDAO.open();
 
             for (ScoutStop scoutStop : scoutTrip.getStopList()){
                 long scoutStopID=scoutStopDAO.insert(scoutStop);
-                Log.e(TAG,scoutStopID+"");
+                scoutBugDAO.open();
+                for (ScoutBug scoutBug : scoutStop.getScoutBugs()){
+                    scoutBug.setScoutStopID((int)scoutStopID);
+                    scoutBugDAO.insert(scoutBug);
+                }
+                scoutBugDAO.close();
             }
 
             scoutStopDAO.close();
