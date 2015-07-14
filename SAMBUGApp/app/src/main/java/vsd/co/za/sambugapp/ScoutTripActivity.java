@@ -101,8 +101,8 @@ public class ScoutTripActivity extends ActionBarActivity {
         startActivityForResult(intent, UPDATE_STOP);
     }
 
-    public void updateStop(ScoutStop stop){
-        scoutTrip.getStopList().set(updateIndex,stop);
+    public void updateStop(ScoutStop stop) {
+        scoutTrip.getStopList().set(updateIndex, stop);
     }
 
     public void acceptFarm(Intent i){
@@ -117,7 +117,6 @@ public class ScoutTripActivity extends ActionBarActivity {
             blocks.add(obj);
         }
         farm.setBlocks(blocks);
-        Log.d(TAG, "Intent");
         //Bundle b=i.getExtras();
         //farm=(Farm)b.get(LoginActivity.USER_FARM);
     }
@@ -178,6 +177,8 @@ public class ScoutTripActivity extends ActionBarActivity {
                     (TextView)convertView.findViewById(R.id.lblTreeAmount);
             lblTreeAmount.setText(stop.getNumberOfTrees() + "");
             LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
+            ImageView img=new ImageView(this.getContext());
+            //img.setImageResource(R.drawable.st);
             hscrollBugInfo.removeAllViews();
             for (ScoutBug bug:stop.getScoutBugs()) {
                 ImageView img = new ImageView(this.getContext());
