@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Web.Http;
 using System.Web.UI.WebControls;
 using BugCentral.Controllers;
 using DataAccess.Interface.DTOModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Should;
 
 namespace BugCentral.Tests
 {
     [TestClass]
-    public class AuthenticationTest
+    public class AuthenticationControllerTest
     {
         [TestMethod]
         public void TestLogin()
@@ -19,10 +21,13 @@ namespace BugCentral.Tests
             };
 
             var controller = new AuthenticationController();
-            /*controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();*/
+            
 
             var response = controller.Login(loginRequest);
+
+
+            response.Id.ShouldEqual(1);
+            response.Roles[0].Id.ShouldEqual(0);
 
         }
     }

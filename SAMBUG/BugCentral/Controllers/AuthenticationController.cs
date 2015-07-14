@@ -16,13 +16,10 @@ namespace BugCentral.Controllers
         // POST api/authentication/login/
         [HttpPost]
         [Route("login")]
-        public IHttpActionResult Login(LoginRequest loginRequest)
+        public LoginResponse Login(LoginRequest loginRequest)
         {
             var authentication = new Authentication();
-
-            var loginResponse = authentication.Login(loginRequest);
-
-            return null;
+            return authentication.Login(loginRequest);
         }
 
 

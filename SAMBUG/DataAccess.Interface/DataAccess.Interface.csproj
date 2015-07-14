@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTOModels\RoleDto.cs" />
     <Compile Include="DTOModels\LoginRequest.cs" />
     <Compile Include="DTOModels\LoginResponse.cs" />
     <Compile Include="DTOModels\RegisterRequest.cs" />

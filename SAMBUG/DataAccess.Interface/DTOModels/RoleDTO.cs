@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interface.DTOModels
 {
-    public class LoginResponse
+    public class RoleDto
     {
         public int Id { get; set; }
-        public List<RoleDto> Roles{ get; set; }
+        public string Description { get; set; }
     }
 }

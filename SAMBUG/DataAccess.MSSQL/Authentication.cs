@@ -24,20 +24,18 @@ namespace DataAccess.MSSQL
             if (userIdQuery == default(int))
                 return null;
 
-            var rolesQuery = from usrRole in context.UserRoles
+            var rolesQuery = (from usrRole in context.UserRoles
                 join role in context.Roles on usrRole.RoleID equals role.RoleID 
-                          where usrRole.UserID == userIdQuery
-                select role;
+                where usrRole.UserID == userIdQuery
+                select new RoleDto(){ Id = role.RoleID, Description = role.RoleDescription}).ToList();
 
-
-            
-/*            var loginResponse = new LoginResponse
+            var loginResponse = new LoginResponse
             {
-                Id = result.UserID,
-                Role = result.RoleID
-            }*/;
+                Id = userIdQuery,
+                Roles = rolesQuery
+            };
 
-            return null;
+            return loginResponse;
         }
     }
 }
