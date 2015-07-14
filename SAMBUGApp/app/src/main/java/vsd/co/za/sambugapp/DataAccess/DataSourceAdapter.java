@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 /**
  * Created by Aeolus on 2015-07-13.
+ *
  */
 public class DataSourceAdapter {
     protected SQLiteDatabase database;

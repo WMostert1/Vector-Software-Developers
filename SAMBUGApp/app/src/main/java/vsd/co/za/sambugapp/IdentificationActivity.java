@@ -26,7 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +43,6 @@ public class IdentificationActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 1;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
     private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
-    public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     private ImageView mImageView;
     private Bitmap bitmap;
     private Species currentEntry;
@@ -60,69 +58,63 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
+            createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
+        }
+
+        if (createCounter == 0) {
+            SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+            try {
+                speciesDAO.open();
+                if (speciesDAO.isEmpty()) {
+                    speciesDAO.loadPresets();
+                }
+
+                speciesDAO.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            dispatchTakePictureIntent();
+        }
+        if (createCounter == 0) createCounter++;
+
+
         setContentView(R.layout.activity_identification);
-        // dispatchTakePictureIntent();
-        mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
-        SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
-        try {
-            speciesDAO.open();
-            if (speciesDAO.isEmpty()) {
-                speciesDAO.loadPresets();
-            }
 
-            if (savedInstanceState != null) {
-                bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
-                createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
-            }
+        GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
+        gridview.setAdapter(new ImageAdapter(this));
 
-            if (createCounter == 0) {
-                speciesDAO = new SpeciesDAO(getApplicationContext());
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
                 try {
                     speciesDAO.open();
-                    if (speciesDAO.isEmpty()) {
-                        speciesDAO.loadPresets();
-                    }
-
+                    currentEntry = speciesDAO.getSpecies(position + 1);
+                    Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+                    ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
+                    byte[] imgData = currentEntry.getIdealPicture();
+                    comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
+                            imgData.length));
                     speciesDAO.close();
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                dispatchTakePictureIntent();
             }
-            if (createCounter == 0) createCounter++;
+        });
 
-
-            setContentView(R.layout.activity_identification);
-
-            GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
-            gridview.setAdapter(new ImageAdapter(this));
-
-            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
-                    try {
-                        speciesDAO.open();
-                        currentEntry = speciesDAO.getSpecies(position + 1);
-                        Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
-                        speciesDAO.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-
-            mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
-            if (bitmap != null) mImageView.setImageBitmap(bitmap);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+        if (bitmap != null) mImageView.setImageBitmap(bitmap);
     }
 
-        @Override
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_identification, menu);
@@ -155,7 +147,19 @@ public class IdentificationActivity extends AppCompatActivity {
                     bitmap.recycle();
                 }
                 stream = getContentResolver().openInputStream(data.getData());
-                bitmap = BitmapFactory.decodeStream(stream);
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(stream, null, options);
+
+                // Calculate inSampleSize
+                options.inSampleSize = ImageAdapter.calculateInSampleSize(options, 150, 150);
+
+                // Decode bitmap with inSampleSize set
+                options.inJustDecodeBounds = false;
+                stream = getContentResolver().openInputStream(data.getData());
+
+
+                bitmap = BitmapFactory.decodeStream(stream, null, options);
                 Log.e("BMap", bitmap.toString());
                 //TODO: Rotate the image
 
@@ -181,26 +185,24 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
 
-
     public void sendResultBack(View view) {
 
         Intent output = new Intent();
         Bundle b = new Bundle();
-        currentEntry.setIdealPicture(null);
-        b.putSerializable(IDENTIFICATION_SPECIES, currentEntry);
-        Bitmap cp      = mImageView.getDrawingCache();
-        //Bitmap cp=bitmap;
-        cp=Bitmap.createScaledBitmap(cp,50,50,true);
-        if(cp == null){
+        Species species = new Species();
+        species.setSpeciesName("Keagan a bitch ;)");
+        b.putSerializable("Species", species);
+
+        Bitmap cp = mImageView.getDrawingCache();
+        if (cp == null) {
             Log.e("Look", "Bitch");
         }
-        b.putParcelable("Image",cp);
+        b.putParcelable("Image", cp);
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();
 
     }
-
 
 
 }
