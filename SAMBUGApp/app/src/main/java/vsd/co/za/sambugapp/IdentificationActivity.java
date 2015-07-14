@@ -36,8 +36,9 @@ public class IdentificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
-        dispatchTakePictureIntent();
-        mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+        //dispatchTakePictureIntent();
+        //mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+        bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.st);
     }
 
 
@@ -66,7 +67,9 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         InputStream stream = null;
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
+        if (data==null)
+            Log.e("Keags","NULL INTENT");
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK)
 
             try {
                 // recyle unused bitmaps
@@ -195,7 +198,9 @@ public class IdentificationActivity extends AppCompatActivity {
         Intent output = new Intent();
         Bundle b = new Bundle();
         b.putSerializable(IDENTIFICATION_SPECIES, identification);
-        Bitmap cp      = mImageView.getDrawingCache();
+        //Bitmap cp      = mImageView.getDrawingCache();
+        Bitmap cp=bitmap;
+        cp=Bitmap.createScaledBitmap(cp,50,50,true);
         if(cp == null){
             Log.e("Look", "Bitch");
         }

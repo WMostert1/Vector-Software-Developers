@@ -2,17 +2,18 @@ package vsd.co.za.sambugapp.DomainModels;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Kale-ab on 2015-07-09.
  */
-public class ScoutBug {
+public class ScoutBug implements Serializable{
     public int ScoutBugID;
     public int ScoutStopID;
     public int SpeciesID;
     public int NumberOfBugs;
-    public Bitmap FieldPicture;
+    public byte[] FieldPicture;
     public String Comments;
     public Integer LastModifiedID;
     public Date TMStamp;
@@ -52,11 +53,11 @@ public class ScoutBug {
         NumberOfBugs = numberOfBugs;
     }
 
-    public Bitmap getFieldPicture() {
+    public byte[] getFieldPicture() {
         return FieldPicture;
     }
 
-    public void setFieldPicture(Bitmap fieldPicture) {
+    public void setFieldPicture(byte[] fieldPicture) {
         FieldPicture = fieldPicture;
     }
 

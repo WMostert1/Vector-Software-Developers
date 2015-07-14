@@ -1,6 +1,7 @@
 package vsd.co.za.sambugapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -174,14 +176,16 @@ public class ScoutTripActivity extends ActionBarActivity {
             lblBlockName.setText(stop.Block.getBlockName());
             TextView lblTreeAmount =
                     (TextView)convertView.findViewById(R.id.lblTreeAmount);
-            lblTreeAmount.setText(stop.getNumberOfTrees()+"");
+            lblTreeAmount.setText(stop.getNumberOfTrees() + "");
             LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
-            ImageView img=new ImageView(this.getContext());
-            //img.setImageResource(R.drawable.st);
             hscrollBugInfo.removeAllViews();
-            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.st));
-            img.setLayoutParams(new RelativeLayout.LayoutParams(50,50));
-            hscrollBugInfo.addView(img);
+            for (ScoutBug bug:stop.getScoutBugs()) {
+                ImageView img = new ImageView(this.getContext());
+                Bitmap bitmap=BitmapFactory.decodeByteArray(bug.getFieldPicture(),0,bug.getFieldPicture().length);
+                img.setImageBitmap(bitmap);
+                img.setLayoutParams(new RelativeLayout.LayoutParams(50, 50));
+                hscrollBugInfo.addView(img);
+            }
             return convertView;
         }
     }

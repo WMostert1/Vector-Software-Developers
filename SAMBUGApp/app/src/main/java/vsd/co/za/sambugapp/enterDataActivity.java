@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,6 +33,7 @@ import vsd.co.za.sambugapp.DomainModels.Species;
 
 
 public class enterDataActivity extends ActionBarActivity {
+    private final String BUG_COUNT="za.co.vsd.bug_count";
     ScoutStop stop;
     Species species;
     Spinner mySpin;
@@ -50,7 +52,7 @@ public class enterDataActivity extends ActionBarActivity {
         acceptStop(iReceive);
         acceptBlocks(iReceive);
         populateSpinner();
-        initializeNumberPickers();
+        initializeNumberPickers(savedInstanceState);
         //receiveGeoLocation();
         createScoutStop();
     }
@@ -77,6 +79,12 @@ public class enterDataActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt(BUG_COUNT, npBugs.getValue());
+    }
+
     private void populateSpinner() {
         mySpin = (Spinner) findViewById(R.id.spnBlocks);
         ArrayAdapter<String> dataAdapter;
@@ -97,7 +105,7 @@ public class enterDataActivity extends ActionBarActivity {
         mySpin.setAdapter(adapter);
     }
 
-    public void initializeNumberPickers() {
+    public void initializeNumberPickers(Bundle savedInstanceState) {
         npTrees = (NumberPicker) findViewById(R.id.npNumTrees);
         npBugs = (NumberPicker) findViewById(R.id.npNumBugs);
 
@@ -108,6 +116,9 @@ public class enterDataActivity extends ActionBarActivity {
         npBugs.setMinValue(0);
         npBugs.setMaxValue(100);
         npBugs.setWrapSelectorWheel(false);
+        if (savedInstanceState!=null){
+            npBugs.setValue(savedInstanceState.getInt(BUG_COUNT));
+        }
 
     }
 
@@ -149,20 +160,21 @@ public class enterDataActivity extends ActionBarActivity {
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
             Log.e("Look", "here2");
             Bundle speciesReceived = data.getExtras();
-            Species species = (Species) speciesReceived.get("Species");
+            Species species = (Species) speciesReceived.get(IdentificationActivity.IDENTIFICATION_SPECIES);
             Bitmap imageTaken2 = (Bitmap)speciesReceived.getParcelable("Image");
-          //  addImage(imageTaken);
-           // createBug(species);
+            createBug(species,npBugs.getValue(),imageTaken2); //add this to "Add Bug" button later
+
             Log.e("Look", species.getSpeciesName());
         }
     }
 
-//    //public void addImage(Bitmap im){
-//        stop.setImageCaptured(im);
-//    }
-    private void createBug(Species spec){
+    private void createBug(Species spec,int numBugs,Bitmap fieldImg){
         ScoutBug sb = new ScoutBug();
         sb.setSpecies(spec);
+        sb.setNumberOfBugs(numBugs);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        fieldImg.compress(Bitmap.CompressFormat.JPEG,100,stream);
+        sb.setFieldPicture(stream.toByteArray());
         stop.ScoutBugs.add(sb); //addBugEntry(sb);
     }
 
@@ -254,7 +266,7 @@ public class enterDataActivity extends ActionBarActivity {
     public void sendResultBack(View view) {
         Intent output = new Intent();
         Bundle b = new Bundle();
-        b.putSerializable("ScoutStop",stop);
+        b.putSerializable(ScoutTripActivity.SCOUT_STOP, stop);
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();
