@@ -96,6 +96,10 @@ public class IdentificationActivity extends AppCompatActivity {
                     speciesDAO.open();
                     currentEntry = speciesDAO.getSpecies(position + 1);
                     Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+                    ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
+                    byte[] imgData = currentEntry.getIdealPicture();
+                    comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
+                            imgData.length));
                     speciesDAO.close();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -143,7 +147,19 @@ public class IdentificationActivity extends AppCompatActivity {
                     bitmap.recycle();
                 }
                 stream = getContentResolver().openInputStream(data.getData());
-                bitmap = BitmapFactory.decodeStream(stream);
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(stream, null, options);
+
+                // Calculate inSampleSize
+                options.inSampleSize = ImageAdapter.calculateInSampleSize(options, 150, 150);
+
+                // Decode bitmap with inSampleSize set
+                options.inJustDecodeBounds = false;
+                stream = getContentResolver().openInputStream(data.getData());
+
+
+                bitmap = BitmapFactory.decodeStream(stream, null, options);
                 Log.e("BMap", bitmap.toString());
                 //TODO: Rotate the image
 
@@ -187,7 +203,6 @@ public class IdentificationActivity extends AppCompatActivity {
         finish();
 
     }
-
 
 
 }
