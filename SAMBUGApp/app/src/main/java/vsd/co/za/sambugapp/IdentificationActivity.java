@@ -43,14 +43,14 @@ public class IdentificationActivity extends AppCompatActivity {
     private ImageView mImageView;
     private Bitmap bitmap;
     private Species currentEntry;
-    private Species identification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
         // dispatchTakePictureIntent();
-        mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+        //mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+        bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.st);
         SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
         try {
             speciesDAO.open();
@@ -154,7 +154,8 @@ public class IdentificationActivity extends AppCompatActivity {
 
         Intent output = new Intent();
         Bundle b = new Bundle();
-        b.putSerializable(IDENTIFICATION_SPECIES, identification);
+        currentEntry.setIdealPicture(null);
+        b.putSerializable(IDENTIFICATION_SPECIES, currentEntry);
         //Bitmap cp      = mImageView.getDrawingCache();
         Bitmap cp=bitmap;
         cp=Bitmap.createScaledBitmap(cp,50,50,true);

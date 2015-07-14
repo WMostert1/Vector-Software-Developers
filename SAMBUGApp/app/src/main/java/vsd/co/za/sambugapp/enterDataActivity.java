@@ -20,6 +20,7 @@ import android.widget.Spinner;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -54,7 +55,6 @@ public class enterDataActivity extends ActionBarActivity {
         populateSpinner();
         initializeNumberPickers(savedInstanceState);
         //receiveGeoLocation();
-        createScoutStop();
     }
 
     @Override
@@ -239,7 +239,11 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void createScoutStop() {
         stop = new ScoutStop();
-
+        stop.setDate(new Date());
+        stop.setLastModifiedID(1);
+        stop.setTMStamp(new Date());
+        stop.setLatitude(12);
+        stop.setLongitude(12);
     }
 
     private void usePassedStop(ScoutStop sp){
