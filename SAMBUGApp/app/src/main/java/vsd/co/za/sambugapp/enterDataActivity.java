@@ -171,6 +171,7 @@ public class enterDataActivity extends ActionBarActivity {
     private void createBug(Species spec,int numBugs,Bitmap fieldImg){
         ScoutBug sb = new ScoutBug();
         sb.setSpecies(spec);
+        sb.setSpeciesID(spec.getSpeciesID());
         sb.setNumberOfBugs(numBugs);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         fieldImg.compress(Bitmap.CompressFormat.JPEG,100,stream);
