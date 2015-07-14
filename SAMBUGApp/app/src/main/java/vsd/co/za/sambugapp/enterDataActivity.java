@@ -51,7 +51,7 @@ public class enterDataActivity extends ActionBarActivity {
         acceptBlocks(iReceive);
         populateSpinner();
         initializeNumberPickers();
-        receiveGeoLocation();
+        //receiveGeoLocation();
         createScoutStop();
     }
 

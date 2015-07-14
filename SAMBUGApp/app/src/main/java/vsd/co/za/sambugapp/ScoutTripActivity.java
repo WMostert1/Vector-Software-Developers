@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -107,13 +108,14 @@ public class ScoutTripActivity extends ActionBarActivity {
         farm.setFarmID(1);
         farm.setFarmName("DEEZ NUTS");
         HashSet<Block> blocks=new HashSet<>();
-        for (int j=1;j<=5;j++){
+        for (int j=1;j<=10;j++){
             Block obj=new Block();
             obj.setBlockID(j);
             obj.setBlockName("Block #" + j);
             blocks.add(obj);
         }
         farm.setBlocks(blocks);
+        Log.d(TAG, "Intent");
         //Bundle b=i.getExtras();
         //farm=(Farm)b.get(LoginActivity.USER_FARM);
     }
@@ -124,9 +126,13 @@ public class ScoutTripActivity extends ActionBarActivity {
         ScoutStop stop=(ScoutStop)bundle.get(SCOUT_STOP);
         if (requestCode == NEW_STOP && resultCode == RESULT_OK) {
             addStop(stop);
+            Log.d(TAG,"Added");
         } else if (requestCode==UPDATE_STOP && resultCode==RESULT_OK){
             updateStop(stop);
+            Log.d(TAG,"Updated");
         }
+        lstStopsAdapter.notifyDataSetChanged();
+        lstPestsPerTreeAdapter.notifyDataSetChanged();
     }
 
     @Override

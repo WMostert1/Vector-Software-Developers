@@ -26,9 +26,11 @@ import vsd.co.za.sambugapp.DomainModels.Species;
 
 public class IdentificationActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
+    public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     private ImageView mImageView;
     private Bitmap bitmap;
     private Species currentEntry;
+    private Species identification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,6 @@ public class IdentificationActivity extends AppCompatActivity {
         dispatchTakePictureIntent();
         mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
     }
-
 
 
     @Override
@@ -100,7 +101,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     public void speciesSelectionClick(View view) {
 
-        Species identification = new Species();
+        identification = new Species();
         String c = "Coconut";
         String gV = "Green Vegetable";
         String tS = "Two Spotted";
@@ -188,17 +189,12 @@ public class IdentificationActivity extends AppCompatActivity {
                 break;
         }
 
-
     }
 
     public void sendResultBack(View view) {
-
         Intent output = new Intent();
         Bundle b = new Bundle();
-        Species species = new Species();
-        species.setSpeciesName("Keagan a bitch ;)");
-        b.putSerializable("Species", species);
-
+        b.putSerializable(IDENTIFICATION_SPECIES, identification);
         Bitmap cp      = mImageView.getDrawingCache();
         if(cp == null){
             Log.e("Look", "Bitch");
@@ -207,9 +203,6 @@ public class IdentificationActivity extends AppCompatActivity {
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();
-
     }
-
-
 
 }
