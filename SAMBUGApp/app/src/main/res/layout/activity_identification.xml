@@ -30,7 +30,7 @@
         >
 
         <ImageButton
-            tools:src="@drawable/coconut_inst_1"
+            android:src="@drawable/coconut_inst_1"
             android:id="@+id/coconut_1"
             android:onClick="speciesSelectionClick"
             android:scaleType="fitXY"
@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
         <ImageButton
-            tools:src="@drawable/coconut_inst_2"
+            android:src="@drawable/coconut_inst_2"
             android:id="@+id/coconut_2"
             android:onClick="speciesSelectionClick"
             android:scaleType="fitXY"
@@ -48,7 +48,7 @@
             android:layout_weight="1"
             android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
         <ImageButton
-            tools:src="@drawable/coconut_inst_3"
+            android:src="@drawable/coconut_inst_3"
             android:id="@+id/coconut_3"
             android:onClick="speciesSelectionClick"
             android:scaleType="fitXY"
@@ -58,7 +58,7 @@
             android:contentDescription="@string/identification_activity_speciesSpecificationDescription"
             android:focusable="false" />
         <ImageButton
-            tools:src="@drawable/coconut_inst_4"
+            android:src="@drawable/coconut_inst_4"
             android:id="@+id/coconut_4"
             android:onClick="speciesSelectionClick"
             android:scaleType="fitXY"
@@ -75,7 +75,7 @@
             >
 
             <ImageButton
-                tools:src="@drawable/green_veg_inst_1"
+                android:src="@drawable/green_veg_inst_1"
                 android:id="@+id/green_veg_1"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"
@@ -84,7 +84,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
             <ImageButton
-                tools:src="@drawable/green_veg_inst_2"
+                android:src="@drawable/green_veg_inst_2"
                 android:id="@+id/green_veg_2"
                 android:onClick="speciesSe
                 lectionClick"
@@ -94,7 +94,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
             <ImageButton
-                tools:src="@drawable/green_veg_inst_3"
+                android:src="@drawable/green_veg_inst_3"
                 android:id="@+id/green_veg_3"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"
@@ -103,7 +103,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
             <ImageButton
-                tools:src="@drawable/green_veg_inst_4"
+                android:src="@drawable/green_veg_inst_4"
                 android:id="@+id/green_veg_4"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"
@@ -120,7 +120,7 @@
             >
 
             <ImageButton
-                tools:src="@drawable/yellow_edged_inst_1"
+                android:src="@drawable/yellow_edged_inst_1"
                 android:id="@+id/yellow_edged_1"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"
@@ -129,7 +129,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
             <ImageButton
-                tools:src="@drawable/yellow_edged_inst_2"
+                android:src="@drawable/yellow_edged_inst_2"
                 android:id="@+id/yellow_edged_2"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"
@@ -138,7 +138,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
             <ImageButton
-                tools:src="@drawable/yellow_edged_inst_3"
+                android:src="@drawable/yellow_edged_inst_3"
                 android:id="@+id/yellow_edged_3"
                 android:onClick="speciesSelectionClick"
 
@@ -148,7 +148,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
             <ImageButton
-                tools:src="@drawable/yellow_edged_inst_4"
+                android:src="@drawable/yellow_edged_inst_4"
                 android:id="@+id/yellow_edged_4"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"
@@ -165,7 +165,7 @@
             >
 
             <ImageButton
-                tools:src="@drawable/two_spot_inst_1"
+                android:src="@drawable/two_spot_inst_1"
                 android:id="@+id/two_spot_1"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"
@@ -174,7 +174,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
             <ImageButton
-                tools:src="@drawable/two_spot_inst_2"
+                android:src="@drawable/two_spot_inst_2"
                 android:id="@+id/two_spot_2"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"
@@ -183,7 +183,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
             <ImageButton
-                tools:src="@drawable/two_spot_inst_3"
+                android:src="@drawable/two_spot_inst_3"
                 android:id="@+id/two_spot_3"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"
@@ -192,7 +192,7 @@
                 android:layout_weight="1"
                 android:contentDescription="@string/identification_activity_speciesSpecificationDescription"/>
             <ImageButton
-                tools:src="@drawable/two_spot_inst_4"
+                android:src="@drawable/two_spot_inst_4"
                 android:id="@+id/two_spot_4"
                 android:onClick="speciesSelectionClick"
                 android:scaleType="fitXY"

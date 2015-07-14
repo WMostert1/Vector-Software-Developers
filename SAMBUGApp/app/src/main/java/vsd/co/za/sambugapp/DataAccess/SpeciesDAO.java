@@ -2,19 +2,23 @@ package vsd.co.za.sambugapp.DataAccess;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
+import java.io.ByteArrayOutputStream;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 
 import vsd.co.za.sambugapp.DomainModels.Species;
+import vsd.co.za.sambugapp.R;
+
 
 
 /**
@@ -35,11 +39,83 @@ public class SpeciesDAO extends DataSourceAdapter {
         };
     }
 
+    /**
+     * This is only for phase 1 of the project to get some pre-loaded data into the database without
+     * needing the sync service from BugCentral
+     *
+     * @throws Resources.NotFoundException This is thrown when the drawables are missing
+     */
+    public void loadPresets() throws Resources.NotFoundException {
+        //These strings story the species name
+        String[] speciesNames = {"Coconut Bug", "Green Vegetable Bug", "Two Spotted Bug", "Yellow Edged Bug"};
+
+        //These array lists hold the integers that reference the drawable images
+        ArrayList<Integer> cRef = new ArrayList<>();
+        ArrayList<Integer> gvRef = new ArrayList<>();
+        ArrayList<Integer> tsRef = new ArrayList<>();
+        ArrayList<Integer> yeRef = new ArrayList<>();
+
+        ArrayList<ArrayList<Integer>> references = new ArrayList<>();
+
+        references.add(cRef);
+        references.add(gvRef);
+        references.add(tsRef);
+        references.add(yeRef);
+
+        cRef.add(R.drawable.coconut_inst_1);
+        cRef.add(R.drawable.coconut_inst_2);
+        cRef.add(R.drawable.coconut_inst_3);
+        cRef.add(R.drawable.coconut_inst_4);
+
+        gvRef.add(R.drawable.green_veg_inst_1);
+        gvRef.add(R.drawable.green_veg_inst_2);
+        gvRef.add(R.drawable.green_veg_inst_3);
+        gvRef.add(R.drawable.green_veg_inst_4);
+
+        tsRef.add(R.drawable.two_spot_inst_1);
+        tsRef.add(R.drawable.two_spot_inst_2);
+        tsRef.add(R.drawable.two_spot_inst_3);
+        tsRef.add(R.drawable.two_spot_inst_4);
+
+        yeRef.add(R.drawable.yellow_edged_inst_1);
+        yeRef.add(R.drawable.yellow_edged_inst_2);
+        yeRef.add(R.drawable.yellow_edged_inst_3);
+        yeRef.add(R.drawable.yellow_edged_inst_4);
+
+        for (int bugType = 0; bugType < references.size(); bugType++) {
+            ArrayList<Integer> specificBugReferences = references.get(bugType);
+            for (int instarNo = 0; instarNo < specificBugReferences.size(); instarNo++) {
+                Species speciesEntry = new Species();
+                speciesEntry.setSpeciesName(speciesNames[bugType]);
+                speciesEntry.setLifestage(instarNo);
+
+                Drawable drawable = context.getResources().getDrawable(specificBugReferences.get(instarNo)); //Only deprecated because our target SDK is 22
+                if (drawable == null) throw new Resources.NotFoundException();
+                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                speciesEntry.setIdealPicture(stream.toByteArray());
+
+                try {
+                    String date = DateFormat.getDateTimeInstance().format(new Date());
+                    speciesEntry.setTMStamp(DateFormat.getDateTimeInstance().parse(date));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    speciesEntry.setTMStamp(null);
+                }
+                speciesEntry.setLastModifiedID(null);
+                speciesEntry.setIsPest(true);
+                speciesEntry.setLifestage(instarNo + 1);
+                insert(speciesEntry);
+            }
+        }
+
+    }
 
     public void delete(Species species) {
         int id = species.getSpeciesID();
         database.delete(DBHelper.TABLE_SPECIES, DBHelper.COLUMN_SPECIES_ID + " = " + id, null);
-
     }
 
     public void update(Species species) {
@@ -80,6 +156,33 @@ public class SpeciesDAO extends DataSourceAdapter {
         //Remember to close the cursor
         cursor.close();
         return speciesList;
+    }
+
+    public void clearTable() {
+        database.delete(DBHelper.TABLE_SPECIES, null, null);
+    }
+
+    public Species getSpecies(int id) {
+        Cursor cursor = database.query(DBHelper.TABLE_SPECIES, allColumns, DBHelper.COLUMN_SPECIES_ID + " = " + id, null, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.isAfterLast()) {
+            cursor.close();
+            return null;
+        }
+        Species species = cursorToSpecies(cursor);
+
+        //Remember to close the cursor
+        cursor.close();
+        return species;
+    }
+
+    public boolean isEmpty() {
+        Cursor cursor = database.query(DBHelper.TABLE_SPECIES, allColumns, null, null, null, null, null);
+        cursor.moveToFirst();
+
+        boolean result = cursor.isAfterLast();
+        cursor.close();
+        return result;
     }
 
     public Species cursorToSpecies(Cursor cursor) {

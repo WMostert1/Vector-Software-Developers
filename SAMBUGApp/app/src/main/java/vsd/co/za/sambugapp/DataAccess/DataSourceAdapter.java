@@ -13,9 +13,11 @@ public class DataSourceAdapter {
     protected SQLiteDatabase database;
     protected DBHelper dbHelper;
     protected String[] allColumns;
+    protected Context context;
 
     public DataSourceAdapter(Context context) {
         dbHelper = new DBHelper(context);
+        this.context = context;
     }
 
     public void open() throws SQLException {

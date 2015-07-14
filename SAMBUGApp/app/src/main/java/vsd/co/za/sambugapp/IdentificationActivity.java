@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +49,19 @@ public class IdentificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_identification);
         // dispatchTakePictureIntent();
         mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+        SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+        try {
+            speciesDAO.open();
+            if (speciesDAO.isEmpty()) {
+                speciesDAO.loadPresets();
+            }
+
+            speciesDAO.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -111,120 +125,25 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     public void speciesSelectionClick(View view) {
+        int[] buttonIds = {R.id.coconut_1, R.id.coconut_2, R.id.coconut_3, R.id.coconut_4,
+                R.id.green_veg_1, R.id.green_veg_2, R.id.green_veg_3, R.id.green_veg_4,
+                R.id.two_spot_1, R.id.two_spot_2, R.id.two_spot_3, R.id.two_spot_4,
+                R.id.yellow_edged_1, R.id.yellow_edged_2, R.id.yellow_edged_3, R.id.yellow_edged_4};
 
-        Species identification = new Species();
-        String c = "Coconut";
-        String gV = "Green Vegetable";
-        String tS = "Two Spotted";
-        String yE = "Yellow Edged";
-        identification.setIsPest(true);
-
-        SpeciesDAO dao = new SpeciesDAO(getApplicationContext());
-        try {
-            dao.open();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //TODO: Replace this with proper dynamic code when DB is up
-        switch (view.getId()) {
-            case R.id.coconut_1:
-                identification.setSpeciesName(c);
-                identification.setLifestage(1);
-                Drawable drawable = getResources().getDrawable(R.drawable.coconut_inst_1);
-                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                identification.setIdealPicture(stream.toByteArray());
+        for (int id = 0; id < buttonIds.length; id++) {
+            if (view.getId() == buttonIds[id]) {
+                SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
                 try {
-                    String date = DateFormat.getDateTimeInstance().format(new Date());
-                    identification.setTMStamp(DateFormat.getDateTimeInstance().parse(date));
-                } catch (ParseException e) {
+                    speciesDAO.open();
+                    currentEntry = speciesDAO.getSpecies(id + 1);
+                    Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+                    speciesDAO.close();
+                    return;
+                } catch (Exception e) {
                     e.printStackTrace();
-                    identification.setTMStamp(null);
                 }
-                identification.setLastModifiedID(1);
-                //identification.setIdealPicture(R.);
-
-
-                dao.insert(identification);
-
-                break;
-            case R.id.coconut_2:
-                identification.setSpeciesName(c);
-                identification.setLifestage(2);
-                List<Species> entries = dao.getAllSpecies();
-                break;
-            case R.id.coconut_3:
-                identification.setSpeciesName(c);
-                identification.setLifestage(3);
-                break;
-            case R.id.coconut_4:
-                identification.setSpeciesName(c);
-                identification.setLifestage(4);
-                break;
-
-            case R.id.green_veg_1:
-                identification.setSpeciesName(gV);
-                identification.setLifestage(1);
-                break;
-
-            case R.id.green_veg_2:
-                identification.setSpeciesName(gV);
-                identification.setLifestage(2);
-                break;
-
-            case R.id.green_veg_3:
-                identification.setSpeciesName(gV);
-                identification.setLifestage(3);
-                break;
-
-            case R.id.green_veg_4:
-                identification.setSpeciesName(gV);
-                identification.setLifestage(4);
-                break;
-
-            case R.id.two_spot_1:
-                identification.setSpeciesName(tS);
-                identification.setLifestage(1);
-                break;
-
-            case R.id.two_spot_2:
-                identification.setSpeciesName(tS);
-                identification.setLifestage(2);
-                break;
-
-            case R.id.two_spot_3:
-                identification.setSpeciesName(tS);
-                identification.setLifestage(3);
-                break;
-
-            case R.id.two_spot_4:
-                identification.setSpeciesName(tS);
-                identification.setLifestage(4);
-                break;
-
-            case R.id.yellow_edged_1:
-                identification.setSpeciesName(yE);
-                identification.setLifestage(1);
-                break;
-
-            case R.id.yellow_edged_2:
-                identification.setSpeciesName(yE);
-                identification.setLifestage(2);
-                break;
-
-            case R.id.yellow_edged_3:
-                identification.setSpeciesName(yE);
-                identification.setLifestage(3);
-                break;
-
-            case R.id.yellow_edged_4:
-                identification.setSpeciesName(yE);
-                identification.setLifestage(4);
-                break;
+            }
         }
-
-        dao.close();
     }
 
     public void sendResultBack(View view) {
