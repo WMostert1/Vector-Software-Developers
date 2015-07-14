@@ -6,11 +6,15 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,15 +26,14 @@
             android:windowSoftInputMode="adjustResize|stateVisible" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".enterDataActivity"
-            android:label="@string/title_activity_enter_data"
-            android:exported="true">
-
+            android:exported="true"
+            android:label="@string/title_activity_enter_data" >
         </activity>
         <activity
             android:name=".ScoutTripActivity"
@@ -38,15 +41,17 @@
         </activity>
         <activity
             android:name=".IdentificationActivity"
+            android:exported="true"
             android:label="@string/title_activity_identification"
-            android:parentActivityName=".enterDataActivity"
-            android:exported="true">
+            android:parentActivityName=".enterDataActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vsd.co.za.sambugapp.enterDataActivity" />
         </activity>
-
-
+        <activity
+            android:name=".test"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>
