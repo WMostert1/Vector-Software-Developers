@@ -15,7 +15,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -38,30 +40,72 @@ import vsd.co.za.sambugapp.DomainModels.Species;
 
 
 public class IdentificationActivity extends AppCompatActivity {
-    static final int REQUEST_TAKE_PHOTO = 1;
+    public static final int REQUEST_TAKE_PHOTO = 1;
+    private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
+    private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     private ImageView mImageView;
     private Bitmap bitmap;
     private Species currentEntry;
+    private int createCounter = 0;
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt(FIRST_TIME_INDEX, createCounter);
+        savedInstanceState.putParcelable(FIELD_BITMAP, bitmap);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_identification);
-        // dispatchTakePictureIntent();
-        mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
-        SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
-        try {
-            speciesDAO.open();
-            if (speciesDAO.isEmpty()) {
-                speciesDAO.loadPresets();
-            }
 
-            speciesDAO.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (savedInstanceState != null) {
+            bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
+            createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
         }
 
+        if (createCounter == 0) {
+            SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+            try {
+                speciesDAO.open();
+                if (speciesDAO.isEmpty()) {
+                    speciesDAO.loadPresets();
+                }
+
+                speciesDAO.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            dispatchTakePictureIntent();
+        }
+        if (createCounter == 0) createCounter++;
+
+
+        setContentView(R.layout.activity_identification);
+
+        GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
+        gridview.setAdapter(new ImageAdapter(this));
+
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+                try {
+                    speciesDAO.open();
+                    currentEntry = speciesDAO.getSpecies(position + 1);
+                    Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+                    speciesDAO.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+        if (bitmap != null) mImageView.setImageBitmap(bitmap);
     }
 
 
@@ -124,27 +168,6 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     }
 
-    public void speciesSelectionClick(View view) {
-        int[] buttonIds = {R.id.coconut_1, R.id.coconut_2, R.id.coconut_3, R.id.coconut_4,
-                R.id.green_veg_1, R.id.green_veg_2, R.id.green_veg_3, R.id.green_veg_4,
-                R.id.two_spot_1, R.id.two_spot_2, R.id.two_spot_3, R.id.two_spot_4,
-                R.id.yellow_edged_1, R.id.yellow_edged_2, R.id.yellow_edged_3, R.id.yellow_edged_4};
-
-        for (int id = 0; id < buttonIds.length; id++) {
-            if (view.getId() == buttonIds[id]) {
-                SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
-                try {
-                    speciesDAO.open();
-                    currentEntry = speciesDAO.getSpecies(id + 1);
-                    Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
-                    speciesDAO.close();
-                    return;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     public void sendResultBack(View view) {
 
