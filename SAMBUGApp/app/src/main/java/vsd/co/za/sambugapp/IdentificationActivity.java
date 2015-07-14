@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
@@ -17,10 +19,21 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
+import vsd.co.za.sambugapp.DataAccess.DBHelper;
+import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
 import vsd.co.za.sambugapp.DomainModels.Species;
 
 
@@ -34,8 +47,21 @@ public class IdentificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
-        dispatchTakePictureIntent();
+        // dispatchTakePictureIntent();
         mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+        SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+        try {
+            speciesDAO.open();
+            if (speciesDAO.isEmpty()) {
+                speciesDAO.loadPresets();
+            }
+
+            speciesDAO.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -99,96 +125,25 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     public void speciesSelectionClick(View view) {
+        int[] buttonIds = {R.id.coconut_1, R.id.coconut_2, R.id.coconut_3, R.id.coconut_4,
+                R.id.green_veg_1, R.id.green_veg_2, R.id.green_veg_3, R.id.green_veg_4,
+                R.id.two_spot_1, R.id.two_spot_2, R.id.two_spot_3, R.id.two_spot_4,
+                R.id.yellow_edged_1, R.id.yellow_edged_2, R.id.yellow_edged_3, R.id.yellow_edged_4};
 
-        Species identification = new Species();
-        String c = "Coconut";
-        String gV = "Green Vegetable";
-        String tS = "Two Spotted";
-        String yE = "Yellow Edged";
-        identification.setIsPest(true);
-        // identification.setFieldPic(bitmap);
-
-        //TODO: Replace this with proper dynamic code when DB is up
-        switch (view.getId()) {
-            case R.id.coconut_1:
-                identification.setSpeciesName(c);
-                identification.setLifestage(1);
-                break;
-            case R.id.coconut_2:
-                identification.setSpeciesName(c);
-                identification.setLifestage(2);
-                break;
-            case R.id.coconut_3:
-                identification.setSpeciesName(c);
-                identification.setLifestage(3);
-                break;
-            case R.id.coconut_4:
-                identification.setSpeciesName(c);
-                identification.setLifestage(4);
-                break;
-
-            case R.id.green_veg_1:
-                identification.setSpeciesName(gV);
-                identification.setLifestage(1);
-                break;
-
-            case R.id.green_veg_2:
-                identification.setSpeciesName(gV);
-                identification.setLifestage(2);
-                break;
-
-            case R.id.green_veg_3:
-                identification.setSpeciesName(gV);
-                identification.setLifestage(3);
-                break;
-
-            case R.id.green_veg_4:
-                identification.setSpeciesName(gV);
-                identification.setLifestage(4);
-                break;
-
-            case R.id.two_spot_1:
-                identification.setSpeciesName(tS);
-                identification.setLifestage(1);
-                break;
-
-            case R.id.two_spot_2:
-                identification.setSpeciesName(tS);
-                identification.setLifestage(2);
-                break;
-
-            case R.id.two_spot_3:
-                identification.setSpeciesName(tS);
-                identification.setLifestage(3);
-                break;
-
-            case R.id.two_spot_4:
-                identification.setSpeciesName(tS);
-                identification.setLifestage(4);
-                break;
-
-            case R.id.yellow_edged_1:
-                identification.setSpeciesName(yE);
-                identification.setLifestage(1);
-                break;
-
-            case R.id.yellow_edged_2:
-                identification.setSpeciesName(yE);
-                identification.setLifestage(2);
-                break;
-
-            case R.id.yellow_edged_3:
-                identification.setSpeciesName(yE);
-                identification.setLifestage(3);
-                break;
-
-            case R.id.yellow_edged_4:
-                identification.setSpeciesName(yE);
-                identification.setLifestage(4);
-                break;
+        for (int id = 0; id < buttonIds.length; id++) {
+            if (view.getId() == buttonIds[id]) {
+                SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+                try {
+                    speciesDAO.open();
+                    currentEntry = speciesDAO.getSpecies(id + 1);
+                    Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+                    speciesDAO.close();
+                    return;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
-
-
     }
 
     public void sendResultBack(View view) {
@@ -199,11 +154,11 @@ public class IdentificationActivity extends AppCompatActivity {
         species.setSpeciesName("Keagan a bitch ;)");
         b.putSerializable("Species", species);
 
-        Bitmap cp      = mImageView.getDrawingCache();
-        if(cp == null){
+        Bitmap cp = mImageView.getDrawingCache();
+        if (cp == null) {
             Log.e("Look", "Bitch");
         }
-        b.putParcelable("Image",cp);
+        b.putParcelable("Image", cp);
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();

@@ -17,7 +17,7 @@ public class Species implements Serializable {
     public int SpeciesID;
     public String SpeciesName;
     public int Lifestage;
-    public int IdealPicture;
+    public byte[] IdealPicture;
     public boolean IsPest;
     public Integer LastModifiedID;
     public Date TMStamp;
@@ -48,11 +48,11 @@ public class Species implements Serializable {
         Lifestage = lifestage;
     }
 
-    public int getIdealPicture() {
+    public byte[] getIdealPicture() {
         return IdealPicture;
     }
 
-    public void setIdealPicture(int idealPicture) {
+    public void setIdealPicture(byte[] idealPicture) {
         IdealPicture = idealPicture;
     }
 

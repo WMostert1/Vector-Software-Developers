@@ -86,7 +86,8 @@
             <ImageButton
                 android:src="@drawable/green_veg_inst_2"
                 android:id="@+id/green_veg_2"
-                android:onClick="speciesSelectionClick"
+                android:onClick="speciesSe
+                lectionClick"
                 android:scaleType="fitXY"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/galleryPicHeight"
