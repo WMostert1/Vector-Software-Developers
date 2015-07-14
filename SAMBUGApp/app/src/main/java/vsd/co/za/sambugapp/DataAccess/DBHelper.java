@@ -14,9 +14,11 @@ import vsd.co.za.sambugapp.R;
 
 
 /**
- * Created by Aeolus on 2015-07-10.
+ * Created by Aeolus on 2015-07-10.ssss
  */
 public class DBHelper<T> extends SQLiteOpenHelper {
+
+
     public static final String COLUMN_LAST_MODIFIED_ID = "LastModifiedID";
     public static final String COLUMN_TIMESTAMP = "TMStamp";
 

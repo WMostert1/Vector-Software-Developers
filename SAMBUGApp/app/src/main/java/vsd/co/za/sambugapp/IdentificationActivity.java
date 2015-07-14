@@ -23,9 +23,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
+import vsd.co.za.sambugapp.DataAccess.DBHelper;
 import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
 import vsd.co.za.sambugapp.DomainModels.Species;
 
@@ -40,7 +46,7 @@ public class IdentificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_identification);
-        dispatchTakePictureIntent();
+        // dispatchTakePictureIntent();
         mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
     }
 
@@ -129,7 +135,13 @@ public class IdentificationActivity extends AppCompatActivity {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 identification.setIdealPicture(stream.toByteArray());
-                identification.setTMStamp(new Date());
+                try {
+                    String date = DateFormat.getDateTimeInstance().format(new Date());
+                    identification.setTMStamp(DateFormat.getDateTimeInstance().parse(date));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    identification.setTMStamp(null);
+                }
                 identification.setLastModifiedID(1);
                 //identification.setIdealPicture(R.);
 
@@ -140,7 +152,7 @@ public class IdentificationActivity extends AppCompatActivity {
             case R.id.coconut_2:
                 identification.setSpeciesName(c);
                 identification.setLifestage(2);
-                ArrayList<Species> entries = (ArrayList) dao.getAllSpecies();
+                List<Species> entries = dao.getAllSpecies();
                 break;
             case R.id.coconut_3:
                 identification.setSpeciesName(c);

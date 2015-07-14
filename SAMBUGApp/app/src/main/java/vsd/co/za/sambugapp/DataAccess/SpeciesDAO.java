@@ -4,10 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 
 import vsd.co.za.sambugapp.DomainModels.Species;
 
@@ -28,6 +33,26 @@ public class SpeciesDAO extends DataSourceAdapter {
                 DBHelper.COLUMN_LAST_MODIFIED_ID,
                 DBHelper.COLUMN_TIMESTAMP
         };
+    }
+
+
+    public void delete(Species species) {
+        int id = species.getSpeciesID();
+        database.delete(DBHelper.TABLE_SPECIES, DBHelper.COLUMN_SPECIES_ID + " = " + id, null);
+
+    }
+
+    public void update(Species species) {
+        int id = species.getSpeciesID();
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.COLUMN_SPECIES_NAME, species.getSpeciesName());
+        values.put(DBHelper.COLUMN_LIFESTAGE, species.getLifestage());
+        values.put(DBHelper.COLUMN_IDEAL_PICTURE, species.getIdealPicture());
+        values.put(DBHelper.COLUMN_IS_PEST, species.isPest());
+        values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, species.getLastModifiedID());
+        values.put(DBHelper.COLUMN_TIMESTAMP, species.getTMStamp().toString());
+        database.update(DBHelper.TABLE_SPECIES, values, DBHelper.COLUMN_SPECIES_ID + " = " + id, null);
+
     }
 
     public void insert(Species species) {
@@ -58,12 +83,21 @@ public class SpeciesDAO extends DataSourceAdapter {
     }
 
     public Species cursorToSpecies(Cursor cursor) {
-        //TODO: Do the queries propery
         Species species = new Species();
         species.setSpeciesID(cursor.getInt(0));
-        species.setSpeciesName(cursor.getString(0));
-        species.setLifestage(cursor.getInt(1));
-        species.setIdealPicture(cursor.getBlob(0));
+        species.setSpeciesName(cursor.getString(1));
+        species.setLifestage(cursor.getInt(2));
+        species.setIdealPicture(cursor.getBlob(3));
+        species.setIsPest(cursor.getInt(4) == 1);
+        species.setLastModifiedID(cursor.getInt(5));
+        String date = cursor.getString(6);
+        try {
+            //TODO: Get this bloody thing to parse the date correctly
+            species.setTMStamp(DateFormat.getDateTimeInstance().parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            species.setTMStamp(null);
+        }
         return species;
     }
 }
