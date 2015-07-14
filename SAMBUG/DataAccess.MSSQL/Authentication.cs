@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,21 +16,30 @@ namespace DataAccess.MSSQL
         {
             var context = new BugDBEntities();
 
-            var result = (from user in context.Users
+            var userIdQuery =  (from user in context.Users
                 where user.Email.Equals(loginRequest.Username) && user.Password.Equals(loginRequest.Password)
-                select user)
+                select user.UserID)
                 .FirstOrDefault();
 
-            if (result == null || !loginRequest.Password.Equals(result.Password))
+            if (userIdQuery == default(int))
                 return null;
 
-            var loginResponse = new LoginResponse
+            var rolesQuery = from usrRole in context.UserRoles
+                join rle in context.Roles on usrRole.RoleID equals rle.RoleID 
+                          where usrRole.UserID == userIdQuery
+                select rle;
+
+            
+                
+
+
+/*            var loginResponse = new LoginResponse
             {
                 Id = result.UserID,
                 Role = result.RoleID
-            };
+            }*/;
 
-            return loginResponse;
+            return null;
         }
     }
 }

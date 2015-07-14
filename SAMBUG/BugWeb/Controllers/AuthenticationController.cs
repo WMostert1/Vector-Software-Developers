@@ -21,6 +21,7 @@ namespace BugWeb.Controllers
 
         public ActionResult Login(LoginViewModel loginViewModel)
         {
+
             var nameValCollection = new NameValueCollection();
             nameValCollection.Add("Username", loginViewModel.Username);
             nameValCollection.Add("Password", loginViewModel.Password); 
