@@ -127,7 +127,7 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void initializeNumberPickers(Bundle savedInstanceState) {
         npTrees = (NumberPicker) findViewById(R.id.npNumTrees);
-        npBugs = (NumberPicker) findViewById(R.id.npNumBugs);
+        npBugs = (NumberPicker) findViewById(R.id.npNumBugs1);
 
         npTrees.setMinValue(1);
         npTrees.setMaxValue(100);
@@ -354,11 +354,13 @@ public class enterDataActivity extends ActionBarActivity {
     public void storeCurrentBug(){
         ScoutBug currBug = new ScoutBug();
         if(species != null){
-            currBug.setFieldPicture(imageTaken);
+            currBug.setSpecies(species);
         }
         //currBug.setSpecies(species);
         if(imageTaken != null){
-            currBug.setFieldPicture(imageTaken);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            imageTaken.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            currBug.setFieldPicture(stream.toByteArray());
         }
 
 //        TableRow rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
@@ -366,6 +368,23 @@ public class enterDataActivity extends ActionBarActivity {
 //        //NumberPicker currNumberPicker = (NumberPicker)findViewById(R.id.npNumBugs1);
 //        currBug.setNumberOfBugs(currNumberPicker.getValue());
         allBugs.add(currBug);
-       // currBug
+        // currBug
+
+
+
+       // currBug.setNumberOfBugs(numBugs);
+
+        //TODO: change to user id eventually
+//        sb.setLastModifiedID(1);
+//        sb.setTMStamp(new Date());
+//        stop.ScoutBugs.add(sb); .setSpecies(spec);
+//        sb.setNumberOfBugs(numBugs);
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        fieldImg.compress(Bitmap.CompressFormat.JPEG,100,stream);
+//        sb.setFieldPicture(stream.toByteArray());
+//        //TODO: change to user id eventually
+//        sb.setLastModifiedID(1);
+//        sb.setTMStamp(new Date());
+//        stop.ScoutBugs.add(sb);
     }
 }
