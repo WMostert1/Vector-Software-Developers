@@ -43,6 +43,8 @@ public class IdentificationActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 1;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
     private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
+    static final int REQUEST_TAKE_PHOTO = 1;
+    public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     private ImageView mImageView;
     private Bitmap bitmap;
     private Species currentEntry;
@@ -58,6 +60,15 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_identification);
+        // dispatchTakePictureIntent();
+        mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+        SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+        try {
+            speciesDAO.open();
+            if (speciesDAO.isEmpty()) {
+                speciesDAO.loadPresets();
+            }
 
         if (savedInstanceState != null) {
             bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
@@ -168,20 +179,41 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     }
 
+    public void speciesSelectionClick(View view) {
+        int[] buttonIds = {R.id.coconut_1, R.id.coconut_2, R.id.coconut_3, R.id.coconut_4,
+                R.id.green_veg_1, R.id.green_veg_2, R.id.green_veg_3, R.id.green_veg_4,
+                R.id.two_spot_1, R.id.two_spot_2, R.id.two_spot_3, R.id.two_spot_4,
+                R.id.yellow_edged_1, R.id.yellow_edged_2, R.id.yellow_edged_3, R.id.yellow_edged_4};
+
+        for (int id = 0; id < buttonIds.length; id++) {
+            if (view.getId() == buttonIds[id]) {
+                SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+                try {
+                    speciesDAO.open();
+                    currentEntry = speciesDAO.getSpecies(id + 1);
+                    Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+                    speciesDAO.close();
+                    return;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     public void sendResultBack(View view) {
 
         Intent output = new Intent();
         Bundle b = new Bundle();
-        Species species = new Species();
-        species.setSpeciesName("Keagan a bitch ;)");
-        b.putSerializable("Species", species);
-
-        Bitmap cp = mImageView.getDrawingCache();
-        if (cp == null) {
+        currentEntry.setIdealPicture(null);
+        b.putSerializable(IDENTIFICATION_SPECIES, currentEntry);
+        Bitmap cp      = mImageView.getDrawingCache();
+        //Bitmap cp=bitmap;
+        cp=Bitmap.createScaledBitmap(cp,50,50,true);
+        if(cp == null){
             Log.e("Look", "Bitch");
         }
-        b.putParcelable("Image", cp);
+        b.putParcelable("Image",cp);
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();

@@ -12,31 +12,28 @@ public class ScoutTrip {
 
     private ArrayList<ScoutStop> scoutStops;
 
-    public ScoutTrip() {
-        //mock generation
-        scoutStops = new ArrayList<>();
-        ScoutStop[] objects = new ScoutStop[5];
-        for (int i = 0; i < 5; i++) {
-            objects[i] = new ScoutStop();
-            objects[i].setNumberOfTrees(i + 1);
-            scoutStops.add(objects[i]);
-        }
+    public ScoutTrip(){
+        scoutStops=new ArrayList<>();
 
     }
 
-    public void addStop(ScoutStop scoutStop) {
+    public void addStop(ScoutStop scoutStop){
         scoutStops.add(scoutStop);
     }
 
-    public ScoutStop getStop(int index) {
+    public void updateStop(ScoutStop scoutStop, int position){
+        scoutStops.set(position,scoutStop);
+    }
+
+    public ScoutStop getStop(int index){
         return scoutStops.get(index);
     }
 
-    public ArrayList<ScoutStop> getStopList() {
+    public ArrayList<ScoutStop> getStopList(){
         return scoutStops;
     }
 
-    public int getNumStops() {
+    public int getNumStops(){
         return scoutStops.size();
     }
 
