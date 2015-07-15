@@ -1,5 +1,6 @@
 package vsd.co.za.sambugapp.DomainModels;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -8,7 +9,7 @@ import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 /**
  * Created by keaganthompson on 7/9/15.
  */
-public class ScoutTrip {
+public class ScoutTrip implements Serializable{
 
     private ArrayList<ScoutStop> scoutStops;
 
@@ -22,7 +23,7 @@ public class ScoutTrip {
     }
 
     public void updateStop(ScoutStop scoutStop, int position){
-        scoutStops.set(position,scoutStop);
+        scoutStops.set(position, scoutStop);
     }
 
     public ScoutStop getStop(int index){
