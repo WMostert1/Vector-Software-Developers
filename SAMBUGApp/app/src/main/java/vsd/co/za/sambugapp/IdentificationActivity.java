@@ -48,6 +48,10 @@ public class IdentificationActivity extends AppCompatActivity {
     private Species currentEntry;
     private int createCounter = 0;
 
+    public void doAutomaticClassification(View view) {
+        Toast.makeText(getApplicationContext(), "This feature is currently in development", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
