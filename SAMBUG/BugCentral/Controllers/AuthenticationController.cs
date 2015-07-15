@@ -10,16 +10,22 @@ using DataAccess.MSSQL;
 
 namespace BugCentral.Controllers
 {
-    [RoutePrefix("api")]
     public class AuthenticationController : ApiController
     {               
         // POST api/authentication/login/
         [HttpPost]
-        [Route("login")]
         public LoginResponse Login(LoginRequest loginRequest)
         {
             var authentication = new Authentication();
-            return authentication.Login(loginRequest);
+
+            LoginResponse loginResponse = authentication.Login(loginRequest);
+
+            if (loginResponse == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);     
+            }
+
+            return loginResponse;
         }
 
 
