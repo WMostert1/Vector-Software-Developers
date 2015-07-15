@@ -128,7 +128,6 @@ public class IdentificationActivity extends AppCompatActivity {
                     return;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("Here","Error");
                 }
             }
         }
