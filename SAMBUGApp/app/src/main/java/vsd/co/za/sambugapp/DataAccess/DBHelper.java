@@ -8,14 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import vsd.co.za.sambugapp.R;
 
 
 /**
- * Created by Aeolus on 2015-07-10.
+ * Created by Aeolus on 2015-07-10.ssss
  */
-public class DBHelper extends SQLiteOpenHelper {
+public class DBHelper<T> extends SQLiteOpenHelper {
+
+
     public static final String COLUMN_LAST_MODIFIED_ID = "LastModifiedID";
     public static final String COLUMN_TIMESTAMP = "TMStamp";
 
@@ -50,6 +53,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DATE = "Date";
 
     public static final String TABLE_SPECIES = "Species";
+    public static final String COLUMN_SPECIES_ID = "SpeciesID";
     public static final String COLUMN_SPECIES_NAME = "SpeciesName";
     public static final String COLUMN_LIFESTAGE = "Lifestage";
     public static final String COLUMN_IDEAL_PICTURE = "IdealPicture";
@@ -67,8 +71,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         for (String script : sqlScripts)
             db.execSQL(script);
-
-
     }
 
 
@@ -92,4 +94,6 @@ public class DBHelper extends SQLiteOpenHelper {
         //TODO: Add upgrade policy
         onCreate(db);
     }
+
+
 }
