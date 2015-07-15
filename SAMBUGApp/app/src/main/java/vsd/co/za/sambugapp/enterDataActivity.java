@@ -1,10 +1,12 @@
 package vsd.co.za.sambugapp;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,7 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -50,8 +54,9 @@ public class enterDataActivity extends ActionBarActivity {
     Block currBlock;
     Bitmap imageTaken;
     int bugNumber;
-    ArrayList<ScoutBug> allBugs;
+    HashSet<ScoutBug> allBugs;
     TableLayout table;
+    boolean first = true;
     // Spinner
 
     @Override
@@ -59,7 +64,7 @@ public class enterDataActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
         bugNumber = 1;
-        allBugs = new ArrayList<ScoutBug>();
+        allBugs = new HashSet<ScoutBug>();
         Intent iReceive = getIntent();
        // Bundle scoutStop = iReceive.getExtras();
         acceptStop(iReceive);
@@ -297,25 +302,31 @@ public class enterDataActivity extends ActionBarActivity {
     public void sendResultBack(View view) {
         Intent output = new Intent();
         Bundle b = new Bundle();
+        stop.setScoutBugs(allBugs);
+        //convertArrayListToHashSet(allBugs);
         b.putSerializable(ScoutTripActivity.SCOUT_STOP, stop);
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();
     }
 
+
+
     public void addBug(View view){
+        table = (TableLayout) findViewById(R.id.tblLayout);
         storeCurrentBug();
         bugNumber++;
-        table = (TableLayout) findViewById(R.id.tblLayout);
+
         TableRow delRow = (TableRow)findViewById(R.id.delRow);
         table.removeView(delRow);
 
         TableRow row= new TableRow(this);
 
         TextView tv1 = new TextView(this);
-        tv1.setText(R.string.bugType);
+        tv1.setText(R.string.numBugs);
+
         tv1.setTextSize(24);
-        tv1.setGravity(Gravity.CENTER_VERTICAL);
+       // tv1.setGravity(Gravity.CENTER_VERTICAL);
 
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.FILL_PARENT);
         params.weight = 1.0f;
@@ -334,26 +345,47 @@ public class enterDataActivity extends ActionBarActivity {
         row.addView(np1);
 
         TextView tv2 = new TextView(this);
-        tv2.setText(R.string.numBugs);
+        tv2.setText(R.string.bugType);
         tv2.setTextSize(24);
-        tv2.setGravity(Gravity.CENTER_VERTICAL);
+       // tv2.setGravity(Gravity.CENTER_VERTICAL);
         tv2.setMinWidth(220);
         Button btnSelectBug = new Button(this);
-        btnSelectBug.setText( R.string.btnSelectBug);
+        btnSelectBug.setText(R.string.btnSelectBug);
+        btnSelectBug.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendToIdentificationActivity(v);
+                //addBug(v);
+            }
+        });
         TableRow row2= new TableRow(this);
         row2.addView(tv2);
         row2.addView(btnSelectBug);
 
 
+        Bitmap takenImage =     BitmapFactory.decodeByteArray(currBug.getFieldPicture(),0,currBug.getFieldPicture().length);
+        ImageView im = new ImageView(this);
+        im.setImageBitmap(takenImage);
+
+        TableRow row3= new TableRow(this);
+        im.setLayoutParams(new TableRow.LayoutParams());
+        im.getLayoutParams().height = 350; // OR
+        im.getLayoutParams().width =  350;
+        //im.setLayoutParams(new TableLayout.LayoutParams(50, 50));
+        row3.addView(im);
+
         TableRow emptyRow = new TableRow(this);
+
        // table.addView(emptyRow);
+        table.addView(row3);
         table.addView(row);
         table.addView(row2);
+
         table.addView(delRow);
     }
 
     public void storeCurrentBug(){
-        ScoutBug currBug = new ScoutBug();
+        currBug = new ScoutBug();
         if(species != null){
             currBug.setSpecies(species);
         }
@@ -364,10 +396,19 @@ public class enterDataActivity extends ActionBarActivity {
             currBug.setFieldPicture(stream.toByteArray());
         }
 
-//        TableRow rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
-//        NumberPicker currNumberPicker = (NumberPicker) rowNumberPicker.getChildAt(1);
+        TableRow rowNumberPicker;
+//        if(first) {
+            rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
+//            first = false;
+//        }
+//        else {
+//            rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 4);
+//        }
+
+        NumberPicker currNumberPicker = (NumberPicker) rowNumberPicker.getChildAt(1);
 //        //NumberPicker currNumberPicker = (NumberPicker)findViewById(R.id.npNumBugs1);
-//        currBug.setNumberOfBugs(currNumberPicker.getValue());
+        Log.e("Look", String.valueOf(currNumberPicker.getValue()));
+        currBug.setNumberOfBugs(currNumberPicker.getValue());
         allBugs.add(currBug);
         // currBug
 

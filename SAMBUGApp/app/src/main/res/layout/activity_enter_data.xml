@@ -33,7 +33,7 @@
 
     <Button
         android:layout_below="@+id/scrlView"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btnDoneStop"
         android:id="@+id/btnDone"
@@ -51,13 +51,12 @@
         android:text="Block"
         android:id="@+id/tvBlock"
         android:textSize="24dp"
-        android:layout_marginTop="44dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <ScrollView
-        android:layout_height="wrap_content"
+
         android:layout_below="@+id/tvNumberOfTrees"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -66,8 +65,10 @@
         android:layout_alignParentEnd="true"
         android:layout_width="match_parent"
         android:background="@color/button_material_light"
+        android:layout_height="240dp"
         >
-    <TableLayout
+
+        <TableLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -78,6 +79,8 @@
         android:id="@+id/tblLayout"
         android:rowCount="6"
         android:scrollbars="vertical"
+
+
         >
 
         <TableRow android:id="@+id/r1">

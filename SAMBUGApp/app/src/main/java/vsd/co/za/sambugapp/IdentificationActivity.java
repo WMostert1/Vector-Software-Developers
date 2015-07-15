@@ -113,7 +113,7 @@ public class IdentificationActivity extends AppCompatActivity {
             mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
             if (bitmap != null) mImageView.setImageBitmap(bitmap);
         }
-    }
+
 
 
 
