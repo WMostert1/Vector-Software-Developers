@@ -128,7 +128,6 @@ public class SpeciesDAO extends DataSourceAdapter {
         values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, species.getLastModifiedID());
         values.put(DBHelper.COLUMN_TIMESTAMP, species.getTMStamp().toString());
         database.update(DBHelper.TABLE_SPECIES, values, DBHelper.COLUMN_SPECIES_ID + " = " + id, null);
-
     }
 
     public void insert(Species species) {

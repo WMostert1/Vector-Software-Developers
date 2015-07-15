@@ -40,9 +40,11 @@ import vsd.co.za.sambugapp.DomainModels.Species;
 
 
 public class IdentificationActivity extends AppCompatActivity {
+
     public static final int REQUEST_TAKE_PHOTO = 1;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
     private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
+    public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     private ImageView mImageView;
     private Bitmap bitmap;
     private Species currentEntry;
@@ -63,58 +65,60 @@ public class IdentificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
-            createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
-        }
-
-        if (createCounter == 0) {
-            SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
-            try {
-                speciesDAO.open();
-                if (speciesDAO.isEmpty()) {
-                    speciesDAO.loadPresets();
-                }
-
-                speciesDAO.close();
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (savedInstanceState != null) {
+                bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
+                createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
             }
 
-            dispatchTakePictureIntent();
-        }
-        if (createCounter == 0) createCounter++;
-
-
-        setContentView(R.layout.activity_identification);
-
-        GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
-        gridview.setAdapter(new ImageAdapter(this));
-
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
+            if (createCounter == 0) {
                 SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
                 try {
                     speciesDAO.open();
-                    currentEntry = speciesDAO.getSpecies(position + 1);
-                    Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
-                    ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
-                    byte[] imgData = currentEntry.getIdealPicture();
-                    comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
-                            imgData.length));
+                    if (speciesDAO.isEmpty()) {
+                        speciesDAO.loadPresets();
+                    }
+
                     speciesDAO.close();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
+                dispatchTakePictureIntent();
             }
-        });
+            if (createCounter == 0) createCounter++;
 
-        mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
-        if (bitmap != null) mImageView.setImageBitmap(bitmap);
-    }
+
+            setContentView(R.layout.activity_identification);
+
+            GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
+            gridview.setAdapter(new ImageAdapter(this));
+
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+                    SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+                    try {
+                        speciesDAO.open();
+                        currentEntry = speciesDAO.getSpecies(position + 1);
+                        Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+                        ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
+                        byte[] imgData = currentEntry.getIdealPicture();
+                        comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
+                                imgData.length));
+                        speciesDAO.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+            if (bitmap != null) mImageView.setImageBitmap(bitmap);
+        }
+
+
 
 
 
@@ -189,24 +193,27 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
 
+
     public void sendResultBack(View view) {
 
         Intent output = new Intent();
         Bundle b = new Bundle();
-        Species species = new Species();
-        species.setSpeciesName("Keagan a bitch ;)");
-        b.putSerializable("Species", species);
-
-        Bitmap cp = mImageView.getDrawingCache();
-        if (cp == null) {
+        currentEntry.setIdealPicture(null);
+        b.putSerializable(IDENTIFICATION_SPECIES, currentEntry);
+        //Bitmap cp      = mImageView.getDrawingCache();
+        Bitmap cp=bitmap;
+        cp=Bitmap.createScaledBitmap(cp,50,50,true);
+        if(cp == null){
             Log.e("Look", "Bitch");
         }
-        b.putParcelable("Image", cp);
+        b.putParcelable("Image",cp);
         output.putExtras(b);
+        //output.putExtra("Image",cp);
         setResult(RESULT_OK, output);
         finish();
 
     }
+
 
 
 }

@@ -1,3 +1,4 @@
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -10,10 +11,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
         android:id="@+id/spnBlocks"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="42dp"
-        android:layout_toEndOf="@+id/btnDone"
-        android:layout_toRightOf="@+id/btnDone" />
+        android:layout_alignBottom="@+id/tvBlock"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/tvNumberOfTrees"
+        android:layout_toRightOf="@+id/tvNumberOfTrees" />
 
     <TextView
     android:layout_width="wrap_content"
@@ -22,53 +24,25 @@
         android:text="Number of Trees"
         android:id="@+id/tvNumberOfTrees"
         android:textSize="24dp"
-        android:layout_below="@+id/spnBlocks"
+        android:layout_alignBottom="@+id/npNumTrees"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="65dp" />
+        android:layout_marginBottom="49dp" />
 
-    <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Number of Bugs"
-        android:id="@+id/tvNumberOfBugs"
-        android:textSize="24dp"
-        android:layout_alignTop="@+id/npNumBugs"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="42dp" />
 
-    <TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Bug Type"
-        android:id="@+id/tvBugType"
-        android:textSize="24dp"
-        android:layout_alignTop="@+id/btnSelectBug"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
     <Button
-    style="?android:attr/buttonStyleSmall"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-        android:text="@string/btnSelectBug"
-        android:id="@+id/btnSelectBug"
-        android:onClick="sendToIdentificationActivity"
-        android:layout_above="@+id/btnDone"
-        android:layout_alignRight="@+id/spnBlocks"
-        android:layout_alignEnd="@+id/spnBlocks" />
-
-    <Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+        android:layout_below="@+id/scrlView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/btnDoneStop"
         android:id="@+id/btnDone"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="sendToScoutTripActivity" />
+        android:onClick="sendToScoutTripActivity"
+
+        android:orientation="vertical"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -77,25 +51,122 @@
         android:text="Block"
         android:id="@+id/tvBlock"
         android:textSize="24dp"
-        android:layout_alignBottom="@+id/spnBlocks"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <ScrollView
+
+        android:layout_below="@+id/tvNumberOfTrees"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/scrlView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="match_parent"
+        android:background="@color/button_material_light"
+        android:layout_height="240dp"
+        >
+
+        <TableLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvNumberOfTrees"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/btnDone"
+        android:id="@+id/tblLayout"
+        android:rowCount="6"
+        android:scrollbars="vertical"
+
+
+        >
+
+        <TableRow android:id="@+id/r1">
+
+            <TextView
+
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/numBugs"
+                android:id="@+id/tvBugType"
+                android:textSize="24dp"
+                android:layout_alignBottom="@+id/btnSelectBug"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center_vertical"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:minWidth="220dp"
+                />
+
+            <NumberPicker
+                android:layout_width="70dp"
+                android:id="@+id/npNumBugs1"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:orientation="vertical" />
+
+        </TableRow>
+
+        <TableRow android:id="@+id/r2">
+
+            <TextView
+                android:layout_width="97dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/bugType"
+                android:id="@+id/tvNumberOfBugs"
+                android:textSize="24dp"
+                android:layout_centerVertical="true"
+                android:layout_alignRight="@+id/tvNumberOfTrees"
+                android:layout_alignEnd="@+id/tvNumberOfTrees"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:padding="3dip"
+               />
+
+            <Button
+                android:padding="3dip"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="@string/btnSelectBug"
+                android:id="@+id/btnSelectBug"
+                android:onClick="sendToIdentificationActivity"
+                android:layout_below="@+id/npNumBugs1"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="bottom"
+                android:layout_row="1"
+                android:layout_column="1" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/delRow">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/addBug"
+                android:id="@+id/button"
+                android:layout_column="1"
+                android:onClick="addBug" />
+        </TableRow>
+
+    </TableLayout>
+    </ScrollView>
     <NumberPicker
-        android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
         android:id="@+id/npNumTrees"
+        android:layout_width="85dp"
         android:layout_below="@+id/spnBlocks"
-        android:layout_alignLeft="@+id/btnSelectBug"
-        android:layout_alignStart="@+id/btnSelectBug" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/npNumBugs"
-        android:layout_below="@+id/npNumTrees"
-        android:layout_alignLeft="@+id/npNumTrees"
-        android:layout_alignStart="@+id/npNumTrees" />
+        android:layout_alignRight="@+id/spnBlocks"
+        android:layout_alignEnd="@+id/spnBlocks" />
 
 
 </RelativeLayout>

@@ -28,9 +28,8 @@
 
         <activity
             android:name=".enterDataActivity"
-            android:label="@string/title_activity_enter_data"
-            android:exported="true">
-
+            android:exported="true"
+            android:label="@string/title_activity_enter_data" >
         </activity>
         <activity
             android:name=".ScoutTripActivity"
@@ -38,9 +37,9 @@
         </activity>
         <activity
             android:name=".IdentificationActivity"
+            android:exported="true"
             android:label="@string/title_activity_identification"
-            android:parentActivityName=".enterDataActivity"
-            android:exported="true">
+            android:parentActivityName=".enterDataActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="vsd.co.za.sambugapp.enterDataActivity" />

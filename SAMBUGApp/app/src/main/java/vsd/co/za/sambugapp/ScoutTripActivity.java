@@ -1,9 +1,13 @@
 package vsd.co.za.sambugapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,10 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import vsd.co.za.sambugapp.DataAccess.ScoutBugDAO;
+import vsd.co.za.sambugapp.DataAccess.ScoutStopDAO;
 import vsd.co.za.sambugapp.DomainModels.*;
 
 
@@ -26,29 +34,31 @@ public class ScoutTripActivity extends ActionBarActivity {
 
     public static final String SCOUT_STOP="za.co.vsd.scout_stop";
     private final String UPDATE_INDEX="za.co.vsd.update_index";
-    public static final String USER_FARM = "za.co.vsd.user_blocks";
-    private final int NEW_STOP = 0;
-    private final int UPDATE_STOP = 1;
+    public static final String USER_FARM="za.co.vsd.user_blocks";
+    public final String SCOUT_STOP_LIST="za.co.vsd.scout_stop_list";
+    private final int NEW_STOP=0;
+    private final int UPDATE_STOP=1;
     private final String TAG="ScoutTripActivity";
 
-    private ScoutTrip scoutTrip;
+    public ScoutTrip scoutTrip;
     private ListView lstStops;
     private ListView lstPestsPerTree;
     private ScoutStopAdapter lstStopsAdapter;
     private PestsPerTreeAdapter lstPestsPerTreeAdapter;
     private Farm farm;
 
-    private int updateIndex=-1;
+    public int updateIndex=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             updateIndex = savedInstanceState.getInt(UPDATE_INDEX);
+            scoutTrip=(ScoutTrip)savedInstanceState.getSerializable(SCOUT_STOP_LIST);
+        } else {
+            scoutTrip = new ScoutTrip();
         }
         setContentView(R.layout.activity_scout_trip);
-
-        scoutTrip = new ScoutTrip();
 
         lstStops = (ListView) findViewById(R.id.lstStops);
         lstStops.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -71,23 +81,24 @@ public class ScoutTripActivity extends ActionBarActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(UPDATE_INDEX, updateIndex);
+        savedInstanceState.putSerializable(SCOUT_STOP_LIST,scoutTrip);
     }
 
-    public void addStopActivityStart(View v) {
+    public void addStopActivityStart(View v){
         Intent intent=new Intent(this,enterDataActivity.class);
         Bundle b = new Bundle();
         b.putSerializable(SCOUT_STOP,null);
-        b.putSerializable(USER_FARM, farm);
+        b.putSerializable(USER_FARM,farm);
         intent.putExtras(b);
         startActivityForResult(intent, NEW_STOP);
         //handle new stop object
     }
 
-    private void addStop(ScoutStop stop) {
+    public void addStop(ScoutStop stop){
         scoutTrip.addStop(stop);
     }
 
-    public void updateStopActivityStart(int position) {
+    public void updateStopActivityStart(int position){
         //Enter EnterDataActivity for editing the stop
         updateIndex=position;
         Intent intent=new Intent(this,enterDataActivity.class);
@@ -102,13 +113,13 @@ public class ScoutTripActivity extends ActionBarActivity {
         scoutTrip.getStopList().set(updateIndex, stop);
     }
 
-    public void acceptFarm(Intent i) {
-        farm = new Farm();
+    public void acceptFarm(Intent i){
+        farm=new Farm();
         farm.setFarmID(1);
         farm.setFarmName("DEEZ NUTS");
-        HashSet<Block> blocks = new HashSet<>();
-        for (int j = 1; j <= 5; j++) {
-            Block obj = new Block();
+        HashSet<Block> blocks=new HashSet<>();
+        for (int j=1;j<=10;j++){
+            Block obj=new Block();
             obj.setBlockID(j);
             obj.setBlockName("Block #" + j);
             blocks.add(obj);
@@ -118,14 +129,50 @@ public class ScoutTripActivity extends ActionBarActivity {
         //farm=(Farm)b.get(LoginActivity.USER_FARM);
     }
 
+    public void finishTrip(View v){
+        persistData();
+        finish();
+    }
+
+    public boolean persistData(){
+        ScoutStopDAO scoutStopDAO=new ScoutStopDAO(getApplicationContext());
+        ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
+        try{
+            scoutStopDAO.open();
+
+            for (ScoutStop scoutStop : scoutTrip.getStopList()){
+                long scoutStopID=scoutStopDAO.insert(scoutStop);
+                scoutBugDAO.open();
+                for (ScoutBug scoutBug : scoutStop.getScoutBugs()){
+                    scoutBug.setScoutStopID((int)scoutStopID);
+                    scoutBugDAO.insert(scoutBug);
+                }
+                scoutBugDAO.close();
+            }
+
+            scoutStopDAO.close();
+        } catch (Exception ex){
+            ex.printStackTrace();
+            return false;
+        }
+        Toast.makeText(getApplicationContext(),"You are done. Go home.",Toast.LENGTH_LONG).show();
+        return true;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bundle bundle = data.getExtras();
-        ScoutStop stop = (ScoutStop) bundle.get(SCOUT_STOP);
-        if (requestCode == NEW_STOP && resultCode == RESULT_OK) {
-            addStop(stop);
-        } else if (requestCode == UPDATE_STOP && resultCode == RESULT_OK) {
-            updateStop(stop);
+        if (resultCode==RESULT_OK) {
+            Bundle bundle = data.getExtras();
+            ScoutStop stop = (ScoutStop) bundle.get(SCOUT_STOP);
+            if (requestCode == NEW_STOP) {
+                addStop(stop);
+                Log.d(TAG, "Added");
+            } else if (requestCode == UPDATE_STOP) {
+                updateStop(stop);
+                Log.d(TAG, "Updated");
+            }
+            lstStopsAdapter.notifyDataSetChanged();
+            lstPestsPerTreeAdapter.notifyDataSetChanged();
         }
     }
 
@@ -170,12 +217,15 @@ public class ScoutTripActivity extends ActionBarActivity {
                     (TextView)convertView.findViewById(R.id.lblTreeAmount);
             lblTreeAmount.setText(stop.getNumberOfTrees() + "");
             LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
-            ImageView img=new ImageView(this.getContext());
-            //img.setImageResource(R.drawable.st);
             hscrollBugInfo.removeAllViews();
-            img.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.st));
-            img.setLayoutParams(new RelativeLayout.LayoutParams(50, 50));
-            hscrollBugInfo.addView(img);
+            for (ScoutBug bug:stop.getScoutBugs()) {
+                Bitmap bitmap=BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length);
+                bitmap=Bitmap.createScaledBitmap(bitmap,150,150,true);
+                View view = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
+                ((ImageView)view.findViewById(R.id.bugInfoImage)).setImageBitmap(bitmap);
+                ((TextView)view.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs()+"");
+                hscrollBugInfo.addView(view);
+            }
             return convertView;
         }
     }
