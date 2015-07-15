@@ -114,7 +114,7 @@ public class IdentificationActivity extends AppCompatActivity {
             if (bitmap != null) mImageView.setImageBitmap(bitmap);
         }
 
-    }
+
 
 
 

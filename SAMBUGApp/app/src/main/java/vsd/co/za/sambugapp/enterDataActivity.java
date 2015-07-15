@@ -164,6 +164,7 @@ public class enterDataActivity extends ActionBarActivity {
 
         Intent output = new Intent();
         Bundle b = new Bundle();
+        stop.setScoutBugs(allBugs);
         b.putSerializable(ScoutTripActivity.SCOUT_STOP,stop);
         output.putExtras(b);
         setResult(RESULT_OK, output);
@@ -185,7 +186,9 @@ public class enterDataActivity extends ActionBarActivity {
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
             Log.e("Look", "here2");
             Bundle speciesReceived = data.getExtras();
-            Species species = (Species) speciesReceived.get(IdentificationActivity.IDENTIFICATION_SPECIES);
+            species = (Species) speciesReceived.get(IdentificationActivity.IDENTIFICATION_SPECIES);
+            //currBug.setSpecies(species);
+            //createBug(species,);
             Bitmap imageTaken2 = (Bitmap)speciesReceived.getParcelable("Image");
             imageTaken = imageTaken2;
           //  addImage(imageTaken);
@@ -302,7 +305,7 @@ public class enterDataActivity extends ActionBarActivity {
     public void sendResultBack(View view) {
         Intent output = new Intent();
         Bundle b = new Bundle();
-        stop.setScoutBugs(allBugs);
+       // stop.setScoutBugs(allBugs);
         //convertArrayListToHashSet(allBugs);
         b.putSerializable(ScoutTripActivity.SCOUT_STOP, stop);
         output.putExtras(b);
@@ -409,6 +412,7 @@ public class enterDataActivity extends ActionBarActivity {
 //        //NumberPicker currNumberPicker = (NumberPicker)findViewById(R.id.npNumBugs1);
         Log.e("Look", String.valueOf(currNumberPicker.getValue()));
         currBug.setNumberOfBugs(currNumberPicker.getValue());
+        currBug.setSpecies(species);
         allBugs.add(currBug);
         // currBug
 
