@@ -20,4 +20,10 @@ public class ScoutTripActivityTest extends ActivityInstrumentationTestCase2<Scou
         super.setUp();
         scoutTripActivity=getActivity();
     }
+
+    public void testPreconditions() throws Exception {
+        assertNotNull("ScoutTripActivity is null",scoutTripActivity);
+    }
+
+
 }
