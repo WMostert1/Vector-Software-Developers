@@ -1,4 +1,4 @@
-package vsd.co.za.sambugapp.UnitTests.ScoutTripActivity.tests;
+package vsd.co.za.sambugapp;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Button;
