@@ -36,7 +36,9 @@ namespace BugWeb.Controllers
             readResponseTask.Wait();
 
             String x = readResponseTask.Result;
-            return null;
+
+           /* if(.....)*/
+            return View("~/Views/Home/Home.cshtml");
         }
     }
 }
