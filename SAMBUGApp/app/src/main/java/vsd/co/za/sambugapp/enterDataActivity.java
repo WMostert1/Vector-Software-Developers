@@ -14,12 +14,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -44,6 +46,7 @@ import vsd.co.za.sambugapp.DomainModels.Species;
 
 public class enterDataActivity extends ActionBarActivity {
     private final String BUG_COUNT="za.co.vsd.bug_count";
+    private final String BUG_LIST="za.co.vsd.bug_list";
     ScoutStop stop;
     Species species;
     Spinner mySpin;
@@ -63,12 +66,20 @@ public class enterDataActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
+        if (savedInstanceState!=null){
+            allBugs=(HashSet<ScoutBug>)savedInstanceState.get(BUG_LIST);
+            updateAddedBugsView();
+        } else {
+            allBugs = new HashSet<ScoutBug>();
+        }
+
         bugNumber = 1;
-        allBugs = new HashSet<ScoutBug>();
+
         Intent iReceive = getIntent();
-       // Bundle scoutStop = iReceive.getExtras();
+        // Bundle scoutStop = iReceive.getExtras();
         acceptStop(iReceive);
         acceptBlocks(iReceive);
+
         populateSpinner();
         initializeNumberPickers(savedInstanceState);
         //receiveGeoLocation();
@@ -100,6 +111,7 @@ public class enterDataActivity extends ActionBarActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(BUG_COUNT, npBugs.getValue());
+        savedInstanceState.putSerializable(BUG_LIST,allBugs);
     }
 
     private void populateSpinner() {
@@ -132,7 +144,7 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void initializeNumberPickers(Bundle savedInstanceState) {
         npTrees = (NumberPicker) findViewById(R.id.npNumTrees);
-        npBugs = (NumberPicker) findViewById(R.id.npNumBugs1);
+        npBugs = (NumberPicker) findViewById(R.id.npNumBugs);
 
         npTrees.setMinValue(1);
         npTrees.setMaxValue(100);
@@ -316,75 +328,86 @@ public class enterDataActivity extends ActionBarActivity {
 
 
     public void addBug(View view){
-        table = (TableLayout) findViewById(R.id.tblLayout);
         storeCurrentBug();
         bugNumber++;
+        updateAddedBugsView();
 
-        TableRow delRow = (TableRow)findViewById(R.id.delRow);
-        table.removeView(delRow);
+        //TableRow delRow = (TableRow)findViewById(R.id.delRow);
+        //table.removeView(delRow);
 
-        TableRow row= new TableRow(this);
+        //TableRow row= new TableRow(this);
 
-        TextView tv1 = new TextView(this);
-        tv1.setText(R.string.numBugs);
 
-        tv1.setTextSize(24);
+        //TextView tv1 = new TextView(this);
+        //tv1.setText(R.string.numBugs);
+
+        //tv1.setTextSize(24);
        // tv1.setGravity(Gravity.CENTER_VERTICAL);
 
-        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.FILL_PARENT);
-        params.weight = 1.0f;
-        params.gravity = Gravity.TOP;
-        tv1.setMinWidth(220);
+//        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.FILL_PARENT);
+//        params.weight = 1.0f;
+//        params.gravity = Gravity.TOP;
+//        tv1.setMinWidth(220);
 
-        NumberPicker np1 = new NumberPicker(this);
+        //NumberPicker np1 = new NumberPicker(this);
 
-        np1.setMinValue(0);
-        np1.setMaxValue(100);
-        np1.setWrapSelectorWheel(false);
+//        np1.setMinValue(0);
+//        np1.setMaxValue(100);
+//        np1.setWrapSelectorWheel(false);
 //        np1.getId();
 //        np1.setId(bugNumber);
-        row.addView(tv1);
+        //row.addView(tv1);
 
-        row.addView(np1);
+        //row.addView(np1);
 
-        TextView tv2 = new TextView(this);
-        tv2.setText(R.string.bugType);
-        tv2.setTextSize(24);
+//        TextView tv2 = new TextView(this);
+//        tv2.setText(R.string.bugType);
+//        tv2.setTextSize(24);
        // tv2.setGravity(Gravity.CENTER_VERTICAL);
-        tv2.setMinWidth(220);
-        Button btnSelectBug = new Button(this);
-        btnSelectBug.setText(R.string.btnSelectBug);
-        btnSelectBug.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendToIdentificationActivity(v);
-                //addBug(v);
-            }
-        });
-        TableRow row2= new TableRow(this);
-        row2.addView(tv2);
-        row2.addView(btnSelectBug);
+//        tv2.setMinWidth(220);
+//        Button btnSelectBug = new Button(this);
+//        btnSelectBug.setText(R.string.btnSelectBug);
+//        btnSelectBug.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                sendToIdentificationActivity(v);
+//                //addBug(v);
+//            }
+//        });
+//        TableRow row2= new TableRow(this);
+//        row2.addView(tv2);
+//        row2.addView(btnSelectBug);
 
 
-        Bitmap takenImage =     BitmapFactory.decodeByteArray(currBug.getFieldPicture(),0,currBug.getFieldPicture().length);
-        ImageView im = new ImageView(this);
-        im.setImageBitmap(takenImage);
+//        Bitmap takenImage =     BitmapFactory.decodeByteArray(currBug.getFieldPicture(),0,currBug.getFieldPicture().length);
+//        ImageView im = new ImageView(this);
+//        im.setImageBitmap(takenImage);
 
-        TableRow row3= new TableRow(this);
-        im.setLayoutParams(new TableRow.LayoutParams());
-        im.getLayoutParams().height = 350; // OR
-        im.getLayoutParams().width =  350;
-        //im.setLayoutParams(new TableLayout.LayoutParams(50, 50));
-        row3.addView(im);
+//        TableRow row3= new TableRow(this);
+//        im.setLayoutParams(new TableRow.LayoutParams());
+//        im.getLayoutParams().height = 350; // OR
+//        im.getLayoutParams().width =  350;
+//        //im.setLayoutParams(new TableLayout.LayoutParams(50, 50));
+//        row3.addView(im);
 
-        TableRow emptyRow = new TableRow(this);
+        //TableRow emptyRow = new TableRow(this);
 
        // table.addView(emptyRow);
-        table.addView(row3);
-        table.addView(row);
-        table.addView(row2);
+//        table.addView(row3);
+//        table.addView(row);
+//        table.addView(row2);
+//
+//        table.addView(delRow);
+    }
 
-        table.addView(delRow);
+    public void updateAddedBugsView(){
+        LinearLayout info=(LinearLayout)findViewById(R.id.addedBugsContent);
+        for (ScoutBug bug:allBugs) {
+            View bugInfo = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
+            ((ImageView) bugInfo.findViewById(R.id.bugInfoImage)).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length),150,150,true));
+            ((TextView) bugInfo.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs() + "");
+            info.addView(bugInfo);
+        }
     }
 
     public void storeCurrentBug(){
@@ -399,16 +422,16 @@ public class enterDataActivity extends ActionBarActivity {
             currBug.setFieldPicture(stream.toByteArray());
         }
 
-        TableRow rowNumberPicker;
+      //  TableRow rowNumberPicker;
 //        if(first) {
-            rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
+     //       rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
 //            first = false;
 //        }
 //        else {
 //            rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 4);
 //        }
 
-        NumberPicker currNumberPicker = (NumberPicker) rowNumberPicker.getChildAt(1);
+        NumberPicker currNumberPicker = (NumberPicker) findViewById(R.id.npNumBugs);
 //        //NumberPicker currNumberPicker = (NumberPicker)findViewById(R.id.npNumBugs1);
         Log.e("Look", String.valueOf(currNumberPicker.getValue()));
         currBug.setNumberOfBugs(currNumberPicker.getValue());

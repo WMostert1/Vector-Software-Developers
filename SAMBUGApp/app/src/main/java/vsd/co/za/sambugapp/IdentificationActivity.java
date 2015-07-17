@@ -182,10 +182,11 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     private void dispatchTakePictureIntent(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-        }
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//        }
+        bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.coconut_inst_1);
     }
 
 

@@ -84,6 +84,10 @@ public class ScoutTripActivity extends ActionBarActivity {
         savedInstanceState.putSerializable(SCOUT_STOP_LIST,scoutTrip);
     }
 
+    /**
+     * Start EnterDataActivity to create new ScoutStop object.
+     * @param v Button view that is clicked
+     */
     public void addStopActivityStart(View v){
         Intent intent=new Intent(this,enterDataActivity.class);
         Bundle b = new Bundle();
@@ -98,6 +102,10 @@ public class ScoutTripActivity extends ActionBarActivity {
         scoutTrip.addStop(stop);
     }
 
+    /**
+     * Start EnterDataActivity to update ScoutStop object.
+     * @param position Index of ScoutStop in stop list.
+     */
     public void updateStopActivityStart(int position){
         //Enter EnterDataActivity for editing the stop
         updateIndex=position;
@@ -109,11 +117,19 @@ public class ScoutTripActivity extends ActionBarActivity {
         startActivityForResult(intent, UPDATE_STOP);
     }
 
-    public void updateStop(ScoutStop stop) {
-        scoutTrip.getStopList().set(updateIndex, stop);
+    /**
+     * Update ScoutStop object.
+     * @param scoutStop ScoutStop object to update list.
+     */
+    public void updateStop(ScoutStop scoutStop) {
+        scoutTrip.getStopList().set(updateIndex, scoutStop);
     }
 
-    public void acceptFarm(Intent i){
+    /**
+     * Initialise farm object.
+     * @param intent Intent passed in from LoginActivity.
+     */
+    public void acceptFarm(Intent intent){
         farm=new Farm();
         farm.setFarmID(1);
         farm.setFarmName("DEEZ NUTS");
@@ -129,11 +145,19 @@ public class ScoutTripActivity extends ActionBarActivity {
         //farm=(Farm)b.get(LoginActivity.USER_FARM);
     }
 
+    /**
+     * End ScoutTripActivity.
+     * @param v Button view that is clicked.
+     */
     public void finishTrip(View v){
         persistData();
         finish();
     }
 
+    /**
+     * Persist scout stops to the SQLite database.
+     * @return True if data is successfully persisted, false otherwise.
+     */
     public boolean persistData(){
         ScoutStopDAO scoutStopDAO=new ScoutStopDAO(getApplicationContext());
         ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
