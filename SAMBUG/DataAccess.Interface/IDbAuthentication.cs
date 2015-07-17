@@ -7,8 +7,8 @@ using DataAccess.Interface.DTOModels;
 
 namespace DataAccess.Interface
 {
-    public interface IAuthentication
+    public interface IDbAuthentication
     {
-        LoginResponse Login(LoginRequest loginRequest);
+        LoginResponse GetUserIdRoles(LoginRequest loginRequest);
     }
 }

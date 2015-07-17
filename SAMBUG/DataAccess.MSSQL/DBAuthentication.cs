@@ -10,9 +10,9 @@ using DataAccess.Interface.DTOModels;
 
 namespace DataAccess.MSSQL
 {
-    public class Authentication : IAuthentication
+    public class DBAuthentication : IDbAuthentication
     {
-        public LoginResponse Login(LoginRequest loginRequest)
+        public LoginResponse GetUserIdRoles(LoginRequest loginRequest)
         {
             var context = new BugDBEntities();
 

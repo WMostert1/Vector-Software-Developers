@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using BugWeb.Controllers;
 using BugWeb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Autofac.Extras.Moq;
+using Should;
 
 namespace BugWeb.Tests.Controllers
 {
@@ -26,6 +28,8 @@ namespace BugWeb.Tests.Controllers
 
             // Act
             var result = controller.Login(loginViewModel) as ViewResult;
+
+            //Assert
             
         }
     }
