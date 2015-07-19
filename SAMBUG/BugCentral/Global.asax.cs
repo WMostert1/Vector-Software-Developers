@@ -7,6 +7,8 @@ using System.Web.Http;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.WebApi;
+using DataAccess.Interface;
+using DataAccess.MSSQL;
 
 namespace BugCentral
 {
@@ -19,6 +21,9 @@ namespace BugCentral
             
             // Register Web API controllers.
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
+            //register other types
+            builder.RegisterType<DbAuthentication>().As<IDbAuthentication>();
 
             // Get HttpConfiguration.
             var config = GlobalConfiguration.Configuration;

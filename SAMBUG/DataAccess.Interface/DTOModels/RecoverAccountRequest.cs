@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interface.DTOModels
 {
-    public class RegisterResponse
+    public class RecoverAccountRequest
     {
     }
 }

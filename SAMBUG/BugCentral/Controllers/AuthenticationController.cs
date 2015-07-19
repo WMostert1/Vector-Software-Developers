@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 using System.Web.Http;
 using DataAccess.Interface;
 using DataAccess.Interface.DTOModels;
-using DataAccess.MSSQL;
 
 namespace BugCentral.Controllers
 {
@@ -15,6 +13,7 @@ namespace BugCentral.Controllers
     {
 
         private readonly IDbAuthentication _dbAuthentication;
+
 
         public AuthenticationController(IDbAuthentication dbAuthentication)
         {

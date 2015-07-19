@@ -10,7 +10,7 @@ using DataAccess.Interface.DTOModels;
 
 namespace DataAccess.MSSQL
 {
-    public class DBAuthentication : IDbAuthentication
+    public class DbAuthentication : IDbAuthentication
     {
         public LoginResponse GetUserIdRoles(LoginRequest loginRequest)
         {
@@ -22,7 +22,7 @@ namespace DataAccess.MSSQL
                 .FirstOrDefault();
 
             if (userIdQuery == default(int))
-                return null;
+                return new LoginResponse(){Id = 0, Roles = null};
 
             var rolesQuery = (from usrRole in context.UserRoles
                 join role in context.Roles on usrRole.RoleID equals role.RoleID 

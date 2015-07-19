@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DBAuthentication.cs" />
+    <Compile Include="DbAuthentication.cs" />
     <Compile Include="Block.cs">
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>

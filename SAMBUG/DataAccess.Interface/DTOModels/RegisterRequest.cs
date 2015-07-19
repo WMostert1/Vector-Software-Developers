@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interface.DTOModels
 {
-    class RegisterRequest
+    public class RegisterRequest
     {
         public string Email { get; set; }
         public string EmailConfirmation { get; set; }

@@ -5,6 +5,7 @@ using BugCentral.Controllers;
 using DataAccess.Interface.DTOModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Autofac.Extras.Moq;
+using DataAccess.Interface;
 using Should;
 
 namespace BugCentral.Tests
@@ -13,20 +14,28 @@ namespace BugCentral.Tests
     public class AuthenticationControllerTest
     {
         [TestMethod]
-        public void TestLogin()
+        public void CentralLoginTest_ShouldNotAuthenticate()
         {
-            /*var loginRequest = new LoginRequest()
+            //Arrange
+            var loginRequest = new LoginRequest()
             {
                 Username = "michelle@gmail.com",
                 Password = "321"
             };
 
-            var controller = new AuthenticationController();
-            
+            var autoMock = AutoMock.GetStrict();
+            autoMock.Mock<IDbAuthentication>()
+                .Setup(dbAuthentication => dbAuthentication.GetUserIdRoles(loginRequest))
+                .Returns(new LoginResponse(){Id = default(int), Roles = null});
+
+            var controller = autoMock.Create<AuthenticationController>();
+
+            //Act
             var response = controller.Login(loginRequest);
 
-            response.Id.ShouldEqual(1);
-            response.Roles[0].Id.ShouldEqual(0);*/
+            //Assert
+            response.Id.ShouldEqual(0);
+            response.Roles.ShouldBeNull();
 
         }
     }
