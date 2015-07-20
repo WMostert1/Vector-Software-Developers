@@ -24,6 +24,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.mcxiaoke.volley:library:1.0.17'
 
     // the following is required to use Mockito and JUnit for your
     // instrumentation unit tests on the JVM

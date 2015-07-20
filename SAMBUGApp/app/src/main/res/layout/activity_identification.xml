@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="vsd.co.za.sambugapp.IdentificationActivity">
+    tools:context="vsd.co.za.sambugapp.IdentificationActivity"
+    android:background="#ff89878c">
 
     <LinearLayout
         android:layout_width="match_parent"

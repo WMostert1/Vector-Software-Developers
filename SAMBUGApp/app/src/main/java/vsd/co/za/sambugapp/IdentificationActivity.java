@@ -33,7 +33,7 @@ import vsd.co.za.sambugapp.DomainModels.Species;
  */
 public class IdentificationActivity extends AppCompatActivity {
 
-    public static final int REQUEST_TAKE_PHOTO = 1;
+    public static final int REQUEST_TAKE_PHOTO = 89;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
     private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
@@ -197,17 +197,17 @@ public class IdentificationActivity extends AppCompatActivity {
      * Starts a new intent to take a picture with the device's camera
      */
     private void dispatchTakePictureIntent(){
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-//        }
-        bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.coconut_inst_1);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        }
+
     }
 
 
     /**
      * This function puts the current Species entry as well as the field picture taken
-     * ionto a bundle which is then returned to the enterDataActivity
+     * into a bundle which is then returned to the enterDataActivity
      * @param view THe button that was clicked
      */
     public void sendResultBack(View view) {

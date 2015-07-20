@@ -9,7 +9,7 @@
                 android:orientation="vertical"
                 android:weightSum="90"
                 tools:context="vsd.co.za.sambugapp.ScoutTripActivity"
-              android:background="#ff7f7d81">
+              android:background="#ff89878c">
         <Button
             android:id="@+id/btnAddStop"
             android:layout_width="wrap_content"
