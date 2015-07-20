@@ -28,15 +28,11 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-
 import vsd.co.za.sambugapp.DomainModels.Block;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
@@ -61,6 +57,8 @@ public class enterDataActivity extends ActionBarActivity {
     TableLayout table;
     boolean first = true;
     // Spinner
+    LocationManager mLocationManager;
+    Location myLocation = null;//= getLastKnownLocation();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,8 +221,6 @@ public class enterDataActivity extends ActionBarActivity {
         stop.ScoutBugs.add(sb); //addBugEntry(sb);
     }
 
-    LocationManager mLocationManager;
-    Location myLocation = null;//= getLastKnownLocation();
     public void receiveGeoLocation() {
         myLocation = getLastKnownLocation();
         String sLocation = "Latitude = " + myLocation.getLatitude() + " Longitude = " + myLocation.getLongitude();
