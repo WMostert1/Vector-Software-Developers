@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BugWeb;
+﻿using System.Web.Mvc;
 using BugWeb.Controllers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BugWeb.Tests.Controllers
+namespace BugWeb.Tests
 {
     [TestClass]
     public class HomeControllerTest

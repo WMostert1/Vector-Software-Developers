@@ -7,8 +7,11 @@ using System.Web.Http;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.WebApi;
+using BugBusiness.BugSecurity;
 using DataAccess.Interface;
 using DataAccess.MSSQL;
+using BugBusiness.Interface.BugSecurity;
+
 
 namespace BugCentral
 {
@@ -24,6 +27,7 @@ namespace BugCentral
 
             //register other types
             builder.RegisterType<DbAuthentication>().As<IDbAuthentication>();
+            builder.RegisterType<BugSecurity>().As<IBugSecurity>();
 
             // Get HttpConfiguration.
             var config = GlobalConfiguration.Configuration;

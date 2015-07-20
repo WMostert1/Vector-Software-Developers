@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using BugWeb.Controllers;
 using BugWeb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Autofac.Extras.Moq;
-using Should;
 
-namespace BugWeb.Tests.Controllers
+namespace BugWeb.Tests
 {
     [TestClass]
     public class AuthenticationControllerTest
     {
-        [TestMethod] 
+        [TestMethod]
         public void WebLoginTest_ShouldBeAuthenticated()
         {
             // Arrange
@@ -30,7 +23,8 @@ namespace BugWeb.Tests.Controllers
             var result = controller.Login(loginViewModel) as ViewResult;
 
             //Assert
-            
+
         }
     }
 }
+
