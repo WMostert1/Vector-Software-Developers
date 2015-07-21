@@ -23,6 +23,7 @@ namespace DataAccess.MSSQL
         public string RoleDescription { get; set; }
         public Nullable<int> LastModifiedID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }
+        public int RoleType { get; set; }
     
         public virtual ICollection<UserRole> UserRoles { get; set; }
     }

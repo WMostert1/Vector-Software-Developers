@@ -30,6 +30,7 @@
             <PropertyRef Name="RoleID" />
           </Key>
           <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="RoleType" Type="int" Nullable="false" />
           <Property Name="RoleDescription" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="LastModifiedID" Type="int" />
           <Property Name="TMStamp" Type="datetime" />
@@ -297,6 +298,7 @@
           <Property Name="LastModifiedID" Type="Int32" />
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
           <NavigationProperty Name="UserRoles" Relationship="BugDBModel.FK_UserRole_ToRole" FromRole="Role" ToRole="UserRole" />
+          <Property Name="RoleType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="ScoutBug">
           <Key>
@@ -566,6 +568,7 @@
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="BugDBModel.Role">
               <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleType" ColumnName="RoleType" />
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
                 <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />

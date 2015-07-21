@@ -93,6 +93,10 @@
       <Project>{02c58a1b-5945-4a36-acc6-df1a10052947}</Project>
       <Name>DataAccess.Interface</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataAccess.MSSQL\DataAccess.MSSQL.csproj">
+      <Project>{f45bc879-abb9-4d04-8868-dac9191ef054}</Project>
+      <Name>DataAccess.MSSQL</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

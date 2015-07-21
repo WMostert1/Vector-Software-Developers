@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Interface", "Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.MSSQL", "DataAccess.MSSQL\DataAccess.MSSQL.csproj", "{F45BC879-ABB9-4D04-8868-DAC9191EF054}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugBusiness.Implementation", "BugBusiness\BugBusiness.Implementation.csproj", "{6AADB819-C1D4-41D8-964A-3242A094716C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugBusiness", "BugBusiness\BugBusiness.csproj", "{6AADB819-C1D4-41D8-964A-3242A094716C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugBusiness.Tests", "BugBusiness.Tests\BugBusiness.Tests.csproj", "{40EA16DD-A96E-496B-AC30-62CFEE63FA87}"
 EndProject

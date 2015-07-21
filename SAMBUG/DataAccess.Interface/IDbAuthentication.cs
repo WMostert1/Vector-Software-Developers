@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataAccess.Interface.DTOModels;
+using DataAccess.Interface.Domain;
 
 namespace DataAccess.Interface
 {
     public interface IDbAuthentication
     {
-        LoginResponse GetUserIdRoles(LoginRequest loginRequest);
+        User GetUserByCredentials(string username, string password);
     }
 }

@@ -6,6 +6,7 @@ using DataAccess.Interface.DTOModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Autofac.Extras.Moq;
 using DataAccess.Interface;
+using DataAccess.MSSQL;
 using Should;
 
 namespace BugCentral.Tests
@@ -19,12 +20,19 @@ namespace BugCentral.Tests
             //Arrange
             var loginRequest = new LoginRequest()
             {
-                Username = "michelle@gmail.com",
-                Password = "321"
+                Username = "email1",
+                Password = "123"
             };
 
-            var autoMock = AutoMock.GetStrict();
-            autoMock.Mock<IDbAuthentication>()
+            IDbAuthentication dbAuth = new DbAuthentication();
+
+            var x = dbAuth.GetUserByCredentials(loginRequest.Username, loginRequest.Password);
+
+            var y = 1;
+
+            /*var autoMock = AutoMock.GetStrict();
+            autoMock
+                .Mock<IDbAuthentication>()
                 .Setup(dbAuthentication => dbAuthentication.GetUserIdRoles(loginRequest))
                 .Returns(new LoginResponse(){Id = default(int), Roles = null});
 
@@ -35,7 +43,7 @@ namespace BugCentral.Tests
 
             //Assert
             response.Id.ShouldEqual(0);
-            response.Roles.ShouldBeNull();
+            response.Roles.ShouldBeNull();*/
 
         }
     }

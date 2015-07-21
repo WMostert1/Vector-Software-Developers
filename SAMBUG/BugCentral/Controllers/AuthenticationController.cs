@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using BugBusiness.Interface.BugSecurity;
 using DataAccess.Interface;
 using DataAccess.Interface.DTOModels;
 
@@ -12,26 +13,28 @@ namespace BugCentral.Controllers
     public class AuthenticationController : ApiController
     {
 
-        private readonly IDbAuthentication _dbAuthentication;
+        private readonly IBugSecurity _bugSecurity;
 
 
-        public AuthenticationController(IDbAuthentication dbAuthentication)
+        public AuthenticationController(IBugSecurity bugSecurity)
         {
-            _dbAuthentication = dbAuthentication;
+            _bugSecurity = bugSecurity;
         }
    
         // POST api/authentication/login/
         [HttpPost]
         public LoginResponse Login(LoginRequest loginRequest)
         {
-            LoginResponse loginResponse = _dbAuthentication.GetUserIdRoles(loginRequest);
+            
 
-            if (loginResponse == null)
+           /* if (loginResponse == null)
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden);     
             }
 
-            return loginResponse;
+            return loginResponse;*/
+
+            return null;
         }
 
 

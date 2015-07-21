@@ -12,11 +12,38 @@ namespace DataAccess.MSSQL
 {
     public class DbAuthentication : IDbAuthentication
     {
-        public LoginResponse GetUserIdRoles(LoginRequest loginRequest)
+        public DataAccess.Interface.Domain.User GetUserByCredentials(string username, string password)
         {
-            var context = new BugDBEntities();
+            var db = new BugDBEntities();
+            
+            var dataUser = db.Users.First(usr => usr.Email.Equals(username) && usr.Password.Equals(password));
 
-            var userIdQuery =  (from user in context.Users
+            if (dataUser == null)
+            {
+                return null;
+            }
+
+            var roles = new List<DataAccess.Interface.Domain.Role>();
+
+            foreach (var userRole in dataUser.UserRoles)
+            {
+                var role = new DataAccess.Interface.Domain.Role()
+                {
+                    Type = userRole.Role.RoleType,
+                    Description = userRole.Role.RoleDescription
+                };
+
+                roles.Add(role);
+            }
+
+            var user = new DataAccess.Interface.Domain.User()
+            {
+                Id = dataUser.UserID,
+                Roles = roles
+            };
+
+            return user;
+            /* var userIdQuery =  (from user in db.Users
                 where user.Email.Equals(loginRequest.Username) && user.Password.Equals(loginRequest.Password)
                 select user.UserID)
                 .FirstOrDefault();
@@ -24,8 +51,8 @@ namespace DataAccess.MSSQL
             if (userIdQuery == default(int))
                 return new LoginResponse(){Id = 0, Roles = null};
 
-            var rolesQuery = (from usrRole in context.UserRoles
-                join role in context.Roles on usrRole.RoleID equals role.RoleID 
+            var rolesQuery = (from usrRole in db.UserRoles
+                join role in db.Roles on usrRole.RoleID equals role.RoleID 
                 where usrRole.UserID == userIdQuery
                 select new RoleDto(){ Id = role.RoleID, Description = role.RoleDescription}).ToList();
 
@@ -33,9 +60,7 @@ namespace DataAccess.MSSQL
             {
                 Id = userIdQuery,
                 Roles = rolesQuery
-            };
-
-            return loginResponse;
+            };*/
         }
     }
 }

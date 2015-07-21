@@ -31,7 +31,7 @@ namespace BugWeb.Controllers
             HttpContent requestContent = new StringContent(JsonConvert.SerializeObject(loginViewModel));
             requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             var postTask = _httpClient.PostAsync("http://localhost:53358/api/authentication/login", requestContent);
-            postTask.RunSynchronously();
+            postTask.Wait();
             
             var readResponseTask = postTask.Result.Content.ReadAsStringAsync();
             readResponseTask.Wait();

@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Role.cs" />
+    <Compile Include="Domain\User.cs" />
     <Compile Include="DTOModels\LoginRequest.cs" />
     <Compile Include="DTOModels\RecoverAccountRequest.cs" />
     <Compile Include="DTOModels\RecoverAccountResponse.cs" />

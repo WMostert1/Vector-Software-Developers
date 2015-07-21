@@ -120,9 +120,9 @@
       <Project>{eb2847d5-e1b6-461f-8845-2612ec40b3ee}</Project>
       <Name>BugBusiness.Interface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BugBusiness\BugBusiness.Implementation.csproj">
+    <ProjectReference Include="..\BugBusiness\BugBusiness.csproj">
       <Project>{6aadb819-c1d4-41d8-964a-3242a094716c}</Project>
-      <Name>BugBusiness.Implementation</Name>
+      <Name>BugBusiness</Name>
     </ProjectReference>
     <ProjectReference Include="..\DataAccess.Interface\DataAccess.Interface.csproj">
       <Project>{02c58a1b-5945-4a36-acc6-df1a10052947}</Project>
