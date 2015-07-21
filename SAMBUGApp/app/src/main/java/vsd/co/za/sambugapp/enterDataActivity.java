@@ -2,14 +2,17 @@ package vsd.co.za.sambugapp;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -104,8 +107,12 @@ public class enterDataActivity extends ActionBarActivity {
         savedInstanceState.putInt(BUG_COUNT, npBugs.getValue());
     }
 
-    /*
-
+    /**
+     * This function is called when the app returns from the IdentificationActivity.
+     * It Saves the Species object and the imageTaken. All of this is received from the IdentificationActivity.
+     * @param requestCode
+     * @param resultCode
+     * @param data
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -198,6 +205,10 @@ public class enterDataActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Starts the identification activity.
+     * @param view
+     */
     public void sendToIdentificationActivity(View view) {
 
         Intent intent = new Intent(enterDataActivity.this, IdentificationActivity.class);
@@ -228,6 +239,15 @@ public class enterDataActivity extends ActionBarActivity {
      */
     public void receiveGeoLocation() {
         myLocation = getLastKnownLocation();
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        if (myLocation == null) {
+            // request for a single update, and try again.
+            // Later will request for updates every 10 mins
+           // mLocationManager.requestSingleUpdate(null,null);
+            myLocation = mgr
+                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
         String sLocation = "Latitude = " + myLocation.getLatitude() + " Longitude = " + myLocation.getLongitude();
         Log.d("MY CURRENT LOCATION", sLocation);
 
@@ -268,6 +288,7 @@ public class enterDataActivity extends ActionBarActivity {
      * Error message if gps is off.
      */
     public void createErrorMessage() {
+
         new AlertDialog.Builder(this)
                 .setTitle("Switch on gps")
                 .setMessage("Please ensure your gps is switched on.")
@@ -295,6 +316,9 @@ public class enterDataActivity extends ActionBarActivity {
         startActivity(gpsOptionsIntent);
     }
 
+    /**
+     * Creates a ScoutStop object.
+     */
     public void createScoutStop() {
         stop = new ScoutStop();
         stop.setDate(new Date());
@@ -305,13 +329,17 @@ public class enterDataActivity extends ActionBarActivity {
         stop.setLongitude((float) myLocation.getLongitude());
     }
 
+
     private void usePassedStop(ScoutStop sp){
         stop=sp;
         currBlock = stop.getBlock();
     }
 
 
-
+    /**
+     * Send the stop object back the ScoutTripActivity.
+     * @param view
+     */
     public void sendResultBack(View view) {
         Intent output = new Intent();
         Bundle b = new Bundle();
@@ -322,7 +350,10 @@ public class enterDataActivity extends ActionBarActivity {
     }
 
 
-
+    /**
+     * Adds a bug
+     * @param view
+     */
     public void addBug(View view){
         table = (TableLayout) findViewById(R.id.tblLayout);
         storeCurrentBug();
@@ -331,6 +362,9 @@ public class enterDataActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * Adds rows to the the layout dynamically.
+     */
     public void addRowsDynamically(){
         TableRow delRow = (TableRow)findViewById(R.id.delRow);
         table.removeView(delRow);
@@ -394,6 +428,9 @@ public class enterDataActivity extends ActionBarActivity {
         table.addView(delRow);
     }
 
+    /**
+     * Stores the current Bugs
+     */
     public void storeCurrentBug(){
         currBug = new ScoutBug();
         if(species != null){
@@ -413,6 +450,14 @@ public class enterDataActivity extends ActionBarActivity {
 
         currBug.setNumberOfBugs(currNumberPicker.getValue());
         currBug.setSpecies(species);
+        currBug.setSpeciesID(species.getSpeciesID());
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        imageTaken.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        currBug.setFieldPicture(stream.toByteArray());
+        //TODO: change to user id eventually
+        currBug.setLastModifiedID(1);
+        currBug.setTMStamp(new Date());
+        stop.ScoutBugs.add(currBug);
         allBugs.add(currBug);
 
     }
