@@ -13,7 +13,5 @@ buildscript {
 }
 
 allprojects {
-    repositories {
-        jcenter()
-    }
+    repositories { jcenter() }
 }
