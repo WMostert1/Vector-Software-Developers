@@ -9,7 +9,7 @@ namespace BugWeb.Tests
     public class AuthenticationControllerTest
     {
         [TestMethod]
-        public void WebLoginTest_ShouldBeAuthenticated()
+        public void Inter_Login_Web_ShouldAuthenticate()
         {
             // Arrange
             var controller = new AuthenticationController();

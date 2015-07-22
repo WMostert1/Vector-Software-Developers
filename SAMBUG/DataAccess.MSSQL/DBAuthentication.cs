@@ -9,39 +9,35 @@ using DataAccess.Interface;
 
 namespace DataAccess.MSSQL
 {
+    //TODO: possible use of AutoMapper in the future
     public class DbAuthentication : IDbAuthentication
     {
         public DataAccess.Interface.Domain.User GetUserByCredentials(string username, string password)
         {
             var db = new BugDBEntities();
             
-            var dataUser = db.Users.First(usr => usr.Email.Equals(username) && usr.Password.Equals(password));
+            var entityUser = db.Users.First(usr => usr.Email.Equals(username) && usr.Password.Equals(password));
 
-            if (dataUser == null)
+            if (entityUser == null)
             {
                 return null;
             }
 
-            var roles = new List<DataAccess.Interface.Domain.Role>();
-
-            foreach (var userRole in dataUser.UserRoles)
+            //map EF Role to Domain Role
+            var roles = entityUser.UserRoles.Select(userRole => new DataAccess.Interface.Domain.Role()
             {
-                var role = new DataAccess.Interface.Domain.Role()
-                {
-                    Type = userRole.Role.RoleType,
-                    Description = userRole.Role.RoleDescription
-                };
+                Type = userRole.Role.RoleType, 
+                Description = userRole.Role.RoleDescription
+            }).ToList();
 
-                roles.Add(role);
-            }
-
-            var user = new DataAccess.Interface.Domain.User()
+            //map EF user to Domain User
+            var domainUser = new DataAccess.Interface.Domain.User()
             {
-                Id = dataUser.UserID,
+                Id = entityUser.UserID,
                 Roles = roles
             };
 
-            return user;
+            return domainUser;
             
         }
     }

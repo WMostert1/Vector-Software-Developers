@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
+using BugBusiness.Interface.BugSecurity.Exceptions;
 using DataAccess.Interface;
 using DataAccess.Interface.Domain;
 
@@ -24,7 +25,16 @@ namespace BugBusiness.BugSecurity
         {
             User user = _dbAuthentication.GetUserByCredentials(loginRequest.Username, loginRequest.Password);
 
-            return null;
+            if (user == null)
+                throw new NotRegisteredException();
+            
+            var loginResponse = new LoginResponse()
+            {
+                Id = user.Id,
+                Roles = user.Roles
+            };
+        
+            return loginResponse;
         }
 
         public RegisterResponse Register(RegisterRequest registerRequest)

@@ -45,6 +45,8 @@
     <Compile Include="BugSecurity\DTO\RecoverAccountResponse.cs" />
     <Compile Include="BugSecurity\DTO\RegisterRequest.cs" />
     <Compile Include="BugSecurity\DTO\RegisterResponse.cs" />
+    <Compile Include="BugSecurity\Exceptions\NotRegisteredException.cs" />
+    <Compile Include="BugSecurity\Exceptions\UserExistsException.cs" />
     <Compile Include="BugSecurity\IBugSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BugReporting\DTO\" />
+    <Folder Include="BugReporting\Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

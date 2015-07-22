@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
+using BugBusiness.Interface.BugSecurity.Exceptions;
 
 namespace BugCentral.Controllers
 {
@@ -24,18 +25,28 @@ namespace BugCentral.Controllers
         [HttpPost]
         public LoginResponse Login(LoginRequest loginRequest)
         {
-            
-
-           /* if (loginResponse == null)
+            try
             {
-                throw new HttpResponseException(HttpStatusCode.Forbidden);     
+                LoginResponse loginResponse = Login(loginRequest);
+                return loginResponse;
             }
-
-            return loginResponse;*/
-
-            return null;
+            catch (NotRegisteredException)
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);  
+            }
         }
 
-
+        [HttpPost]
+        public RegisterResponse Register(RegisterRequest registerRequest)
+        {
+           try{
+                RegisterResponse registerResponse = Register(registerRequest);
+                return registerResponse;
+            }
+            catch (UserExistsException)
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
+        }
     }
 }

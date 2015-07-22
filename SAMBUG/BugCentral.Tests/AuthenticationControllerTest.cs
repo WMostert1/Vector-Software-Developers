@@ -14,7 +14,7 @@ namespace BugCentral.Tests
     public class AuthenticationControllerTest
     {
         [TestMethod]
-        public void CentralLoginTest_ShouldNotAuthenticate()
+        public void Inter_Login_API_ShouldNotAuthenticate()
         {
             //Arrange
             var loginRequest = new LoginRequest()
@@ -23,13 +23,7 @@ namespace BugCentral.Tests
                 Password = "123"
             };
 
-       /*     IDbAuthentication dbAuth = new DbAuthentication();
-
-            var x = dbAuth.GetUserByCredentials(loginRequest.Username, loginRequest.Password);
-
-       */
-
-            /*var autoMock = AutoMock.GetStrict();
+           /*var autoMock = AutoMock.GetStrict();
             autoMock
                 .Mock<IDbAuthentication>()
                 .Setup(dbAuthentication => dbAuthentication.GetUserIdRoles(loginRequest))

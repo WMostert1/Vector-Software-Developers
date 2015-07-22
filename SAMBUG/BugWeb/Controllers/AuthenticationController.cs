@@ -22,22 +22,14 @@ namespace BugWeb.Controllers
         // GET: Authentication
         public ActionResult Index()
         {
+
             return null;
         }
 
         //TODO: Look at asynchronous calls
         public ActionResult Login(LoginViewModel loginViewModel)
         {
-            HttpContent requestContent = new StringContent(JsonConvert.SerializeObject(loginViewModel));
-            requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            var postTask = _httpClient.PostAsync("http://localhost:53358/api/authentication/login", requestContent);
-            postTask.Wait();
-            
-            var readResponseTask = postTask.Result.Content.ReadAsStringAsync();
-            readResponseTask.Wait();
-
-            String x = readResponseTask.Result;
-
+           
            /* if(.....)*/
             return View("~/Views/Home/Home.cshtml");
         }
