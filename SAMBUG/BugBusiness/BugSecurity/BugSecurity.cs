@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BugBusiness.Interface.BugSecurity;
+using BugBusiness.Interface.BugSecurity.DTO;
 using DataAccess.Interface;
-using DataAccess.Interface.DTOModels;
 using DataAccess.Interface.Domain;
 
 namespace BugBusiness.BugSecurity
@@ -23,6 +23,7 @@ namespace BugBusiness.BugSecurity
         public LoginResponse Login(LoginRequest loginRequest)
         {
             User user = _dbAuthentication.GetUserByCredentials(loginRequest.Username, loginRequest.Password);
+
             return null;
         }
 

@@ -39,6 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BugSecurity\DTO\LoginRequest.cs" />
+    <Compile Include="BugSecurity\DTO\LoginResponse.cs" />
+    <Compile Include="BugSecurity\DTO\RecoverAccountRequest.cs" />
+    <Compile Include="BugSecurity\DTO\RecoverAccountResponse.cs" />
+    <Compile Include="BugSecurity\DTO\RegisterRequest.cs" />
+    <Compile Include="BugSecurity\DTO\RegisterResponse.cs" />
     <Compile Include="BugSecurity\IBugSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -49,7 +55,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BugReporting\" />
+    <Folder Include="BugReporting\DTO\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

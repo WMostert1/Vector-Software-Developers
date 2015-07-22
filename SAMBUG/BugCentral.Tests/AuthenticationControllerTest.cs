@@ -2,11 +2,10 @@
 using System.Web.Http;
 using System.Web.UI.WebControls;
 using BugCentral.Controllers;
-using DataAccess.Interface.DTOModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Autofac.Extras.Moq;
-using DataAccess.Interface;
-using DataAccess.MSSQL;
+using BugBusiness.Interface.BugSecurity;
+using BugBusiness.Interface.BugSecurity.DTO;
 using Should;
 
 namespace BugCentral.Tests
@@ -24,11 +23,11 @@ namespace BugCentral.Tests
                 Password = "123"
             };
 
-            IDbAuthentication dbAuth = new DbAuthentication();
+       /*     IDbAuthentication dbAuth = new DbAuthentication();
 
             var x = dbAuth.GetUserByCredentials(loginRequest.Username, loginRequest.Password);
 
-            var y = 1;
+       */
 
             /*var autoMock = AutoMock.GetStrict();
             autoMock

@@ -85,17 +85,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BugBusiness.Interface\BugBusiness.Interface.csproj">
+      <Project>{eb2847d5-e1b6-461f-8845-2612ec40b3ee}</Project>
+      <Name>BugBusiness.Interface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BugCentral\BugCentral.csproj">
       <Project>{D1DB4439-E4AE-401E-BD68-E511031A3B16}</Project>
       <Name>BugCentral</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataAccess.Interface\DataAccess.Interface.csproj">
-      <Project>{02c58a1b-5945-4a36-acc6-df1a10052947}</Project>
-      <Name>DataAccess.Interface</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataAccess.MSSQL\DataAccess.MSSQL.csproj">
-      <Project>{f45bc879-abb9-4d04-8868-dac9191ef054}</Project>
-      <Name>DataAccess.MSSQL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

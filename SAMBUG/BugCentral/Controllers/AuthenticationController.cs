@@ -5,8 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using BugBusiness.Interface.BugSecurity;
-using DataAccess.Interface;
-using DataAccess.Interface.DTOModels;
+using BugBusiness.Interface.BugSecurity.DTO;
 
 namespace BugCentral.Controllers
 {

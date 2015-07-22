@@ -1,4 +1,4 @@
-﻿namespace DataAccess.Interface.DTOModels
+﻿namespace BugBusiness.Interface.BugSecurity.DTO
 {
     public class LoginRequest
     {

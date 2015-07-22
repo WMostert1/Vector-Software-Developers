@@ -41,13 +41,6 @@
   <ItemGroup>
     <Compile Include="Domain\Role.cs" />
     <Compile Include="Domain\User.cs" />
-    <Compile Include="DTOModels\LoginRequest.cs" />
-    <Compile Include="DTOModels\RecoverAccountRequest.cs" />
-    <Compile Include="DTOModels\RecoverAccountResponse.cs" />
-    <Compile Include="DTOModels\RoleDto.cs" />
-    <Compile Include="DTOModels\LoginResponse.cs" />
-    <Compile Include="DTOModels\RegisterRequest.cs" />
-    <Compile Include="DTOModels\RegisterResponse.cs" />
     <Compile Include="IDbAuthentication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

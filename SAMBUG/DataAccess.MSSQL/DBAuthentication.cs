@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Interface;
-using DataAccess.Interface.DTOModels;
 
 namespace DataAccess.MSSQL
 {
@@ -43,24 +42,7 @@ namespace DataAccess.MSSQL
             };
 
             return user;
-            /* var userIdQuery =  (from user in db.Users
-                where user.Email.Equals(loginRequest.Username) && user.Password.Equals(loginRequest.Password)
-                select user.UserID)
-                .FirstOrDefault();
-
-            if (userIdQuery == default(int))
-                return new LoginResponse(){Id = 0, Roles = null};
-
-            var rolesQuery = (from usrRole in db.UserRoles
-                join role in db.Roles on usrRole.RoleID equals role.RoleID 
-                where usrRole.UserID == userIdQuery
-                select new RoleDto(){ Id = role.RoleID, Description = role.RoleDescription}).ToList();
-
-            var loginResponse = new LoginResponse
-            {
-                Id = userIdQuery,
-                Roles = rolesQuery
-            };*/
+            
         }
     }
 }
