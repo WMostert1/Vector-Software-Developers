@@ -1,12 +1,6 @@
 /**
  * Created by Aeolus on 2015-07-17.
- */
-
-
-        import static org.junit.Assert.*;
-
-/**
- * Created by Aeolus on 2015-07-17.
+ *
  */
 public class SampleTest{
 

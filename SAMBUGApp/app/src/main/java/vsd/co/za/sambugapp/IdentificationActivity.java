@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -217,11 +218,14 @@ public class IdentificationActivity extends AppCompatActivity {
         currentEntry.setIdealPicture(null);
         bundle.putSerializable(IDENTIFICATION_SPECIES, currentEntry
         );
+        if (bitmap==null){
+            Log.e("PROB","IT~S NULL HERE");
+        }
         Bitmap currentPicture = bitmap;
         currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
         bundle.putParcelable("Image", currentPicture);
         output.putExtras(bundle);
-
+        setResult(RESULT_OK,output);
         finish();
     }
 

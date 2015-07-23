@@ -1,14 +1,12 @@
-package vsd.co.za.sambugapp.test;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 /**
  * Created by Aeolus on 2015-07-17.
+ *
  */
 public class BlockTest {
-
     @Test
     public void testSetBlockID() throws Exception {
         assertEquals(true, true);
@@ -76,7 +74,7 @@ public class BlockTest {
 
     @Test
     public void testGetFarm() throws Exception {
-        assertEquals(true, true);
+        assertEquals(false, true);
     }
 
     @Test
