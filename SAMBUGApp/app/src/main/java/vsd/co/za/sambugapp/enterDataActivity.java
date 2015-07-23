@@ -16,19 +16,20 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -47,6 +48,8 @@ import vsd.co.za.sambugapp.DomainModels.Species;
 
 public class enterDataActivity extends ActionBarActivity {
     private final String BUG_COUNT="za.co.vsd.bug_count";
+    private final String BUG_LIST="za.co.vsd.bug_list";
+    private final String TREE_COUNT="za.co.vsd.tree_count";
     ScoutStop stop;
     Species species;
     Spinner mySpin;
@@ -54,12 +57,12 @@ public class enterDataActivity extends ActionBarActivity {
     NumberPicker npBugs;
     ScoutBug currBug;
     Farm farm;
-
-
     Block currBlock;
     Bitmap imageTaken;
     HashSet<ScoutBug> allBugs;
     TableLayout table;
+    boolean first = true;
+    // Spinner
 
     LocationManager mLocationManager;
     Location myLocation = null;
@@ -76,7 +79,10 @@ public class enterDataActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
-        if(savedInstanceState == null) {
+        if (savedInstanceState!=null){
+            allBugs=(HashSet<ScoutBug>)savedInstanceState.get(BUG_LIST);
+            updateAddedBugsView();
+        } else {
             allBugs = new HashSet<ScoutBug>();
         }
             Intent iReceive = getIntent();
@@ -118,6 +124,8 @@ public class enterDataActivity extends ActionBarActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(BUG_COUNT, npBugs.getValue());
+        savedInstanceState.putInt(TREE_COUNT,npTrees.getValue());
+        savedInstanceState.putSerializable(BUG_LIST,allBugs);
     }
 
     /**
@@ -203,7 +211,7 @@ public class enterDataActivity extends ActionBarActivity {
      */
     public void initializeNumberPickers(Bundle savedInstanceState) {
         npTrees = (NumberPicker) findViewById(R.id.npNumTrees);
-        npBugs = (NumberPicker) findViewById(R.id.npNumBugs1);
+        npBugs = (NumberPicker) findViewById(R.id.npNumBugs);
 
         npTrees.setMinValue(1);
         npTrees.setMaxValue(100);
@@ -214,20 +222,59 @@ public class enterDataActivity extends ActionBarActivity {
         npBugs.setWrapSelectorWheel(false);
         if (savedInstanceState!=null){
             npBugs.setValue(savedInstanceState.getInt(BUG_COUNT));
+            npTrees.setValue(savedInstanceState.getInt(TREE_COUNT));
         }
 
     }
 
-    /**
-     * Starts the identification activity.
-     * @param view
-     */
+    
+    public void sendToScoutTripActivity(View view) {
+
+        String blockName=mySpin.getSelectedItem().toString();
+        Block tempBlock=null;
+        for (Block b:farm.getBlocks()){
+            if (b.getBlockName().equals(blockName)){
+                tempBlock=b;
+                break;
+            }
+        }
+        stop.setBlockID(tempBlock.getBlockID());
+        stop.setNumberOfTrees(npTrees.getValue());
+
+        Intent output = new Intent();
+        Bundle b = new Bundle();
+        stop.setScoutBugs(allBugs);
+        b.putSerializable(ScoutTripActivity.SCOUT_STOP,stop);
+        output.putExtras(b);
+        setResult(RESULT_OK, output);
+        finish();
+    }
+
     public void sendToIdentificationActivity(View view) {
 
         Intent intent = new Intent(enterDataActivity.this, IdentificationActivity.class);
         startActivityForResult(intent, 0);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("Look", "here1");
+        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+            Log.e("Look", "here2");
+            Bundle speciesReceived = data.getExtras();
+            species = (Species) speciesReceived.get(IdentificationActivity.IDENTIFICATION_SPECIES);
+            //currBug.setSpecies(species);
+            //createBug(species,);
+            Bitmap imageTaken2 = (Bitmap)speciesReceived.getParcelable("Image");
+            imageTaken = imageTaken2;
+            if (imageTaken==null){
+                Log.e("AR","NULL ON RESULT");
+            }
+          //  addImage(imageTaken);
+           // createBug(species);
+            Log.e("Look", species.getSpeciesName());
+        }
+    }
 
 
     private void createBug(Species spec,int numBugs,Bitmap fieldImg){
@@ -244,6 +291,12 @@ public class enterDataActivity extends ActionBarActivity {
         stop.ScoutBugs.add(sb); //addBugEntry(sb);
     }
 
+    LocationManager mLocationManager;
+    Location myLocation = null;//= getLastKnownLocation();
+    public void receiveGeoLocation() {
+        myLocation = getLastKnownLocation();
+        String sLocation = "Latitude = " + myLocation.getLatitude() + " Longitude = " + myLocation.getLongitude();
+        Log.d("MY CURRENT LOCATION", sLocation);
 
 
     /**
@@ -341,9 +394,9 @@ public class enterDataActivity extends ActionBarActivity {
     public synchronized void createScoutStop() {
         stop = new ScoutStop();
         stop.setDate(new Date());
-        //TODO:change to user id eventually
-        stop.setLastModifiedID(1);
+        stop.setLastModifiedID(farm.getUserID());
         stop.setTMStamp(new Date());
+        stop.setUserID(farm.getUserID());
         if(myLocation != null){
             stop.setLatitude((float) myLocation.getLatitude());
             stop.setLongitude((float) myLocation.getLongitude());
@@ -352,10 +405,20 @@ public class enterDataActivity extends ActionBarActivity {
 
 
     private void usePassedStop(ScoutStop sp){
+        //stop.duplicateStop(sp);
         stop=sp;
         currBlock = stop.getBlock();
     }
 
+    private void acceptStop(Intent iReceive){
+        Bundle scoutStop = iReceive.getExtras();
+        ScoutStop sp = (ScoutStop) scoutStop.get(ScoutTripActivity.SCOUT_STOP);
+        if(sp == null){
+            createScoutStop();
+        }
+        else usePassedStop(sp);
+       // Log.e("Look",stop.getBlockName() );
+    }
 
     /**
      * Send the stop object back the ScoutTripActivity.
@@ -378,6 +441,8 @@ public class enterDataActivity extends ActionBarActivity {
     public void addBug(View view){
         table = (TableLayout) findViewById(R.id.tblLayout);
         storeCurrentBug();
+        bugNumber++;
+        updateAddedBugsView();
 
         addRowsDynamically();
 
@@ -449,6 +514,15 @@ public class enterDataActivity extends ActionBarActivity {
         table.addView(delRow);
     }
 
+    public void updateAddedBugsView(){
+        LinearLayout info=(LinearLayout)findViewById(R.id.addedBugsContent);
+        for (ScoutBug bug:allBugs) {
+            View bugInfo = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
+            ((ImageView) bugInfo.findViewById(R.id.bugInfoImage)).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length),150,150,true));
+            ((TextView) bugInfo.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs() + "");
+            info.addView(bugInfo);
+        }
+    }
     /**
      * Stores the current Bugs
      */

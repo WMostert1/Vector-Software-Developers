@@ -1,11 +1,12 @@
-package vsd.co.za.sambugapp.UnitTests.ScoutTripActivity.tests;
+package vsd.co.za.sambugapp;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.Button;
 
 import java.util.Date;
 
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
-import vsd.co.za.sambugapp.ScoutTripActivity;
+import org.mockito.*;
 
 /**
  * Created by keaganthompson on 7/14/15.
@@ -33,7 +34,6 @@ public class ScoutTripActivityTest extends ActivityInstrumentationTestCase2<Scou
         final int expectedResult=1;
 
         scoutTripActivity.addStop(new ScoutStop());
-
         final int actualResult=scoutTripActivity.scoutTrip.getNumStops();
 
         assertEquals(actualResult, expectedResult);
@@ -70,11 +70,20 @@ public class ScoutTripActivityTest extends ActivityInstrumentationTestCase2<Scou
         stop.setLastModifiedID(1);
         stop.setTMStamp(new Date());
         scoutTripActivity.scoutTrip.addStop(stop);
-
         final boolean actualResult = scoutTripActivity.persistData();
 
         assertEquals(actualResult,expectedResult);
 
     }
 
+    public void testFinishActivity() throws Exception {
+
+        final boolean expectedResult=true;
+
+        Button button=(Button)scoutTripActivity.findViewById(R.id.btnFinishTrip);
+        scoutTripActivity.finishTrip(button);
+        final boolean actualResult=scoutTripActivity.isFinishing();
+
+        assertEquals(expectedResult,actualResult);
+    }
 }

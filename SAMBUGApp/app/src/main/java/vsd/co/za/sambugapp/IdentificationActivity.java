@@ -4,10 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,47 +12,57 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridLayout;
+
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
-import vsd.co.za.sambugapp.DataAccess.DBHelper;
+
 import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
 import vsd.co.za.sambugapp.DomainModels.Species;
 
-
+/**
+ * This activity class is the third viewable screen when interacting with the App in order
+ * to capture scouting data.
+ * <p/>
+ * This activity makes use of the default camera handler app on the device.
+ */
 public class IdentificationActivity extends AppCompatActivity {
 
     public static final int REQUEST_TAKE_PHOTO = 1;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
     private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
-    private ImageView mImageView;
-    private Bitmap bitmap;
-    private Species currentEntry;
+    private ImageView mImageView = null;
+    private Bitmap bitmap = null;
+    private Species currentEntry = null;
     private int createCounter = 0;
 
+    /**
+     * Saves the current state of the activity for future activities being restarted
+     * @param savedInstanceState The saved activity state of the currently running activity
+     */
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
+        //createCounter is used to only start the camera once
         savedInstanceState.putInt(FIRST_TIME_INDEX, createCounter);
         savedInstanceState.putParcelable(FIELD_BITMAP, bitmap);
     }
 
+    /**
+     * Main responsibilities:
+     * ------------------------------------------
+     * Handles the saved state bundle
+     * Loads the gallery by initialising the grid and loading compressed images
+     * Checks on first startup if the database Species
+     * @param savedInstanceState State of the previous running version of the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +72,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
             }
 
+        //Checks/loads species data into the Species table of the database
             if (createCounter == 0) {
                 SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
                 try {
@@ -112,9 +119,11 @@ public class IdentificationActivity extends AppCompatActivity {
 
             mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
             if (bitmap != null) mImageView.setImageBitmap(bitmap);
-        }
+    }
 
-
+    public Species getCurrentEntry() {
+        return currentEntry;
+    }
 
 
 
@@ -140,13 +149,19 @@ public class IdentificationActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * The case where the photo is returned from the external camera app is handled here
+     * @param requestCode The identification code of a specific
+     * @param resultCode The code indicating the outcome of the request
+     * @param data Data received from another activity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         InputStream stream = null;
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
 
             try {
-                // recyle unused bitmaps
+                //Recycle unused bitmaps
                 if (bitmap != null) {
                     bitmap.recycle();
                 }
@@ -161,10 +176,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 // Decode bitmap with inSampleSize set
                 options.inJustDecodeBounds = false;
                 stream = getContentResolver().openInputStream(data.getData());
-
-
                 bitmap = BitmapFactory.decodeStream(stream, null, options);
-                Log.e("BMap", bitmap.toString());
+
                 //TODO: Rotate the image
 
                 mImageView.setImageBitmap(bitmap);
@@ -181,33 +194,39 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Starts a new intent to take a picture with the device's camera
+     */
     private void dispatchTakePictureIntent(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-        }
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//        }
+        bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.coconut_inst_1);
     }
 
 
-
+    /**
+     * This function puts the current Species entry as well as the field picture taken
+     * ionto a bundle which is then returned to the enterDataActivity
+     * @param view THe button that was clicked
+     */
     public void sendResultBack(View view) {
-
         Intent output = new Intent();
-        Bundle b = new Bundle();
-        currentEntry.setIdealPicture(null);
-        b.putSerializable(IDENTIFICATION_SPECIES, currentEntry);
-        //Bitmap cp      = mImageView.getDrawingCache();
-        Bitmap cp=bitmap;
-        cp=Bitmap.createScaledBitmap(cp,50,50,true);
-        if(cp == null){
-            Log.e("Look", "Bitch");
-        }
-        b.putParcelable("Image",cp);
-        output.putExtras(b);
-        //output.putExtra("Image",cp);
-        setResult(RESULT_OK, output);
-        finish();
+        Bundle bundle = new Bundle();
 
+        currentEntry.setIdealPicture(null);
+        bundle.putSerializable(IDENTIFICATION_SPECIES, currentEntry
+        );
+        if (bitmap==null){
+            Log.e("PROB","IT~S NULL HERE");
+        }
+        Bitmap currentPicture = bitmap;
+        currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
+        bundle.putParcelable("Image", currentPicture);
+        output.putExtras(bundle);
+        setResult(RESULT_OK,output);
+        finish();
     }
 
 
