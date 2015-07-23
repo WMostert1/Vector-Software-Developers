@@ -1,4 +1,5 @@
 package vsd.co.za.sambugapp;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.test.ActivityInstrumentationTestCase2;
@@ -16,6 +17,8 @@ import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,82 +40,104 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
         }
 
         @Test
-        public void testStartActivity() {
+        public void testGeoLocation(){
+                //enterDataActivity activity = mock(enterDataActivity.class, CALLS_REAL_METHODS);
+                enterDataActivity activity = Mockito.spy(new enterDataActivity());
+                //activity.CheckIfGPSON() =
+                Mockito.when(activity.CheckIfGPSON()).thenReturn(true);
+                Mockito.when(activity.receiveGeoLocation()).thenCallRealMethod();
 
-//                Farm fm = new Farm();
-//
-//                HashSet<Block> blocks = new HashSet<Block>();
-//                Block blockA = new Block();
-//                blockA.setBlockName("BlockA");
-//                Block blockB = new Block();
-//                blockB.setBlockName("BlockB");
-//                Block blockC = new Block();
-//                blockC.setBlockName("BlockC");
-//
-//                blocks.add(blockA);
-//                blocks.add(blockB);
-//                blocks.add(blockC);
-//
-//                ScoutTripActivity sta = mock(ScoutTripActivity.class);
-//                when(sta.addStopActivityStart();)
-//                enterDataActivity activity = null;
-//
-//
-//                new enterDataActivity();
-//                assertNotNull(activity);
+                assertNotNull("Testing gps location",activity.receiveGeoLocation());
         }
 
-        @Test
-        public void testLoadingBlocks(){
-//                ScoutStop sp = new ScoutStop();
-//
-//                Farm fm = new Farm();
-//
-//                HashSet<Block> blocks = new HashSet<Block>();
-//                Block blockA = new Block();
-//                blockA.setBlockName("BlockA");
-//                Block blockB = new Block();
-//                blockB.setBlockName("BlockB");
-//                Block blockC = new Block();
-//                blockC.setBlockName("BlockC");
-//
-//                blocks.add(blockA);
-//                blocks.add(blockB);
-//                blocks.add(blockC);
-//
-//                fm.setBlocks(blocks);
-//
-//
-//                enterDataActivity activity = mock(enterDataActivity.class);
-//                //enterDataActivity activity = getActivity();
-//              //  when(activity.getFarm()).thenReturn(fm);
-//
-//
-//                Intent iReceive = new Intent();
-//
-//                Bundle bundle=new Bundle();
-//                bundle.putSerializable(USER_FARM, fm);
-//                iReceive.putExtras(bundle);
-//
-//                when(activity.acceptBlocks(iReceive)).then();
-//
-//                activity.acceptBlocks(iReceive);
-//                activity.populateSpinner();
-//                //Spinner spnNumBlocks = (Spinner)activity.findViewById(R.id.spnBlocks);
-//                /*
-//                Testing to see if the num of blocks is correct.
-//                 */
-//                assertEquals(3, activity.getMySpin().getCount());
-//
-//
 
 
-        }
 
-        @Test
-        public void testAcceptStop(){
-                enterDataActivity activity = mock(enterDataActivity.class);
-                activity.populateSpinner();
-        }
+
+
+
+
+
+
+
+
+//        @Test
+//        public void testStartActivity() {
+//
+////                Farm fm = new Farm();
+////
+////                HashSet<Block> blocks = new HashSet<Block>();
+////                Block blockA = new Block();
+////                blockA.setBlockName("BlockA");
+////                Block blockB = new Block();
+////                blockB.setBlockName("BlockB");
+////                Block blockC = new Block();
+////                blockC.setBlockName("BlockC");
+////
+////                blocks.add(blockA);
+////                blocks.add(blockB);
+////                blocks.add(blockC);
+////
+////                ScoutTripActivity sta = mock(ScoutTripActivity.class);
+////                when(sta.addStopActivityStart();)
+////                enterDataActivity activity = null;
+////
+////
+////                new enterDataActivity();
+////                assertNotNull(activity);
+//        }
+//
+//        @Test
+//        public void testLoadingBlocks(){
+////                ScoutStop sp = new ScoutStop();
+////
+////                Farm fm = new Farm();
+////
+////                HashSet<Block> blocks = new HashSet<Block>();
+////                Block blockA = new Block();
+////                blockA.setBlockName("BlockA");
+////                Block blockB = new Block();
+////                blockB.setBlockName("BlockB");
+////                Block blockC = new Block();
+////                blockC.setBlockName("BlockC");
+////
+////                blocks.add(blockA);
+////                blocks.add(blockB);
+////                blocks.add(blockC);
+////
+////                fm.setBlocks(blocks);
+////
+////
+////                enterDataActivity activity = mock(enterDataActivity.class);
+////                //enterDataActivity activity = getActivity();
+////              //  when(activity.getFarm()).thenReturn(fm);
+////
+////
+////                Intent iReceive = new Intent();
+////
+////                Bundle bundle=new Bundle();
+////                bundle.putSerializable(USER_FARM, fm);
+////                iReceive.putExtras(bundle);
+////
+////                when(activity.acceptBlocks(iReceive)).then();
+////
+////                activity.acceptBlocks(iReceive);
+////                activity.populateSpinner();
+////                //Spinner spnNumBlocks = (Spinner)activity.findViewById(R.id.spnBlocks);
+////                /*
+////                Testing to see if the num of blocks is correct.
+////                 */
+////                assertEquals(3, activity.getMySpin().getCount());
+////
+////
+//
+//
+//        }
+//
+//        @Test
+//        public void testAcceptStop(){
+////                enterDataActivity activity = mock(enterDataActivity.class);
+////                activity.populateSpinner();
+//        }
 
 }

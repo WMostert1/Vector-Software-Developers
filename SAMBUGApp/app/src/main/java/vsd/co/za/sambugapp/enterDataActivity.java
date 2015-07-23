@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -29,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -61,17 +61,30 @@ public class enterDataActivity extends ActionBarActivity {
     HashSet<ScoutBug> allBugs;
     TableLayout table;
 
+    LocationManager mLocationManager;
+    Location myLocation = null;
+
+    public synchronized Location getMyLocation() {
+        return myLocation;
+    }
+
+    public void setMyLocation(Location myLocation) {
+        this.myLocation = myLocation;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
-        allBugs = new HashSet<ScoutBug>();
-        Intent iReceive = getIntent();
-        receiveGeoLocation();
-        acceptStop(iReceive);
-        acceptBlocks(iReceive);
-        populateSpinner();
-        initializeNumberPickers(savedInstanceState);
+        if(savedInstanceState == null) {
+            allBugs = new HashSet<ScoutBug>();
+        }
+            Intent iReceive = getIntent();
+            receiveGeoLocation();
+            acceptStop(iReceive);
+            acceptBlocks(iReceive);
+            populateSpinner();
+            initializeNumberPickers(savedInstanceState);
 
     }
 
@@ -156,7 +169,7 @@ public class enterDataActivity extends ActionBarActivity {
         if(frm != null) {
             setFarm(frm);
         }
-        else Log.e("Error","No block exists!");
+        else Log.e("Error", "No block exists!");
     }
 
     /**
@@ -176,10 +189,10 @@ public class enterDataActivity extends ActionBarActivity {
         mySpin.setAdapter(adapter);
         int pos =0;
         for(int i =0; i <mySpin.getItemIdAtPosition(i);i++){
-           if(mySpin.getItemAtPosition(i) == currBlock){
-               pos = i;
-               break;
-           }
+            if(mySpin.getItemAtPosition(i) == currBlock){
+                pos = i;
+                break;
+            }
         }
         mySpin.setSelection(pos);
     }
@@ -231,33 +244,39 @@ public class enterDataActivity extends ActionBarActivity {
         stop.ScoutBugs.add(sb); //addBugEntry(sb);
     }
 
-    LocationManager mLocationManager;
-    Location myLocation = null;
+
 
     /**
      * Receives the Location Data from the device.
      */
-    public void receiveGeoLocation() {
-        myLocation = getLastKnownLocation();
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        if (myLocation == null) {
-            // request for a single update, and try again.
-            // Later will request for updates every 10 mins
-           // mLocationManager.requestSingleUpdate(null,null);
-            myLocation = mgr
-                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    public Location receiveGeoLocation() {
+        mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new MyLocationListener();
+        if (!CheckIfGPSON()){
+            Intent gpsOptionsIntent = new Intent(
+                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(gpsOptionsIntent);
+        } else {
+            mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,locationListener,null);
+            myLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
-        String sLocation = "Latitude = " + myLocation.getLatitude() + " Longitude = " + myLocation.getLongitude();
-        Log.d("MY CURRENT LOCATION", sLocation);
-
+        return myLocation;
     }
+
+    /**
+     * Checks if GPS is on.
+     * @return
+     */
+    public boolean CheckIfGPSON(){
+        return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
 
     /**
      * Gets the last known location if GPS is on. Else it goes to an error screen.
      * @return Location object.
      */
-    private Location getLastKnownLocation() {
+    private synchronized Location getLastKnownLocation() {
         mLocationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
         List<String> providers = mLocationManager.getProviders(true);
         Location bestLocation = null;
@@ -272,8 +291,9 @@ public class enterDataActivity extends ActionBarActivity {
                     bestLocation = l;
                 }
             }
-        } else {
-            createErrorMessage();
+        }
+        else {
+        //createErrorMessage();
         }
 
 
@@ -288,8 +308,7 @@ public class enterDataActivity extends ActionBarActivity {
      * Error message if gps is off.
      */
     public void createErrorMessage() {
-
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(enterDataActivity.this)
                 .setTitle("Switch on gps")
                 .setMessage("Please ensure your gps is switched on.")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -310,7 +329,7 @@ public class enterDataActivity extends ActionBarActivity {
     /**
      * Moves to the GPS screen.
      */
-    public void moveGPSScreen() {
+    public synchronized void moveGPSScreen() {
         Intent gpsOptionsIntent = new Intent(
                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivity(gpsOptionsIntent);
@@ -319,14 +338,16 @@ public class enterDataActivity extends ActionBarActivity {
     /**
      * Creates a ScoutStop object.
      */
-    public void createScoutStop() {
+    public synchronized void createScoutStop() {
         stop = new ScoutStop();
         stop.setDate(new Date());
         //TODO:change to user id eventually
         stop.setLastModifiedID(1);
         stop.setTMStamp(new Date());
-        stop.setLatitude((float) myLocation.getLatitude());
-        stop.setLongitude((float) myLocation.getLongitude());
+        if(myLocation != null){
+            stop.setLatitude((float) myLocation.getLatitude());
+            stop.setLongitude((float) myLocation.getLongitude());
+        }
     }
 
 
