@@ -16,9 +16,9 @@ namespace DataAccess.MSSQL
         {
             var db = new BugDBEntities();
             
-            var entityUser = db.Users.First(usr => usr.Email.Equals(username) && usr.Password.Equals(password));
+            var entityUser = db.Users.SingleOrDefault(usr => usr.Email.Equals(username) && usr.Password.Equals(password));
 
-            if (entityUser == null)
+            if (entityUser == default(User))
             {
                 return null;
             }

@@ -3,29 +3,38 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using Should;
 using Autofac.Extras.Moq;
-using BugBusiness.Interface.BugSecurity;
 using DataAccess.Interface;
-using Role = DataAccess.Interface.Domain.Role;
+using DataAccess.Interface.Domain;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
-using DataAccess.Interface.Domain;
 
 namespace BugBusiness.Tests
 {
     [TestClass]
     public class BugSecurityTest
     {
+        private AutoMock _autoMock;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _autoMock = AutoMock.GetStrict();
+        }
+
+        [TestCleanup]
+        public void TearDown()
+        {
+            _autoMock.Dispose();
+        }
 
         [TestMethod]
         public void Unit_Login_Business_ShouldAuthenticate()
         {
             //Arrange
-            var autoMock = AutoMock.GetStrict();
-            
-            autoMock
+            _autoMock
                 .Mock<IDbAuthentication>()
                 .Setup(dbAuthentication => dbAuthentication.GetUserByCredentials("Test1", "321"))
-                .Returns(new DataAccess.Interface.Domain.User()
+                .Returns(new User()
                 {
                     Id = 1,
                     Roles = new List<Role>()
@@ -35,7 +44,7 @@ namespace BugBusiness.Tests
                     }
                 });
 
-            var bugSecurity = autoMock.Create<BugSecurity.BugSecurity>();
+            var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
 
             //Act
             LoginResponse loginResponse = bugSecurity.Login(new LoginRequest()
@@ -56,17 +65,15 @@ namespace BugBusiness.Tests
         public void Unit_Login_Business_ShouldNotAuthenticate()
         {
             //Arrange
-            var autoMock = AutoMock.GetStrict();
-
-            autoMock
+            _autoMock
                 .Mock<IDbAuthentication>()
                 .Setup(dbAuthentication => dbAuthentication.GetUserByCredentials("Test2", "123"))
-                .Returns((DataAccess.Interface.Domain.User)null);
+                .Returns((User)null);
             
-            var bugSecurity = autoMock.Create<BugSecurity.BugSecurity>();
+            var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
 
             //Act
-            LoginResponse loginResponse = bugSecurity.Login(new LoginRequest()
+            bugSecurity.Login(new LoginRequest()
             {
                 Username = "Test2",
                 Password = "123"
@@ -81,6 +88,7 @@ namespace BugBusiness.Tests
             //Arrange
             //Act
             //Assert
+            throw new NotImplementedException();
         }
 
         [TestMethod]
@@ -89,6 +97,7 @@ namespace BugBusiness.Tests
             //Arrange
             //Act
             //Assert
+            throw new NotImplementedException();
         }
     }
 }

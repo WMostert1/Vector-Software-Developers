@@ -19,13 +19,13 @@ namespace BugCentral
     {
         protected void Application_Start()
         {
-            //Acquire container builder
+            // Acquire container builder
             var builder = new ContainerBuilder();
             
             // Register Web API controllers.
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-            //register other types
+            // Register other types
             builder.RegisterType<DbAuthentication>().As<IDbAuthentication>();
             builder.RegisterType<BugSecurity>().As<IBugSecurity>();
 
