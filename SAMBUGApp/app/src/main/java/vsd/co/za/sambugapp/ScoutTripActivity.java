@@ -130,7 +130,7 @@ public class ScoutTripActivity extends ActionBarActivity {
      * @param intent Intent passed in from LoginActivity.
      */
     public void acceptFarm(Intent intent){
-        farm=new Farm();
+        /*farm=new Farm();
         farm.setFarmID(1);
         farm.setFarmName("DEEZ NUTS");
         HashSet<Block> blocks=new HashSet<>();
@@ -140,9 +140,9 @@ public class ScoutTripActivity extends ActionBarActivity {
             obj.setBlockName("Block #" + j);
             blocks.add(obj);
         }
-        farm.setBlocks(blocks);
-        //Bundle b=i.getExtras();
-        //farm=(Farm)b.get(LoginActivity.USER_FARM);
+        farm.setBlocks(blocks);*/
+        Bundle b=intent.getExtras();
+        farm=(Farm)b.get(LoginActivity.USER_FARM);
     }
 
     /**

@@ -6,8 +6,7 @@ import android.widget.Button;
 import java.util.Date;
 
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
-import vsd.co.za.sambugapp.R;
-import vsd.co.za.sambugapp.ScoutTripActivity;
+import org.mockito.*;
 
 /**
  * Created by keaganthompson on 7/14/15.

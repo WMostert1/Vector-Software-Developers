@@ -43,6 +43,7 @@ import vsd.co.za.sambugapp.DomainModels.Species;
 public class enterDataActivity extends ActionBarActivity {
     private final String BUG_COUNT="za.co.vsd.bug_count";
     private final String BUG_LIST="za.co.vsd.bug_list";
+    private final String TREE_COUNT="za.co.vsd.tree_count";
     ScoutStop stop;
     Species species;
     Spinner mySpin;
@@ -64,6 +65,7 @@ public class enterDataActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
+        Log.e("PLPL","BEGIN");
         if (savedInstanceState!=null){
             allBugs=(HashSet<ScoutBug>)savedInstanceState.get(BUG_LIST);
             updateAddedBugsView();
@@ -75,8 +77,9 @@ public class enterDataActivity extends ActionBarActivity {
 
         Intent iReceive = getIntent();
         // Bundle scoutStop = iReceive.getExtras();
-        acceptStop(iReceive);
         acceptBlocks(iReceive);
+        acceptStop(iReceive);
+
 
         populateSpinner();
         initializeNumberPickers(savedInstanceState);
@@ -109,6 +112,7 @@ public class enterDataActivity extends ActionBarActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(BUG_COUNT, npBugs.getValue());
+        savedInstanceState.putInt(TREE_COUNT,npTrees.getValue());
         savedInstanceState.putSerializable(BUG_LIST,allBugs);
     }
 
@@ -153,13 +157,22 @@ public class enterDataActivity extends ActionBarActivity {
         npBugs.setWrapSelectorWheel(false);
         if (savedInstanceState!=null){
             npBugs.setValue(savedInstanceState.getInt(BUG_COUNT));
+            npTrees.setValue(savedInstanceState.getInt(TREE_COUNT));
         }
 
     }
 
     public void sendToScoutTripActivity(View view) {
 
-        stop.Block.setBlockName(mySpin.getSelectedItem().toString());
+        String blockName=mySpin.getSelectedItem().toString();
+        Block tempBlock=null;
+        for (Block b:farm.getBlocks()){
+            if (b.getBlockName().equals(blockName)){
+                tempBlock=b;
+                break;
+            }
+        }
+        stop.setBlockID(tempBlock.getBlockID());
         stop.setNumberOfTrees(npTrees.getValue());
 //       // stop.
 ////        Intent intent = new Intent(enterDataActivity.this, ScoutTripActivity.class);
@@ -201,6 +214,9 @@ public class enterDataActivity extends ActionBarActivity {
             //createBug(species,);
             Bitmap imageTaken2 = (Bitmap)speciesReceived.getParcelable("Image");
             imageTaken = imageTaken2;
+            if (imageTaken==null){
+                Log.e("AR","NULL ON RESULT");
+            }
           //  addImage(imageTaken);
            // createBug(species);
             Log.e("Look", species.getSpeciesName());
@@ -280,12 +296,15 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void createScoutStop() {
         stop = new ScoutStop();
-        stop.setDate(new Date());
-        //TODO:change to user id eventually
-        stop.setLastModifiedID(1);
-        stop.setTMStamp(new Date());
-        stop.setLatitude(12);
+        stop.setUserID(farm.getUserID());
+        Location location=getLastKnownLocation();
+        //stop.setLatitude((float)location.getLatitude());
+        //stop.setLongitude((float)location.getLongitude());
         stop.setLongitude(12);
+        stop.setLatitude(12);
+        stop.setDate(new Date());
+        stop.setLastModifiedID(farm.getUserID());
+        stop.setTMStamp(new Date());
     }
 
     private void usePassedStop(ScoutStop sp){
@@ -416,6 +435,8 @@ public class enterDataActivity extends ActionBarActivity {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             imageTaken.compress(Bitmap.CompressFormat.JPEG,100,stream);
             currBug.setFieldPicture(stream.toByteArray());
+        } else {
+            Log.e("PROBLEM","IMAGETAKEN IS NULL");
         }
 
       //  TableRow rowNumberPicker;

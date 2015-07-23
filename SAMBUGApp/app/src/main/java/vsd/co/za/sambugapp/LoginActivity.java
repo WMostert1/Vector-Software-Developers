@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
+import org.json.*;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,9 +31,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DataAccess.DBHelper;
+import vsd.co.za.sambugapp.DomainModels.Block;
+import vsd.co.za.sambugapp.DomainModels.Farm;
 
 
 /**
@@ -58,6 +63,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mLoginFormView;
 
     public static final String USER_FARM = "za.co.vsd.user_farm";
+    private final String TAG="LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +101,31 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         DBHelper dbHelper = new DBHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+        //testing
+        JSONObject obj=new JSONObject();
+        Log.e(TAG,"HELLO");
+        try {
+            obj.put("Name", "Keags");
+            ArrayList<Block> blocks=new ArrayList<>();
+            JSONArray array=new JSONArray();
+            for (int i=0;i<2;i++){
+                Block block=new Block();
+                block.setBlockID(i);
+                block.setBlockName("Block " + i);
+                JSONObject temp=new JSONObject();
+                temp.put("ID",block.getBlockID());
+                temp.put("Name",block.getBlockName());
+                array.put(temp);
+            }
+            obj.put("Blocks",array);
+            JSONArray arr=obj.getJSONArray("Blocks");
+            for (int i=0;i<arr.length();i++){
+                JSONObject arrObj=arr.getJSONObject(i);
+                Log.e(TAG,arrObj.getString("ID")+arrObj.getString("Name"));
+            }
+        }catch(Exception ex){
+            Log.e(TAG, ex.getMessage());
+        }
     }
 
     private void populateAutoComplete() {
@@ -152,8 +183,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);*/
 
-            Intent intent=new Intent(LoginActivity.this,ScoutTripActivity.class);
-            startActivity(intent);
+            //send login request
+            Farm resultFarm=loginRequest(email,password);
+            //test login request
+            if (resultFarm==null){
+                Toast.makeText(getApplicationContext(),"Login failed!",Toast.LENGTH_LONG).show();
+            } else {
+                Intent intent = new Intent(getApplicationContext(),ScoutTripActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable(USER_FARM,resultFarm);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
         }
     }
 
@@ -165,6 +206,72 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
+    }
+
+    private Farm loginRequest(String email,String password){
+        //create login request
+        JSONObject loginRequest=new JSONObject();
+        try {
+            loginRequest.put("Username", email);
+            loginRequest.put("Password", password);
+        } catch (JSONException ex){
+            Log.e(TAG,ex.getMessage());
+        }
+        //send login request
+        //String result=sendLoginRequest();
+        Farm farm;
+        if (email.equals("m@m.m") && password.equals("")){
+            JSONObject resultJSON=new JSONObject();
+            try {
+                resultJSON.put("FarmID", 1);
+                resultJSON.put("UserID", 3);
+                resultJSON.put("FarmName", "Spektakel");
+                JSONArray tempArr=new JSONArray();
+                for (int i=1;i<4;i++){
+                    Block block=new Block();
+                    block.setBlockID(i);
+                    block.setFarmID(1);
+                    block.setBlockName("Block " + i);
+                    JSONObject temp=new JSONObject();
+                    temp.put("BlockID",block.getBlockID());
+                    temp.put("FarmID",block.getFarmID());
+                    temp.put("BlockName",block.getBlockName());
+                    tempArr.put(temp);
+                }
+                resultJSON.put("Blocks",tempArr);
+            }catch(JSONException ex){
+                Log.e(TAG,ex.getMessage());
+            }
+            //farmid,userid,farmname,list of blocks
+            return handleLoginResult(resultJSON.toString());
+        }
+        return null;
+    }
+
+    private Farm handleLoginResult(String jsonString){
+        Farm farm;
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            farm=new Farm();
+            farm.setFarmID(jsonObject.getInt("FarmID"));
+            farm.setUserID(jsonObject.getInt("UserID"));
+            farm.setFarmName(jsonObject.getString("FarmName"));
+            JSONArray jsonArray=jsonObject.getJSONArray("Blocks");
+            HashSet<Block> blockList=new HashSet<>();
+            for (int i=0;i<jsonArray.length();i++){
+                JSONObject tempJson=jsonArray.getJSONObject(i);
+                Block tempBlock=new Block();
+                tempBlock.setBlockID(tempJson.getInt("BlockID"));
+                tempBlock.setFarmID(tempJson.getInt("FarmID"));
+                tempBlock.setBlockName(tempJson.getString("BlockName"));
+                blockList.add(tempBlock);
+            }
+            farm.setBlocks(blockList);
+        }catch (JSONException ex){
+            Log.e(TAG,ex.getMessage());
+            farm=null;
+        }
+        return farm;
     }
 
     /**
