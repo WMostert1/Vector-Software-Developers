@@ -256,26 +256,6 @@ public class enterDataActivity extends ActionBarActivity {
         startActivityForResult(intent, 0);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("Look", "here1");
-        if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
-            Log.e("Look", "here2");
-            Bundle speciesReceived = data.getExtras();
-            species = (Species) speciesReceived.get(IdentificationActivity.IDENTIFICATION_SPECIES);
-            //currBug.setSpecies(species);
-            //createBug(species,);
-            Bitmap imageTaken2 = (Bitmap)speciesReceived.getParcelable("Image");
-            imageTaken = imageTaken2;
-            if (imageTaken==null){
-                Log.e("AR","NULL ON RESULT");
-            }
-          //  addImage(imageTaken);
-           // createBug(species);
-            Log.e("Look", species.getSpeciesName());
-        }
-    }
-
 
     private void createBug(Species spec,int numBugs,Bitmap fieldImg){
         ScoutBug sb = new ScoutBug();
@@ -290,15 +270,6 @@ public class enterDataActivity extends ActionBarActivity {
         sb.setTMStamp(new Date());
         stop.ScoutBugs.add(sb); //addBugEntry(sb);
     }
-
-    LocationManager mLocationManager;
-    Location myLocation = null;//= getLastKnownLocation();
-    public void receiveGeoLocation() {
-        myLocation = getLastKnownLocation();
-        String sLocation = "Latitude = " + myLocation.getLatitude() + " Longitude = " + myLocation.getLongitude();
-        Log.d("MY CURRENT LOCATION", sLocation);
-
-
     /**
      * Receives the Location Data from the device.
      */
@@ -410,15 +381,6 @@ public class enterDataActivity extends ActionBarActivity {
         currBlock = stop.getBlock();
     }
 
-    private void acceptStop(Intent iReceive){
-        Bundle scoutStop = iReceive.getExtras();
-        ScoutStop sp = (ScoutStop) scoutStop.get(ScoutTripActivity.SCOUT_STOP);
-        if(sp == null){
-            createScoutStop();
-        }
-        else usePassedStop(sp);
-       // Log.e("Look",stop.getBlockName() );
-    }
 
     /**
      * Send the stop object back the ScoutTripActivity.
@@ -439,9 +401,9 @@ public class enterDataActivity extends ActionBarActivity {
      * @param view
      */
     public void addBug(View view){
-        table = (TableLayout) findViewById(R.id.tblLayout);
+        // table = (TableLayout) findViewById(R.id.tblLayout);
         storeCurrentBug();
-        bugNumber++;
+        //bugNumber++;
         updateAddedBugsView();
 
         addRowsDynamically();
@@ -452,66 +414,66 @@ public class enterDataActivity extends ActionBarActivity {
      * Adds rows to the the layout dynamically.
      */
     public void addRowsDynamically(){
-        TableRow delRow = (TableRow)findViewById(R.id.delRow);
-        table.removeView(delRow);
-
-        TableRow row= new TableRow(this);
-
-        TextView tv1 = new TextView(this);
-        tv1.setText(R.string.numBugs);
-
-        tv1.setTextSize(24);
-
-        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.FILL_PARENT);
-        params.weight = 1.0f;
-        params.gravity = Gravity.TOP;
-        tv1.setMinWidth(220);
-
-        NumberPicker np1 = new NumberPicker(this);
-
-        np1.setMinValue(0);
-        np1.setMaxValue(100);
-        np1.setWrapSelectorWheel(false);
-        row.addView(tv1);
-
-        row.addView(np1);
-
-        TextView tv2 = new TextView(this);
-        tv2.setText(R.string.bugType);
-        tv2.setTextSize(24);
-        tv2.setMinWidth(220);
-        Button btnSelectBug = new Button(this);
-        btnSelectBug.setText(R.string.btnSelectBug);
-        btnSelectBug.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendToIdentificationActivity(v);
-            }
-        });
-        TableRow row2= new TableRow(this);
-        row2.addView(tv2);
-        row2.addView(btnSelectBug);
-
-
-        Bitmap takenImage =     BitmapFactory.decodeByteArray(currBug.getFieldPicture(),0,currBug.getFieldPicture().length);
-        ImageView im = new ImageView(this);
-        im.setImageBitmap(takenImage);
-
-        TableRow row3= new TableRow(this);
-        im.setLayoutParams(new TableRow.LayoutParams());
-        im.getLayoutParams().height = 350; // OR
-        im.getLayoutParams().width =  350;
-        //im.setLayoutParams(new TableLayout.LayoutParams(50, 50));
-        row3.addView(im);
-
-        TableRow emptyRow = new TableRow(this);
-
-        // table.addView(emptyRow);
-        table.addView(row3);
-        table.addView(row);
-        table.addView(row2);
-
-        table.addView(delRow);
+//        TableRow delRow = (TableRow)findViewById(R.id.delRow);
+//        table.removeView(delRow);
+//
+//        TableRow row= new TableRow(this);
+//
+//        TextView tv1 = new TextView(this);
+//        tv1.setText(R.string.numBugs);
+//
+//        tv1.setTextSize(24);
+//
+//        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.FILL_PARENT);
+//        params.weight = 1.0f;
+//        params.gravity = Gravity.TOP;
+//        tv1.setMinWidth(220);
+//
+//        NumberPicker np1 = new NumberPicker(this);
+//
+//        np1.setMinValue(0);
+//        np1.setMaxValue(100);
+//        np1.setWrapSelectorWheel(false);
+//        row.addView(tv1);
+//
+//        row.addView(np1);
+//
+//        TextView tv2 = new TextView(this);
+//        tv2.setText(R.string.bugType);
+//        tv2.setTextSize(24);
+//        tv2.setMinWidth(220);
+//        Button btnSelectBug = new Button(this);
+//        btnSelectBug.setText(R.string.btnSelectBug);
+//        btnSelectBug.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                sendToIdentificationActivity(v);
+//            }
+//        });
+//        TableRow row2= new TableRow(this);
+//        row2.addView(tv2);
+//        row2.addView(btnSelectBug);
+//
+//
+//        Bitmap takenImage =     BitmapFactory.decodeByteArray(currBug.getFieldPicture(),0,currBug.getFieldPicture().length);
+//        ImageView im = new ImageView(this);
+//        im.setImageBitmap(takenImage);
+//
+//        TableRow row3= new TableRow(this);
+//        im.setLayoutParams(new TableRow.LayoutParams());
+//        im.getLayoutParams().height = 350; // OR
+//        im.getLayoutParams().width =  350;
+//        //im.setLayoutParams(new TableLayout.LayoutParams(50, 50));
+//        row3.addView(im);
+//
+//        TableRow emptyRow = new TableRow(this);
+//
+//        // table.addView(emptyRow);
+//        table.addView(row3);
+//        table.addView(row);
+//        table.addView(row2);
+//
+//        table.addView(delRow);
     }
 
     public void updateAddedBugsView(){
