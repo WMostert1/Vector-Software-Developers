@@ -79,11 +79,11 @@ public class ScoutTripActivityTest extends ActivityInstrumentationTestCase2<Scou
 
     public void testFinishActivity() throws Exception {
 
-        final boolean expectedResult=true;
+        final boolean expectedResult = true;
 
-        Button button=(Button)scoutTripActivity.findViewById(R.id.btnFinishTrip);
+        Button button = (Button)scoutTripActivity.findViewById(R.id.btnFinishTrip);
         scoutTripActivity.finishTrip(button);
-        final boolean actualResult=scoutTripActivity.isFinishing();
+        final boolean actualResult = scoutTripActivity.isFinishing();
 
         assertEquals(expectedResult,actualResult);
     }

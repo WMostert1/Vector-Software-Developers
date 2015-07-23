@@ -27,6 +27,7 @@ import java.util.HashSet;
 
 import vsd.co.za.sambugapp.DataAccess.ScoutBugDAO;
 import vsd.co.za.sambugapp.DataAccess.ScoutStopDAO;
+import vsd.co.za.sambugapp.DataAccess.SynchronizeTask;
 import vsd.co.za.sambugapp.DomainModels.*;
 
 
@@ -180,6 +181,9 @@ public class ScoutTripActivity extends ActionBarActivity {
             return false;
         }
         Toast.makeText(getApplicationContext(),"You are done. Go home.",Toast.LENGTH_LONG).show();
+
+        new SynchronizeTask(getApplicationContext()).execute();
+
         return true;
     }
 
