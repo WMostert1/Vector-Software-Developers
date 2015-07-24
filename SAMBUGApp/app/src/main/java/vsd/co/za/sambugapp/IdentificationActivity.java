@@ -198,11 +198,10 @@ public class IdentificationActivity extends AppCompatActivity {
      * Starts a new intent to take a picture with the device's camera
      */
     private void dispatchTakePictureIntent(){
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-//        }
-        bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.coconut_inst_1);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+        }
     }
 
 

@@ -87,8 +87,9 @@ public class enterDataActivity extends ActionBarActivity {
         }
             Intent iReceive = getIntent();
             receiveGeoLocation();
-            acceptStop(iReceive);
             acceptBlocks(iReceive);
+        acceptStop(iReceive);
+
             populateSpinner();
             initializeNumberPickers(savedInstanceState);
 
@@ -239,6 +240,7 @@ public class enterDataActivity extends ActionBarActivity {
             }
         }
         stop.setBlockID(tempBlock.getBlockID());
+        stop.setBlock(tempBlock);
         stop.setNumberOfTrees(npTrees.getValue());
 
         Intent output = new Intent();
@@ -282,10 +284,11 @@ public class enterDataActivity extends ActionBarActivity {
             startActivity(gpsOptionsIntent);
         } else {
             mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,locationListener,null);
-            myLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            myLocation = getLastKnownLocation(); //mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
         return myLocation;
     }
+
 
     /**
      * Checks if GPS is on.
@@ -383,20 +386,6 @@ public class enterDataActivity extends ActionBarActivity {
 
 
     /**
-     * Send the stop object back the ScoutTripActivity.
-     * @param view
-     */
-    public void sendResultBack(View view) {
-        Intent output = new Intent();
-        Bundle b = new Bundle();
-        b.putSerializable(ScoutTripActivity.SCOUT_STOP, stop);
-        output.putExtras(b);
-        setResult(RESULT_OK, output);
-        finish();
-    }
-
-
-    /**
      * Adds a bug
      * @param view
      */
@@ -478,6 +467,7 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void updateAddedBugsView(){
         LinearLayout info=(LinearLayout)findViewById(R.id.addedBugsContent);
+        info.removeAllViews();
         for (ScoutBug bug:allBugs) {
             View bugInfo = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
             ((ImageView) bugInfo.findViewById(R.id.bugInfoImage)).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length),150,150,true));
@@ -500,12 +490,13 @@ public class enterDataActivity extends ActionBarActivity {
             currBug.setFieldPicture(stream.toByteArray());
         }
 
-        TableRow rowNumberPicker;
-        rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
+        // TableRow rowNumberPicker;
+        // rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
 
-        NumberPicker currNumberPicker = (NumberPicker) rowNumberPicker.getChildAt(1);
+        // NumberPicker currNumberPicker = (NumberPicker) rowNumberPicker.getChildAt(1);
 
-        currBug.setNumberOfBugs(currNumberPicker.getValue());
+        //currBug.setNumberOfBugs(currNumberPicker.getValue());
+        currBug.setNumberOfBugs(npBugs.getValue());
         currBug.setSpecies(species);
         currBug.setSpeciesID(species.getSpeciesID());
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
