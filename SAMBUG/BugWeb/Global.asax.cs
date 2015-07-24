@@ -7,6 +7,10 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Autofac;
 using Autofac.Integration.Mvc;
+using BugBusiness.BugSecurity;
+using BugBusiness.Interface.BugSecurity;
+using DataAccess.Interface;
+using DataAccess.MSSQL;
 
 namespace BugWeb
 {
@@ -16,8 +20,18 @@ namespace BugWeb
         {
             //build IoC container and register controllers
             var builder = new ContainerBuilder();
+
+            // Register MVC controllers.
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
+
+            // Regster other types
+            builder.RegisterType<DbAuthentication>().As<IDbAuthentication>();
+            builder.RegisterType<BugSecurity>().As<IBugSecurity>();
+
+            // Acquire IoC Container
             var container = builder.Build();
+
+            // Set AutoFac to be the dependency resolver.
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 
             AreaRegistration.RegisterAllAreas();

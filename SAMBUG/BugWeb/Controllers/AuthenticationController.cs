@@ -8,6 +8,9 @@ using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
+using BugBusiness.Interface.BugSecurity;
+using BugBusiness.Interface.BugSecurity.DTO;
+using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
 using Newtonsoft.Json;
 
@@ -15,23 +18,33 @@ namespace BugWeb.Controllers
 {
     public class AuthenticationController : Controller
     {
-        /*private WebClient webClient = new WebClient();*/
 
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly IBugSecurity _bugSecurity;
 
-        // GET: Authentication
-        public ActionResult Index()
+
+        public AuthenticationController(IBugSecurity bugSecurity)
         {
-
-            return null;
+            _bugSecurity = bugSecurity;
         }
 
-        //TODO: Look at asynchronous calls
         public ActionResult Login(LoginViewModel loginViewModel)
         {
-           
-           /* if(.....)*/
-            return View("~/Views/Home/Home.cshtml");
+
+            LoginRequest loginRequest = new LoginRequest()
+            {
+                Username = loginViewModel.Username,
+                Password = loginViewModel.Password
+            }; 
+
+            try
+            {
+                LoginResponse loginResponse = _bugSecurity.Login(loginRequest);
+                return View("~/Views/Home/Home.cshtml");
+            }
+            catch (NotRegisteredException)
+            {
+                return View("~/Views/Home/Index.cshtml");
+            }
         }
     }
 }

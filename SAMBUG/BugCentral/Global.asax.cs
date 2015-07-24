@@ -22,17 +22,17 @@ namespace BugCentral
             // Acquire container builder
             var builder = new ContainerBuilder();
             
-            // Register Web API controllers.
+            // Register Web API controllers
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             // Register other types
             builder.RegisterType<DbAuthentication>().As<IDbAuthentication>();
             builder.RegisterType<BugSecurity>().As<IBugSecurity>();
 
-            // Get HttpConfiguration.
+            // Get HttpConfiguration
             var config = GlobalConfiguration.Configuration;
 
-            // Set AutoFac to be the dependency resolver.
+            // Set AutoFac to be the dependency resolver
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 

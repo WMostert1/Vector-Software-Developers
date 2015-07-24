@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System.Web.Http.Results;
 using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 
 namespace BugCentral.Controllers
 {
+    [RoutePrefix("api/authentication")]
     public class AuthenticationController : ApiController
     {
 
         private readonly IBugSecurity _bugSecurity;
-
 
         public AuthenticationController(IBugSecurity bugSecurity)
         {
             _bugSecurity = bugSecurity;
         }
    
-        // POST api/authentication/login/
-        [HttpPost]
-        public LoginResponse Login(LoginRequest loginRequest)
+        [Route("login")]
+        public LoginResponse Post([FromBody] LoginRequest loginRequest)
         {
             try
             {
@@ -35,8 +35,8 @@ namespace BugCentral.Controllers
             }
         }
 
-        [HttpPost]
-        public RegisterResponse Register(RegisterRequest registerRequest)
+        [Route("register")]
+        public RegisterResponse Post([FromBody] RegisterRequest registerRequest)
         {
            try{
                 RegisterResponse registerResponse = _bugSecurity.Register(registerRequest);
