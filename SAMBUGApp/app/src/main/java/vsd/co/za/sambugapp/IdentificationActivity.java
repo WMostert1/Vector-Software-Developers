@@ -43,6 +43,11 @@ public class IdentificationActivity extends AppCompatActivity {
     private Species currentEntry = null;
     private int createCounter = 0;
 
+
+    public void doAutomaticClassification(View view) {
+        Toast.makeText(getApplicationContext(), "This feature is currently in development", Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * Saves the current state of the activity for future activities being restarted
      * @param savedInstanceState The saved activity state of the currently running activity
@@ -224,7 +229,7 @@ public class IdentificationActivity extends AppCompatActivity {
         currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
         bundle.putParcelable("Image", currentPicture);
         output.putExtras(bundle);
-        setResult(RESULT_OK,output);
+        setResult(RESULT_OK, output);
         finish();
     }
 

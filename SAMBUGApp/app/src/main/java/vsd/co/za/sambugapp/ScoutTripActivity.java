@@ -32,6 +32,8 @@ import vsd.co.za.sambugapp.DomainModels.*;
 
 public class ScoutTripActivity extends ActionBarActivity {
 
+
+    //Variables for proper communication between activities
     public static final String SCOUT_STOP="za.co.vsd.scout_stop";
     private final String UPDATE_INDEX="za.co.vsd.update_index";
     public static final String USER_FARM="za.co.vsd.user_blocks";
@@ -52,6 +54,7 @@ public class ScoutTripActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Check if activity is already running
         if (savedInstanceState != null) {
             updateIndex = savedInstanceState.getInt(UPDATE_INDEX);
             scoutTrip=(ScoutTrip)savedInstanceState.getSerializable(SCOUT_STOP_LIST);
@@ -130,17 +133,6 @@ public class ScoutTripActivity extends ActionBarActivity {
      * @param intent Intent passed in from LoginActivity.
      */
     public void acceptFarm(Intent intent){
-        /*farm=new Farm();
-        farm.setFarmID(1);
-        farm.setFarmName("DEEZ NUTS");
-        HashSet<Block> blocks=new HashSet<>();
-        for (int j=1;j<=10;j++){
-            Block obj=new Block();
-            obj.setBlockID(j);
-            obj.setBlockName("Block #" + j);
-            blocks.add(obj);
-        }
-        farm.setBlocks(blocks);*/
         Bundle b=intent.getExtras();
         farm=(Farm)b.get(LoginActivity.USER_FARM);
     }
@@ -163,10 +155,11 @@ public class ScoutTripActivity extends ActionBarActivity {
         ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
         try{
             scoutStopDAO.open();
-
+            //persist each scout stop
             for (ScoutStop scoutStop : scoutTrip.getStopList()){
                 long scoutStopID=scoutStopDAO.insert(scoutStop);
                 scoutBugDAO.open();
+                //persist each scout bug
                 for (ScoutBug scoutBug : scoutStop.getScoutBugs()){
                     scoutBug.setScoutStopID((int)scoutStopID);
                     scoutBugDAO.insert(scoutBug);
@@ -188,10 +181,10 @@ public class ScoutTripActivity extends ActionBarActivity {
         if (resultCode==RESULT_OK) {
             Bundle bundle = data.getExtras();
             ScoutStop stop = (ScoutStop) bundle.get(SCOUT_STOP);
-            if (requestCode == NEW_STOP) {
+            if (requestCode == NEW_STOP) { //add new stop
                 addStop(stop);
                 Log.d(TAG, "Added");
-            } else if (requestCode == UPDATE_STOP) {
+            } else if (requestCode == UPDATE_STOP) { //update selected stop
                 updateStop(stop);
                 Log.d(TAG, "Updated");
             }
@@ -222,6 +215,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //special adapter to create custom list items for scout stops
     private class ScoutStopAdapter extends ArrayAdapter<ScoutStop> {
         public ScoutStopAdapter(ArrayList<ScoutStop> stops) {
             super(getApplication().getApplicationContext(), 0, stops);
@@ -254,6 +248,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         }
     }
 
+    //special adapter to create custom list item for pests per tree display
     private class PestsPerTreeAdapter extends ArrayAdapter<ScoutStop> {
         public PestsPerTreeAdapter(ArrayList<ScoutStop> stops){
             super(getApplication().getApplicationContext(),0,stops);

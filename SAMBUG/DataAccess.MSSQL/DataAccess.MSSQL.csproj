@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication.cs" />
     <Compile Include="Block.cs">
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
@@ -88,6 +89,9 @@
     <Compile Include="User.cs">
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="UserRole.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="EntityFrameworkModel.edmx">
@@ -114,6 +118,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccess.Interface\DataAccess.Interface.csproj">
+      <Project>{02c58a1b-5945-4a36-acc6-df1a10052947}</Project>
+      <Name>DataAccess.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
