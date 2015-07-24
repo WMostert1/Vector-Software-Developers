@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using BugWeb.Controllers;
 using BugWeb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,18 +13,9 @@ namespace BugWeb.Tests
         public void Inter_Login_Web_ShouldAuthenticate()
         {
             // Arrange
-            /*var controller = new AuthenticationController();
-            var loginViewModel = new LoginViewModel()
-            {
-                Username = "michelle@gmail.com",
-                Password = "321"
-            };
-
             // Act
-            var result = controller.Login(loginViewModel) as ViewResult;
-*/
             //Assert
-
+            throw new NotImplementedException();
         }
     }
 }

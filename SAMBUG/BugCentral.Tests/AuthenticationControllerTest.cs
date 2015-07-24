@@ -17,27 +17,9 @@ namespace BugCentral.Tests
         public void Inter_Login_API_ShouldNotAuthenticate()
         {
             //Arrange
-            var loginRequest = new LoginRequest()
-            {
-                Username = "email1",
-                Password = "123"
-            };
-
-           /*var autoMock = AutoMock.GetStrict();
-            autoMock
-                .Mock<IDbAuthentication>()
-                .Setup(dbAuthentication => dbAuthentication.GetUserIdRoles(loginRequest))
-                .Returns(new LoginResponse(){Id = default(int), Roles = null});
-
-            var controller = autoMock.Create<AuthenticationController>();
-
             //Act
-            var response = controller.Login(loginRequest);
-
             //Assert
-            response.Id.ShouldEqual(0);
-            response.Roles.ShouldBeNull();*/
-
+            throw new NotImplementedException();
         }
     }
 }
