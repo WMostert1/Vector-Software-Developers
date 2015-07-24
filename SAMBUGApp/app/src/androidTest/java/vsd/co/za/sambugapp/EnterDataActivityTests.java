@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,13 +42,14 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
 
         @Test
         public void testGeoLocation(){
-                //enterDataActivity activity = mock(enterDataActivity.class, CALLS_REAL_METHODS);
+                // enterDataActivity activity = mock(enterDataActivity.class, CALLS_REAL_METHODS);
                 enterDataActivity activity = Mockito.spy(new enterDataActivity());
                 //activity.CheckIfGPSON() =
-                Mockito.when(activity.CheckIfGPSON()).thenReturn(true);
-                Mockito.when(activity.receiveGeoLocation()).thenCallRealMethod();
-
-                assertNotNull("Testing gps location",activity.receiveGeoLocation());
+                doReturn(true).when(activity).CheckIfGPSON();
+                // Mockito.when(activity.CheckIfGPSON()).thenReturn(true);
+                //   when(activity.receiveGeoLocation()).thenCallRealMethod();
+                //  activity.CheckIfGPSON();
+                assertNotNull("Testing gps location", Mockito.when(activity.receiveGeoLocation()).thenCallRealMethod());
         }
 
 
