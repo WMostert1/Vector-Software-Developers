@@ -11,6 +11,7 @@ using DataAccess.Interface.Domain;
 
 namespace BugBusiness.BugSecurity
 {
+
     public class BugSecurity : IBugSecurity
     {
 

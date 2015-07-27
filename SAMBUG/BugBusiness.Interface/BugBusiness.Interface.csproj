@@ -45,6 +45,7 @@
     <Compile Include="BugSecurity\DTO\RecoverAccountResponse.cs" />
     <Compile Include="BugSecurity\DTO\RegisterRequest.cs" />
     <Compile Include="BugSecurity\DTO\RegisterResponse.cs" />
+    <Compile Include="BugSecurity\Exceptions\InvalidInputException.cs" />
     <Compile Include="BugSecurity\Exceptions\NotRegisteredException.cs" />
     <Compile Include="BugSecurity\Exceptions\UserExistsException.cs" />
     <Compile Include="BugSecurity\IBugSecurity.cs" />

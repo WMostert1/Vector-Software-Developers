@@ -39,12 +39,38 @@ namespace BugWeb.Controllers
             try
             {
                 LoginResponse loginResponse = _bugSecurity.Login(loginRequest);
-                return View("~/Views/Home/Home.cshtml");
+                return RedirectToAction("index", "home");
             }
             catch (NotRegisteredException)
             {
-                return View("~/Views/Home/Index.cshtml");
+                return RedirectToAction("login", "home");
             }
         }
+
+        public ActionResult Register(RegisterViewModel registerViewModel)
+        {
+            RegisterRequest registerRequest = new RegisterRequest()
+            {
+                Username = registerViewModel.Username,
+                UsernameConfirmation = registerViewModel.UsernameConfirmation,
+                Password = registerViewModel.Password,
+                PasswordConfirmation = registerViewModel.PasswordConfirmation,
+                FarmName = registerViewModel.FarmName
+            };
+
+            try
+            {
+                RegisterResponse registerResponse = _bugSecurity.Register(registerRequest);
+                return RedirectToAction("login", "home");
+            }
+            catch (InvalidInputException)
+            {
+                return RedirectToAction("register", "home");
+            }
+            catch (UserExistsException)
+            {
+                return RedirectToAction("register", "home");
+            }
+        } 
     }
 }

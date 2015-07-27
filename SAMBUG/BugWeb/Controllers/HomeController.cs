@@ -11,11 +11,19 @@ namespace BugWeb.Controllers
 
         public ActionResult Index()
         {
-
-            return View();
+            return RedirectToAction("login", "home");
         }
 
-       
-        
+        public ActionResult Login()
+        {
+            @ViewBag.Title = "Login Page";
+            return View("~/Views/Authentication/Login.cshtml");
+        }
+
+        public ActionResult Register()
+        {
+            @ViewBag.Title = "Register Page";
+            return View("~/Views/Authentication/Register.cshtml");
+        }
     }
 }
