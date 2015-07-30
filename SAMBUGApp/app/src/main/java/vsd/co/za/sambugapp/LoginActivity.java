@@ -244,8 +244,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             }
             //farmid,userid,farmname,list of blocks
             return handleLoginResult(resultJSON.toString());
-        }
-        return null;
+        } else return null;
     }
 
     private Farm handleLoginResult(String jsonString){

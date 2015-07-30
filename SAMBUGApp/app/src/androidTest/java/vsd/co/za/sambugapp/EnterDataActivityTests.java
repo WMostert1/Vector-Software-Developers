@@ -19,9 +19,12 @@ import org.mockito.Mockito;
 
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.argThat;
 
 
 /**
@@ -42,16 +45,37 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
 
         @Test
         public void testGeoLocation(){
-                // enterDataActivity activity = mock(enterDataActivity.class, CALLS_REAL_METHODS);
-                enterDataActivity activity = Mockito.spy(new enterDataActivity());
-                //activity.CheckIfGPSON() =
+                enterDataActivity activity = mock(enterDataActivity.class);
                 doReturn(true).when(activity).CheckIfGPSON();
-                // Mockito.when(activity.CheckIfGPSON()).thenReturn(true);
-                //   when(activity.receiveGeoLocation()).thenCallRealMethod();
-                //  activity.CheckIfGPSON();
-                assertNotNull("Testing gps location", Mockito.when(activity.receiveGeoLocation()).thenCallRealMethod());
+                assertNotNull(when(activity.receiveGeoLocation()).thenCallRealMethod());
         }
 
+        @Test
+        public void testAcceptBlock() {
+                enterDataActivity activity = mock(enterDataActivity.class);
+                Intent I = new Intent();
+                Bundle b = new Bundle();
+                Farm f = new Farm();
+
+                Block blockA = new Block();
+                blockA.setBlockName("BlockA");
+                Block blockB = new Block();
+                blockB.setBlockName("BlockB");
+                Block blockC = new Block();
+                blockC.setBlockName("BlockC");
+
+                HashSet<Block> blocks = new HashSet<Block>();
+                blocks.add(blockA);
+                blocks.add(blockB);
+                blocks.add(blockC);
+
+                f.setBlocks(blocks);
+                b.putSerializable(ScoutTripActivity.USER_FARM, f);
+                I.putExtras(b);
+                doCallRealMethod().when(activity).setiReceive(I);
+                assertNotNull(when(activity.acceptBlocks()).thenCallRealMethod());
+
+        }
 
 
 

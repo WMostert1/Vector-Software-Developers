@@ -84,7 +84,7 @@ public class ScoutTripActivity extends ActionBarActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(UPDATE_INDEX, updateIndex);
-        savedInstanceState.putSerializable(SCOUT_STOP_LIST,scoutTrip);
+        savedInstanceState.putSerializable(SCOUT_STOP_LIST, scoutTrip);
     }
 
     /**
@@ -128,13 +128,24 @@ public class ScoutTripActivity extends ActionBarActivity {
         scoutTrip.getStopList().set(updateIndex, scoutStop);
     }
 
+    public Farm getFarm() {
+        return farm;
+    }
+
+    public void setFarm(Farm farm) {
+        this.farm = farm;
+    }
+
     /**
      * Initialise farm object.
      * @param intent Intent passed in from LoginActivity.
      */
-    public void acceptFarm(Intent intent){
-        Bundle b=intent.getExtras();
-        farm=(Farm)b.get(LoginActivity.USER_FARM);
+    public void acceptFarm(Intent intent) {
+        Bundle b = intent.getExtras();
+        //if (farm != null) {
+        setFarm((Farm) b.get(LoginActivity.USER_FARM));
+        //farm = (Farm) b.get(LoginActivity.USER_FARM);
+        //}
     }
 
     /**
