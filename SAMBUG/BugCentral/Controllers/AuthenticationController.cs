@@ -31,7 +31,7 @@ namespace BugCentral.Controllers
             }
             catch (NotRegisteredException)
             {
-                throw new HttpResponseException(HttpStatusCode.PreconditionFailed);  
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);  
             }
         }
 

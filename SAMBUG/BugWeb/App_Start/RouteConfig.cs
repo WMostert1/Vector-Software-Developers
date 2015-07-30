@@ -13,17 +13,7 @@ namespace BugWeb
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            routes.MapRoute(
-               name: "shortLogin",
-               url: "login",
-               defaults: new { controller = "Home", action = "Login" }
-           );
-
-            routes.MapRoute(
-                name: "shortRegister",
-                url: "register",
-                defaults: new { controller = "Home", action = "Register" }
-            );
+            routes.MapRoute("rootActions", "{action}/{id}", new { controller = "home", action = "index", id = UrlParameter.Optional }); 
 
             routes.MapRoute(
                 name: "Default",
