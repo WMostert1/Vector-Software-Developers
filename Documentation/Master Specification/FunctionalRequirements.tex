@@ -249,22 +249,23 @@ An innovative approach to handling the management and acquisition of scout data 
 	\subsection{Quality Requirements}
 		\subsubsection{Maintainability}
 			As a standard requirement for all projects, SAMBUG needs to be maintainable. This is especially due to the fact that the project has very high expansion potential. SUBTROP has shown interest in further maintaining the project after completion.
+			Since development on the project is split among 5 members, we have to ensure that the code is as readable as possible and this includes using good documentation of code in the form of comments and Javadoc descriptions.
 		\subsubsection{Scalability}
-			Since the user base for the system will be comparatively small, scalability is not a great issue. The load on the system will not under any foreseeable circumstances be extremely high.
+			Since the user base for the system will be comparatively small, scalability is not a great issue. The load on the system will not under any foreseeable circumstances be extremely high. 
 		\subsubsection{Performance Requirements}
-			Performance is a very important requirement for the system. The goal of the system is to provide an efficient service rendered. Users of the system will be subject to high pressure environments where time is an issue.
+			Performance is a very important requirement for the system. The goal of the system is to provide an efficient service rendered. Users of the system will be subject to high pressure environments where time is an issue. Using phone memory effectively is also a must as the phones used by the users might not be latest models, and therefore may struggle with some of the more graphical parts of the app.
 		\subsubsection{Reliability and Availability}
-			Since users will be relying heavily on this system to make important business decisions the system must be available to be used at all times. As such, a reliable system is of paramount importance.
+			Since users will be relying heavily on this system to make important business decisions the system must be available to be used at all times. As such, a reliable system is of paramount importance. The storing of data and persistence of said data to the server must be completely reliable since this is the essential part of the project goal.
 		\subsubsection{Security}
-			As specified by the client, for the sake of reducing usage complexity of the system, the security may be relaxed in this case due to the fact that the users are generally not comfortable with using technological products.
+			As specified by the client, for the sake of reducing usage complexity of the system, the security may be relaxed in this case due to the fact that the users are generally not comfortable with using technological products. However, security measures should be put in place to help the user navigate through the app in order to complete the data entry process.
 		\subsubsection{Auditability}
-			There is no specific auditability requirement for the system since there will be no business value in tracking user activity.
+			There is no specific auditability requirement for the system since there will be no business value in tracking user activity, but for some traceability the user details of someone who edits the database is stored.
 		\subsubsection{Testability}
 			Every service offered by the system should be testable via:\\
 			1. Unit tests\\
 			2. Integration tests
 		\subsubsection{Usability}
-			Usability is the main quality requirement for the system. In order for the system to have any actual business value it should be easy to use and effective.
+			Usability is the main quality requirement for the system. In order for the system to have any actual business value it should be easy to use and effective. As far as possible, the user should be able to use the app without needing textual instructions.
 		\subsubsection{Deployability}
 			The system must be deployable to any cloud hosted virtual machine or locally hosted server.
 	\subsection{Architecture responsibilities}
