@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Farm]
 (
-	[FarmID] INT NOT NULL PRIMARY KEY,
+	[FarmID] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR [dbo].[Farm_FarmID_Sequence],
 	[UserID] INT NOT NULL,
 	[FarmName] VARCHAR(50) NOT NULL,
 	[LastModifiedID] INT NULL,
