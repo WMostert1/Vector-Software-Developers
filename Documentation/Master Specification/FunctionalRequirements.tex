@@ -5,6 +5,7 @@
 \usepackage{titling}
 \usepackage{graphicx}
 \usepackage{titlesec}
+\usepackage{hyperref}
 
 \graphicspath{ {./Images/} }
 
@@ -297,17 +298,43 @@ An innovative approach to handling the management and acquisition of scout data 
 		\subsubsection{Mobile Application}
 			\paragraph{Android Studio}
 		\subsubsection{Web Backend}
-			\paragraph{.NET REST Services}
-			\paragraph{SQL Server}
+			\paragraph{.NET WebAPI}
+				The Microsoft .NET framework was chosen as a backend framework for hosting RESTful services. The following factors contributed to this decision:
+				\begin{itemize}
+					\item The .NET framework is a tried and tested industry standard technology which adds value to the Reliability component of the 
+							quality requirements.
+					\item The .NET framework and packages used within the project became open source as announced by Microsoft at the Build 214 conference thus freeing the client from licencing fees. See the \href{http://www.dotnetfoundation.org/projects}{.NET Foundation}  for further details on open source Microsoft Packages.
+					\item The main alternative to the .NET framework was the Java EE reference framework. Since Performance and Scalability is a very important quality requirement .NET was deemed superior due to case studies consulted:
+							\begin{itemize}
+								\item  \href{http://www.slideshare.net/tejasvirastogi/java-vs-net-24443514}{Testing .NET vs Java EE with basic web pages}
+								\item  \href{http://www.seguetech.com/blog/2013/06/03/dotnet-vs-java-how-to-pick}{How to pick between Java and .NET}
+								\item  \href{http://stackoverflow.com/questions/18088/are-there-any-studies-comparing-java-ee-vs-net}{.NET vs Java Discussion}
+							\end{itemize}
+							It is worth noting that Java EE and .NET are very closely matched in many aspects. The difference between the two frameworks are nearly negligable in terms of performance.
+					\item The .NET framework provides seameless integration with the other technologies utilised
+					\item The .NET framework provides for quick and easy set-up for REST services and web front ends using MVC5		
+				\end{itemize}
+			\paragraph{.NET MVC 5}
+				For the same reasons metioned for the choice of .NET WebAPI. MVC 5 was chosen as a pattern at a lower level of granularity due to the built in support for it in the .NET framework and it can be viewed in most cases as a industry standard for web applications.
+			\paragraph{MSSQL Express}
+					Express is the free version of the Microsoft RDBMS which caters for all the data needs of the system. This technology can easily be swopped out for other free database technologies such as MySQL
+					due to the technology neutral architecural design.
+			\paragraph{AutoFac}
+					AutoFac is used as a mocking framework for unit testing as well as for dependency injection in order to fascilitate more effective unit testing and pluggability. Using this dependency injection framework code maintainability is also improved.
 		\subsubsection{Web Frontend}
 			\paragraph{Aurelia.io}
+				Aurelia is the next generation JavaScript client framework for mobile, desktop and web. It provides two-way databinding (as does AngularJS) and extensible HTML as well as other great features such as client side dependency injection
+				. Aurelia is the way forward for client side scripting frameworks. The other major competitor in this area is AngularJS. See \href{http://ilikekillnerds.com/2015/01/aurelia-vs-angularjs-round-one-fight/}{Aurelia vs AngularJS – Round One: FIGHT!}
 		\subsubsection{Builds}		
 			\paragraph{TeamCity}
+				TeamCity was chosen as a automated build and continious integration environment being run on a development server to fascilitate continious integration and better development as a team.
 			\paragraph{Gradle}
 			\paragraph{MSBuild}
+				MSBuild is the standard build script language for the .NET development environment. Since it functions seamlessly there is no need to change this technology.
 		\subsubsection{Testing}
 			\paragraph{JUnit}
-			\paragraph{NUnit}
+			\paragraph{MSTest}
+				MSBuild is the standard testing pacakge for the .NET development environment. Since it functions seamlessly there is no need to change this technology.
 	
 	
 
