@@ -8,6 +8,15 @@ import java.util.HashSet;
  * Created by Aeolus on 2015-07-13.
  */
 public class Farm implements Serializable {
+    public int FarmID;
+    public int UserID;
+    public String FarmName;
+    public int LastModifiedID;
+    public Date TMStamp;
+
+    public HashSet<Block> Blocks;
+    public User User;
+    
     public Farm() {
         this.Blocks = new HashSet<Block>();
     }
@@ -68,12 +77,4 @@ public class Farm implements Serializable {
         User = user;
     }
 
-    public int FarmID;
-    public int UserID;
-    public String FarmName;
-    public Integer LastModifiedID;
-    public Date TMStamp;
-
-    public HashSet<Block> Blocks;
-    public User User;
 }

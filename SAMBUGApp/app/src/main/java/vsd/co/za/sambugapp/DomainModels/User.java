@@ -17,7 +17,7 @@ public class User implements Serializable {
     public int RoleID;
     public String Email;
     public String Password;
-    public Integer LastModifiedID;
+    public int LastModifiedID;
     public Date TMStamp;
 
     public HashSet<Farm> Farms;

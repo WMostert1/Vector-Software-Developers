@@ -103,7 +103,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
                     try {
                         speciesDAO.open();
-                        currentEntry = speciesDAO.getSpecies(position + 1);
+                        currentEntry = speciesDAO.getSpeciesByID(position + 1);
                         Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
                         ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
                         byte[] imgData = currentEntry.getIdealPicture();

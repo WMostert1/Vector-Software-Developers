@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 /**
  * Created by keaganthompson on 7/8/15.
+ *
  */
 public class ScoutStop implements Serializable {
 
@@ -17,7 +18,7 @@ public class ScoutStop implements Serializable {
     public float Longitude;
 
     public java.util.Date Date;
-    public Integer LastModifiedID;
+    public int LastModifiedID;
     public Date TMStamp;
 
     public Block Block;

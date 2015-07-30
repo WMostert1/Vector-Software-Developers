@@ -161,18 +161,18 @@ public class ScoutTripActivity extends ActionBarActivity {
      */
     public boolean persistData(){
         ScoutStopDAO scoutStopDAO=new ScoutStopDAO(getApplicationContext());
-        ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
+       // ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
         try{
             scoutStopDAO.open();
 
             for (ScoutStop scoutStop : scoutTrip.getStopList()){
-                long scoutStopID=scoutStopDAO.insert(scoutStop);
-                scoutBugDAO.open();
-                for (ScoutBug scoutBug : scoutStop.getScoutBugs()){
-                    scoutBug.setScoutStopID((int)scoutStopID);
-                    scoutBugDAO.insert(scoutBug);
-                }
-                scoutBugDAO.close();
+                long scoutStopID = scoutStopDAO.insert(scoutStop);
+//                scoutBugDAO.open();
+//                for (ScoutBug scoutBug : scoutStop.getScoutBugs()){
+//                    scoutBug.setScoutStopID((int)scoutStopID);
+//                    scoutBugDAO.insert(scoutBug);
+//                }
+//                scoutBugDAO.close();
             }
 
             scoutStopDAO.close();
