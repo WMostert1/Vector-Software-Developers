@@ -22,6 +22,7 @@ import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Matchers.argThat;
@@ -46,8 +47,14 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
         @Test
         public void testGeoLocation(){
                 enterDataActivity activity = mock(enterDataActivity.class);
-                doReturn(true).when(activity).CheckIfGPSON();
-                assertNotNull(when(activity.receiveGeoLocation()).thenCallRealMethod());
+                doReturn(false).when(activity).CheckIfGPSON();
+                //activity.CheckIfGPSON();
+                when(activity.receiveGeoLocation()).thenReturn(null); //  thenCallRealMethod();
+                // assertNotNull(when(activity.receiveGeoLocation()).thenCallRealMethod());
+                assertNull(activity.receiveGeoLocation());
+
+                verify(activity).receiveGeoLocation();
+                // verify(activity).CheckIfGPSON();
         }
 
         @Test
@@ -74,9 +81,21 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
                 I.putExtras(b);
                 doCallRealMethod().when(activity).setiReceive(I);
                 assertNotNull(when(activity.acceptBlocks()).thenCallRealMethod());
-
+                // verify(activity).getiReceive();
         }
 
+        @Test
+        public void testAcceptStop() {
+                enterDataActivity activity = mock(enterDataActivity.class);
+                Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                ScoutStop stop = new ScoutStop();
+                bundle.putSerializable(SCOUT_STOP, stop);
+                intent.putExtras(bundle);
+
+                doCallRealMethod().when(activity).setiReceive(intent);
+
+        }
 
 
 

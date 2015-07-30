@@ -68,6 +68,7 @@ public class enterDataActivity extends ActionBarActivity {
     }
 
     public void setiReceive(Intent iReceive) {
+        Log.e("Good", "HElppoooooooooooooooooooo");
         this.iReceive = iReceive;
     }
 
@@ -96,7 +97,7 @@ public class enterDataActivity extends ActionBarActivity {
             allBugs = new HashSet<ScoutBug>();
         }
         iReceive = getIntent();
-            receiveGeoLocation();
+        receiveGeoLocation();
         acceptBlocks();
         acceptStop();
 
