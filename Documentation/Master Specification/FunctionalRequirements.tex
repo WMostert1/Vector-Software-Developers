@@ -280,14 +280,31 @@ An innovative approach to handling the management and acquisition of scout data 
 		\end{itemize}
 \section{Architectural Design}
 	\subsection{Overview}
-		A layered architecture will be used with the following layers:
+		A layered architecture will be used to provide for better decoupling of the various		access channels and architectural responsibilities. Within these layers the Model-View-Controller pattern will be applied to further separate concerns among what can be viewed as three distinct parts of a Web application. The following provides an overview of the architecture:
 			\begin{itemize}
 				\item Access Layer
 					\begin{itemize}
-						\item 
+						\item View\\
+						In many ways the Android application serves as an access channel to the Web server. However, it is not categorised as a "View" in the MVC sense. Our MVC pattern is only used across the Access and Services layers. Therefore, this only encompasses HTML views that are rendered using the Razor rendering engine.
+						\item View Model\\
+						Model definitions are used both in the View and in the Controller, since these define the primary format of data transfer between those two components. It is important to remember that since MVC is used solely for the frontend, these models are only view models, and not data or domain models.
 					\end{itemize}
 				\item Services Layer
+				    \begin{itemize}
+						\item View Model
+						\item Web and RESTful Controllers\\
+						The MVC Web Controllers communicate with Browser-based clients whilst the RESTful controllers use JSON to communicate with other clients.
+						\item Business Logic\\
+						Business Logic is extracted from both sets of controllers to allow for common services and for thinner controllers.
+					\end{itemize}
 				\item Data Access Layer
+				    \begin{itemize}
+						\item Domain Model						
+						\item Data Abstraction (Repository)\\
+						This interface defines a contract between the application and the database, allowing us to swap our current database implementation for any other implementation that realises the contract. Query methods map entities to domain models which are returned to the Services layer for further processing. This further decouples our domain from our data.
+						\item MSSQL Implementation\\
+						This is our current Database implementation. Entity Framework is used as an ORM. Entities are defined here and are used to query the database with LINQ.						
+					\end{itemize}
 			\end{itemize}
 	\subsection{Infrastructure Layout}
 		\includegraphics[width=\linewidth]{SystemComponents}	
@@ -305,19 +322,19 @@ An innovative approach to handling the management and acquisition of scout data 
 				\begin{itemize}
 					\item The .NET framework is a tried and tested industry standard technology which adds value to the Reliability component of the 
 							quality requirements.
-					\item The .NET framework and packages used within the project became open source as announced by Microsoft at the Build 214 conference thus freeing the client from licencing fees. See the \href{http://www.dotnetfoundation.org/projects}{.NET Foundation}  for further details on open source Microsoft Packages.
+					\item The .NET framework and packages used within the project became open source as announced by Microsoft at the Build 214 conference thus freeing the client from licensing fees. See the \href{http://www.dotnetfoundation.org/projects}{.NET Foundation}  for further details on open source Microsoft Packages.
 					\item The main alternative to the .NET framework was the Java EE reference framework. Since Performance and Scalability is a very important quality requirement .NET was deemed superior due to case studies consulted:
 							\begin{itemize}
 								\item  \href{http://www.slideshare.net/tejasvirastogi/java-vs-net-24443514}{Testing .NET vs Java EE with basic web pages}
 								\item  \href{http://www.seguetech.com/blog/2013/06/03/dotnet-vs-java-how-to-pick}{How to pick between Java and .NET}
 								\item  \href{http://stackoverflow.com/questions/18088/are-there-any-studies-comparing-java-ee-vs-net}{.NET vs Java Discussion}
 							\end{itemize}
-							It is worth noting that Java EE and .NET are very closely matched in many aspects. The difference between the two frameworks are nearly negligable in terms of performance.
-					\item The .NET framework provides seameless integration with the other technologies utilised
+							It is worth noting that Java EE and .NET are very closely matched in many aspects. The difference between the two frameworks are nearly negligible in terms of performance.
+					\item The .NET framework provides seamless integration with the other technologies utilised
 					\item The .NET framework provides for quick and easy set-up for REST services and web front ends using MVC5		
 				\end{itemize}
 			\paragraph{.NET MVC 5}
-				For the same reasons metioned for the choice of .NET WebAPI. MVC 5 was chosen as a pattern at a lower level of granularity due to the built in support for it in the .NET framework and it can be viewed in most cases as a industry standard for web applications.
+				For the same reasons mentioned for the choice of .NET WebAPI. MVC 5 was chosen as a pattern at a lower level of granularity due to the built in support for it in the .NET framework and it can be viewed in most cases as a industry standard for web applications.
 			\paragraph{MSSQL Express}
 					Express is the free version of the Microsoft RDBMS which caters for all the data needs of the system. This technology can easily be swopped out for other free database technologies such as MySQL
 					due to the technology neutral architecural design.
