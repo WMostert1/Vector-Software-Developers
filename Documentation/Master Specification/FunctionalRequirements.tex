@@ -315,18 +315,21 @@ An innovative approach to handling the management and acquisition of scout data 
 	\subsection{Technologies}
 		\subsubsection{Mobile Application}
 			\paragraph{Android Studio}
-				We chose to use this development suite since it is the industry standard for Android app development.\newline 
-				The IDE provides lots of code analysis with the tool named Lint. It also has a very good dynamic layout preview to design the interfaces for specific screen variations.\newline 
-				Furthermore, we decided to develop the app natively instead of using a cross-platform alternative like Titanium because the client specified that only an Android app would be required and therefore it seems pointless to deal with hassles that may arise in cross-platform development. A large focus for our group, specifically in the mobile app, is a high quality user interface. This particular aspect is something we stand to lose if we develop for cross-platform since we would only be able to use common controls between Android and iOS, for example.\newline
+				 We chose to use this development suite because of the following:
+				\begin{itemize}
+				\item It is the industry standard for Android app development.
+				\item The IDE provides lots of code analysis with the tool named Lint. It also has a very good dynamic layout preview to design the interfaces for specific screen variations.
+				\item Furthermore, we decided to develop the app natively instead of using a cross-platform alternative like Titanium because the client specified that only an Android app would be required and therefore it seems pointless to deal with hassles that may arise in cross-platform development. 
+				\item A large focus for our group, specifically in the mobile app, is a high quality user interface. This particular aspect is something we stand to lose if we develop for cross-platform since we would only be able to use common controls between Android and iOS, for example.\end{itemize} 
 				For more information regarding Native vs. Cross-platform development, click \href{https://yalantis.com/blog/native-vs-cross-platform-app-development-shouldnt-work-cross-platform/}{here}.
 			\paragraph{Mockito}
 		There are many Mocking Frameworks available for Android App development. 
 		Mockito stands out from the others in the following respects:
 			\begin{itemize}
 				\item Mockito is simple to use, implement and is a lot more readable, especially when compared to the likes of RhinoMock, JMockit and EasyMock. These other frameworks are are old, unpleasant and difficult to find documentation for.
-				\item Mockito not only allows interfaces to mocked, but also allows abstract and concrete classes to mocked. Furthermore, this can be done without any extensions (e.g. EasyMock requires class extentions.)
-				\item Since it is a single Jar, it is easy to setup. 
-				\item Mockito supports spies (partial mocks), in order to gather indirect output from a test, meaning functions can be tested and verified without giving the test input. 
+				\item Mockito not only allows interfaces to be mocked, but also allows abstract and concrete classes to be mocked. Furthermore, this can be done without any extensions (e.g. EasyMock requires class extentions.)
+				\item Since it is a single Jar file, it is easy to setup. 
+				\item Mockito supports spies (to create partial mocks), in order to gather indirect output from a test, meaning functions can be tested and verified without giving the test input. 
 				\end{itemize}
 				For more information regarding Mockito vs. EasyMock, click \href{https://code.google.com/p/mockito/wiki/MockitoVSEasyMock}{here}. \newline
 				For more information regarding the pros and cons of Mockito, click \href{http://hamletdarcy.blogspot.com/2010/09/mockito-pros-cons-and-best-practices.html}{here}. \newline
@@ -337,7 +340,7 @@ An innovative approach to handling the management and acquisition of scout data 
 					\begin{itemize}	
 						\item It is available for free. 
 						\item It is Portable, because the whole database is located on a single file making easy to transfer.
-						\item It is easy to query data, because it is stored in a simple structured way.
+						\item It is easy to query data, because data is stored in a simple structured way.
 						\item SQLite has higher performance than many other relational db management systems and uses a low amount memory.
 						\item It is easier to manage since there is no file parsing and generated code that needs to be debugged. 
 						\item The content can easily be viewed using various third-party tools.
