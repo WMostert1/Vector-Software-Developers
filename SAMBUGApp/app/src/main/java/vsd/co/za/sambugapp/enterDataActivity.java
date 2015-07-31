@@ -288,6 +288,7 @@ public class enterDataActivity extends ActionBarActivity {
     public Location receiveGeoLocation() {
         mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new MyLocationListener();
+        Log.e("Bitch", "Better have my money");
         if (!CheckIfGPSON()){
             Intent gpsOptionsIntent = new Intent(
                     android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);

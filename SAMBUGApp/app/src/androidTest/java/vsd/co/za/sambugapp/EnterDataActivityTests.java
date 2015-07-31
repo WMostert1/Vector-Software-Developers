@@ -47,11 +47,12 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
         @Test
         public void testGeoLocation(){
                 enterDataActivity activity = mock(enterDataActivity.class);
-                doReturn(false).when(activity).CheckIfGPSON();
+                //doReturn(false).when(activity).CheckIfGPSON();
+                when(activity.CheckIfGPSON()).thenReturn(false);
                 //activity.CheckIfGPSON();
-                when(activity.receiveGeoLocation()).thenReturn(null); //  thenCallRealMethod();
-                // assertNotNull(when(activity.receiveGeoLocation()).thenCallRealMethod());
-                assertNull(activity.receiveGeoLocation());
+                //doCallRealMethod().when(activity).receiveGeoLocation();//.thenCallRealMethod(); //  thenCallRealMethod();
+                assertNotNull(when(activity.receiveGeoLocation()).thenCallRealMethod());
+                //assertNotNull(activity.receiveGeoLocation());
 
                 verify(activity).receiveGeoLocation();
                 // verify(activity).CheckIfGPSON();
