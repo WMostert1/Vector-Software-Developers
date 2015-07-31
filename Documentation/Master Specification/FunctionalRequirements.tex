@@ -316,6 +316,27 @@ An innovative approach to handling the management and acquisition of scout data 
 		\subsubsection{Mobile Application}
 			\paragraph{Android Studio}
 				We chose to use this development suite since it is the industry standard for Android app development. The IDE provides lots of code analysis with the tool named Lint. It also has a very good dynamic layout preview to design the interfaces for specific screen variations. Furthermore, we decided to develop the app natively instead of using a cross-platform alternative like Titanium because the client specified that only an Android app would be required and therefore it seems pointless to deal with hassles that may arise in cross-platform development. A large focus for our group, specifically in the mobile app, is a high quality user interface. This particular aspect is something we stand to lose if we develop for cross-platform since we would only be able to use common controls between Android and iOS, for example.
+			\paragraph{Mockito}
+		There are many Mocking Frameworks available for Android App development. 
+		Mockito stands out from the others in the following respects:
+			\begin{itemize}
+				\item Mockito is simple to use, implement and is a lot more readable, especially when compared to the likes of RhinoMock, JMockit and EasyMock. These other frameworks are are old, unpleasant and difficult to find documentation for.
+				\item Mockito not only allows interfaces to mocked, but also allows abstract and concrete classes to mocked. Furthermore, this can be done without any extensions (e.g. EasyMock requires class extentions.)
+				\item Since it is a single Jar, it is easy to setup. 
+				\item Mockito supports spies (partial mocks), in order to gather indirect output from a test, meaning functions can be tested and verified without giving the test input. 
+				\end{itemize}
+			
+			\paragraph{SQLite}
+				SQLite is a relational database management system which is contained in a C programming library. It was selected because of the following: 
+					\begin{itemize}	
+						\item It is available for free. 
+						\item It is Portable, because the whole database is located on a single file making easy to transfer.
+						\item It is easy to query data, because it is stored in a simple structured way.
+						\item SQLite has higher performance than many other relational db management systems and uses a low amount memory.
+						\item It is easier to manage since there is no file parsing and generated code that needs to be debugged. 
+						\item The content can easily be viewed using various third-party tools.
+					\end{itemize}
+
 		\subsubsection{Web Backend}
 			\paragraph{.NET WebAPI}
 				The Microsoft .NET framework was chosen as a backend framework for hosting RESTful services. The following factors contributed to this decision:
@@ -353,6 +374,13 @@ An innovative approach to handling the management and acquisition of scout data 
 				MSBuild is the standard build script language for the .NET development environment. Since it functions seamlessly there is no need to change this technology.
 		\subsubsection{Testing}
 			\paragraph{JUnit}
+				Junit was selected as the Unit Testing framework because:
+					\begin{itemize}	
+						\item It is simpler to use and has better online documentation than competitors such as TestNG.
+						\item Junit is the most popular testing framework in Industry. 
+						\item It is easy to integrate Junit as part of your build process. 
+						\item Since it is the most popular testing framework,  new features are constantly  being added.
+					\end{itemize}
 			\paragraph{MSTest}
 				MSBuild is the standard testing pacakge for the .NET development environment. Since it functions seamlessly there is no need to change this technology.
 	
