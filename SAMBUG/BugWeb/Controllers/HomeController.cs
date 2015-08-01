@@ -8,21 +8,19 @@ namespace BugWeb.Controllers
 {
     public class HomeController : Controller
     {
-
+        //TODO: Still need to check if user is logged in before returning view. Redirects to login page if not
         public ActionResult Index()
         {
-            return RedirectToAction("login", "home");
+            return View();
         }
 
         public ActionResult Login()
         {
-            @ViewBag.Title = "Login Page";
             return View("~/Views/Authentication/Login.cshtml");
         }
 
         public ActionResult Register()
-        {
-            @ViewBag.Title = "Register Page";
+        {    
             return View("~/Views/Authentication/Register.cshtml");
         }
     }

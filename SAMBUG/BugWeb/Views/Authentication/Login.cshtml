@@ -1,4 +1,5 @@
 ﻿@{
+    ViewBag.Title = "Login Page";
     Layout = "~/Views/Shared/Authentication.cshtml";
 }
 
@@ -10,7 +11,7 @@
 </div>
 
 
-<form class="form-horizontal" role="form" action="authentication/login" method="POST">
+<form class="form-horizontal" role="form" action='@Url.Action("login", "authentication")' method="POST">
     <fieldset>
         <legend>Please log in to continue</legend>
         <div class="form-group">
@@ -23,7 +24,7 @@
             <button type="submit" class="btn-default col-lg-1 col-lg-offset-3">Log in</button>
         </div>
         <div class="form-group">
-        <p class="col-lg-2 col-lg-offset-2 align-left">Click <a class="btn-link" href="/register">here</a> to register
+        <p class="col-lg-2 col-lg-offset-2 align-left">Click <a class="btn-link" href="@Url.Action("register","home")">here</a> to register
         </p>
             </div>
 </fieldset>

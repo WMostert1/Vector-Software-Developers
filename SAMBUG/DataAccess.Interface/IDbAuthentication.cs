@@ -10,5 +10,6 @@ namespace DataAccess.Interface
     public interface IDbAuthentication
     {
         User GetUserByCredentials(string username, string password);
+        bool InsertNewUser(string username, string password, string farmName);
     }
 }

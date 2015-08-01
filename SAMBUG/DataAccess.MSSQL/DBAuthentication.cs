@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Security.Cryptography;
@@ -39,6 +40,46 @@ namespace DataAccess.MSSQL
 
             return domainUser;
             
+        }
+
+        //TODO: Remove magic number => 1
+        public bool InsertNewUser(string username, string password, string farmName)
+        {
+            var userQuery = GetUserByCredentials(username, password);
+
+            if (userQuery != null)
+            {
+                return false;
+            }
+
+            var db = new BugDBEntities();
+
+            Role role = db.Roles.SingleOrDefault(rle => rle.RoleType == 1);
+
+            User user = new User()
+            {
+                Email = username,
+                Password = password,
+            };
+
+            UserRole userRole = new UserRole()
+            {
+                Role = role
+            };
+
+            Farm farm = new Farm()
+            {
+                FarmName = farmName
+            };
+
+            user.Farms.Add(farm);
+            user.UserRoles.Add(userRole);
+
+            db.Users.Add(user);
+
+            db.SaveChanges();
+
+            return true;
         }
     }
 }

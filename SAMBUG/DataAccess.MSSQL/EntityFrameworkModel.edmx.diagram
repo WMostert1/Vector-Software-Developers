@@ -11,7 +11,7 @@
         <EntityTypeShape EntityType="BugDBModel.ScoutBug" Width="1.5" PointX="12" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="BugDBModel.ScoutStop" Width="1.5" PointX="9.75" PointY="4.375" IsExpanded="true" />
         <EntityTypeShape EntityType="BugDBModel.Species" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugDBModel.Treatment" Width="1.5" PointX="9.75" PointY="8.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BugDBModel.Treatment" Width="1.5" PointX="14.875" PointY="5.5" IsExpanded="true" />
         <EntityTypeShape EntityType="BugDBModel.User" Width="1.5" PointX="3" PointY="4.625" IsExpanded="true" />
         <AssociationConnector Association="BugDBModel.FK_Farm_ToBlock" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_ScoutStop_ToBlock" ManuallyRouted="false" />
