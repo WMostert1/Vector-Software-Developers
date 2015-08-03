@@ -55,22 +55,39 @@
 \pagebreak
 
 \section{System Overview}
-The main goal of the SAMBUG system is to help Macadamia nut farmers (or any other farmers dealing with stink bugs as a pest). Please note that this system was developed with specific work flows in mind, which will be addressed later. 
-The farmers can use the system in two ways, namely an Android application and a browser interface.\\\\
+\subsection{Introduction}
+SAMBUG is a system that will ease the process of stinkbug pest scouting on a farm. Features of the system include stinkbug classification and recognition, data storage, reporting on various scouting trips and more.
+\subsection{Utilisation}
+Farmers can use the system in two ways, namely an Android application and a browser interface.\\\\
 The way in which the system will help farmers will be listed below:
 	\begin{itemize}
-		\item Farmers can easily use the Android application to classify 			stink bugs while in the field. These bugs may be part of a sample 		that was taken during scouting. Classification can be done using 			two methods, manual classification and automatic classification:
+		\item Farmers can easily use the Android application to classify stink bugs (during a scouting trip). Classification can be done using two methods, manual classification and automatic classification:
 		\begin{itemize}
-			\item \textbf{Manual Classification:} This method allows the 				user to take a photo of a specific bug (one at a time) and 					then selecting another photo from a gallery. This photo must 				be chosen to most resemble the bug of which the initial photo 			was taken. The application makes this easy by placing the 					captured image next to the possible selected photo to make 					comparison easier.
-			\item \textbf{Automatic Classification:} This method also 					allows the user to take a photo of the specific bug, and 					thereafter the application will do the classification. This 				classification is done using artificial intelligent systems. 				Automatic classification will be more accurate than manual 					classification. 
+			\item \textbf{Manual Classification:} This method allows the user to take a photo of a single bug and compare it with various other photos taken from a pre-selected gallery of photos. The user will select the photo that most resembles the bug that he/she wants to classify.
+			\item \textbf{Automatic Classification:} This method also allows the user to take a photo of the specific bug, and thereafter the application will do the classification by using an artificially intelligent system. 
 		\end{itemize}
-		\item While scouting and classifying bugs, the application makes 
-		it easy to enter additional data, such as the number of that 				specific bug that was found, in which block of the far it was. 				etc.
-		\item After doing a scout trip, a summary will be shown, 					summarising the number and types of bugs found during that trip. 			Using this summary, farmers can decide with more confidence if 				spraying pesticide is necessary or not.
-		\item When taking a photo during classification, the geolocation 			will be taken as well. With this feature, farmers will find it 				easier to make sure that scouts actually go out to random 					locations.
-		\item After capturing the data for a scout trip, this data will 			be stored in a database such as to later look back at the data.
-		\item The browser interface can be used by the farmers to manage 			his/her farm and to view data from previous scout trips. It will 			be able to view the data through means of graphs and also tables. 		Various filters can then be applied to these graphs and tables, 			such as blocks and dates, making it easier to draw conclusions.
+		\item While scouting and classifying bugs, the application makes it easy to enter additional data, such as the number of that specific bug that was found, in which block of the farm it was, etc.
+		\item After doing a scout trip, a summary will be shown, summarising the number and types of bugs found during that trip. Using this summary, farmers can decide with more confidence if spraying pesticide is necessary or not.
+		\item When taking a photo during classification, the geolocation will be taken as well. With this feature, farmers will find it easier to make sure that scouts actually go out to random locations.
+		\item After capturing the data for a scout trip, this data will be stored in a database such as to later look back at the data.
+		\item The browser interface will offer various services, of which the most important is reporting services based on previous scouting trips.
+		\item Administrators at Subtrop will be able to view data from different farms to also help them reach conclusions.
+		\item On the browser interface it will be possible to enter data concerning pesticide spraying. This will also be stored in the database and may later be used to view data.
 	\end{itemize}
+	
+\subsection{Intended Audience}
+The intended audience of this systems is farmers specifically dealing with stink bugs as pests on their farms. Any farmer who seeks assistance with regards to bug classification, data management and scout trip management will find the system useful. The system will specifically assist farmers who do scouting of pests to reach certain conclusions, such as whether to spray pesticide or not, where and when pests are more, etc.
+
+\subsection{Users}
+The system has in mind three different users which will be described bellow:
+	\begin{itemize}
+		\item \textbf{Staff of Subtrop} These users will have access to all data from all the farms using the system. This means that when they log on in the browser interface they will be able to generate reports based on collective data from all farms.
+		\item \textbf{Farmers} Farmers will use the browser interface, but may also use the Android application. Farmers will only be able to generate reports based on data from their own farm, thus other farms' data will not be visible. 
+		\item \textbf{Scouts} Scouts will mainly use the Android Application to enter data and do classifications while in the field. The Android application is developed to keep in mind different language preferences, thus minimum usage of actual words and more symbols to carry over a message.
+	\end{itemize}
+
+
+
 \section{System Configuration}
 Before we go into any further detail, it is important to ensure that you are fully equipped with the necessary prerequisites to enjoy the SAMBUG system. This section outlines everything you need to get started.
 \subsection{Setup Overview}
@@ -106,8 +123,40 @@ The design of the system as indicated above lends itself to a number of required
 
 
 \section{Installation}
+The Android application will be available for download via the Google Play store (in the future).
+[STUB]
 		
 \section{Getting started}
+\subsection{Requirements to access the system}
+For a user to use the system, it is necessary that he/she registers as a user first. This will be done through the browser interface. Only an email address, password and farm name will be asked for at registration. All users are automatically 'normal' users, that is users who do not have the  of seeing all farms' data (such as Subtrop staff). A user can only become a privileged user if another privileged user authorises him/her. Farmers and scouts will use the same account, and thus the same credentials to use the system.\\\\
+After registration the user can log in on the Android application and also on the browser interface. A user logged in to the Android application will stay logged in if he/she does not explicitly log out. The details used to log in are only the email (as a username) and password.
+
+\subsection{A walk through the system}
+
+%INFORMAL IDEAS
+
+The main flow of the system:\\
+Register on browser interface\\
+Add for the first time all the blocks currently on the farm.\\
+
+On app\\
+Login on Android application\\
+Select new scout trip and start trip\\
+Rest of logic for app\\
+
+On web browser:\\
+Log in to browser interface\\
+View reports of the scout trip (or previous ones). There are two reporting mechanisms (I leave out heat map for now, not sure), these are tables and graphs. Each of these mechanisms will allow filters to be applied to only view data from a specific date or block and so on. May view data to do with bugs and also treatments.\\
+Enter treatment data if pesticide was sprayed.\\
+
+Other aspects:\\
+May change profile settings, may CRUD blocks also.\\\\
+
+If the user is a subtrop staff member, they will not use the app, but only the web interface. Will also not enter any data. Will only view data.\\
+
+Thus work flow may differ for different users.
+
+
 
 \section{Using the system}
 
