@@ -13,7 +13,7 @@ namespace DataAccess.MSSQL
     //TODO: possible use of AutoMapper in the future
     public class DbAuthentication : IDbAuthentication
     {
-        public DataAccess.Interface.Domain.User GetUserByCredentials(string username, string password)
+        public Interface.Domain.User GetUserByCredentials(string username, string password)
         {
             var db = new BugDBEntities();
             
@@ -25,14 +25,14 @@ namespace DataAccess.MSSQL
             }
 
             //map EF Role to Domain Role
-            var roles = entityUser.UserRoles.Select(userRole => new DataAccess.Interface.Domain.Role()
-            {
-                Type = userRole.Role.RoleType, 
-                Description = userRole.Role.RoleDescription
+            var roles = entityUser.Roles.Select(role =>
+            new Interface.Domain.Role(){
+                Type = role.RoleType, 
+                Description = role.RoleDescription
             }).ToList();
 
             //map EF user to Domain User
-            var domainUser = new DataAccess.Interface.Domain.User()
+            var domainUser = new Interface.Domain.User()
             {
                 Id = entityUser.UserID,
                 Roles = roles
@@ -56,16 +56,13 @@ namespace DataAccess.MSSQL
 
             Role role = db.Roles.SingleOrDefault(rle => rle.RoleType == 1);
 
-            User user = new User()
+            var user = new User()
             {
                 Email = username,
-                Password = password,
+                Password = password
             };
 
-            UserRole userRole = new UserRole()
-            {
-                Role = role
-            };
+            user.Roles.Add(role);
 
             Farm farm = new Farm()
             {
@@ -73,10 +70,7 @@ namespace DataAccess.MSSQL
             };
 
             user.Farms.Add(farm);
-            user.UserRoles.Add(userRole);
-
             db.Users.Add(user);
-
             db.SaveChanges();
 
             return true;

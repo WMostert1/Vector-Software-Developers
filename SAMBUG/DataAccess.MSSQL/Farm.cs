@@ -19,8 +19,8 @@ namespace DataAccess.MSSQL
             this.Blocks = new HashSet<Block>();
         }
     
-        public int FarmID { get; set; }
-        public int UserID { get; set; }
+        public long FarmID { get; set; }
+        public long UserID { get; set; }
         public string FarmName { get; set; }
         public Nullable<int> LastModifiedID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }

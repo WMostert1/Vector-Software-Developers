@@ -14,9 +14,9 @@ namespace DataAccess.MSSQL
     
     public partial class ScoutBug
     {
-        public int ScoutBugID { get; set; }
-        public int ScoutStopID { get; set; }
-        public int SpeciesID { get; set; }
+        public long ScoutBugID { get; set; }
+        public long ScoutStopID { get; set; }
+        public long SpeciesID { get; set; }
         public int NumberOfBugs { get; set; }
         public byte[] FieldPicture { get; set; }
         public string Comments { get; set; }

@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[ScoutBug]
 (
-	[ScoutBugID] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR [dbo].[ScoutBug_ScoutBugID_Sequence],
-	[ScoutStopID] INT NOT NULL,
-	[SpeciesID] INT NOT NULL,
+	[ScoutBugID] BIGINT NOT NULL PRIMARY KEY IDENTITY ,
+	[ScoutStopID] BIGINT NOT NULL,
+	[SpeciesID] BIGINT NOT NULL,
 	[NumberOfBugs] INT NOT NULL,
 	[FieldPicture] IMAGE NOT NULL,
 	[Comments] VARCHAR(100),

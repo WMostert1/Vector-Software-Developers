@@ -1,10 +1,8 @@
 ﻿CREATE TABLE [dbo].[UserRole]
 (
-	[UserRoleID] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR [dbo].[UserRole_UserRoleID_Sequence],
-	[UserID] INT NOT NULL,
-	[RoleID] INT NOT NULL,
-	[LastModifiedID] INT NULL,
-	[TMStamp] DATETIME,	
+	[UserID] BIGINT NOT NULL,
+	[RoleID] BIGINT NOT NULL,
+	CONSTRAINT [PK_UserRole] PRIMARY KEY NONCLUSTERED ([UserID], [RoleID]),
 	CONSTRAINT [FK_UserRole_ToUser] FOREIGN KEY ([UserID]) REFERENCES [User]([UserID]),
 	CONSTRAINT [FK_UserRole_ToRole] FOREIGN KEY ([RoleID]) REFERENCES [Role]([RoleID])
 )
