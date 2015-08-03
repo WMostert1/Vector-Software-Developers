@@ -88,31 +88,34 @@ The system has in mind three different users which will be described bellow:
 \section{System Configuration}
 
 \section{Installation}
-The Android application will be available for download via the Google Play store (in the future).
-[STUB]
+The Android application will be available for download via the Google Play store (in the future). The web application will be permanently available via the internet.
 		
 \section{Getting started}
 \subsection{Requirements to access the system}
-For a user to use the system, it is necessary that he/she registers as a user first. This will be done through the browser interface. Only an email address, password and farm name will be asked for at registration. All users are automatically 'normal' users, that is users who do not have the  of seeing all farms' data (such as Subtrop staff). A user can only become a privileged user if another privileged user authorises him/her. Farmers and scouts will use the same account, and thus the same credentials to use the system.\\\\
-After registration the user can log in on the Android application and also on the browser interface. A user logged in to the Android application will stay logged in if he/she does not explicitly log out. The details used to log in are only the email (as a username) and password.
+For a user to use the system, it is necessary that he/she registers as a user first. This can only be done on the web page. Only an email address, password and farm name will be asked for at registration. All users are automatically 'normal' users, that is users who do not have the authority of seeing all farms' data (such as Subtrop staff). A user can only become a privileged user if another privileged user authorises him/her. Farmers and scouts will use the same account, and thus the same credentials to use the system.\\
+After registration the user can log in on the Android Application as well as the web page. A user logged in to the Android application will stay logged in if he/she does not explicitly log out. The details used to log in are only the email (as a username) and password.
 
 \subsection{A walk through the system}
 
 %INFORMAL IDEAS
 
 The main flow of the system:\\
-Register on browser interface\\
-Add for the first time all the blocks currently on the farm.\\
+\begin{itemize}
+\item On the Application: 
+	\begin{itemize}
+		\item Login
+		\item Enter the scouting data
+	\end{itemize}
+\item Web Page
+	\begin{itemize}
+		\item Register on browser interface.
+		\item Add for the first time all the blocks currently on the farm.
+		\item Log On to browser interface.
+		\item View reports on historical data. There are various reporting mechanisms,such tables, maps and graphs. Each of these mechanisms will allow filters to be applied to only view specific data.
+\item Enter treatment data if pesticide was sprayed.
+	\end{itemize}
+\end{itemize}
 
-On app\\
-Login on Android application\\
-Select new scout trip and start trip\\
-Rest of logic for app\\
-
-On web browser:\\
-Log in to browser interface\\
-View reports of the scout trip (or previous ones). There are two reporting mechanisms (I leave out heat map for now, not sure), these are tables and graphs. Each of these mechanisms will allow filters to be applied to only view data from a specific date or block and so on. May view data to do with bugs and also treatments.\\
-Enter treatment data if pesticide was sprayed.\\
 
 Other aspects:\\
 May change profile settings, may CRUD blocks also.\\\\
@@ -123,7 +126,50 @@ Thus work flow may differ for different users.
 
 
 
-\section{Using the system}
+\section{Using the System}
+\subsection{Web Page}
+		 To be continued...
+\subsection{Android Application}
+	The application functions as a simple way for scouters to enter data. Follow these steps in order to use the application for scouting:
+	\begin{enumerate}
+		\item Open the application by clicking on the SAMBUGApp icon on your Android Device
+		\item Once the Application has succesfully been opened please login in with your registered username and password. If you have not yet registered please go to the web page as described in the previous section in order to register. Click on Sign In to continue.
+			\begin{center}
+				\includegraphics[scale=0.13]{shot1}
+			\end{center}
+		\item After successfull login you will be presented with the following screen:
+			\begin{center}
+				\includegraphics[scale=0.13]{shot2}
+			\end{center}
+			Click on the [+] button on the top right hand corner of the screen in order to enter new scouting data.
+
+	\item After being directed, select the block in which you are currently situated from the dropdown list at the top. After selecting the block, select the number of trees you have scouted in total. For each individual pile/species of bugs that you have found, select the number of bugs and click on [ADD BUG]. This will redirect you to a different screen in order to identify the specific species of the bug. You will first however be asked to take a photo of the bug.
+		\begin{center}
+				\includegraphics[scale=0.13]{shot3}
+			\end{center}
+
+	\item Once a picture of the bug has been taken, your picture will appear on the left hand - top side of the screen. To have the application determine the species automatically, click on the [CHOOSE AUTOMATICALLY] button at the top left corner. If you believe the choice was not accurate or if you prefer to choose the species yourself, select the specific bug type for the gallery from the bottom half of the screen. Once you are satified with your selection, click on [DONE].\\
+\hfill\\
+\textit{NOTE: In the image below the "camera picture" has been replace with one of the gallery images}
+	\begin{center}
+				\includegraphics[scale=0.13]{shot4}
+			\end{center}
+
+\item Once you are done with selecting the species, repeat steps 4 and 5 until you have identified and counted all the bugs. Your results may look as below for a single entry:
+
+\begin{center}
+				\includegraphics[scale=0.13]{shot5}
+			\end{center}
+
+\item When all the bugs have been identified and counted click on [DONE]. You will be directed to a screen showing your scouting information as below:
+
+\begin{center}
+				\includegraphics[scale=0.13]{shot6}
+\end{center}
+
+\item If you have moved to a different block and/or wish to continue scouting repeat the steps above. When you are done, click [FINISH] and your data will soon be available to the Farmer on the web page.
+\end{enumerate}
+
 
 \section{Troubleshooting}
 
