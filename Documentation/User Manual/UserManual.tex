@@ -69,6 +69,7 @@ The way in which the system will help farmers will be listed below:
 		\item After capturing the data for a scout trip, this data will be stored in a database such as to later look back at the data.
 		\item The browser interface will offer various services, of which the most important is reporting services based on previous scouting trips.
 		\item Administrators at Subtrop will be able to view data from different farms to also help them reach conclusions.
+		\item On the browser interface it will be possible to enter data concerning pesticide spraying. This will also be stored in the database and may later be used to view data.
 	\end{itemize}
 	
 \subsection{Intended Audience}
@@ -87,8 +88,40 @@ The system has in mind three different users which will be described bellow:
 \section{System Configuration}
 
 \section{Installation}
+The Android application will be available for download via the Google Play store (in the future).
+[STUB]
 		
 \section{Getting started}
+\subsection{Requirements to access the system}
+For a user to use the system, it is necessary that he/she registers as a user first. This will be done through the browser interface. Only an email address, password and farm name will be asked for at registration. All users are automatically 'normal' users, that is users who do not have the  of seeing all farms' data (such as Subtrop staff). A user can only become a privileged user if another privileged user authorises him/her. Farmers and scouts will use the same account, and thus the same credentials to use the system.\\\\
+After registration the user can log in on the Android application and also on the browser interface. A user logged in to the Android application will stay logged in if he/she does not explicitly log out. The details used to log in are only the email (as a username) and password.
+
+\subsection{A walk through the system}
+
+%INFORMAL IDEAS
+
+The main flow of the system:\\
+Register on browser interface\\
+Add for the first time all the blocks currently on the farm.\\
+
+On app\\
+Login on Android application\\
+Select new scout trip and start trip\\
+Rest of logic for app\\
+
+On web browser:\\
+Log in to browser interface\\
+View reports of the scout trip (or previous ones). There are two reporting mechanisms (I leave out heat map for now, not sure), these are tables and graphs. Each of these mechanisms will allow filters to be applied to only view data from a specific date or block and so on. May view data to do with bugs and also treatments.\\
+Enter treatment data if pesticide was sprayed.\\
+
+Other aspects:\\
+May change profile settings, may CRUD blocks also.\\\\
+
+If the user is a subtrop staff member, they will not use the app, but only the web interface. Will also not enter any data. Will only view data.\\
+
+Thus work flow may differ for different users.
+
+
 
 \section{Using the system}
 
