@@ -21,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,9 +40,11 @@ public class ScoutTripActivity extends ActionBarActivity {
     private final String UPDATE_INDEX="za.co.vsd.update_index";
     public static final String USER_FARM="za.co.vsd.user_blocks";
     public final String SCOUT_STOP_LIST="za.co.vsd.scout_stop_list";
+    public final String HAS_STOPS = "za.co.vsd.has_stops";
     private final int NEW_STOP=0;
     private final int UPDATE_STOP=1;
     private final String TAG="ScoutTripActivity";
+    private boolean hasStops = false;
 
     public ScoutTrip scoutTrip;
     private ListView lstStops;
@@ -58,6 +62,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         if (savedInstanceState != null) {
             updateIndex = savedInstanceState.getInt(UPDATE_INDEX);
             scoutTrip=(ScoutTrip)savedInstanceState.getSerializable(SCOUT_STOP_LIST);
+            hasStops = savedInstanceState.getBoolean(HAS_STOPS);
         } else {
             scoutTrip = new ScoutTrip();
         }
@@ -76,14 +81,25 @@ public class ScoutTripActivity extends ActionBarActivity {
         lstPestsPerTree = (ListView) findViewById(R.id.lstPestsPerTree);
         lstPestsPerTreeAdapter = new PestsPerTreeAdapter(scoutTrip.getStopList());
         lstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
+        if (!hasStops) {
+            ScoutStop tempStop = new ScoutStop();
+            Block tempBlock = new Block();
+            tempBlock.setBlockName("No stops added yet. Click '+'");
+            tempStop.setBlock(tempBlock);
+            scoutTrip.addStop(tempStop);
+            lstStopsAdapter.notifyDataSetChanged();
+        }
 
         acceptFarm(getIntent());
+
+        setTitle(farm.getFarmName());
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(UPDATE_INDEX, updateIndex);
+        savedInstanceState.putBoolean(HAS_STOPS, hasStops);
         savedInstanceState.putSerializable(SCOUT_STOP_LIST,scoutTrip);
     }
 
@@ -102,7 +118,10 @@ public class ScoutTripActivity extends ActionBarActivity {
     }
 
     public void addStop(ScoutStop stop){
+        if (!hasStops)
+            scoutTrip.getStopList().clear();
         scoutTrip.addStop(stop);
+        hasStops = true;
     }
 
     /**
@@ -223,30 +242,69 @@ public class ScoutTripActivity extends ActionBarActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater()
-                        .inflate(R.layout.list_scout_stop, null);
-            }
             ScoutStop stop = getItem(position);
-            TextView lblBlockName =
-                    (TextView)convertView.findViewById(R.id.lblBlockName);
-            lblBlockName.setText(stop.Block.getBlockName());
-            TextView lblTreeAmount =
-                    (TextView)convertView.findViewById(R.id.lblTreeAmount);
-            lblTreeAmount.setText(stop.getNumberOfTrees() + "");
-            LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
-            hscrollBugInfo.removeAllViews();
-            for (ScoutBug bug:stop.getScoutBugs()) {
-                Bitmap bitmap=BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length);
-                bitmap=Bitmap.createScaledBitmap(bitmap,150,150,true);
-                View view = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
-                ((ImageView)view.findViewById(R.id.bugInfoImage)).setImageBitmap(bitmap);
-                ((TextView)view.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs()+"");
-                hscrollBugInfo.addView(view);
+            if (hasStops) {
+                if (convertView == null) {
+                    convertView = getLayoutInflater()
+                            .inflate(R.layout.list_scout_stop, null);
+                }
+                TextView lblBlockName =
+                        (TextView) convertView.findViewById(R.id.lblBlockName);
+                lblBlockName.setText(stop.Block.getBlockName());
+                TextView lblTreeAmount =
+                        (TextView) convertView.findViewById(R.id.lblTreeAmount);
+                lblTreeAmount.setText(stop.getNumberOfTrees() + "");
+                LinearLayout hscrollBugInfo = (LinearLayout) convertView.findViewById(R.id.hscrollBugInfo);
+                hscrollBugInfo.removeAllViews();
+                for (ScoutBug bug : stop.getScoutBugs()) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 150, 150, true);
+                    View view = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
+                    ((ImageView) view.findViewById(R.id.bugInfoImage)).setImageBitmap(bitmap);
+                    ((TextView) view.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs() + "");
+                    hscrollBugInfo.addView(view);
+                }
+            } else {
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
+                }
+                TextView lblText = (TextView) convertView.findViewById(android.R.id.text1);
+                lblText.setText(stop.getBlock().getBlockName());
             }
             return convertView;
         }
     }
+
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        if (hasStops) {
+//            if (convertView == null) {
+//                convertView = getLayoutInflater()
+//                        .inflate(R.layout.list_scout_stop, null);
+//            }
+//        } else {
+//            if (convertView==null){
+//                convertView=getLayoutInflater().inflate(R.layout.support_simple_spinner_dropdown_item,null);
+//            }
+//        }
+//        ScoutStop stop = getItem(position);
+//        TextView lblBlockName =
+//                (TextView)convertView.findViewById(R.id.lblBlockName);
+//        lblBlockName.setText(stop.Block.getBlockName());
+//        TextView lblTreeAmount =
+//                (TextView)convertView.findViewById(R.id.lblTreeAmount);
+//        lblTreeAmount.setText(stop.getNumberOfTrees() + "");
+//        LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
+//        hscrollBugInfo.removeAllViews();
+//        for (ScoutBug bug:stop.getScoutBugs()) {
+//            Bitmap bitmap=BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length);
+//            bitmap=Bitmap.createScaledBitmap(bitmap,150,150,true);
+//            View view = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
+//            ((ImageView)view.findViewById(R.id.bugInfoImage)).setImageBitmap(bitmap);
+//            ((TextView)view.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs()+"");
+//            hscrollBugInfo.addView(view);
+//        }
+//        return convertView;
+//    }
 
     //special adapter to create custom list item for pests per tree display
     private class PestsPerTreeAdapter extends ArrayAdapter<ScoutStop> {
@@ -256,14 +314,23 @@ public class ScoutTripActivity extends ActionBarActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView==null) {
-                convertView=getLayoutInflater().inflate(R.layout.list_pests_per_tree,null);
-            }
             ScoutStop stop = getItem(position);
-            TextView lblBlockName=(TextView)convertView.findViewById(R.id.lblBlockName);
-            lblBlockName.setText(stop.getBlock().getBlockName());
-            TextView lblPestsPerTree=(TextView)convertView.findViewById(R.id.lblPestsPerTree);
-            lblPestsPerTree.setText(stop.getPestsPerTree() + "");
+            if (hasStops) {
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(R.layout.list_pests_per_tree, null);
+                }
+                TextView lblBlockName = (TextView) convertView.findViewById(R.id.lblBlockName);
+                lblBlockName.setText(stop.getBlock().getBlockName());
+                TextView lblPestsPerTree = (TextView) convertView.findViewById(R.id.lblPestsPerTree);
+                lblPestsPerTree.setText(String.format("%.2f", stop.getPestsPerTree()));
+                return convertView;
+            } else {
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
+                }
+                TextView lblBlockName = (TextView) convertView.findViewById(android.R.id.text1);
+                lblBlockName.setText(stop.getBlock().getBlockName());
+            }
             return convertView;
         }
     }

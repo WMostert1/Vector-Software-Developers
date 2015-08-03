@@ -89,7 +89,7 @@ public class enterDataActivity extends ActionBarActivity {
             receiveGeoLocation();
             acceptBlocks(iReceive);
         acceptStop(iReceive);
-
+        setTitle(farm.getFarmName());
             populateSpinner();
             initializeNumberPickers(savedInstanceState);
 
