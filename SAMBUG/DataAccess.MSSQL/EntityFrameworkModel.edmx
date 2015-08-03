@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BugDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BugDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Block">
           <Key>
             <PropertyRef Name="BlockID" />
@@ -30,6 +30,7 @@
             <PropertyRef Name="RoleID" />
           </Key>
           <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="RoleType" Type="int" Nullable="false" />
           <Property Name="RoleDescription" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="LastModifiedID" Type="int" />
           <Property Name="TMStamp" Type="datetime" />
@@ -89,9 +90,18 @@
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="RoleID" Type="int" Nullable="false" />
           <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastModifiedID" Type="int" />
+          <Property Name="TMStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleID" />
+          </Key>
+          <Property Name="UserRoleID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="RoleID" Type="int" Nullable="false" />
           <Property Name="LastModifiedID" Type="int" />
           <Property Name="TMStamp" Type="datetime" />
         </EntityType>
@@ -179,15 +189,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_User_ToRole">
+        <Association Name="FK_UserRole_ToRole">
           <End Role="Role" Type="Self.Role" Multiplicity="1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Role">
               <PropertyRef Name="RoleID" />
             </Principal>
-            <Dependent Role="User">
+            <Dependent Role="UserRole">
               <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -200,6 +222,7 @@
           <EntitySet Name="Species" EntityType="Self.Species" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Treatment" EntityType="Self.Treatment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Farm_ToBlock" Association="Self.FK_Farm_ToBlock">
             <End Role="Farm" EntitySet="Farm" />
             <End Role="Block" EntitySet="Block" />
@@ -228,13 +251,16 @@
             <End Role="Block" EntitySet="Block" />
             <End Role="Treatment" EntitySet="Treatment" />
           </AssociationSet>
-          <AssociationSet Name="FK_User_ToRole" Association="Self.FK_User_ToRole">
+          <AssociationSet Name="FK_UserRole_ToRole" Association="Self.FK_UserRole_ToRole">
             <End Role="Role" EntitySet="Role" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_ToUser" Association="Self.FK_UserRole_ToUser">
             <End Role="User" EntitySet="User" />
+            <End Role="UserRole" EntitySet="UserRole" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BugDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -271,7 +297,8 @@
           <Property Name="RoleDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastModifiedID" Type="Int32" />
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_User_ToRole" FromRole="Role" ToRole="User" />
+          <NavigationProperty Name="UserRoles" Relationship="BugDBModel.FK_UserRole_ToRole" FromRole="Role" ToRole="UserRole" />
+          <Property Name="RoleType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="ScoutBug">
           <Key>
@@ -335,14 +362,13 @@
             <PropertyRef Name="UserID" />
           </Key>
           <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="RoleID" Type="Int32" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastModifiedID" Type="Int32" />
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Farms" Relationship="Self.FK_Farm_ToUser" FromRole="User" ToRole="Farm" />
-          <NavigationProperty Name="Role" Relationship="Self.FK_User_ToRole" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="ScoutStops" Relationship="Self.FK_ScoutStop_ToUser" FromRole="User" ToRole="ScoutStop" />
+          <NavigationProperty Name="UserRoles" Relationship="BugDBModel.FK_UserRole_ToUser" FromRole="User" ToRole="UserRole" />
         </EntityType>
         <Association Name="FK_Farm_ToBlock">
           <End Role="Farm" Type="Self.Farm" Multiplicity="1" />
@@ -389,18 +415,6 @@
             </Principal>
             <Dependent Role="Farm">
               <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_User_ToRole">
-          <End Role="Role" Type="Self.Role" Multiplicity="1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="RoleID" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="RoleID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -465,10 +479,6 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Farm" EntitySet="Farms" />
           </AssociationSet>
-          <AssociationSet Name="FK_User_ToRole" Association="Self.FK_User_ToRole">
-            <End Role="Role" EntitySet="Roles" />
-            <End Role="User" EntitySet="Users" />
-          </AssociationSet>
           <AssociationSet Name="FK_ScoutBug_ToScoutStop" Association="Self.FK_ScoutBug_ToScoutStop">
             <End Role="ScoutStop" EntitySet="ScoutStops" />
             <End Role="ScoutBug" EntitySet="ScoutBugs" />
@@ -481,7 +491,52 @@
             <End Role="User" EntitySet="Users" />
             <End Role="ScoutStop" EntitySet="ScoutStops" />
           </AssociationSet>
+          <EntitySet Name="UserRoles" EntityType="BugDBModel.UserRole" />
+          <AssociationSet Name="FK_UserRole_ToRole" Association="BugDBModel.FK_UserRole_ToRole">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_ToUser" Association="BugDBModel.FK_UserRole_ToUser">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserRole" EntitySet="UserRoles" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserRoleID" />
+          </Key>
+          <Property Name="UserRoleID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Role" Relationship="BugDBModel.FK_UserRole_ToRole" FromRole="UserRole" ToRole="Role" />
+          <NavigationProperty Name="User" Relationship="BugDBModel.FK_UserRole_ToUser" FromRole="UserRole" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_UserRole_ToRole">
+          <End Type="BugDBModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="BugDBModel.UserRole" Role="UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_ToUser">
+          <End Type="BugDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugDBModel.UserRole" Role="UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -513,6 +568,7 @@
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="BugDBModel.Role">
               <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleType" ColumnName="RoleType" />
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
                 <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
@@ -578,11 +634,21 @@
             <EntityTypeMapping TypeName="BugDBModel.User">
               <MappingFragment StoreEntitySet="User">
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
                 <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserRoles">
+            <EntityTypeMapping TypeName="BugDBModel.UserRole">
+              <MappingFragment StoreEntitySet="UserRole">
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserRoleID" ColumnName="UserRoleID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

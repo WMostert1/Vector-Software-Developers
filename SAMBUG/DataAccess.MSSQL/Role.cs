@@ -16,14 +16,15 @@ namespace DataAccess.MSSQL
     {
         public Role()
         {
-            this.Users = new HashSet<User>();
+            this.UserRoles = new HashSet<UserRole>();
         }
     
         public int RoleID { get; set; }
         public string RoleDescription { get; set; }
         public Nullable<int> LastModifiedID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }
+        public int RoleType { get; set; }
     
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }
