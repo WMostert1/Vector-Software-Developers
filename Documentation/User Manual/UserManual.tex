@@ -4,7 +4,9 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{titling}
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{titlesec}
+\newcommand{\sectionbreak}{\clearpage}
 \usepackage[hidelinks]{hyperref} 
 
 \graphicspath{ {./Images/} }
@@ -48,6 +50,7 @@
 	
 
 \tableofcontents
+\listoffigures
 
 \pagebreak
 
@@ -69,6 +72,38 @@ The way in which the system will help farmers will be listed below:
 		\item The browser interface can be used by the farmers to manage 			his/her farm and to view data from previous scout trips. It will 			be able to view the data through means of graphs and also tables. 		Various filters can then be applied to these graphs and tables, 			such as blocks and dates, making it easier to draw conclusions.
 	\end{itemize}
 \section{System Configuration}
+Before we go into any further detail, it is important to ensure that you are fully equipped with the necessary prerequisites to enjoy the SAMBUG system. This section outlines everything you need to get started.
+\subsection{Setup Overview}
+SAMBUG is intended to be an integrated solution. The Android application and Website are complementary. Figure \ref{fig:layout} depicts the common high-level configuration of the system. Please note that \ref{fig:Web} may be interchanged with any Web-enabled device.
+	\begin{figure}[h]
+		\begin{subfigure}{0.3\textwidth}
+			%\includegraphics[scale=]{}
+		\caption{Data Capture}		
+		\label{fig:dataCapt}	
+		\end{subfigure}
+		\begin{subfigure}{0.3\textwidth}
+			%\includegraphics[scale=]{}
+		\caption{History \& Analysis}		
+		\label{fig:Engine}	
+		\end{subfigure}
+		\begin{subfigure}{0.3\textwidth}
+			%\includegraphics[scale=]{}
+		\caption{Farm Management \& Consolidation}	
+		\label{fig:Web}		
+		\end{subfigure}
+	\caption{Illustration of SAMBUG's Configuration}
+	\label{fig:layout}
+	\end{figure}
+
+\subsection{Hardware \& Software Requirements}
+The design of the system as indicated above lends itself to a number of required devices and services, including:
+	\begin{itemize}
+		\item An Android Smartphone or tablet \footnote{You are advised to use a device with a camera that's able to take good quality macro photos in a medium level of light} (Android 4.1 or higher) - This will house the application used during Scouts, your main access point to the system.
+		\item A Second Web-enabled device - This is where you will manage your farm and view consolidated information of your scouts. Although you may choose to use the same phone/tablet you use in the field, the Web-based nature of this part of the system will allow you to work on a device with a large display, suitable for office work (e.g. a PC)
+		\item Internet Connection - Our application is designed to perform all of its functions even where no mobile/WiFi network reception is available. However, the information you'll be gathering during your scouting trips will have to be uploaded to the server at some point, and for that, you need to be connected to the internet. 
+	\end{itemize}
+
+
 
 \section{Installation}
 		
