@@ -275,37 +275,6 @@ public class ScoutTripActivity extends ActionBarActivity {
         }
     }
 
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        if (hasStops) {
-//            if (convertView == null) {
-//                convertView = getLayoutInflater()
-//                        .inflate(R.layout.list_scout_stop, null);
-//            }
-//        } else {
-//            if (convertView==null){
-//                convertView=getLayoutInflater().inflate(R.layout.support_simple_spinner_dropdown_item,null);
-//            }
-//        }
-//        ScoutStop stop = getItem(position);
-//        TextView lblBlockName =
-//                (TextView)convertView.findViewById(R.id.lblBlockName);
-//        lblBlockName.setText(stop.Block.getBlockName());
-//        TextView lblTreeAmount =
-//                (TextView)convertView.findViewById(R.id.lblTreeAmount);
-//        lblTreeAmount.setText(stop.getNumberOfTrees() + "");
-//        LinearLayout hscrollBugInfo=(LinearLayout)convertView.findViewById(R.id.hscrollBugInfo);
-//        hscrollBugInfo.removeAllViews();
-//        for (ScoutBug bug:stop.getScoutBugs()) {
-//            Bitmap bitmap=BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length);
-//            bitmap=Bitmap.createScaledBitmap(bitmap,150,150,true);
-//            View view = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
-//            ((ImageView)view.findViewById(R.id.bugInfoImage)).setImageBitmap(bitmap);
-//            ((TextView)view.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs()+"");
-//            hscrollBugInfo.addView(view);
-//        }
-//        return convertView;
-//    }
-
     //special adapter to create custom list item for pests per tree display
     private class PestsPerTreeAdapter extends ArrayAdapter<ScoutStop> {
         public PestsPerTreeAdapter(ArrayList<ScoutStop> stops){

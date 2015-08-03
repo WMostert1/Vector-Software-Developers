@@ -61,6 +61,17 @@ public class enterDataActivity extends ActionBarActivity {
     Bitmap imageTaken;
     HashSet<ScoutBug> allBugs;
     TableLayout table;
+    Intent iReceive;
+
+    public Intent getiReceive() {
+        return iReceive;
+    }
+
+    public void setiReceive(Intent iReceive) {
+        Log.e("Good", "HElppoooooooooooooooooooo");
+        this.iReceive = iReceive;
+    }
+
     boolean first = true;
     // Spinner
 
@@ -158,9 +169,9 @@ public class enterDataActivity extends ActionBarActivity {
      * Accepts the Stop Object. If no object is found, it creates one.
      * @param iReceive
      */
-    public void acceptStop(Intent iReceive){
+    public void acceptStop() {
 
-        Bundle scoutStop = iReceive.getExtras();
+        Bundle scoutStop = getiReceive().getExtras();
         ScoutStop sp = (ScoutStop) scoutStop.get(ScoutTripActivity.SCOUT_STOP);
         if(sp == null){
             createScoutStop();
@@ -172,13 +183,14 @@ public class enterDataActivity extends ActionBarActivity {
      * Gets the blocks from the farm object passed.
      * @param iReceive- the intent used to pass the farm.
      */
-    public void acceptBlocks(Intent iReceive){
-        Bundle scoutStop = iReceive.getExtras();
+    public Farm acceptBlocks() {
+        Bundle scoutStop = getiReceive().getExtras();
         Farm frm = (Farm) scoutStop.get(ScoutTripActivity.USER_FARM);
         if(frm != null) {
             setFarm(frm);
         }
         else Log.e("Error", "No block exists!");
+        return frm;
     }
 
     /**
