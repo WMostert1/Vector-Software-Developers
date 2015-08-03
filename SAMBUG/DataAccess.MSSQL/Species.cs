@@ -19,7 +19,7 @@ namespace DataAccess.MSSQL
             this.ScoutBugs = new HashSet<ScoutBug>();
         }
     
-        public int SpeciesID { get; set; }
+        public long SpeciesID { get; set; }
         public string SpeciesName { get; set; }
         public int Lifestage { get; set; }
         public byte[] IdealPicture { get; set; }

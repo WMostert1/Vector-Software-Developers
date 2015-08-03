@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Role]
 (
-	[RoleID] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR [dbo].[Role_RoleID_Sequence],
+	[RoleID] BIGINT NOT NULL PRIMARY KEY  IDENTITY,
 	[RoleType] INT NOT NULL,
 	[RoleDescription] VARCHAR(50) NOT NULL,
 	[LastModifiedID] INT,
