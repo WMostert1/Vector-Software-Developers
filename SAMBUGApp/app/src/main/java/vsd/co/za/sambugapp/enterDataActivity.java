@@ -96,10 +96,10 @@ public class enterDataActivity extends ActionBarActivity {
         } else {
             allBugs = new HashSet<ScoutBug>();
         }
-            Intent iReceive = getIntent();
+        iReceive = getIntent();
             receiveGeoLocation();
-            acceptBlocks(iReceive);
-        acceptStop(iReceive);
+        acceptBlocks();
+        acceptStop();
         setTitle(farm.getFarmName());
             populateSpinner();
             initializeNumberPickers(savedInstanceState);
@@ -154,6 +154,7 @@ public class enterDataActivity extends ActionBarActivity {
             species = (Species) speciesReceived.get(IdentificationActivity.IDENTIFICATION_SPECIES);
             Bitmap imageTaken2 = (Bitmap)speciesReceived.getParcelable("Image");
             imageTaken = imageTaken2;
+            addBug();
         }
     }
 
@@ -167,7 +168,6 @@ public class enterDataActivity extends ActionBarActivity {
 
     /**
      * Accepts the Stop Object. If no object is found, it creates one.
-     * @param iReceive
      */
     public void acceptStop() {
 
@@ -181,7 +181,6 @@ public class enterDataActivity extends ActionBarActivity {
 
     /**
      * Gets the blocks from the farm object passed.
-     * @param iReceive- the intent used to pass the farm.
      */
     public Farm acceptBlocks() {
         Bundle scoutStop = getiReceive().getExtras();
@@ -399,9 +398,9 @@ public class enterDataActivity extends ActionBarActivity {
 
     /**
      * Adds a bug
-     * @param view
+     *
      */
-    public void addBug(View view){
+    public void addBug() {
         // table = (TableLayout) findViewById(R.id.tblLayout);
         storeCurrentBug();
         //bugNumber++;
