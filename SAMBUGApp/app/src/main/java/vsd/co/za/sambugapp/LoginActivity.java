@@ -220,7 +220,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         //send login request
         //String result=sendLoginRequest();
         Farm farm;
-        if (email.equals("m@m.m") && password.equals("")){
+        if (email.equals("vsd@sambug.co.za") && password.equals("pass123")){
             JSONObject resultJSON=new JSONObject();
             try {
                 resultJSON.put("FarmID", 1);
