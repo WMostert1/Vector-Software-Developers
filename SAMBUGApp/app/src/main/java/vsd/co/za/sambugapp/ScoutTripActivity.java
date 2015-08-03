@@ -182,7 +182,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         }
         Toast.makeText(getApplicationContext(),"You are done. Go home.",Toast.LENGTH_LONG).show();
 
-        new SynchronizeTask(getApplicationContext()).execute();
+        SynchronizeTask.getInstance(getApplicationContext()).execute();
 
         return true;
     }

@@ -104,7 +104,7 @@ public class SpeciesDAO extends DataSourceAdapter {
                     e.printStackTrace();
                     speciesEntry.setTMStamp(null);
                 }
-                speciesEntry.setLastModifiedID(null);
+                speciesEntry.setLastModifiedID(1);
                 speciesEntry.setIsPest(true);
                 speciesEntry.setLifestage(instarNo + 1);
                 insert(speciesEntry);

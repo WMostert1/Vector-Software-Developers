@@ -38,6 +38,15 @@ public class DataSourceTest extends AndroidTestCase {
         super.tearDown();
     }
 
+    public void testPresets() throws Exception {
+        SpeciesDAO speciesDAO = new SpeciesDAO(context);
+        speciesDAO.open();
+        speciesDAO.loadPresets();
+        List<Species> presetValues = speciesDAO.getAllSpecies();
+        assertEquals("Didnt persist everyting", 16, presetValues.size());
+        speciesDAO.close();
+    }
+
     public void testScoutStopCRD() throws Exception{
         ScoutStopDAO scoutStopDAO = new ScoutStopDAO(context);
         scoutStopDAO.open();

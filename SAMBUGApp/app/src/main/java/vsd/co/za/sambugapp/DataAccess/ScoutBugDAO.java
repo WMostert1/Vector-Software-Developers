@@ -115,7 +115,12 @@ public class ScoutBugDAO extends DataSourceAdapter {
         scoutBug.setComments(cursor.getString(5));
         scoutBug.setLastModifiedID(cursor.getInt(6));
         String date = cursor.getString(7);
-        scoutBug.setTMStamp(new Date(date));
+        try {
+            scoutBug.setTMStamp(new Date(date));
+        } catch (Exception e) {
+            scoutBug.setTMStamp(new Date());
+        }
+
 //        try {
 //            //TODO: Get this bloody thing to parse the date correctly
 //
