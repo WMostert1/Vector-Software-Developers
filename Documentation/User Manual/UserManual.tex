@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{titlesec}
+\usepackage{datetime}
 \newcommand{\sectionbreak}{\clearpage}
 \usepackage[hidelinks]{hyperref} 
 
@@ -17,6 +18,9 @@
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\newdateformat{monthyeardate}{%
+  \monthname[\THEMONTH], \THEYEAR}
 
 \begin{document}
 %\title{ \huge Functional Requirements for the SAMBUG}
@@ -42,8 +46,8 @@
          
     \vskip2cm
           
-    
-    \large \textbf{July, 2015}
+    \large \textbf{\monthyeardate\today}
+  
     \vfill
 \end{titlepage}
 	
@@ -91,7 +95,7 @@ The system has in mind three different users which will be described bellow:
 \section{System Configuration}
 Before we go into any further detail, it is important to ensure that you are fully equipped with the necessary prerequisites to enjoy the SAMBUG system. This section outlines everything you need to get started.
 \subsection{Setup Overview}
-SAMBUG is intended to be an integrated solution. The Android application and Website are complementary. Figure \ref{fig:layout} depicts the common high-level configuration of the system. Please note that \ref{fig:Web} may be interchanged with any Web-enabled device.
+SAMBUG is intended to be an integrated solution. The Android application and Website are complementary. Figure \ref{fig:layout} depicts the common high-level configuration of the system. Please note that Figure \ref{fig:Web} may be interchanged with any Web-enabled device.
 	\begin{figure}[h]
 		\begin{subfigure}{0.3\textwidth}
 			%\includegraphics[scale=]{}
@@ -116,8 +120,15 @@ SAMBUG is intended to be an integrated solution. The Android application and Web
 The design of the system as indicated above lends itself to a number of required devices and services, including:
 	\begin{itemize}
 		\item An Android Smartphone or tablet \footnote{You are advised to use a device with a camera that's able to take good quality macro photos in a medium level of light} (Android 4.1 or higher) - This will house the application used during Scouts, your main access point to the system.
-		\item A Second Web-enabled device - This is where you will manage your farm and view consolidated information of your scouts. Although you may choose to use the same phone/tablet you use in the field, the Web-based nature of this part of the system will allow you to work on a device with a large display, suitable for office work (e.g. a PC)
-		\item Internet Connection - Our application is designed to perform all of its functions even where no mobile/WiFi network reception is available. However, the information you'll be gathering during your scouting trips will have to be uploaded to the server at some point, and for that, you need to be connected to the internet. 
+		\item A Second Web-enabled device - This is where you will manage your farm and view consolidated information of your scouts. Although you may choose to use the same phone/tablet you use in the field, the Web-based nature of this part of the system will allow you to work on a device with a large display, suitable for office work (e.g. a PC).
+		\item Internet Browser - Whatever your choice of device in Figure \ref{fig:Web}, it must have one or more of the latest (As of \monthyeardate\today) popular Internet Browsers installed. You may choose from an extensive list, including, but not limited to:
+		\begin{itemize}
+			\item Google Chrome
+			\item Internet Explorer/Microsoft Edge
+			\item Mozilla Firefox
+			\item Safari
+		\end{itemize}
+		\item Internet Connection - Our application is designed to perform all of its functions even where no mobile/WiFi network reception is available. However, the information you'll be gathering during your scouting trips will have to be uploaded to the server at some point, and for that, you need to be connected to the internet. 		
 	\end{itemize}
 
 
