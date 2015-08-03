@@ -75,10 +75,16 @@
     <RefactorLog Include="BugDB.refactorlog" />
   </ItemGroup>
   <ItemGroup>
-    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac">
-      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\120\SqlSchemas\master.dacpac</HintPath>
+    <ArtifactReference Include="master.dacpac">
+      <HintPath>master.dacpac</HintPath>
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-      <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
+      <DatabaseSqlCmdVariable>master</DatabaseSqlCmdVariable>
     </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="master">
+      <DefaultValue>master</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
   </ItemGroup>
 </Project>
