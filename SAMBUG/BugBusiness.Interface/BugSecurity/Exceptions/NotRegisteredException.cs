@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataAccess.Interface;
 
-namespace DataAccess.MSSQL
+namespace BugBusiness.Interface.BugSecurity.Exceptions
 {
-    public class Authentication : IAuthentication
+    public class NotRegisteredException: ApplicationException
     {
     }
 }

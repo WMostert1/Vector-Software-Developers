@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Treatment]
 (
-	[TreatmentID] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR [dbo].[Treatment_TreatmentID_Sequence],
-	[BlockID] INT NOT NULL,
+	[TreatmentID] BIGINT NOT NULL PRIMARY KEY IDENTITY ,
+	[BlockID] BIGINT NOT NULL,
 	[Date] DATETIME NOT NULL,
 	[Comments] VARCHAR(100),
 	[LastModifiedID] INT,
