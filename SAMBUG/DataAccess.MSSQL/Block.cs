@@ -20,8 +20,8 @@ namespace DataAccess.MSSQL
             this.Treatments = new HashSet<Treatment>();
         }
     
-        public int BlockID { get; set; }
-        public int FarmID { get; set; }
+        public long BlockID { get; set; }
+        public long FarmID { get; set; }
         public string BlockName { get; set; }
         public Nullable<int> LastModifiedID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }

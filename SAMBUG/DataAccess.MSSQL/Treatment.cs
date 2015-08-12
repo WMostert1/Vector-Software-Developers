@@ -14,8 +14,8 @@ namespace DataAccess.MSSQL
     
     public partial class Treatment
     {
-        public int TreatmentID { get; set; }
-        public int BlockID { get; set; }
+        public long TreatmentID { get; set; }
+        public long BlockID { get; set; }
         public System.DateTime Date { get; set; }
         public string Comments { get; set; }
         public Nullable<int> LastModifiedID { get; set; }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Interface
+namespace BugBusiness.Interface.BugSecurity.Exceptions
 {
-    public interface IAuthentication
+    public class InvalidInputException : ApplicationException
     {
     }
 }

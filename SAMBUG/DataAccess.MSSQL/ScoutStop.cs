@@ -19,9 +19,9 @@ namespace DataAccess.MSSQL
             this.ScoutBugs = new HashSet<ScoutBug>();
         }
     
-        public int ScoutStopID { get; set; }
-        public int UserID { get; set; }
-        public int BlockID { get; set; }
+        public long ScoutStopID { get; set; }
+        public long UserID { get; set; }
+        public long BlockID { get; set; }
         public int NumberOfTrees { get; set; }
         public float Latitude { get; set; }
         public float Longitude { get; set; }
