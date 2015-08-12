@@ -18,6 +18,7 @@
 
     <string name="btnSelectBug">Select Bug</string>
     <string name="btnDoneStop">Done</string>
+    <string name="addBug">Add Bug</string>
 
     <string-array name="arrBlocks">
         <item>Piesang</item>
@@ -25,4 +26,7 @@
         <item>BuildMeBoy</item>
         <item>WeWantAMichelle</item>
     </string-array>
+    <string name="title_activity_test">test</string>
+    <string name="numBugs">Number of Bugs</string>
+    <string name="bugType">Bug Type</string>
 </resources>

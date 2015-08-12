@@ -19,7 +19,7 @@ public class MyLocationListener implements LocationListener {
         String myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
 
         //I make a log to see the results
-        Log.e("MY CURRENT LOCATION", myLocation);
+        Log.d("MY CURRENT LOCATION", myLocation);
 
     }
 
