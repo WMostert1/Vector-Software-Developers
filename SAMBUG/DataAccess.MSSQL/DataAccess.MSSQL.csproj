@@ -52,6 +52,7 @@
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DbAuthentication.cs" />
+    <Compile Include="DbFarmManagement.cs" />
     <Compile Include="EntityFrameworkModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

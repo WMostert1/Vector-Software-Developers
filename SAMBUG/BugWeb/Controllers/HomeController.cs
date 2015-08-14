@@ -23,5 +23,10 @@ namespace BugWeb.Controllers
         {    
             return View("~/Views/Authentication/Register.cshtml");
         }
+
+        public ActionResult BlockEdit()
+        {
+            return RedirectToAction("index", "farmmanagement");
+        }
     }
 }

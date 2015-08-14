@@ -1,0 +1,34 @@
+﻿@model DataAccess.Interface.Domain.Block
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>View</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Block</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BlockName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BlockName)
+        </dd>
+
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            @Html.HiddenFor(model=>model.BlockID)
+            <input type="submit" value="Yes" class="btn btn-default" />  |
+            @Html.ActionLink("No", "index", "farmmanagement",null, new { @class = "btn btn-default", @style = "color:black" })
+        </div>
+    }
+</div>
