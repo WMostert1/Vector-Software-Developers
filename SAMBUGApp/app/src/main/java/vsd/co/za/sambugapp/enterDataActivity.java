@@ -49,8 +49,11 @@ import vsd.co.za.sambugapp.DomainModels.Species;
 public class enterDataActivity extends ActionBarActivity {
     private final String BUG_COUNT="za.co.vsd.bug_count";
     private final String BUG_LIST="za.co.vsd.bug_list";
-    private final String TREE_COUNT="za.co.vsd.tree_count";
-    ScoutStop stop;
+    private final String SCOUT_STOP = "za.co.vsd.scout_stop";
+    private final String BLOCK_INFO_COLLAPSED = "za.co.vsd.block_info_collapsed";
+    private boolean blockInfoCollapsed = false;
+    private int numberOfBugs = -1;
+    ScoutStop stop = null;
     Species species;
     Spinner mySpin;
     NumberPicker npTrees;
@@ -92,6 +95,8 @@ public class enterDataActivity extends ActionBarActivity {
         setContentView(R.layout.activity_enter_data);
         if (savedInstanceState!=null){
             allBugs=(HashSet<ScoutBug>)savedInstanceState.get(BUG_LIST);
+            blockInfoCollapsed = savedInstanceState.getBoolean(BLOCK_INFO_COLLAPSED);
+            numberOfBugs = savedInstanceState.getInt(BUG_COUNT);
             updateAddedBugsView();
         } else {
             allBugs = new HashSet<ScoutBug>();
@@ -99,11 +104,17 @@ public class enterDataActivity extends ActionBarActivity {
         iReceive = getIntent();
             receiveGeoLocation();
         acceptBlocks();
-        acceptStop();
+        acceptStop(savedInstanceState);
         setTitle(farm.getFarmName());
+        if (!blockInfoCollapsed) {
+            Log.d("CHECK", "Not collapsing");
             populateSpinner();
-            initializeNumberPickers(savedInstanceState);
 
+        } else {
+            Log.d("CHECK", "collapsing");
+            collapseBlockEditing(null);
+        }
+        initializeNumberPickers();
     }
 
 
@@ -136,8 +147,9 @@ public class enterDataActivity extends ActionBarActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(BUG_COUNT, npBugs.getValue());
-        savedInstanceState.putInt(TREE_COUNT,npTrees.getValue());
         savedInstanceState.putSerializable(BUG_LIST,allBugs);
+        savedInstanceState.putSerializable(SCOUT_STOP, stop);
+        savedInstanceState.putBoolean(BLOCK_INFO_COLLAPSED, blockInfoCollapsed);
     }
 
     /**
@@ -169,14 +181,16 @@ public class enterDataActivity extends ActionBarActivity {
     /**
      * Accepts the Stop Object. If no object is found, it creates one.
      */
-    public void acceptStop() {
-
-        Bundle scoutStop = getiReceive().getExtras();
-        ScoutStop sp = (ScoutStop) scoutStop.get(ScoutTripActivity.SCOUT_STOP);
-        if(sp == null){
-            createScoutStop();
+    public void acceptStop(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            stop = (ScoutStop) savedInstanceState.getSerializable(SCOUT_STOP);
+        } else {
+            Bundle scoutStop = getiReceive().getExtras();
+            ScoutStop sp = (ScoutStop) scoutStop.get(ScoutTripActivity.SCOUT_STOP);
+            if (sp == null) {
+                createScoutStop();
+            } else usePassedStop(sp);
         }
-        else usePassedStop(sp);
     }
 
     /**
@@ -219,45 +233,29 @@ public class enterDataActivity extends ActionBarActivity {
 
     /**
      * Initializes the number pickers to the appropriate values.
-     * @param savedInstanceState
      */
-    public void initializeNumberPickers(Bundle savedInstanceState) {
-        npTrees = (NumberPicker) findViewById(R.id.npNumTrees);
+    public void initializeNumberPickers() {
+        if (!blockInfoCollapsed) {
+            npTrees = (NumberPicker) findViewById(R.id.npNumTrees);
+            npTrees.setMinValue(1);
+            npTrees.setMaxValue(100);
+            npTrees.setWrapSelectorWheel(false);
+        }
+
         npBugs = (NumberPicker) findViewById(R.id.npNumBugs);
-
-        npTrees.setMinValue(1);
-        npTrees.setMaxValue(100);
-        npTrees.setWrapSelectorWheel(false);
-
         npBugs.setMinValue(0);
         npBugs.setMaxValue(100);
         npBugs.setWrapSelectorWheel(false);
-        if (savedInstanceState!=null){
-            npBugs.setValue(savedInstanceState.getInt(BUG_COUNT));
-            npTrees.setValue(savedInstanceState.getInt(TREE_COUNT));
-        }
 
     }
 
     
     public void sendToScoutTripActivity(View view) {
 
-        String blockName=mySpin.getSelectedItem().toString();
-        Block tempBlock=null;
-        for (Block b:farm.getBlocks()){
-            if (b.getBlockName().equals(blockName)){
-                tempBlock=b;
-                break;
-            }
-        }
-        stop.setBlockID(tempBlock.getBlockID());
-        stop.setBlock(tempBlock);
-        stop.setNumberOfTrees(npTrees.getValue());
-
         Intent output = new Intent();
         Bundle b = new Bundle();
         stop.setScoutBugs(allBugs);
-        b.putSerializable(ScoutTripActivity.SCOUT_STOP,stop);
+        b.putSerializable(ScoutTripActivity.SCOUT_STOP, stop);
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();
@@ -410,6 +408,39 @@ public class enterDataActivity extends ActionBarActivity {
 
     }
 
+    public void collapseBlockEditing(View v) {
+        LinearLayout layout = (LinearLayout) findViewById(R.id.blockEditingLayout);
+        Block tempBlock = null;
+        if (v != null) {
+            blockInfoCollapsed = true;
+            String blockName = mySpin.getSelectedItem().toString();
+            for (Block b : farm.getBlocks()) {
+                if (b.getBlockName().equals(blockName)) {
+                    tempBlock = b;
+                    break;
+                }
+            }
+            stop.setBlockID(tempBlock.getBlockID());
+            stop.setBlock(tempBlock);
+            stop.setNumberOfTrees(npTrees.getValue());
+        } else {
+            tempBlock = stop.getBlock();
+        }
+//        Block tempBlock=null;
+//        for (Block b:farm.getBlocks()){
+//            if (b.getBlockName().equals(blockName)){
+//                tempBlock=b;
+//                break;
+//            }
+//        }
+        layout.removeAllViews();
+        layout.inflate(getApplicationContext(), R.layout.collapsed_block_info, layout);
+        TextView lblBlockName = (TextView) layout.findViewById(R.id.lblBlockName);
+        lblBlockName.setText(stop.getBlock().getBlockName());
+        TextView lblNumTrees = (TextView) layout.findViewById(R.id.lblNumTrees);
+        lblNumTrees.setText(stop.getNumberOfTrees() + "");
+    }
+
     /**
      * Adds rows to the the layout dynamically.
      */
@@ -507,7 +538,7 @@ public class enterDataActivity extends ActionBarActivity {
         // NumberPicker currNumberPicker = (NumberPicker) rowNumberPicker.getChildAt(1);
 
         //currBug.setNumberOfBugs(currNumberPicker.getValue());
-        currBug.setNumberOfBugs(npBugs.getValue());
+        currBug.setNumberOfBugs(numberOfBugs);
         currBug.setSpecies(species);
         currBug.setSpeciesID(species.getSpeciesID());
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
