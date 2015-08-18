@@ -31,7 +31,7 @@ namespace DataAccess.MSSQL
             };
             db.ScoutStops.Add(ScoutStop);
             db.SaveChanges();
-            return success;
+            return true;
         }
 
         public bool PersistScoutBugs(Int64 scoutBugID, Int64 scoutStopID, Int64 speciesID, int numberOfBugs, byte[] fieldImage, string comments, int lastModifiedID, DateTime tmpStamp)
