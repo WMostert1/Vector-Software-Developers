@@ -12,18 +12,47 @@ namespace DataAccess.MSSQL
     class DbSynchronization: IDbAuthentication
     {
        
-        public bool PersistBugStops(Int64 scoutStopID, Int64 userID, Int64 blockID, int numberOfTrees, float latitude, float longitude, DateTime datetime, int lastModifiedID, DateTime tmStamp)
+        public bool PersistBugStops(Int64 scoutStopID, Int64 userID, Int64 blockID, int numberOfTrees, float latitude, float longitude, DateTime date, int lastModifiedID, DateTime tmStamp)
         {
-            bool success = false;
+
+
             var db = new BugDBEntities();
+            var ScoutStop = new ScoutStop()
+            {
+                ScoutStopID = scoutStopID,
+                UserID = userID,
+                BlockID = blockID,
+                NumberOfTrees = numberOfTrees,
+                Latitude = latitude,
+                Longitude = longitude,
+                Date = date,
+                LastModifiedID = lastModifiedID,
+                TMStamp = tmStamp
+            };
+            db.ScoutStops.Add(ScoutStop);
+            db.SaveChanges();
             return success;
         }
 
-        public bool PersistScoutBugs(Int64 scoutBugID, Int64 scoutStopID, Int64 speciesID, int NumberOfBugs, byte[] image, string comments, int lastModifiedID, DateTime tmpStamp)
+        public bool PersistScoutBugs(Int64 scoutBugID, Int64 scoutStopID, Int64 speciesID, int numberOfBugs, byte[] fieldImage, string comments, int lastModifiedID, DateTime tmpStamp)
         {
-            bool success = false;
             var db = new BugDBEntities();
-            return success;
+            
+            var ScoutBug = new ScoutBug()
+            {
+                ScoutBugID = scoutBugID,
+                ScoutStopID = scoutStopID,
+                SpeciesID = speciesID,
+                NumberOfBugs = numberOfBugs,
+                FieldPicture = fieldImage,
+                Comments = comments,
+                LastModifiedID = lastModifiedID,
+                TMStamp = tmpStamp
+            };
+            db.ScoutBugs.Add(ScoutBug);
+            db.SaveChanges();
+
+            return true;
 
         }
     }
