@@ -42,6 +42,7 @@
     <Compile Include="Domain\Role.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="IDbAuthentication.cs" />
+    <Compile Include="IDbReporting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
