@@ -9,7 +9,7 @@ using DataAccess.Interface;
 
 namespace DataAccess.MSSQL
 {
-    class DbSynchronization: IDbAuthentication
+    class DbSynchronization : IDbSynchronization
     {
        
         public bool PersistBugStops(Int64 scoutStopID, Int64 userID, Int64 blockID, int numberOfTrees, float latitude, float longitude, DateTime date, int lastModifiedID, DateTime tmStamp)
