@@ -35,7 +35,7 @@ namespace DataAccess.MSSQL
             var domainUser = new Interface.Domain.User()
             {
                 Id = entityUser.UserID,
-                Roles = roles
+                Roles = roles,
             };
 
             return domainUser;

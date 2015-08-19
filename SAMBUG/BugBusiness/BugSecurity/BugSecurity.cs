@@ -67,7 +67,7 @@ namespace BugBusiness.BugSecurity
                 throw new UserExistsException();
             }
 
-            return new RegisterResponse();
+            return new RegisterResponse() {};
 
         }
 

@@ -61,7 +61,7 @@ namespace BugWeb.Controllers
             try
             {
                 RegisterResponse registerResponse = _bugSecurity.Register(registerRequest);
-                return RedirectToAction("login", "home");
+                return RedirectToAction("index", "farmmanagement");
             }
             catch (InvalidInputException)
             {

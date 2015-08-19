@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interface.Domain
 {
-    public class User
+    public class Farm
     {
-        public long Id { get; set; }
-        public List<Role> Roles { get; set; }
-        public Farm Farm { get; set; }
+        public long FarmID { get; set; }
+        public string FarmName { get; set; }
     }
 }

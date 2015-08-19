@@ -25,6 +25,7 @@ namespace BugWeb.Controllers
         // GET: FarmManagement
         public ActionResult Index()
         {
+
             GetBlocksByFarmRequest getblocksbyfarmRequest = new GetBlocksByFarmRequest()
             {
                 FarmID = 1
@@ -35,16 +36,14 @@ namespace BugWeb.Controllers
                 GetBlocksByFarmResult getblocksbyfarmResult = _farmManagement.GetBlocksByFarm(getblocksbyfarmRequest);
                 return View("~/Views/FarmManagement/BlockEdit.cshtml", getblocksbyfarmResult.Blocks);
             }
-            catch (InvalidInputException ex)
+            catch (InvalidInputException)
             {
                 return RedirectToAction("index", "home");
             }
-            catch (NoBlocksException ex)
+            catch (NoBlocksException)
             {
                 return RedirectToAction("login", "home");
             }
-
-            return RedirectToAction("index");
         }
 
         // GET: FarmManagement/Details/5
@@ -74,16 +73,14 @@ namespace BugWeb.Controllers
                     AddBlockResult addblockResponse = _farmManagement.AddBlock(addblockRequest);
                     return RedirectToAction("index", "farmmanagement");
                 }
-                catch (InvalidInputException ex)
+                catch (InvalidInputException)
                 {
                     return RedirectToAction("index", "home");
                 }
-                catch (BlockExistsException ex)
+                catch (BlockExistsException)
                 {
                     return RedirectToAction("login", "authentication");
                 }
-
-                return RedirectToAction("Index");
         }
 
         // GET: FarmManagement/Edit/5
