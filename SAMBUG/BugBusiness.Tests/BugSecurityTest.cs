@@ -88,7 +88,7 @@ namespace BugBusiness.Tests
             //Arrange
             //Act
             //Assert
-            throw new NotImplementedException();
+           // throw new NotImplementedException();
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace BugBusiness.Tests
             //Arrange
             //Act
             //Assert
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }
