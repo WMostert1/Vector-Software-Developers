@@ -26,7 +26,7 @@ namespace BugWeb
             // Register MVC controllers.
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
-            // Regster other types
+            // Register other types
             builder.RegisterType<DbAuthentication>().As<IDbAuthentication>();
             builder.RegisterType<BugSecurity>().As<IBugSecurity>();
             builder.RegisterType<DbFarmManagement>().As<IDbFarmManagement>();
