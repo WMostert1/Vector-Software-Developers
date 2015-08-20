@@ -29,6 +29,7 @@ import java.util.HashSet;
 
 import vsd.co.za.sambugapp.DataAccess.ScoutBugDAO;
 import vsd.co.za.sambugapp.DataAccess.ScoutStopDAO;
+import vsd.co.za.sambugapp.DataAccess.SynchronizeTask;
 import vsd.co.za.sambugapp.DomainModels.*;
 
 
@@ -152,6 +153,17 @@ public class ScoutTripActivity extends ActionBarActivity {
      * @param intent Intent passed in from LoginActivity.
      */
     public void acceptFarm(Intent intent){
+        /*farm=new Farm();
+        farm.setFarmID(1);
+        farm.setFarmName("DEEZ NUTS");
+        HashSet<Block> blocks=new HashSet<>();
+        for (int j=1;j<=10;j++){
+            Block obj=new Block();
+            obj.setBlockID(j);
+            obj.setBlockName("Block #" + j);
+            blocks.add(obj);
+        }
+        farm.setBlocks(blocks);*/
         Bundle b=intent.getExtras();
         farm=(Farm)b.get(LoginActivity.USER_FARM);
     }
@@ -171,19 +183,18 @@ public class ScoutTripActivity extends ActionBarActivity {
      */
     public boolean persistData(){
         ScoutStopDAO scoutStopDAO=new ScoutStopDAO(getApplicationContext());
-        ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
+       // ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
         try{
             scoutStopDAO.open();
             //persist each scout stop
             for (ScoutStop scoutStop : scoutTrip.getStopList()){
-                long scoutStopID=scoutStopDAO.insert(scoutStop);
-                scoutBugDAO.open();
-                //persist each scout bug
-                for (ScoutBug scoutBug : scoutStop.getScoutBugs()){
-                    scoutBug.setScoutStopID((int)scoutStopID);
-                    scoutBugDAO.insert(scoutBug);
-                }
-                scoutBugDAO.close();
+                long scoutStopID = scoutStopDAO.insert(scoutStop);
+//                scoutBugDAO.open();
+//                for (ScoutBug scoutBug : scoutStop.getScoutBugs()){
+//                    scoutBug.setScoutStopID((int)scoutStopID);
+//                    scoutBugDAO.insert(scoutBug);
+//                }
+//                scoutBugDAO.close();
             }
 
             scoutStopDAO.close();
@@ -192,6 +203,9 @@ public class ScoutTripActivity extends ActionBarActivity {
             return false;
         }
         Toast.makeText(getApplicationContext(),"You are done. Go home.",Toast.LENGTH_LONG).show();
+
+        SynchronizeTask.getInstance(getApplicationContext()).execute();
+
         return true;
     }
 
