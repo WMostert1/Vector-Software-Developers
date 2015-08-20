@@ -93,6 +93,7 @@ public class enterDataActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
+        Log.e("CHECK", "Create");
         if (savedInstanceState!=null){
             allBugs=(HashSet<ScoutBug>)savedInstanceState.get(BUG_LIST);
             blockInfoCollapsed = savedInstanceState.getBoolean(BLOCK_INFO_COLLAPSED);

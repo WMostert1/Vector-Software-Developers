@@ -11,7 +11,7 @@
         android:id="@+id/llStopInfo"
         android:weightSum="10">
         <TextView
-            android:id="@+id/lblBlockName"
+            android:id="@+id/listscoutstop_lblBlockName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textStyle="bold"

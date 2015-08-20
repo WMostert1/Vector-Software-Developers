@@ -244,12 +244,10 @@ public class ScoutTripActivity extends ActionBarActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ScoutStop stop = getItem(position);
             if (hasStops) {
-                if (convertView == null) {
-                    convertView = getLayoutInflater()
-                            .inflate(R.layout.list_scout_stop, null);
-                }
+                convertView = getLayoutInflater()
+                        .inflate(R.layout.list_scout_stop, null);
                 TextView lblBlockName =
-                        (TextView) convertView.findViewById(R.id.lblBlockName);
+                        (TextView) convertView.findViewById(R.id.listscoutstop_lblBlockName);
                 lblBlockName.setText(stop.Block.getBlockName());
                 TextView lblTreeAmount =
                         (TextView) convertView.findViewById(R.id.lblTreeAmount);
@@ -285,9 +283,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ScoutStop stop = getItem(position);
             if (hasStops) {
-                if (convertView == null) {
                     convertView = getLayoutInflater().inflate(R.layout.list_pests_per_tree, null);
-                }
                 TextView lblBlockName = (TextView) convertView.findViewById(R.id.lblBlockName);
                 lblBlockName.setText(stop.getBlock().getBlockName());
                 TextView lblPestsPerTree = (TextView) convertView.findViewById(R.id.lblPestsPerTree);
