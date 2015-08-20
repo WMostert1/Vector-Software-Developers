@@ -7,6 +7,7 @@ using System.Web.Http.Results;
 using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
+using Newtonsoft.Json.Linq;
 
 namespace BugCentral.Controllers
 {
@@ -20,8 +21,9 @@ namespace BugCentral.Controllers
         {
             _bugSecurity = bugSecurity;
         }
-   
-        [Route("login")]
+        
+        
+
         public LoginResponse Post([FromBody] LoginRequest loginRequest)
         {
             try

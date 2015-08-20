@@ -12,8 +12,9 @@ using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
-using Newtonsoft.Json;
 using DataAccess.Interface.Domain;
+using Newtonsoft.Json;
+
 
 namespace BugWeb.Controllers
 {
@@ -44,7 +45,7 @@ namespace BugWeb.Controllers
                 //set up session
                 User user = new User()
                 {
-                    Id=loginResponse.User.Id,
+                    UserId=loginResponse.User.UserId,
                     Farms=loginResponse.User.Farms,
                     Roles=loginResponse.User.Roles
                 };
@@ -93,6 +94,27 @@ namespace BugWeb.Controllers
             {
                 return RedirectToAction("register", "home");
             }
-        } 
+        }
+
+        [HttpGet]
+        public ActionResult EditUserRoles()
+        {
+            ViewEditUserRolesResponse response = _bugSecurity.GetUsers();
+            return View(response);
+        }
+
+        [HttpPost]
+        public ActionResult EditUserRoles(EditUserRoleViewModel editUserRoleViewModel)
+        {
+            
+            _bugSecurity.EditUserRoles(new EditUserRoleRequest
+            {
+                UserId = editUserRoleViewModel.UserId,
+                IsAdministrator = editUserRoleViewModel.IsAdministrator,
+                IsGrower = editUserRoleViewModel.IsGrower
+            });
+
+            return RedirectToAction("EditUserRoles","Authentication");
+        }
     }
 }
