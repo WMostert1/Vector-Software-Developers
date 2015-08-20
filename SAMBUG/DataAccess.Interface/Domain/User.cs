@@ -8,7 +8,10 @@ namespace DataAccess.Interface.Domain
 {
     public class User
     {
-        public long Id { get; set; }
-        public List<Role> Roles { get; set; } 
+
+        public long UserId { get; set; }
+        public string Email { get; set; }
+
+        public virtual ICollection<Role> Roles { get; set; }
     }
 }

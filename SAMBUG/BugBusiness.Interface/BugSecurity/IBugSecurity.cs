@@ -13,5 +13,8 @@ namespace BugBusiness.Interface.BugSecurity
         LoginResponse Login(LoginRequest loginRequest);
         RegisterResponse Register(RegisterRequest registerRequest);
         RecoverAccountResponse RecoverAccount(RecoverAccountRequest recoverAccountRequest);
+        ViewEditUserRolesResponse GetUsers();
+        void EditUserRoles(EditUserRoleRequest editUserRoleRequest);
+
     }
 }
