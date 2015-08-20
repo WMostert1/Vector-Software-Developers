@@ -49,6 +49,23 @@
     <Compile Include="BugSecurity\Exceptions\NotRegisteredException.cs" />
     <Compile Include="BugSecurity\Exceptions\UserExistsException.cs" />
     <Compile Include="BugSecurity\IBugSecurity.cs" />
+    <Compile Include="FarmManagement\DTO\AddBlockRequest.cs" />
+    <Compile Include="FarmManagement\DTO\AddBlockResult.cs" />
+    <Compile Include="FarmManagement\DTO\DeleteBlockByIDRequest.cs" />
+    <Compile Include="FarmManagement\DTO\DeleteBlockByIDResult.cs" />
+    <Compile Include="FarmManagement\DTO\GetBlockByIDResult.cs" />
+    <Compile Include="FarmManagement\DTO\GetBlocksByFarmRequest.cs" />
+    <Compile Include="FarmManagement\DTO\GetBlocksByFarmResult.cs" />
+    <Compile Include="FarmManagement\DTO\GetBlockByIDRequest.cs" />
+    <Compile Include="FarmManagement\DTO\UpdateBlockByIDRequest.cs" />
+    <Compile Include="FarmManagement\DTO\UpdateBlockByIDResult.cs" />
+    <Compile Include="FarmManagement\Exceptions\BlockExistsException.cs" />
+    <Compile Include="FarmManagement\Exceptions\CouldNotDeleteBlockException.cs" />
+    <Compile Include="FarmManagement\Exceptions\CouldNotUpdateException.cs" />
+    <Compile Include="FarmManagement\Exceptions\InvalidInputException.cs" />
+    <Compile Include="FarmManagement\Exceptions\NoBlocksException.cs" />
+    <Compile Include="FarmManagement\Exceptions\NoSuchBlockExistsException.cs" />
+    <Compile Include="FarmManagement\IFarmManagement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

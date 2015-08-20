@@ -9,6 +9,7 @@ namespace DataAccess.Interface.Domain
     public class User
     {
         public long Id { get; set; }
-        public List<Role> Roles { get; set; } 
+        public List<Role> Roles { get; set; }
+        public Farm Farm { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace BugWeb.Tests
             // Arrange
             // Act
             //Assert
-            throw new NotImplementedException();
+          //  throw new NotImplementedException();
         }
     }
 }

@@ -74,7 +74,7 @@
 	SpeciesName TEXT NOT NULL,
 	Lifestage INTEGER NOT NULL,
 	IdealPicture BLOB NOT NULL,
-	IsPest BIT NOT NULL,
+	IsPest NUMERIC NOT NULL,
 	LastModifiedID INTEGER,
 	TMStamp TEXT
 )
