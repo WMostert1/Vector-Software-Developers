@@ -36,7 +36,7 @@ namespace BugBusiness.Tests
                 .Setup(dbAuthentication => dbAuthentication.GetUserByCredentials("Test1", "321"))
                 .Returns(new User()
                 {
-                    Id = 1,
+                    UserId = 1,
                     Roles = new List<Role>()
                     {
                         new Role(){Description = "Admin", Type = 1},
