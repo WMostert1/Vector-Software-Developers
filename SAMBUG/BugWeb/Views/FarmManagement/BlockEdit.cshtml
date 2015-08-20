@@ -1,33 +1,25 @@
-﻿@model IEnumerable<DataAccess.Interface.Domain.Block>
+﻿@model IEnumerable<DataAccess.Interface.Domain.Farm>
 
 @{
     ViewBag.Title = "BlockEdit";
 }
 
-<h2>Edit blocks for @TempData["Farm"]</h2>
-
-<p>
-    <a href="@Url.Action("Create","FarmManagement")">Createe</a>
-    @Html.ActionLink("Create New", "Create","FarmManagement")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.BlockName)
-        </th>
-</th>
-    </tr>
+<h2>BlockEdit</h2>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.BlockName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.BlockID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.BlockID })
-        </td>
-    </tr>
+    @Html.DisplayFor(modelItem => item.FarmName)
+    <p>
+        @Html.ActionLink("Create New", "Create", new { id = item.FarmID })
+    </p>
+    <table class="table">
+        @foreach (var block in item.Blocks){
+        <tr>
+            <td>@Html.DisplayFor(modelItem=>block.BlockName)</td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id =  block.BlockID,farmID=item.FarmID}) |
+                @Html.ActionLink("Delete", "Delete", new { id = block.BlockID, farmID=item.FarmID})
+            </td>
+        </tr>
+        }
+    </table>
 }
-
-</table>

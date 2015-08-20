@@ -32,8 +32,7 @@ namespace BugBusiness.BugSecurity
             
             var loginResponse = new LoginResponse()
             {
-                Id = user.Id,
-                Roles = user.Roles
+                User = user
             };
         
             return loginResponse;

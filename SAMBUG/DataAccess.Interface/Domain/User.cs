@@ -10,6 +10,6 @@ namespace DataAccess.Interface.Domain
     {
         public long Id { get; set; }
         public List<Role> Roles { get; set; }
-        public Farm Farm { get; set; }
+        public List<Farm> Farms { get; set; }
     }
 }

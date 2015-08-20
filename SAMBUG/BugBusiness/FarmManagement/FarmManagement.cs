@@ -77,6 +77,28 @@ namespace BugBusiness.FarmManagement
             return getblockbyidResult;
         }
 
+        public GetFarmByIDResult GetFarmByID(GetFarmByIDRequest getfarmbyidRequest)
+        {
+            if (getfarmbyidRequest.FarmID <= 0)
+            {
+                throw new InvalidInputException();
+            }
+
+            Farm farm = _dbFarmManagement.GetFarmByID(getfarmbyidRequest.FarmID);
+
+            if (farm == null)
+            {
+                throw new NoSuchFarmExistsException();
+            }
+
+            GetFarmByIDResult getfarmbyidResult = new GetFarmByIDResult()
+            {
+                Farm = farm
+            };
+
+            return getfarmbyidResult;
+        }
+
         public UpdateBlockByIDResult UpdateBlockByID(UpdateBlockByIDRequest updateblockbyidRequest)
         {
             if (updateblockbyidRequest.BlockID <= 0 || updateblockbyidRequest.BlockName.Equals(""))

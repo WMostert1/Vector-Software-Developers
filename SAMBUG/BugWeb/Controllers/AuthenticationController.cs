@@ -13,6 +13,7 @@ using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
 using Newtonsoft.Json;
+using DataAccess.Interface.Domain;
 
 namespace BugWeb.Controllers
 {
@@ -39,7 +40,28 @@ namespace BugWeb.Controllers
             try
             {
                 LoginResponse loginResponse = _bugSecurity.Login(loginRequest);
-                return RedirectToAction("index", "home");
+
+                //set up session
+                User user = new User()
+                {
+                    Id=loginResponse.User.Id,
+                    Farms=loginResponse.User.Farms,
+                    Roles=loginResponse.User.Roles
+                };
+                Session["UserInfo"] = user;
+                //check to go to home page or farm setup
+                int blockCount = 0;
+                foreach (Farm f in user.Farms){
+                    blockCount += f.Blocks.Count;
+                }
+                if (blockCount > 0)
+                {
+                    return RedirectToAction("index", "home");
+                }
+                else
+                {
+                    return RedirectToAction("index", "farmmanagement");
+                }
             }
             catch (NotRegisteredException)
             {
@@ -61,7 +83,7 @@ namespace BugWeb.Controllers
             try
             {
                 RegisterResponse registerResponse = _bugSecurity.Register(registerRequest);
-                return RedirectToAction("index", "farmmanagement");
+                return RedirectToAction("login", "home");
             }
             catch (InvalidInputException)
             {

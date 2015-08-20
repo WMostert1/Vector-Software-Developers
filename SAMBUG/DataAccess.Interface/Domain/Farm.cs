@@ -10,5 +10,6 @@ namespace DataAccess.Interface.Domain
     {
         public long FarmID { get; set; }
         public string FarmName { get; set; }
+        public List<Block> Blocks { get; set; }
     }
 }

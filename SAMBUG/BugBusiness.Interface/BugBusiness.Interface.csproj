@@ -57,6 +57,8 @@
     <Compile Include="FarmManagement\DTO\GetBlocksByFarmRequest.cs" />
     <Compile Include="FarmManagement\DTO\GetBlocksByFarmResult.cs" />
     <Compile Include="FarmManagement\DTO\GetBlockByIDRequest.cs" />
+    <Compile Include="FarmManagement\DTO\GetFarmByIDRequest.cs" />
+    <Compile Include="FarmManagement\DTO\GetFarmByIDResult.cs" />
     <Compile Include="FarmManagement\DTO\UpdateBlockByIDRequest.cs" />
     <Compile Include="FarmManagement\DTO\UpdateBlockByIDResult.cs" />
     <Compile Include="FarmManagement\Exceptions\BlockExistsException.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="FarmManagement\Exceptions\InvalidInputException.cs" />
     <Compile Include="FarmManagement\Exceptions\NoBlocksException.cs" />
     <Compile Include="FarmManagement\Exceptions\NoSuchBlockExistsException.cs" />
+    <Compile Include="FarmManagement\Exceptions\NoSuchFarmExistsException.cs" />
     <Compile Include="FarmManagement\IFarmManagement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

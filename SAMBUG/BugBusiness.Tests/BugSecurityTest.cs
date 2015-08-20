@@ -54,9 +54,9 @@ namespace BugBusiness.Tests
             });
 
             //Assert
-            loginResponse.Id.ShouldEqual(1);
-            loginResponse.Roles[0].Type.ShouldEqual(1);
-            loginResponse.Roles[1].Type.ShouldEqual(2);
+            loginResponse.User.Id.ShouldEqual(1);
+            loginResponse.User.Roles[0].Type.ShouldEqual(1);
+            loginResponse.User.Roles[1].Type.ShouldEqual(2);
 
         }
 

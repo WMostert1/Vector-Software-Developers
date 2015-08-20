@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
-    public class AddBlockRequest
+    public class GetFarmByIDRequest
     {
         public long FarmID { get; set; }
-        public string BlockName { get; set; }
     }
 }

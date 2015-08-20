@@ -13,6 +13,7 @@ namespace BugBusiness.Interface.FarmManagement
         AddBlockResult AddBlock(AddBlockRequest addblockRequest);
         GetBlocksByFarmResult GetBlocksByFarm(GetBlocksByFarmRequest getblocksbyfarmRequest);
         GetBlockByIDResult GetBlockByID(GetBlockByIDRequest getblockybyidRequest);
+        GetFarmByIDResult GetFarmByID(GetFarmByIDRequest getfarmbyidRequest);
         UpdateBlockByIDResult UpdateBlockByID(UpdateBlockByIDRequest updateblockbyidRequest);
         DeleteBlockByIDResult DeleteBlockByID(DeleteBlockByIDRequest deleteblockbyidRequest);
     }

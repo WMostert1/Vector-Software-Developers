@@ -25,16 +25,16 @@ namespace BugWeb.Controllers
         // GET: FarmManagement
         public ActionResult Index()
         {
+            User user = (User)Session["UserInfo"];
 
-            GetBlocksByFarmRequest getblocksbyfarmRequest = new GetBlocksByFarmRequest()
-            {
-                FarmID = 1
-            };
-
+            //GetBlocksByFarmRequest getblocksbyfarmRequest = new GetBlocksByFarmRequest()
+            //{
+            //    FarmID = user.FarmID
+            //};
             try
             {
-                GetBlocksByFarmResult getblocksbyfarmResult = _farmManagement.GetBlocksByFarm(getblocksbyfarmRequest);
-                return View("~/Views/FarmManagement/BlockEdit.cshtml", getblocksbyfarmResult.Blocks);
+               // GetBlocksByFarmResult getblocksbyfarmResult = _farmManagement.GetBlocksByFarm(getblocksbyfarmRequest);
+                return View("~/Views/FarmManagement/BlockEdit.cshtml", user.Farms);
             }
             catch (InvalidInputException)
             {
@@ -47,14 +47,15 @@ namespace BugWeb.Controllers
         }
 
         // GET: FarmManagement/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(long id)
         {
             return View();
         }
 
         // GET: FarmManagement/Create
-        public ActionResult Create()
+        public ActionResult Create(long id)
         {
+            TempData["CreateID"] = id;
             return View("~/Views/FarmManagement/CreateBlock.cshtml");
         }
 
@@ -62,15 +63,20 @@ namespace BugWeb.Controllers
         [HttpPost]
         public ActionResult Create(BlockViewModel blockViewModel)
         {
+                User user = (User)Session["UserInfo"];
+                long farmID=(long)TempData["CreateID"];
                 AddBlockRequest addblockRequest = new AddBlockRequest()
                 {
-                    FarmID = 1,
+                    FarmID = farmID,
                     BlockName = blockViewModel.BlockName
                 };
 
                 try
                 {
                     AddBlockResult addblockResponse = _farmManagement.AddBlock(addblockRequest);
+                    user.Farms.RemoveAll(farm => farm.FarmID.Equals(farmID));
+                    Farm updatedFarm=_farmManagement.GetFarmByID(new GetFarmByIDRequest(){FarmID=farmID}).Farm;
+                    user.Farms.Add(updatedFarm);
                     return RedirectToAction("index", "farmmanagement");
                 }
                 catch (InvalidInputException)
@@ -84,8 +90,9 @@ namespace BugWeb.Controllers
         }
 
         // GET: FarmManagement/Edit/5
-        public ActionResult Edit(long id)
+        public ActionResult Edit(long id,long farmID)
         {
+            TempData["FarmID"] = farmID;
             GetBlockByIDRequest getblockbyidRequest=new GetBlockByIDRequest()
             {
                 BlockID=id
@@ -96,11 +103,11 @@ namespace BugWeb.Controllers
                 GetBlockByIDResult getblockbyidResult=_farmManagement.GetBlockByID(getblockbyidRequest);
                 return View("~/Views/FarmManagement/UpdateBlock.cshtml", getblockbyidResult.Block);
             }
-            catch(InvalidInputException ex)
+            catch(InvalidInputException)
             {
                 return RedirectToAction("index","home");
             }
-            catch(NoSuchBlockExistsException ex){
+            catch(NoSuchBlockExistsException){
                 return RedirectToAction("login","authentication");
             }
         }
@@ -109,7 +116,8 @@ namespace BugWeb.Controllers
         [HttpPost]
         public ActionResult Edit(BlockViewModel blockViewModel)
         {
-            
+            User user = (User)Session["UserInfo"];
+            long farmID=(long)TempData["FarmID"];
             UpdateBlockByIDRequest updateblockbyidRequest = new UpdateBlockByIDRequest()
             {
                 BlockID = blockViewModel.BlockID,
@@ -118,21 +126,25 @@ namespace BugWeb.Controllers
             try
             {
                 UpdateBlockByIDResult updateblockbyidResult=_farmManagement.UpdateBlockByID(updateblockbyidRequest);
+                user.Farms.RemoveAll(farm => farm.FarmID.Equals(farmID));
+                Farm updatedFarm = _farmManagement.GetFarmByID(new GetFarmByIDRequest() { FarmID = farmID }).Farm;
+                user.Farms.Add(updatedFarm);
                 return RedirectToAction("index", "farmmanagement");
             }
-            catch (InvalidInputException ex)
+            catch (InvalidInputException)
             {
                 return RedirectToAction("index", "home");
             }
-            catch (CouldNotUpdateException ex)
+            catch (CouldNotUpdateException)
             {
                 return RedirectToAction("login", "authentication");
             }
         }
 
         // GET: FarmManagement/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(long id,long farmID)
         {
+            TempData["FarmID"] = farmID;
             GetBlockByIDRequest getblockbyidRequest = new GetBlockByIDRequest()
             {
                 BlockID = id
@@ -143,11 +155,11 @@ namespace BugWeb.Controllers
                 GetBlockByIDResult getblockbyidResult = _farmManagement.GetBlockByID(getblockbyidRequest);
                 return View("~/Views/FarmManagement/DeleteBlock.cshtml", getblockbyidResult.Block);
             }
-            catch (InvalidInputException ex)
+            catch (InvalidInputException)
             {
                 return RedirectToAction("index", "home");
             }
-            catch (NoSuchBlockExistsException ex)
+            catch (NoSuchBlockExistsException)
             {
                 return RedirectToAction("login", "authentication");
             }
@@ -157,6 +169,8 @@ namespace BugWeb.Controllers
         [HttpPost]
         public ActionResult Delete(BlockViewModel blockViewModel)
         {
+            User user = (User)Session["UserInfo"];
+            long farmID = (long)TempData["FarmID"];
             DeleteBlockByIDRequest deleteblockbyidRequest = new DeleteBlockByIDRequest()
             {
                 BlockID=blockViewModel.BlockID
@@ -165,13 +179,16 @@ namespace BugWeb.Controllers
             try
             {
                 DeleteBlockByIDResult deleteblockbyidResult = _farmManagement.DeleteBlockByID(deleteblockbyidRequest);
+                user.Farms.RemoveAll(farm => farm.FarmID.Equals(farmID));
+                Farm updatedFarm = _farmManagement.GetFarmByID(new GetFarmByIDRequest() { FarmID = farmID }).Farm;
+                user.Farms.Add(updatedFarm);
                 return RedirectToAction("index", "farmmanagement");
             }
-            catch (InvalidInputException ex)
+            catch (InvalidInputException)
             {
                 return RedirectToAction("index", "home");
             }
-            catch (CouldNotDeleteBlockException ex)
+            catch (CouldNotDeleteBlockException)
             {
                 return RedirectToAction("login", "authentication");
             }

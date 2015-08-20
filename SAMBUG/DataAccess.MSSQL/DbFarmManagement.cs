@@ -24,7 +24,7 @@ namespace DataAccess.MSSQL
 
             var block = new Block()
             {
-                FarmID=1,
+                FarmID=id,
                 BlockName = blockname
             };
             db.Blocks.Add(block);
@@ -58,6 +58,29 @@ namespace DataAccess.MSSQL
             if (block != null)
             {
                 return new Interface.Domain.Block() { BlockID = block.BlockID, BlockName = block.BlockName };
+            }
+
+            return null;
+        }
+
+        public Interface.Domain.Farm GetFarmByID(long id)
+        {
+            var db=new BugDBEntities();
+
+            var farm = db.Farms.SingleOrDefault(frm => frm.FarmID.Equals(id));
+
+            if (farm != null)
+            {
+                return new Interface.Domain.Farm()
+                {
+                    FarmID=farm.FarmID,
+                    FarmName=farm.FarmName,
+                    Blocks=farm.Blocks.Select(blk =>
+                        new Interface.Domain.Block() 
+                        { BlockID = blk.BlockID, 
+                          BlockName = blk.BlockName 
+                        }).ToList()
+                };
             }
 
             return null;

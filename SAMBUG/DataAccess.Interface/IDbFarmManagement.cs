@@ -11,6 +11,7 @@ namespace DataAccess.Interface
         bool InsertNewBlock(long id, string blockname);
         IEnumerable<Domain.Block> GetBlocksByFarm(long id);
         Domain.Block GetBlockByID(long id);
+        Domain.Farm GetFarmByID(long id);
         bool UpdateBlock(long id, string blockname);
         bool DeleteBlock(long id);
     }

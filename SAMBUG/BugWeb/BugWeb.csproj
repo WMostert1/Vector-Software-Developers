@@ -179,10 +179,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Shared\Authentication.cshtml" />
     <Content Include="Views\Authentication\Register.cshtml" />
-    <Content Include="Views\FarmManagement\BlockEdit.cshtml" />
     <Content Include="Views\FarmManagement\CreateBlock.cshtml" />
     <Content Include="Views\FarmManagement\UpdateBlock.cshtml" />
     <Content Include="Views\FarmManagement\DeleteBlock.cshtml" />
+    <Content Include="Views\FarmManagement\BlockEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
