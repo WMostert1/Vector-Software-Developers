@@ -48,11 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication.cs" />
+    <Compile Include="DbSynchronization.cs" />
+    <Compile Include="DbAuthentication.cs" />
     <Compile Include="Block.cs">
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="DbAuthentication.cs" />
+    <Compile Include="DbFarmManagement.cs" />
     <Compile Include="EntityFrameworkModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -88,9 +89,6 @@
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
     <Compile Include="User.cs">
-      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="UserRole.cs">
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>

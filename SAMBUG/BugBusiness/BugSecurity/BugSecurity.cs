@@ -32,8 +32,7 @@ namespace BugBusiness.BugSecurity
             
             var loginResponse = new LoginResponse()
             {
-                Id = user.Id,
-                Roles = user.Roles
+                User = user
             };
         
             return loginResponse;
@@ -67,13 +66,27 @@ namespace BugBusiness.BugSecurity
                 throw new UserExistsException();
             }
 
-            return new RegisterResponse();
+            return new RegisterResponse() {};
 
         }
 
         public RecoverAccountResponse RecoverAccount(RecoverAccountRequest recoverAccountRequest)
         {
             throw new NotImplementedException();
+        }
+
+        public ViewEditUserRolesResponse GetUsers()
+        {
+            var users = _dbAuthentication.GetAllUsers();
+            return new ViewEditUserRolesResponse { Users = users };
+        }
+
+        public void EditUserRoles(EditUserRoleRequest editUserRoleRequest)
+        {
+
+            _dbAuthentication.EditUserRoles(editUserRoleRequest.UserId, editUserRoleRequest.IsGrower,
+                editUserRoleRequest.IsAdministrator);
+
         }
     }
 }

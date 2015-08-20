@@ -12,7 +12,9 @@ using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
+using DataAccess.Interface.Domain;
 using Newtonsoft.Json;
+
 
 namespace BugWeb.Controllers
 {
@@ -39,7 +41,28 @@ namespace BugWeb.Controllers
             try
             {
                 LoginResponse loginResponse = _bugSecurity.Login(loginRequest);
-                return RedirectToAction("index", "home");
+
+                //set up session
+                User user = new User()
+                {
+                    UserId=loginResponse.User.UserId,
+                    Farms=loginResponse.User.Farms,
+                    Roles=loginResponse.User.Roles
+                };
+                Session["UserInfo"] = user;
+                //check to go to home page or farm setup
+                int blockCount = 0;
+                foreach (Farm f in user.Farms){
+                    blockCount += f.Blocks.Count;
+                }
+                if (blockCount > 0)
+                {
+                    return RedirectToAction("index", "home");
+                }
+                else
+                {
+                    return RedirectToAction("index", "farmmanagement");
+                }
             }
             catch (NotRegisteredException)
             {
@@ -71,6 +94,27 @@ namespace BugWeb.Controllers
             {
                 return RedirectToAction("register", "home");
             }
-        } 
+        }
+
+        [HttpGet]
+        public ActionResult EditUserRoles()
+        {
+            ViewEditUserRolesResponse response = _bugSecurity.GetUsers();
+            return View(response);
+        }
+
+        [HttpPost]
+        public ActionResult EditUserRoles(EditUserRoleViewModel editUserRoleViewModel)
+        {
+            
+            _bugSecurity.EditUserRoles(new EditUserRoleRequest
+            {
+                UserId = editUserRoleViewModel.UserId,
+                IsAdministrator = editUserRoleViewModel.IsAdministrator,
+                IsGrower = editUserRoleViewModel.IsGrower
+            });
+
+            return RedirectToAction("EditUserRoles","Authentication");
+        }
     }
 }

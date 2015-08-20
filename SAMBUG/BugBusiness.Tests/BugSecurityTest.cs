@@ -1,12 +1,12 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using Should;
-using Autofac.Extras.Moq;
-using DataAccess.Interface;
-using DataAccess.Interface.Domain;
+﻿using Autofac.Extras.Moq;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
+using DataAccess.Interface;
+using DataAccess.Interface.Domain;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Should;
+using System;
+using System.Collections.Generic;
 
 namespace BugBusiness.Tests
 {
@@ -18,7 +18,7 @@ namespace BugBusiness.Tests
         [TestInitialize]
         public void Setup()
         {
-            _autoMock = AutoMock.GetStrict();
+            _autoMock = AutoMock.GetLoose();
         }
 
         [TestCleanup]
@@ -36,10 +36,10 @@ namespace BugBusiness.Tests
                 .Setup(dbAuthentication => dbAuthentication.GetUserByCredentials("Test1", "321"))
                 .Returns(new User()
                 {
-                    Id = 1,
+                    UserId = 1,
                     Roles = new List<Role>()
                     {
-                        new Role(){ Description = "Admin", Type = 1},
+                        new Role(){Description = "Admin", Type = 1},
                         new Role(){Description = "Grower", Type = 2}
                     }
                 });
@@ -54,9 +54,10 @@ namespace BugBusiness.Tests
             });
 
             //Assert
-            loginResponse.Id.ShouldEqual(1);
-            loginResponse.Roles[0].Type.ShouldEqual(1);
-            loginResponse.Roles[1].Type.ShouldEqual(2);
+            loginResponse.User.UserId.ShouldEqual(1);
+            
+            loginResponse.User.Roles[0].Type.ShouldEqual(1);
+            loginResponse.User.Roles[1].Type.ShouldEqual(2);
 
         }
 
@@ -86,18 +87,119 @@ namespace BugBusiness.Tests
         public void Unit_Register_Business_ShouldAddUser()
         {
             //Arrange
+            _autoMock
+               .Mock<IDbAuthentication>()
+               .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "321", "Farm1"))
+               .Returns(true);
+
+            var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
+           
             //Act
-            //Assert
-            throw new NotImplementedException();
+            RegisterResponse registerResponse = bugSecurity.Register(new RegisterRequest()
+            {
+                Username = "TestEmail@TestHost.com",
+                UsernameConfirmation = "TestEmail@TestHost.com",
+                Password = "321",
+                PasswordConfirmation = "321",
+                FarmName = "Farm1"
+            });
+
+            //Assert - Expect No Service Exceptions
         }
 
         [TestMethod]
+        [ExpectedExceptionAttribute(typeof(UserExistsException))]
         public void Unit_Register_Business_ShouldNotAddUser()
         {
             //Arrange
+            _autoMock
+               .Mock<IDbAuthentication>()
+               .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "54321", "Farm1"))
+               .Returns(false);
+
+            var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
+
             //Act
+            RegisterResponse registerResponse = bugSecurity.Register(new RegisterRequest()
+            {
+                Username = "TestEmail@TestHost.com",
+                UsernameConfirmation = "TestEmail@TestHost.com",
+                Password = "54321",
+                PasswordConfirmation = "54321",
+                FarmName = "Farm1"
+            });
+
+            //Assert - Expect UserExistsException
+        }
+
+        [TestMethod]
+        public void Unit_Register_Business_ShouldInvalidateEmailAddresses()
+        {
+            //Arrange
+            _autoMock
+               .Mock<IDbAuthentication>().SetReturnsDefault(true);
+
+            var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
+
+            string[] invalidEmails =
+            {
+                "plainaddress",
+                "#@%^%#$@#$@#.com",
+                "@example.com",
+                "email.example.com",
+                "email@example@example.com",
+                ".email@example.com"
+            };
+
+            var invalidEmailCount = 0;
+
+            //Act
+            foreach (var email in invalidEmails)
+            {
+                try
+                {
+                    bugSecurity.Register(new RegisterRequest()
+                    {
+                        Username = email,
+                        UsernameConfirmation = email,
+                        Password = "54321",
+                        PasswordConfirmation = "54321",
+                        FarmName = "Farm1"
+                    });
+                }
+                catch (InvalidInputException)
+                {
+                    ++invalidEmailCount;
+                }
+            }
+           
             //Assert
-            throw new NotImplementedException();
+            invalidEmailCount.ShouldEqual(invalidEmails.Length);
+        }
+
+        [TestMethod]
+        [ExpectedExceptionAttribute(typeof(InvalidInputException))]
+        public void Unit_Register_Business_ShouldInvalidateConfirmations()
+        {
+            //Arrange
+            _autoMock
+               .Mock<IDbAuthentication>()
+               .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "54321", "Farm1"))
+               .Returns(true);
+
+            var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
+
+            //Act
+            RegisterResponse registerResponse = bugSecurity.Register(new RegisterRequest()
+            {
+                Username = "TestEmail@TestHost.com",
+                UsernameConfirmation = "different@differentHost.com",
+                Password = "54321",
+                PasswordConfirmation = "54321",
+                FarmName = "Farm1"
+            });
+
+            //Assert - Expect InvalidInputException
         }
     }
 }

@@ -4,13 +4,13 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BugDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BugDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Block">
           <Key>
             <PropertyRef Name="BlockID" />
           </Key>
-          <Property Name="BlockID" Type="int" Nullable="false" />
-          <Property Name="FarmID" Type="int" Nullable="false" />
+          <Property Name="BlockID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FarmID" Type="bigint" Nullable="false" />
           <Property Name="BlockName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="LastModifiedID" Type="int" />
           <Property Name="TMStamp" Type="datetime" />
@@ -19,8 +19,8 @@
           <Key>
             <PropertyRef Name="FarmID" />
           </Key>
-          <Property Name="FarmID" Type="int" Nullable="false" />
-          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="FarmID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
           <Property Name="FarmName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="LastModifiedID" Type="int" />
           <Property Name="TMStamp" Type="datetime" />
@@ -29,7 +29,8 @@
           <Key>
             <PropertyRef Name="RoleID" />
           </Key>
-          <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="RoleID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleType" Type="int" Nullable="false" />
           <Property Name="RoleDescription" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="LastModifiedID" Type="int" />
           <Property Name="TMStamp" Type="datetime" />
@@ -38,9 +39,9 @@
           <Key>
             <PropertyRef Name="ScoutBugID" />
           </Key>
-          <Property Name="ScoutBugID" Type="int" Nullable="false" />
-          <Property Name="ScoutStopID" Type="int" Nullable="false" />
-          <Property Name="SpeciesID" Type="int" Nullable="false" />
+          <Property Name="ScoutBugID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ScoutStopID" Type="bigint" Nullable="false" />
+          <Property Name="SpeciesID" Type="bigint" Nullable="false" />
           <Property Name="NumberOfBugs" Type="int" Nullable="false" />
           <Property Name="FieldPicture" Type="image" Nullable="false" />
           <Property Name="Comments" Type="varchar" MaxLength="100" />
@@ -51,9 +52,9 @@
           <Key>
             <PropertyRef Name="ScoutStopID" />
           </Key>
-          <Property Name="ScoutStopID" Type="int" Nullable="false" />
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="BlockID" Type="int" Nullable="false" />
+          <Property Name="ScoutStopID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="BlockID" Type="bigint" Nullable="false" />
           <Property Name="NumberOfTrees" Type="int" Nullable="false" />
           <Property Name="Latitude" Type="real" Nullable="false" />
           <Property Name="Longitude" Type="real" Nullable="false" />
@@ -65,7 +66,7 @@
           <Key>
             <PropertyRef Name="SpeciesID" />
           </Key>
-          <Property Name="SpeciesID" Type="int" Nullable="false" />
+          <Property Name="SpeciesID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="SpeciesName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Lifestage" Type="int" Nullable="false" />
           <Property Name="IdealPicture" Type="image" Nullable="false" />
@@ -77,8 +78,8 @@
           <Key>
             <PropertyRef Name="TreatmentID" />
           </Key>
-          <Property Name="TreatmentID" Type="int" Nullable="false" />
-          <Property Name="BlockID" Type="int" Nullable="false" />
+          <Property Name="TreatmentID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BlockID" Type="bigint" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Comments" Type="varchar" MaxLength="100" />
           <Property Name="LastModifiedID" Type="int" />
@@ -88,7 +89,7 @@
           <Key>
             <PropertyRef Name="UserID" />
           </Key>
-          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="LastModifiedID" Type="int" />
@@ -96,13 +97,11 @@
         </EntityType>
         <EntityType Name="UserRole">
           <Key>
-            <PropertyRef Name="UserRoleID" />
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="RoleID" />
           </Key>
-          <Property Name="UserRoleID" Type="int" Nullable="false" />
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="RoleID" Type="int" Nullable="false" />
-          <Property Name="LastModifiedID" Type="int" />
-          <Property Name="TMStamp" Type="datetime" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="RoleID" Type="bigint" Nullable="false" />
         </EntityType>
         <Association Name="FK_Farm_ToBlock">
           <End Role="Farm" Type="Self.Farm" Multiplicity="1" />
@@ -267,8 +266,8 @@
           <Key>
             <PropertyRef Name="BlockID" />
           </Key>
-          <Property Name="BlockID" Type="Int32" Nullable="false" />
-          <Property Name="FarmID" Type="Int32" Nullable="false" />
+          <Property Name="BlockID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FarmID" Type="Int64" Nullable="false" />
           <Property Name="BlockName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastModifiedID" Type="Int32" />
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
@@ -280,31 +279,21 @@
           <Key>
             <PropertyRef Name="FarmID" />
           </Key>
-          <Property Name="FarmID" Type="Int32" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="FarmID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
           <Property Name="FarmName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastModifiedID" Type="Int32" />
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Blocks" Relationship="Self.FK_Farm_ToBlock" FromRole="Farm" ToRole="Block" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Farm_ToUser" FromRole="Farm" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Role">
-          <Key>
-            <PropertyRef Name="RoleID" />
-          </Key>
-          <Property Name="RoleID" Type="Int32" Nullable="false" />
-          <Property Name="RoleDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastModifiedID" Type="Int32" />
-          <Property Name="TMStamp" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="UserRoles" Relationship="BugDBModel.FK_UserRole_ToRole" FromRole="Role" ToRole="UserRole" />
+          <NavigationProperty Name="User" Relationship="BugDBModel.FK_Farm_ToUser" FromRole="Farm" ToRole="User" />
         </EntityType>
         <EntityType Name="ScoutBug">
           <Key>
             <PropertyRef Name="ScoutBugID" />
           </Key>
-          <Property Name="ScoutBugID" Type="Int32" Nullable="false" />
-          <Property Name="ScoutStopID" Type="Int32" Nullable="false" />
-          <Property Name="SpeciesID" Type="Int32" Nullable="false" />
+          <Property Name="ScoutBugID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ScoutStopID" Type="Int64" Nullable="false" />
+          <Property Name="SpeciesID" Type="Int64" Nullable="false" />
           <Property Name="NumberOfBugs" Type="Int32" Nullable="false" />
           <Property Name="FieldPicture" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <Property Name="Comments" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -317,9 +306,9 @@
           <Key>
             <PropertyRef Name="ScoutStopID" />
           </Key>
-          <Property Name="ScoutStopID" Type="Int32" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="BlockID" Type="Int32" Nullable="false" />
+          <Property Name="ScoutStopID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="BlockID" Type="Int64" Nullable="false" />
           <Property Name="NumberOfTrees" Type="Int32" Nullable="false" />
           <Property Name="Latitude" Type="Single" Nullable="false" />
           <Property Name="Longitude" Type="Single" Nullable="false" />
@@ -328,13 +317,13 @@
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Block" Relationship="Self.FK_ScoutStop_ToBlock" FromRole="ScoutStop" ToRole="Block" />
           <NavigationProperty Name="ScoutBugs" Relationship="Self.FK_ScoutBug_ToScoutStop" FromRole="ScoutStop" ToRole="ScoutBug" />
-          <NavigationProperty Name="User" Relationship="Self.FK_ScoutStop_ToUser" FromRole="ScoutStop" ToRole="User" />
+          <NavigationProperty Name="User" Relationship="BugDBModel.FK_ScoutStop_ToUser" FromRole="ScoutStop" ToRole="User" />
         </EntityType>
         <EntityType Name="Species">
           <Key>
             <PropertyRef Name="SpeciesID" />
           </Key>
-          <Property Name="SpeciesID" Type="Int32" Nullable="false" />
+          <Property Name="SpeciesID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="SpeciesName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Lifestage" Type="Int32" Nullable="false" />
           <Property Name="IdealPicture" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
@@ -347,26 +336,13 @@
           <Key>
             <PropertyRef Name="TreatmentID" />
           </Key>
-          <Property Name="TreatmentID" Type="Int32" Nullable="false" />
-          <Property Name="BlockID" Type="Int32" Nullable="false" />
+          <Property Name="TreatmentID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BlockID" Type="Int64" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Comments" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="LastModifiedID" Type="Int32" />
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Block" Relationship="Self.FK_Treatment_ToBlock" FromRole="Treatment" ToRole="Block" />
-        </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="UserID" />
-          </Key>
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastModifiedID" Type="Int32" />
-          <Property Name="TMStamp" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Farms" Relationship="Self.FK_Farm_ToUser" FromRole="User" ToRole="Farm" />
-          <NavigationProperty Name="ScoutStops" Relationship="Self.FK_ScoutStop_ToUser" FromRole="User" ToRole="ScoutStop" />
-          <NavigationProperty Name="UserRoles" Relationship="BugDBModel.FK_UserRole_ToUser" FromRole="User" ToRole="UserRole" />
         </EntityType>
         <Association Name="FK_Farm_ToBlock">
           <End Role="Farm" Type="Self.Farm" Multiplicity="1" />
@@ -404,18 +380,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Farm_ToUser">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Farm" Type="Self.Farm" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Farm">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ScoutBug_ToScoutStop">
           <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="1" />
           <End Role="ScoutBug" Type="Self.ScoutBug" Multiplicity="*" />
@@ -440,27 +404,13 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ScoutStop_ToUser">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="ScoutStop">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="BugDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Blocks" EntityType="Self.Block" />
           <EntitySet Name="Farms" EntityType="Self.Farm" />
-          <EntitySet Name="Roles" EntityType="Self.Role" />
           <EntitySet Name="ScoutBugs" EntityType="Self.ScoutBug" />
           <EntitySet Name="ScoutStops" EntityType="Self.ScoutStop" />
           <EntitySet Name="Species" EntityType="Self.Species" />
           <EntitySet Name="Treatments" EntityType="Self.Treatment" />
-          <EntitySet Name="Users" EntityType="Self.User" />
           <AssociationSet Name="FK_Farm_ToBlock" Association="Self.FK_Farm_ToBlock">
             <End Role="Farm" EntitySet="Farms" />
             <End Role="Block" EntitySet="Blocks" />
@@ -473,10 +423,6 @@
             <End Role="Block" EntitySet="Blocks" />
             <End Role="Treatment" EntitySet="Treatments" />
           </AssociationSet>
-          <AssociationSet Name="FK_Farm_ToUser" Association="Self.FK_Farm_ToUser">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Farm" EntitySet="Farms" />
-          </AssociationSet>
           <AssociationSet Name="FK_ScoutBug_ToScoutStop" Association="Self.FK_ScoutBug_ToScoutStop">
             <End Role="ScoutStop" EntitySet="ScoutStops" />
             <End Role="ScoutBug" EntitySet="ScoutBugs" />
@@ -485,55 +431,72 @@
             <End Role="Species" EntitySet="Species" />
             <End Role="ScoutBug" EntitySet="ScoutBugs" />
           </AssociationSet>
-          <AssociationSet Name="FK_ScoutStop_ToUser" Association="Self.FK_ScoutStop_ToUser">
+          <EntitySet Name="Roles" EntityType="BugDBModel.Role" />
+          <EntitySet Name="Users" EntityType="BugDBModel.User" />
+          <AssociationSet Name="FK_Farm_ToUser" Association="BugDBModel.FK_Farm_ToUser">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Farm" EntitySet="Farms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScoutStop_ToUser" Association="BugDBModel.FK_ScoutStop_ToUser">
             <End Role="User" EntitySet="Users" />
             <End Role="ScoutStop" EntitySet="ScoutStops" />
           </AssociationSet>
-          <EntitySet Name="UserRoles" EntityType="BugDBModel.UserRole" />
-          <AssociationSet Name="FK_UserRole_ToRole" Association="BugDBModel.FK_UserRole_ToRole">
+          <AssociationSet Name="UserRole" Association="BugDBModel.UserRole">
             <End Role="Role" EntitySet="Roles" />
-            <End Role="UserRole" EntitySet="UserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserRole_ToUser" Association="BugDBModel.FK_UserRole_ToUser">
             <End Role="User" EntitySet="Users" />
-            <End Role="UserRole" EntitySet="UserRoles" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="UserRole">
+        <EntityType Name="Role">
           <Key>
-            <PropertyRef Name="UserRoleID" />
+            <PropertyRef Name="RoleID" />
           </Key>
-          <Property Name="UserRoleID" Type="Int32" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="RoleID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleType" Type="Int32" Nullable="false" />
+          <Property Name="RoleDescription" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="LastModifiedID" Type="Int32" />
           <Property Name="TMStamp" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Role" Relationship="BugDBModel.FK_UserRole_ToRole" FromRole="UserRole" ToRole="Role" />
-          <NavigationProperty Name="User" Relationship="BugDBModel.FK_UserRole_ToUser" FromRole="UserRole" ToRole="User" />
+          <NavigationProperty Name="Users" Relationship="BugDBModel.UserRole" FromRole="Role" ToRole="User" />
         </EntityType>
-        <Association Name="FK_UserRole_ToRole">
-          <End Type="BugDBModel.Role" Role="Role" Multiplicity="1" />
-          <End Type="BugDBModel.UserRole" Role="UserRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Role">
-              <PropertyRef Name="RoleID" />
-            </Principal>
-            <Dependent Role="UserRole">
-              <PropertyRef Name="RoleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserRole_ToUser">
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Farms" Relationship="BugDBModel.FK_Farm_ToUser" FromRole="User" ToRole="Farm" />
+          <NavigationProperty Name="ScoutStops" Relationship="BugDBModel.FK_ScoutStop_ToUser" FromRole="User" ToRole="ScoutStop" />
+          <NavigationProperty Name="Roles" Relationship="BugDBModel.UserRole" FromRole="User" ToRole="Role" />
+        </EntityType>
+        <Association Name="FK_Farm_ToUser">
           <End Type="BugDBModel.User" Role="User" Multiplicity="1" />
-          <End Type="BugDBModel.UserRole" Role="UserRole" Multiplicity="*" />
+          <End Type="BugDBModel.Farm" Role="Farm" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="UserID" />
             </Principal>
-            <Dependent Role="UserRole">
+            <Dependent Role="Farm">
               <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScoutStop_ToUser">
+          <End Type="BugDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugDBModel.ScoutStop" Role="ScoutStop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="ScoutStop">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserRole">
+          <End Type="BugDBModel.Role" Role="Role" Multiplicity="*" />
+          <End Type="BugDBModel.User" Role="User" Multiplicity="*" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -558,16 +521,6 @@
                 <ScalarProperty Name="FarmID" ColumnName="FarmID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="FarmName" ColumnName="FarmName" />
-                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
-                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="BugDBModel.Role">
-              <MappingFragment StoreEntitySet="Role">
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-                <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
                 <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
                 <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
               </MappingFragment>
@@ -627,28 +580,36 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="BugDBModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
+                <ScalarProperty Name="RoleType" ColumnName="RoleType" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="BugDBModel.User">
               <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
-                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="UserRoles">
-            <EntityTypeMapping TypeName="BugDBModel.UserRole">
-              <MappingFragment StoreEntitySet="UserRole">
-                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
-                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="UserRoleID" ColumnName="UserRoleID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="UserRole" TypeName="BugDBModel.UserRole" StoreEntitySet="UserRole">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserID" ColumnName="UserID" />
+            </EndProperty>
+            <EndProperty Name="Role">
+              <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

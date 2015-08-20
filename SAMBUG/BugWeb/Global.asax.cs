@@ -9,6 +9,8 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using BugBusiness.BugSecurity;
 using BugBusiness.Interface.BugSecurity;
+using BugBusiness.FarmManagement;
+using BugBusiness.Interface.FarmManagement;
 using DataAccess.Interface;
 using DataAccess.MSSQL;
 
@@ -24,9 +26,11 @@ namespace BugWeb
             // Register MVC controllers.
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
-            // Regster other types
+            // Register other types
             builder.RegisterType<DbAuthentication>().As<IDbAuthentication>();
             builder.RegisterType<BugSecurity>().As<IBugSecurity>();
+            builder.RegisterType<DbFarmManagement>().As<IDbFarmManagement>();
+            builder.RegisterType<FarmManagement>().As<IFarmManagement>();
 
             // Acquire IoC Container
             var container = builder.Build();
