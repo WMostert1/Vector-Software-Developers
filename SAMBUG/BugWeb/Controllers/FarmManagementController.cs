@@ -25,12 +25,12 @@ namespace BugWeb.Controllers
         // GET: FarmManagement
         public ActionResult Index()
         {
+            //check not logged in
+            if (Session.Count == 0)
+                return View("~/Views/Authentication/Login.cshtml");
+
             User user = (User)Session["UserInfo"];
 
-            //GetBlocksByFarmRequest getblocksbyfarmRequest = new GetBlocksByFarmRequest()
-            //{
-            //    FarmID = user.FarmID
-            //};
             try
             {
                // GetBlocksByFarmResult getblocksbyfarmResult = _farmManagement.GetBlocksByFarm(getblocksbyfarmRequest);

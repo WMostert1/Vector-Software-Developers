@@ -44,7 +44,7 @@ namespace BugBusiness.FarmManagement
                 throw new InvalidInputException();
             }
 
-            IEnumerable<Block> blocks = _dbFarmManagement.GetBlocksByFarm(getblocksbyfarmRequest.FarmID);
+            ICollection<Block> blocks = _dbFarmManagement.GetBlocksByFarm(getblocksbyfarmRequest.FarmID);
 
             if (blocks == null)
             {

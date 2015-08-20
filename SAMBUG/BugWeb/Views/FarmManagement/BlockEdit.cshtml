@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DataAccess.Interface.Domain.Farm>
+﻿@model ICollection<DataAccess.Interface.Domain.Farm>
 
 @{
     ViewBag.Title = "BlockEdit";
@@ -11,7 +11,11 @@
     <p>
         @Html.ActionLink("Create New", "Create", new { id = item.FarmID })
     </p>
-    <table class="table">
+    <table border="1" class="table">
+        <tr>
+            <th>Block Name</th>
+            <th>Operations</th>
+        </tr>
         @foreach (var block in item.Blocks){
         <tr>
             <td>@Html.DisplayFor(modelItem=>block.BlockName)</td>
@@ -21,5 +25,6 @@
             </td>
         </tr>
         }
+       
     </table>
 }

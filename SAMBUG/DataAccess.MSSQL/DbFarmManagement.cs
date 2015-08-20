@@ -33,7 +33,7 @@ namespace DataAccess.MSSQL
             return true;
         }
 
-        public IEnumerable<Interface.Domain.Block> GetBlocksByFarm(long id){
+        public ICollection<Interface.Domain.Block> GetBlocksByFarm(long id){
             var db=new BugDBEntities();
 
             var farm=db.Farms.SingleOrDefault(frm => frm.FarmID.Equals(id));
