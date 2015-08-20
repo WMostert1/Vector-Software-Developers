@@ -14,7 +14,12 @@ namespace BugWeb.Controllers
             return View();
         }
 
-        public ActionResult Viewtable()
+        public ActionResult Tabular()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult Graphical()
         {
             throw new NotImplementedException();
         }
