@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Block]
 (
-	[BlockID] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR [dbo].[Block_BlockID_Sequence] ,
-	[FarmID] INT NOT NULL,
+	[BlockID] BIGINT NOT NULL PRIMARY KEY IDENTITY  ,
+	[FarmID] BIGINT NOT NULL,
 	[BlockName] VARCHAR(50) NOT NULL,
 	[LastModifiedID] INT ,
 	[TMStamp] DATETIME,

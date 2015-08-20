@@ -19,7 +19,8 @@ namespace DataAccess.MSSQL
             this.UserRoles = new HashSet<UserRole>();
         }
     
-        public int RoleID { get; set; }
+        public long RoleID { get; set; }
+        public int RoleType { get; set; }
         public string RoleDescription { get; set; }
         public Nullable<int> LastModifiedID { get; set; }
         public Nullable<System.DateTime> TMStamp { get; set; }

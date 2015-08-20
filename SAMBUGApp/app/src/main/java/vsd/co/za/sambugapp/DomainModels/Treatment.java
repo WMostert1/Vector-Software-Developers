@@ -10,7 +10,7 @@ public class Treatment {
     public int BlockID;
     public Date Date;
     public String Comments;
-    public Integer LastModifiedID;
+    public int LastModifiedID;
     public Date TMStamp;
 
     public Block Block;

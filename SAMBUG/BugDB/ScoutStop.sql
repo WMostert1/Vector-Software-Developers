@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[ScoutStop]
 (
-	[ScoutStopID] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR [dbo].[ScoutStop_ScoutStopID_Sequence],
-	[UserID] INT NOT NULL,
-	[BlockID] INT NOT NULL,
+	[ScoutStopID] BIGINT NOT NULL PRIMARY KEY IDENTITY ,
+	[UserID] BIGINT NOT NULL,
+	[BlockID] BIGINT NOT NULL,
 	[NumberOfTrees] INT NOT NULL,
 	[Latitude] REAL NOT NULL,
 	[Longitude] REAL NOT NULL,

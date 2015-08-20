@@ -8,6 +8,7 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
@@ -57,6 +58,7 @@ public class ScoutBugDAO extends DataSourceAdapter {
         values.put(DBHelper.COLUMN_FIELD_PICTURE, scoutBug.getFieldPicture());
         values.put(DBHelper.COLUMN_COMMENTS, scoutBug.getComments());
         values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, scoutBug.getLastModifiedID());
+        if(scoutBug.getTMStamp() == null) scoutBug.setTMStamp(new Date());
         values.put(DBHelper.COLUMN_TIMESTAMP, scoutBug.getTMStamp().toString());
         return database.insert(DBHelper.TABLE_SCOUT_BUG, null, values);
     }
@@ -80,7 +82,7 @@ public class ScoutBugDAO extends DataSourceAdapter {
         database.delete(DBHelper.TABLE_SCOUT_BUG, null, null);
     }
 
-    public ScoutBug getScoutBug(int id) {
+    public ScoutBug getScoutBugByID(int id) {
         Cursor cursor = database.query(DBHelper.TABLE_SCOUT_BUG, allColumns, DBHelper.COLUMN_SCOUT_BUG_ID + " = " + id, null, null, null, null);
         cursor.moveToFirst();
         if (cursor.isAfterLast()) {
@@ -114,12 +116,19 @@ public class ScoutBugDAO extends DataSourceAdapter {
         scoutBug.setLastModifiedID(cursor.getInt(6));
         String date = cursor.getString(7);
         try {
-            //TODO: Get this bloody thing to parse the date correctly
-            scoutBug.setTMStamp(DateFormat.getDateTimeInstance().parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            scoutBug.setTMStamp(null);
+            scoutBug.setTMStamp(new Date(date));
+        } catch (Exception e) {
+            scoutBug.setTMStamp(new Date());
         }
+
+//        try {
+//            //TODO: Get this bloody thing to parse the date correctly
+//
+//            //scoutBug.setTMStamp(DateFormat.getDateTimeInstance().parse(date));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//            scoutBug.setTMStamp(null);
+//        }
         return scoutBug;
     }
 
