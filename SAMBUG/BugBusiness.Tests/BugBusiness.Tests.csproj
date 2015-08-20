@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="BugSecurityTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FarmManagementTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BugBusiness.Interface\BugBusiness.Interface.csproj">

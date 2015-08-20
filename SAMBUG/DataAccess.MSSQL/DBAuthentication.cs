@@ -24,6 +24,20 @@ namespace DataAccess.MSSQL
                 return null;
             }
 
+            //map EF Farm to Domain Farm
+            var farms = entityUser.Farms.Select(farm =>
+                new Interface.Domain.Farm()
+                {
+                    FarmID=farm.FarmID,
+                    FarmName=farm.FarmName,
+                    Blocks=farm.Blocks.Select(block=>
+                        new Interface.Domain.Block()
+                        {
+                            BlockID=block.BlockID,
+                            BlockName=block.BlockName
+                        }).ToList()
+                }).ToList();
+
             //map EF Role to Domain Role
             var roles = entityUser.Roles.Select(role =>
             new Interface.Domain.Role(){
@@ -35,7 +49,8 @@ namespace DataAccess.MSSQL
             var domainUser = new Interface.Domain.User()
             {
                 Id = entityUser.UserID,
-                Roles = roles
+                Roles = roles,
+                Farms=farms
             };
 
             return domainUser;

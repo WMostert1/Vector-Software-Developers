@@ -2,4 +2,8 @@
     ViewBag.Title = "Home Page";
 }
 
-<p>Home Page</p>
+<p>Homey Page</p>
+@Html.ActionLink("EditBlocks","BlockEdit","Home")
+<a class="btn-link" href="@Url.Action("blockedit","home")">
+
+@Html.ActionLink("Logout","logout", "home");

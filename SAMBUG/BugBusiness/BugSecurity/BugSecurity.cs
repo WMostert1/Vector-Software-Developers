@@ -32,8 +32,7 @@ namespace BugBusiness.BugSecurity
             
             var loginResponse = new LoginResponse()
             {
-                Id = user.Id,
-                Roles = user.Roles
+                User = user
             };
         
             return loginResponse;
@@ -67,7 +66,7 @@ namespace BugBusiness.BugSecurity
                 throw new UserExistsException();
             }
 
-            return new RegisterResponse();
+            return new RegisterResponse() {};
 
         }
 

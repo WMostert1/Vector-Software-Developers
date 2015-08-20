@@ -1,0 +1,25 @@
+﻿@model IEnumerable<DataAccess.Interface.Domain.Farm>
+
+@{
+    ViewBag.Title = "BlockEdit";
+}
+
+<h2>BlockEdit</h2>
+
+@foreach (var item in Model) {
+    @Html.DisplayFor(modelItem => item.FarmName)
+    <p>
+        @Html.ActionLink("Create New", "Create", new { id = item.FarmID })
+    </p>
+    <table class="table">
+        @foreach (var block in item.Blocks){
+        <tr>
+            <td>@Html.DisplayFor(modelItem=>block.BlockName)</td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id =  block.BlockID,farmID=item.FarmID}) |
+                @Html.ActionLink("Delete", "Delete", new { id = block.BlockID, farmID=item.FarmID})
+            </td>
+        </tr>
+        }
+    </table>
+}
