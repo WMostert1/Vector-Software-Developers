@@ -74,5 +74,19 @@ namespace BugBusiness.BugSecurity
         {
             throw new NotImplementedException();
         }
+
+        public ViewEditUserRolesResponse GetUsers()
+        {
+            var users = _dbAuthentication.GetAllUsers();
+            return new ViewEditUserRolesResponse { Users = users };
+        }
+
+        public void EditUserRoles(EditUserRoleRequest editUserRoleRequest)
+        {
+
+            _dbAuthentication.EditUserRoles(editUserRoleRequest.UserId, editUserRoleRequest.IsGrower,
+                editUserRoleRequest.IsAdministrator);
+
+        }
     }
 }

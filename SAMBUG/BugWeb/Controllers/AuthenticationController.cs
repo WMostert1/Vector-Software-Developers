@@ -14,7 +14,7 @@ using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
 using DataAccess.Interface.Domain;
 using Newtonsoft.Json;
-using DataAccess.Interface.Domain;
+
 
 namespace BugWeb.Controllers
 {
@@ -45,7 +45,7 @@ namespace BugWeb.Controllers
                 //set up session
                 User user = new User()
                 {
-                    Id=loginResponse.User.Id,
+                    UserId=loginResponse.User.UserId,
                     Farms=loginResponse.User.Farms,
                     Roles=loginResponse.User.Roles
                 };

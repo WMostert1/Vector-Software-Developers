@@ -50,7 +50,7 @@ namespace DataAccess.MSSQL
             //map EF user to Domain User
             var domainUser = new Interface.Domain.User()
             {
-                Id = entityUser.UserID,
+                UserId = entityUser.UserID,
                 Roles = roles,
                 Farms=farms
             };
