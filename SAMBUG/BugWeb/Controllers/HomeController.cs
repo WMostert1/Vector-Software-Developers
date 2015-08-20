@@ -28,5 +28,11 @@ namespace BugWeb.Controllers
         {
             return RedirectToAction("index", "farmmanagement");
         }
+
+        public ActionResult Logout()
+        {
+            Session.Abandon();
+            return View("~/Views/Authentication/Login.cshtml");
+        }
     }
 }
