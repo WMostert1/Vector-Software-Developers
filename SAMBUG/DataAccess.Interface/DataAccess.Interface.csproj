@@ -42,6 +42,10 @@
     <Compile Include="Domain\Block.cs" />
     <Compile Include="Domain\Farm.cs" />
     <Compile Include="Domain\Role.cs" />
+    <Compile Include="Domain\ScoutBug.cs" />
+    <Compile Include="Domain\ScoutStop.cs" />
+    <Compile Include="Domain\Species.cs" />
+    <Compile Include="Domain\Treatment.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="IDbAuthentication.cs" />
     <Compile Include="IDbReporting.cs" />

@@ -8,17 +8,19 @@ namespace BugWeb.Controllers
 {
     public class ReportingController : Controller
     {
-        // GET: Reporting
+        // GET: reporting
         public ActionResult Index()
         {
             return View();
         }
 
+        // GET: reporting/tabular
         public ActionResult Tabular()
         {
             throw new NotImplementedException();
         }
 
+        // GET: reporting/graphical
         public ActionResult Graphical()
         {
             throw new NotImplementedException();

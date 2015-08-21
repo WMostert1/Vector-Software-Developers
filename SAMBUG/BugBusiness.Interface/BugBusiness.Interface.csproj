@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BugReporting\IBugReporting.cs" />
     <Compile Include="BugSecurity\DTO\LoginRequest.cs" />
     <Compile Include="BugSecurity\DTO\LoginResponse.cs" />
     <Compile Include="BugSecurity\DTO\RecoverAccountRequest.cs" />

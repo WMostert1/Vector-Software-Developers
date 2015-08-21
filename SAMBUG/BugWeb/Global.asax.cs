@@ -28,6 +28,7 @@ namespace BugWeb
 
             // Register other types
             builder.RegisterType<DbAuthentication>().As<IDbAuthentication>();
+            builder.RegisterType<DbReporting>().As<IDbReporting>();
             builder.RegisterType<BugSecurity>().As<IBugSecurity>();
             builder.RegisterType<DbFarmManagement>().As<IDbFarmManagement>();
             builder.RegisterType<FarmManagement>().As<IFarmManagement>();

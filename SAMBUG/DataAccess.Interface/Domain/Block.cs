@@ -10,5 +10,7 @@ namespace DataAccess.Interface.Domain
     {
         public long BlockID;
         public string BlockName;
+        public ICollection<Treatment> Treatments { get; set; }
+        public ICollection<ScoutStop> ScoutStops { get; set; }
     }
 }

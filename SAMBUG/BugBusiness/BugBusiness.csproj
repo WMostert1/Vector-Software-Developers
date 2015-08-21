@@ -39,13 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BugReporting\BugReporting.cs" />
     <Compile Include="BugSecurity\BugSecurity.cs" />
     <Compile Include="FarmManagement\FarmManagement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BugReporting\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\BugBusiness.Interface\BugBusiness.Interface.csproj">
       <Project>{eb2847d5-e1b6-461f-8845-2612ec40b3ee}</Project>
