@@ -106,14 +106,14 @@ namespace BugBusiness.FarmManagement
                 throw new InvalidInputException();
             }
 
-            bool queryResult = _dbFarmManagement.UpdateBlock(updateblockbyidRequest.BlockID, updateblockbyidRequest.BlockName);
+            long queryResult = _dbFarmManagement.UpdateBlock(updateblockbyidRequest.BlockID, updateblockbyidRequest.BlockName);
 
-            if (!queryResult)
+            if (queryResult==-1)
             {
                 throw new CouldNotUpdateException();
             }
 
-            return new UpdateBlockByIDResult();
+            return new UpdateBlockByIDResult() { FarmID = queryResult };
 
         }
 
