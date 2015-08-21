@@ -17,7 +17,7 @@ namespace BugWeb.Controllers
         // GET: reporting/tabular
         public ActionResult Tabular()
         {
-            throw new NotImplementedException();
+            return View(Session["UserInfo"]);
         }
 
         // GET: reporting/graphical

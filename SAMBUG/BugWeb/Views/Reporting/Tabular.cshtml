@@ -1,7 +1,63 @@
-﻿
+﻿@model DataAccess.Interface.Domain.User
 @{
     ViewBag.Title = "Tabular";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ;
 }
 
-<h2>Tabular</h2>
+<script>src="~/Scripts/Table.js"</script>
+<h3>Farm:</h3>
+<select id ="farm"class="form-control">
+   @foreach (var x in @Model.Farms)
+   {
+       <option value=@x.FarmName>@x.FarmName</option>
+   }
+</select>
 
+<h3>Blocks:</h3>
+<select id="blocks"class="form-control">
+    @foreach (var x in @Model.Farms)
+    {
+        foreach (var y in x.Blocks)
+        {
+            <option value=@y.BlockName>@y.BlockName</option>
+        }
+
+    }
+</select>
+
+<h3>Time Range:</h3>
+<h5>From</h5>
+<input type="date" id="timeFrom" class="form-control">
+
+<h5>To</h5>
+<input type="date" id="timeTo" class="form-control">
+
+<h3>Species:</h3>
+<select id="species" class="form-control"></select>
+
+<button style="margin-top: 15px" class="btn-default" OnClientClick="generate()">Generate tables</button>
+
+@*<h3>Time Range:</h3>
+<select id="blocks" class="form-control">
+    @foreach (var x in @Model.Farms)
+    {
+        foreach (var y in x.Blocks)
+        {
+            <option value=@y.BlockName>@y.BlockName</option>
+        }
+
+    }
+</select>
+
+<h3>Species:</h3>
+<select id="blocks" class="form-control">
+    @foreach (var x in @Model.Farms)
+    {
+        foreach (var y in x.Blocks)
+        {
+            <option value=@y.BlockName>@y.BlockName</option>
+        }
+
+    }
+</select>*@
