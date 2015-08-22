@@ -47,7 +47,7 @@ namespace BugCentral.Controllers
                     float longitude = float.Parse(scoutStop["Longitude"].ToString().Replace(".", ","));
                     DateTime date = Convert.ToDateTime(scoutStop["Date"].ToString());
                     int lastModifiedID = Convert.ToInt16(scoutStop["LastModifiedID"].ToString());
-                    DateTime tmStamp = Convert.ToDateTime(long.Parse(scoutStop["TMStamp"].ToString()));
+                    DateTime tmStamp = Convert.ToDateTime(scoutStop["TMStamp"].ToString());
 
                     dbSynchronization.PersistBugStops(scoutStopID, userID, blockID, numberOfTrees, latitude, longitude, date, lastModifiedID, tmStamp);
                 }
@@ -61,7 +61,7 @@ namespace BugCentral.Controllers
                     byte[] fieldPicture = Encoding.ASCII.GetBytes(scoutBugs["FieldPicture"].ToString());
                     String comments = scoutBugs["Comments"].ToString();
                     int lastModifiedID = Convert.ToInt16(scoutBugs["LastModifiedID"].ToString());
-                    DateTime tmStamp = Convert.ToDateTime(long.Parse(scoutBugs["TMStamp"].ToString()));
+                    DateTime tmStamp = Convert.ToDateTime(scoutBugs["TMStamp"].ToString());
 
                     dbSynchronization.PersistScoutBugs(scoutBugID, scoutStopID, speciesID, numberOfBugs, fieldPicture, comments, lastModifiedID, tmStamp);
                 }
