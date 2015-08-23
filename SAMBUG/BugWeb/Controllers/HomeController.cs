@@ -12,7 +12,7 @@ namespace BugWeb.Controllers
         public ActionResult Index()
         {
             if (Session.Count == 0)
-                return View("~/Views/Authentication/Login.cshtml");
+                return RedirectToAction("login","home");
             else
                 return View();
         }

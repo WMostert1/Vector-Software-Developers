@@ -62,11 +62,7 @@
                                     <p>Please enter a new name for @block.BlockName</p>
                                     <form id="form_@block.BlockID" method="POST" action="./EditBlock">
                                         <input type="number" value="@block.BlockID" name="BlockID" hidden />
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
                                                 <input type="text" id="BlockName" name="BlockName" value="@block.BlockName" aria-label="...">
-                                            </span>
-                                        </div>
                                         <input type="Submit" value="Update" />
                                     </form>
                                     <br />
@@ -90,7 +86,7 @@
                                     <form id="form_@block.BlockID" method="POST" action="./DeleteBlock">
                                         <input type="number" value="@item.FarmID" name="FarmID" hidden />
                                         <input type="number" value="@block.BlockID" name="BlockID" hidden />
-                                        <input type="Submit" value="Yes" />
+                                        <input type="Submit" value="Yes" class="btn-primary"/>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
                                     </form>
                                     <br />
