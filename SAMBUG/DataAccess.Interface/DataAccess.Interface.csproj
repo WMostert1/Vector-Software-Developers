@@ -39,7 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IAuthentication.cs" />
+    <Compile Include="Domain\Block.cs" />
+    <Compile Include="Domain\Farm.cs" />
+    <Compile Include="Domain\Role.cs" />
+    <Compile Include="Domain\User.cs" />
+    <Compile Include="IDbAuthentication.cs" />
+    <Compile Include="IDbFarmManagement.cs" />
+    <Compile Include="IDbSynchronization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

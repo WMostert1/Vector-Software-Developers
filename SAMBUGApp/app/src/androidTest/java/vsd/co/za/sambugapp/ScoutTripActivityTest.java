@@ -1,42 +1,42 @@
-//package vsd.co.za.sambugapp;
-//
-//import android.test.ActivityInstrumentationTestCase2;
-//import android.widget.Button;
-//
-//import java.util.Date;
-//
-//import vsd.co.za.sambugapp.DomainModels.ScoutStop;
-//import org.mockito.*;
-//
-///**
-// * Created by keaganthompson on 7/14/15.
-// */
-//public class ScoutTripActivityTest extends ActivityInstrumentationTestCase2<ScoutTripActivity>{
-//
-//    private ScoutTripActivity scoutTripActivity;
-//
-//    public ScoutTripActivityTest(){
-//        super(ScoutTripActivity.class);
-//    }
-//
-//    @Override
-//    public void setUp() throws Exception {
-//        super.setUp();
-//        scoutTripActivity=getActivity();
-//    }
-//
-//    public void testPreconditions() throws Exception {
-//        assertNotNull("ScoutTripActivity is null", scoutTripActivity);
-//    }
-//
+package vsd.co.za.sambugapp;
+
+import android.test.ActivityInstrumentationTestCase2;
+import android.widget.Button;
+
+import java.util.Date;
+
+import vsd.co.za.sambugapp.DomainModels.ScoutStop;
+import org.mockito.*;
+
+/**
+ * Created by keaganthompson on 7/14/15.
+ */
+public class ScoutTripActivityTest extends ActivityInstrumentationTestCase2<ScoutTripActivity>{
+
+    private ScoutTripActivity scoutTripActivity;
+
+    public ScoutTripActivityTest(){
+        super(ScoutTripActivity.class);
+    }
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+      //  scoutTripActivity=getActivity();
+    }
+
+    public void testPreconditions() throws Exception {
+    //    assertNotNull("ScoutTripActivity is null", scoutTripActivity);
+    }
+
 //    public void testAddStop() throws Exception {
 //
-//        final int expectedResult=1;
-//
-//        scoutTripActivity.addStop(new ScoutStop());
-//        final int actualResult=scoutTripActivity.scoutTrip.getNumStops();
-//
-//        assertEquals(actualResult, expectedResult);
+////        final int expectedResult=1;
+////
+////        scoutTripActivity.addStop(new ScoutStop());
+////        final int actualResult=scoutTripActivity.scoutTrip.getNumStops();
+////
+////        assertEquals(actualResult, expectedResult);
 //    }
 //
 //    public void testUpdateStop() throws Exception {
@@ -78,12 +78,12 @@
 //
 //    public void testFinishActivity() throws Exception {
 //
-//        final boolean expectedResult=true;
+//        final boolean expectedResult = true;
 //
-//        Button button=(Button)scoutTripActivity.findViewById(R.id.btnFinishTrip);
+//        Button button = (Button)scoutTripActivity.findViewById(R.id.btnFinishTrip);
 //        scoutTripActivity.finishTrip(button);
-//        final boolean actualResult=scoutTripActivity.isFinishing();
+//        final boolean actualResult = scoutTripActivity.isFinishing();
 //
 //        assertEquals(expectedResult,actualResult);
 //    }
-//}
+}

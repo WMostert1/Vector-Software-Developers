@@ -18,7 +18,7 @@ public class Block implements Serializable{
     public int BlockID;
     public int FarmID;
     public String BlockName;
-    public Integer LastModifiedID;
+    public int LastModifiedID;
     public Date TMStamp;
 
     public Farm Farm;

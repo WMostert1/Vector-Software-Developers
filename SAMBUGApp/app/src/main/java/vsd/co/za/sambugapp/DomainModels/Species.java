@@ -19,7 +19,7 @@ public class Species implements Serializable {
     public int Lifestage;
     public byte[] IdealPicture;
     public boolean IsPest;
-    public Integer LastModifiedID;
+    public int LastModifiedID;
     public Date TMStamp;
 
     public HashSet<ScoutBug> ScoutBugs;

@@ -1,0 +1,10 @@
+﻿using System.Collections.Generic;
+using DataAccess.Interface.Domain;
+
+namespace BugBusiness.Interface.BugSecurity.DTO
+{
+    public class LoginResponse
+    {
+        public User User { get; set; }
+    }
+}

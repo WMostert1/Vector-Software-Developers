@@ -48,10 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication.cs" />
+    <Compile Include="DbSynchronization.cs" />
+    <Compile Include="DbAuthentication.cs" />
     <Compile Include="Block.cs">
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DbFarmManagement.cs" />
     <Compile Include="EntityFrameworkModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -89,17 +91,12 @@
     <Compile Include="User.cs">
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="UserRole.cs">
-      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="EntityFrameworkModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>EntityFrameworkModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.Config" />
     <None Include="EntityFrameworkModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

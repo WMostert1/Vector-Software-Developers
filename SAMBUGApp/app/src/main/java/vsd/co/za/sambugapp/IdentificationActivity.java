@@ -34,7 +34,7 @@ import vsd.co.za.sambugapp.DomainModels.Species;
  */
 public class IdentificationActivity extends AppCompatActivity {
 
-    public static final int REQUEST_TAKE_PHOTO = 1;
+    public static final int REQUEST_TAKE_PHOTO = 89;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
     private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
@@ -93,7 +93,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 }
 
                 dispatchTakePictureIntent();
-                //bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.coconut_inst_1);
             }
             if (createCounter == 0) createCounter++;
 
@@ -109,7 +108,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
                     try {
                         speciesDAO.open();
-                        currentEntry = speciesDAO.getSpecies(position + 1);
+                        currentEntry = speciesDAO.getSpeciesByID(position + 1);
                         Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
                         ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
                         byte[] imgData = currentEntry.getIdealPicture();
@@ -208,12 +207,13 @@ public class IdentificationActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
         }
+
     }
 
 
     /**
      * This function puts the current Species entry as well as the field picture taken
-     * ionto a bundle which is then returned to the enterDataActivity
+     * into a bundle which is then returned to the enterDataActivity
      * @param view THe button that was clicked
      */
     public void sendResultBack(View view) {

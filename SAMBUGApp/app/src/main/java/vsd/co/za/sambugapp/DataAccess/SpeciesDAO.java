@@ -104,7 +104,7 @@ public class SpeciesDAO extends DataSourceAdapter {
                     e.printStackTrace();
                     speciesEntry.setTMStamp(null);
                 }
-                speciesEntry.setLastModifiedID(null);
+                speciesEntry.setLastModifiedID(1);
                 speciesEntry.setIsPest(true);
                 speciesEntry.setLifestage(instarNo + 1);
                 insert(speciesEntry);
@@ -130,7 +130,7 @@ public class SpeciesDAO extends DataSourceAdapter {
         database.update(DBHelper.TABLE_SPECIES, values, DBHelper.COLUMN_SPECIES_ID + " = " + id, null);
     }
 
-    public void insert(Species species) {
+    public long insert(Species species) {
         ContentValues values = new ContentValues();
         values.put(DBHelper.COLUMN_SPECIES_NAME, species.getSpeciesName());
         values.put(DBHelper.COLUMN_LIFESTAGE, species.getLifestage());
@@ -139,7 +139,7 @@ public class SpeciesDAO extends DataSourceAdapter {
         values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, species.getLastModifiedID());
         values.put(DBHelper.COLUMN_TIMESTAMP, species.getTMStamp().toString());
 
-        database.insert(DBHelper.TABLE_SPECIES, null, values);
+        return database.insert(DBHelper.TABLE_SPECIES, null, values);
     }
 
     public List<Species> getAllSpecies() {
@@ -161,7 +161,7 @@ public class SpeciesDAO extends DataSourceAdapter {
         database.delete(DBHelper.TABLE_SPECIES, null, null);
     }
 
-    public Species getSpecies(int id) {
+    public Species getSpeciesByID(int id) {
         Cursor cursor = database.query(DBHelper.TABLE_SPECIES, allColumns, DBHelper.COLUMN_SPECIES_ID + " = " + id, null, null, null, null);
         cursor.moveToFirst();
         if (cursor.isAfterLast()) {
