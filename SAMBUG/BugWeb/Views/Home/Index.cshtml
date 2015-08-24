@@ -12,14 +12,20 @@
     </div>
     <div class="col-sm-10">
         <div class="panel panel-default">
-            <div class="panel-body">
-                <img src="../../Content/bug.jpg" alt="Sample Image"/>
-                <div class="btn-group-vertical" role="group" aria-label="...">
-                    <button class="btn btn-default btn-block">View Graph</button>
-                    <button class="btn btn-default btn-block">View Table</button>
-                    <button class="btn btn-default btn-block">&nbsp View Heat Map &nbsp</button>
+            <div class="panel-body container-fluid">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div id="visual_data_content"></div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="btn-group-vertical" role="group" aria-label="...">
+                            <button class="btn btn-default btn-block">View Graph</button>
+                            <button class="btn btn-default btn-block">View Table</button>
+                            <button class="btn btn-default btn-block" onclick="$('#visual_data_content').load('./Home/viewMap')">&nbsp View Heat Map &nbsp</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-footer">Graphical Representation</div>      
+                <div class="panel-footer">Historical Data</div>
             </div>       
         </div>
     </div>
