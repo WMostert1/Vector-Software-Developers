@@ -229,7 +229,7 @@ namespace BugBusiness.Tests
             _autoMock
                 .Mock<IDbFarmManagement>()
                 .Setup(dbFarmManagement => dbFarmManagement.UpdateBlock(2, "UpdateTest"))
-                .Returns(true);
+                .Returns(1);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
             UpdateBlockByIDResult updateblockbyidResult = farmManagement.UpdateBlockByID(new UpdateBlockByIDRequest()
@@ -249,7 +249,7 @@ namespace BugBusiness.Tests
             _autoMock
                 .Mock<IDbFarmManagement>()
                 .Setup(dbFarmManagement => dbFarmManagement.UpdateBlock(Int64.MaxValue, "UpdateTest"))
-                .Returns(false);
+                .Returns(0);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
             farmManagement.UpdateBlockByID(new UpdateBlockByIDRequest()
@@ -268,7 +268,7 @@ namespace BugBusiness.Tests
             _autoMock
                 .Mock<IDbFarmManagement>()
                 .Setup(dbFarmManagement => dbFarmManagement.UpdateBlock(0, ""))
-                .Returns(false);
+                .Returns(0);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
             farmManagement.UpdateBlockByID(new UpdateBlockByIDRequest()

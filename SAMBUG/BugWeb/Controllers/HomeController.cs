@@ -40,5 +40,10 @@ namespace BugWeb.Controllers
             Session.Abandon();
             return RedirectToAction("login", "home");
         }
+
+        public ActionResult viewMap()
+        {
+            return PartialView("_HeatMap");
+        }
     }
 }
