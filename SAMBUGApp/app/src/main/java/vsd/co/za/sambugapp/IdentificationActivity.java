@@ -92,8 +92,8 @@ public class IdentificationActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                //dispatchTakePictureIntent();
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.coconut_inst_1);
+                dispatchTakePictureIntent();
+                //bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.coconut_inst_1);
             }
             if (createCounter == 0) createCounter++;
 

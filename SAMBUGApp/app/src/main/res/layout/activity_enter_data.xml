@@ -73,6 +73,7 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/numberOfTreesLayout"
                 android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -97,10 +98,10 @@
             </RelativeLayout>
 
             <Button
+                android:id="@+id/btnAddBug"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/addBug"
-                android:id="@+id/button"
                 android:layout_gravity="center_horizontal"
                 android:onClick="sendToIdentificationActivity"/>
 

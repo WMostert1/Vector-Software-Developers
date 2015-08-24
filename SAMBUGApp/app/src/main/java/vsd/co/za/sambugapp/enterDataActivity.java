@@ -94,30 +94,31 @@ public class enterDataActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
         Log.e("CHECK", "Create");
+        allBugs = new HashSet<>();
         if (savedInstanceState!=null){
             allBugs=(HashSet<ScoutBug>)savedInstanceState.get(BUG_LIST);
             blockInfoCollapsed = savedInstanceState.getBoolean(BLOCK_INFO_COLLAPSED);
             numberOfBugs = savedInstanceState.getInt(BUG_COUNT);
             updateAddedBugsView();
-        } else {
-            allBugs = new HashSet<ScoutBug>();
         }
         iReceive = getIntent();
-            receiveGeoLocation();
+        receiveGeoLocation();
         acceptBlocks();
         acceptStop(savedInstanceState);
         setTitle(farm.getFarmName());
         if (!blockInfoCollapsed) {
             Log.d("CHECK", "Not collapsing");
             populateSpinner();
-
+            RelativeLayout layout = (RelativeLayout) findViewById(R.id.numberOfTreesLayout);
+            layout.setVisibility(View.INVISIBLE);
+            Button btn = (Button) findViewById(R.id.btnAddBug);
+            btn.setVisibility(View.INVISIBLE);
         } else {
             Log.d("CHECK", "collapsing");
             collapseBlockEditing(null);
         }
         initializeNumberPickers();
     }
-
 
     /**
      * Function was automatically added by the activity.
@@ -146,11 +147,19 @@ public class enterDataActivity extends ActionBarActivity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
+        Log.d("BLAH", "SAVING");
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt(BUG_COUNT, npBugs.getValue());
+        savedInstanceState.putInt(BUG_COUNT, numberOfBugs);
         savedInstanceState.putSerializable(BUG_LIST,allBugs);
         savedInstanceState.putSerializable(SCOUT_STOP, stop);
         savedInstanceState.putBoolean(BLOCK_INFO_COLLAPSED, blockInfoCollapsed);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        numberOfBugs = npBugs.getValue();
+        Log.d("BLAH", "PAusing");
     }
 
     /**
@@ -268,20 +277,6 @@ public class enterDataActivity extends ActionBarActivity {
         startActivityForResult(intent, 0);
     }
 
-
-    private void createBug(Species spec,int numBugs,Bitmap fieldImg){
-        ScoutBug sb = new ScoutBug();
-        sb.setSpecies(spec);
-        sb.setSpeciesID(spec.getSpeciesID());
-        sb.setNumberOfBugs(numBugs);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        fieldImg.compress(Bitmap.CompressFormat.JPEG,100,stream);
-        sb.setFieldPicture(stream.toByteArray());
-        //TODO: change to user id eventually
-        sb.setLastModifiedID(1);
-        sb.setTMStamp(new Date());
-        stop.ScoutBugs.add(sb); //addBugEntry(sb);
-    }
     /**
      * Receives the Location Data from the device.
      */
@@ -405,8 +400,6 @@ public class enterDataActivity extends ActionBarActivity {
         //bugNumber++;
         updateAddedBugsView();
 
-        addRowsDynamically();
-
     }
 
     public void collapseBlockEditing(View v) {
@@ -440,72 +433,10 @@ public class enterDataActivity extends ActionBarActivity {
         lblBlockName.setText(stop.getBlock().getBlockName());
         TextView lblNumTrees = (TextView) layout.findViewById(R.id.lblNumTrees);
         lblNumTrees.setText(stop.getNumberOfTrees() + "");
-    }
-
-    /**
-     * Adds rows to the the layout dynamically.
-     */
-    public void addRowsDynamically(){
-//        TableRow delRow = (TableRow)findViewById(R.id.delRow);
-//        table.removeView(delRow);
-//
-//        TableRow row= new TableRow(this);
-//
-//        TextView tv1 = new TextView(this);
-//        tv1.setText(R.string.numBugs);
-//
-//        tv1.setTextSize(24);
-//
-//        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.FILL_PARENT);
-//        params.weight = 1.0f;
-//        params.gravity = Gravity.TOP;
-//        tv1.setMinWidth(220);
-//
-//        NumberPicker np1 = new NumberPicker(this);
-//
-//        np1.setMinValue(0);
-//        np1.setMaxValue(100);
-//        np1.setWrapSelectorWheel(false);
-//        row.addView(tv1);
-//
-//        row.addView(np1);
-//
-//        TextView tv2 = new TextView(this);
-//        tv2.setText(R.string.bugType);
-//        tv2.setTextSize(24);
-//        tv2.setMinWidth(220);
-//        Button btnSelectBug = new Button(this);
-//        btnSelectBug.setText(R.string.btnSelectBug);
-//        btnSelectBug.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                sendToIdentificationActivity(v);
-//            }
-//        });
-//        TableRow row2= new TableRow(this);
-//        row2.addView(tv2);
-//        row2.addView(btnSelectBug);
-//
-//
-//        Bitmap takenImage =     BitmapFactory.decodeByteArray(currBug.getFieldPicture(),0,currBug.getFieldPicture().length);
-//        ImageView im = new ImageView(this);
-//        im.setImageBitmap(takenImage);
-//
-//        TableRow row3= new TableRow(this);
-//        im.setLayoutParams(new TableRow.LayoutParams());
-//        im.getLayoutParams().height = 350; // OR
-//        im.getLayoutParams().width =  350;
-//        //im.setLayoutParams(new TableLayout.LayoutParams(50, 50));
-//        row3.addView(im);
-//
-//        TableRow emptyRow = new TableRow(this);
-//
-//        // table.addView(emptyRow);
-//        table.addView(row3);
-//        table.addView(row);
-//        table.addView(row2);
-//
-//        table.addView(delRow);
+        RelativeLayout openLayout = (RelativeLayout) findViewById(R.id.numberOfTreesLayout);
+        openLayout.setVisibility(View.VISIBLE);
+        Button openButton = (Button) findViewById(R.id.btnAddBug);
+        openButton.setVisibility(View.VISIBLE);
     }
 
     public void updateAddedBugsView(){
