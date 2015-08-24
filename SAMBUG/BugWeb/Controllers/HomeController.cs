@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BugWeb.Security;
 
 namespace BugWeb.Controllers
 {
     public class HomeController : Controller
     {
+        
         //TODO: Still need to check if user is logged in before returning view. Redirects to login page if not
         public ActionResult Index()
         {
-            if (Session.Count == 0)
+            if (!SecurityProvider.isGrower(Session))
                 return RedirectToAction("login","home");
-            else
-                return View();
+            return View();
         }
 
         public ActionResult Login()
@@ -29,10 +30,9 @@ namespace BugWeb.Controllers
 
         public ActionResult BlockEdit()
         {
-            if (Session.Count==0)
-                return RedirectToAction("login", "home");
-            else
-                return RedirectToAction("index", "farmmanagement");
+            if (!SecurityProvider.isGrower(Session)) 
+                return View("~/Views/Shared/Error.cshtml");
+            return RedirectToAction("index", "farmmanagement");
         }
 
         public ActionResult Logout()

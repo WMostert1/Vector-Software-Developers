@@ -14,6 +14,7 @@ using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
 using DataAccess.Interface.Domain;
 using Newtonsoft.Json;
+using BugWeb.Security;
 
 
 namespace BugWeb.Controllers
@@ -99,6 +100,8 @@ namespace BugWeb.Controllers
         [HttpGet]
         public ActionResult EditUserRoles()
         {
+            if (!SecurityProvider.isAdmin(Session))
+                return View("~/Views/Shared/Error.cshtml");
             ViewEditUserRolesResponse response = _bugSecurity.GetUsers();
             return View(response);
         }
@@ -106,7 +109,8 @@ namespace BugWeb.Controllers
         [HttpPost]
         public ActionResult EditUserRoles(EditUserRoleViewModel editUserRoleViewModel)
         {
-            
+            if (!SecurityProvider.isAdmin(Session))
+                return View("~/Views/Shared/Error.cshtml");
             _bugSecurity.EditUserRoles(new EditUserRoleRequest
             {
                 UserId = editUserRoleViewModel.UserId,

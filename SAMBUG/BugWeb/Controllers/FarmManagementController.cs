@@ -8,6 +8,7 @@ using BugBusiness.Interface.FarmManagement.DTO;
 using BugBusiness.Interface.FarmManagement.Exceptions;
 using BugWeb.Models;
 using DataAccess.Interface.Domain;
+using BugWeb.Security;
 
 
 namespace BugWeb.Controllers
@@ -16,45 +17,40 @@ namespace BugWeb.Controllers
     {
         private readonly IFarmManagement _farmManagement;
 
-
         public FarmManagementController(IFarmManagement farmManagement)
         {
             _farmManagement = farmManagement;
-        }
-
-        // GET: FarmManagement/Details/5
-        public ActionResult Details(long id)
-        {
-            return View();
         }
 
         // POST: FarmManagement/Create
         [HttpPost]
         public ActionResult AddBlock(BlockViewModel blockViewModel)
         {
-                User user = (User)Session["UserInfo"];
-                AddBlockRequest addblockRequest = new AddBlockRequest()
-                {
-                    FarmID=blockViewModel.FarmID,
-                    BlockName = blockViewModel.BlockName
-                };
+            if (!SecurityProvider.isGrower(Session))
+                return View("~/Views/Shared/Error.cshtml");
+            User user = (User)Session["UserInfo"];
+            AddBlockRequest addblockRequest = new AddBlockRequest()
+            {
+                FarmID=blockViewModel.FarmID,
+                BlockName = blockViewModel.BlockName
+            };
 
-                try
-                {
-                    AddBlockResult addblockResult = _farmManagement.AddBlock(addblockRequest);
-                    user.Farms.RemoveAll(farm => farm.FarmID.Equals(addblockRequest.FarmID));
-                    Farm updatedFarm=_farmManagement.GetFarmByID(new GetFarmByIDRequest(){FarmID=addblockRequest.FarmID}).Farm;
-                    user.Farms.Add(updatedFarm);
-                    return RedirectToAction("EditBlocks", "FarmManagement");
-                }
-                catch (InvalidInputException)
-                {
-                    return RedirectToAction("index", "home");
-                }
-                catch (BlockExistsException)
-                {
-                    return RedirectToAction("login", "authentication");
-                }
+            try
+            {
+                AddBlockResult addblockResult = _farmManagement.AddBlock(addblockRequest);
+                user.Farms.RemoveAll(farm => farm.FarmID.Equals(addblockRequest.FarmID));
+                Farm updatedFarm=_farmManagement.GetFarmByID(new GetFarmByIDRequest(){FarmID=addblockRequest.FarmID}).Farm;
+                user.Farms.Add(updatedFarm);
+                return RedirectToAction("EditBlocks", "FarmManagement");
+            }
+            catch (InvalidInputException)
+            {
+                return RedirectToAction("index", "home");
+            }
+            catch (BlockExistsException)
+            {
+                return RedirectToAction("login", "authentication");
+            }
         }
 
         // GET: FarmManagement/Edit/5
@@ -62,10 +58,9 @@ namespace BugWeb.Controllers
         public ActionResult EditBlocks()
         {
             //check not logged in
-            if (Session.Count == 0)
-                return View("~/Views/Authentication/Login.cshtml");
+            if (!SecurityProvider.isGrower(Session))
+                return View("~/Views/Shared/Error.cshtml");
             User user = (User)Session["UserInfo"];
-                // GetBlocksByFarmResult getblocksbyfarmResult = _farmManagement.GetBlocksByFarm(getblocksbyfarmRequest);
             return View(user.Farms);
         }
 
@@ -73,6 +68,8 @@ namespace BugWeb.Controllers
         [HttpPost]
         public ActionResult EditBlock(BlockViewModel blockViewModel)
         {
+            if (!SecurityProvider.isGrower(Session))
+                return View("~/Views/Shared/Error.cshtml");
             User user = (User)Session["UserInfo"];
             UpdateBlockByIDRequest updateblockbyidRequest = new UpdateBlockByIDRequest()
             {
@@ -101,6 +98,8 @@ namespace BugWeb.Controllers
         [HttpPost]
         public ActionResult DeleteBlock(BlockViewModel blockViewModel)
         {
+            if (!SecurityProvider.isGrower(Session))
+                return View("~/Views/Shared/Error.cshtml");
             User user = (User)Session["UserInfo"];
             DeleteBlockByIDRequest deleteblockbyidRequest = new DeleteBlockByIDRequest()
             {
