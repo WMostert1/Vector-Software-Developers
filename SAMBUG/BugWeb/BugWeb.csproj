@@ -161,6 +161,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MapControls.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -186,6 +187,7 @@
     <Content Include="Views\FarmManagement\DeleteBlock.cshtml" />
     <Content Include="Views\FarmManagement\EditBlocks.cshtml" />
     <Content Include="Views\Authentication\EditUserRoles.cshtml" />
+    <Content Include="Views\Home\_HeatMap.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
