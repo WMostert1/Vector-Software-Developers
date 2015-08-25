@@ -28,13 +28,13 @@ namespace BugBusiness.Tests
         public void Unit_GetFarmById_Business_ShouldAcquire()
         {
             //Arrange
-            _autoMock
+            /*_autoMock
                 .Mock<IDbReporting>()
                 .Setup(rpt => rpt.GetFarmById(12345))
                 .Returns(new Farm());
                 
 
-            var bugReporting = _autoMock.Create<BugReporting.BugReporting>();
+            var bugReporting = _autoMock.Create<BugReporting.BugReporting>();*/
 
             //Act
            //Assert

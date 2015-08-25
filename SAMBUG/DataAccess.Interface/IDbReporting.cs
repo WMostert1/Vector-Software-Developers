@@ -4,6 +4,6 @@ namespace DataAccess.Interface
 {
     public interface IDbReporting
     {
-        Farm GetFarmById(long farmId);
+        void GetFarmById(long farmId);
     }
 }

@@ -6,15 +6,15 @@ namespace DataAccess.MSSQL
 {
     public class DbReporting : IDbReporting
     {
-        public  GetFarmById(long farmId)
+        public void GetFarmById(long farmId)
         {
             var db = new BugDBEntities();
 
-            IEnumerable<Interface.Domain.ScoutStop> entityScoutStop = db.ScoutStops.Select(stop => AutoMapper.Mapper.Map<Interface.Domain.ScoutStop>(stop)).ToList();
+            IEnumerable<ScoutStop> scoutStop = db.ScoutStops.Select(stop => stop).ToList();
 
-            if (!entityScoutStop.Any())
+            if (!scoutStop.Any())
             {
-                return null;
+                return;
             }
 
            
@@ -26,13 +26,11 @@ namespace DataAccess.MSSQL
                 return null;
             }
 
-            
-
-           
+                       
 
             return domainUser;*/
 
-            return new Interface.Domain.Farm();
+            return;
 
         }
          
