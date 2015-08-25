@@ -1,0 +1,95 @@
+﻿@using DataAccess.Interface.Domain
+@model BugBusiness.Interface.BugSecurity.DTO.ViewEditUserRolesResponse
+
+@{
+    ViewBag.Title = "User Roles";
+    ICollection<User> users = Model.Users;
+}
+
+<h2>@ViewBag.Title</h2>
+<hr/>
+<div>
+    <div class="row">
+        <div style="font-size: 20pt" class="col-sm-4">Email Address</div>
+        <div style="font-size: 20pt" class="col-sm-4">Role</div>
+        
+    </div>
+    <br/>
+    @foreach (var item in users)
+    {
+        <div class="row">
+            <div class="col-sm-4">@Html.DisplayFor(modelItem => item.Email)</div>
+            <div class="col-sm-4">
+
+                @foreach (var role in item.Roles)
+                {
+
+                    <div class="row">
+                        <div class="col-lg-8">@Html.DisplayFor(roleItem => role.Description)</div>
+                    </div>
+
+                    <div id="@Html.Raw("modal" + item.UserId)" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Edit User Role</h4>
+                                </div>
+                                <div class="modal-body">
+
+                                    <p>Please choose roles for @item.Email</p>
+                                    <form id="form_@item.UserId" method="POST" action="./EditUserRoles">
+                                        <input type="number" value="@item.UserId" name="UserId" hidden/>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <input type="checkbox" id="isGrower" name="isGrower" value="true" aria-label="..." >
+                
+                                            </span>
+                                            <input type="text" value="Grower" class="form-control" aria-label="..." disabled>
+                                        </div><!-- /input-group -->
+
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <input type="checkbox" id="isAdministrator" name="isAdministrator" value="true" aria-label="...">
+                                            </span>
+                                            <input type="text" id="role_description_2"  value="Administrator" class="form-control" aria-label="..." disabled>
+                                        </div>
+                                    </form>
+                                    <br/>
+                                   
+                                    <button type="button" class="btn btn-success" onclick=@Html.Raw("validateForm($('#form_"+item.UserId+"'))")>Save</button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            </div>
+
+
+            <div class="col-sm-4"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("modal" + item.UserId)">Edit</button>
+            </div>
+        </div>
+        <br/>
+
+    }
+
+    <script>
+        function validateForm(form) {
+            if (form.find('input[name="isGrower"]').is(':checked') == false && form.find('input[name="isAdministrator"]').is(':checked') == false) {
+                alert("At least one role needs to be selected.");
+            } else {
+                form.submit();
+            }
+        }
+    </script>
+
+    <!--Html.Raw("$('#form_"+item.UserUserId+"').submit()")-->
+
+
+
+</div>

@@ -8,5 +8,6 @@ namespace BugBusiness.Interface.FarmManagement.DTO
 {
     public class UpdateBlockByIDResult
     {
+        public long FarmID { get; set; }
     }
 }

@@ -29,11 +29,10 @@ namespace DataAccess.MSSQL
             };
             db.Blocks.Add(block);
             db.SaveChanges();
-
             return true;
         }
 
-        public IEnumerable<Interface.Domain.Block> GetBlocksByFarm(long id){
+        public ICollection<Interface.Domain.Block> GetBlocksByFarm(long id){
             var db=new BugDBEntities();
 
             var farm=db.Farms.SingleOrDefault(frm => frm.FarmID.Equals(id));
@@ -86,7 +85,7 @@ namespace DataAccess.MSSQL
             return null;
         }
 
-        public bool UpdateBlock(long id, string blockname)
+        public long UpdateBlock(long id, string blockname)
         {
             var db = new BugDBEntities();
 
@@ -96,10 +95,11 @@ namespace DataAccess.MSSQL
             {
                 block.BlockName = blockname;
                 db.SaveChanges();
-                return true;
+                db.Entry(block).GetDatabaseValues();
+                return block.FarmID;
             }
 
-            return false;
+            return -1;
         }
 
         public bool DeleteBlock(long id)

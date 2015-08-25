@@ -9,6 +9,6 @@ namespace BugBusiness.Interface.FarmManagement.DTO
 {
     public class GetBlocksByFarmResult
     {
-        public IEnumerable<Block> Blocks;
+        public ICollection<Block> Blocks;
     }
 }

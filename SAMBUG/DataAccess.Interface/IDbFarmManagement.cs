@@ -9,10 +9,10 @@ namespace DataAccess.Interface
     public interface IDbFarmManagement
     {
         bool InsertNewBlock(long id, string blockname);
-        IEnumerable<Domain.Block> GetBlocksByFarm(long id);
+        ICollection<Domain.Block> GetBlocksByFarm(long id);
         Domain.Block GetBlockByID(long id);
         Domain.Farm GetFarmByID(long id);
-        bool UpdateBlock(long id, string blockname);
+        long UpdateBlock(long id, string blockname);
         bool DeleteBlock(long id);
     }
 }

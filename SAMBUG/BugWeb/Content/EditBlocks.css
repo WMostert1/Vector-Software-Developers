@@ -1,0 +1,19 @@
+﻿.farm-table
+{
+    border:2px black solid;
+    border-radius:25px;
+    padding:10px;
+}
+
+.farm-table-head
+{
+    border-bottom:2px black solid;
+    margin-bottom:10px;
+}
+
+.farm-table-footer
+{
+    border-top:2px black solid;
+    text-align:center;
+    padding:10px;
+}

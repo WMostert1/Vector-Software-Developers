@@ -4,10 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    <style>
+    #panel {
+    background-color: #fff;
+    border: 1px solid #999;
+    left: 25%;
+    padding: 5px;
+ 
+    top: 10px;
+    z-index: 5;
+    }
+    </style>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/Scripts/xdate.js")
+    @Scripts.Render("~/bundles/customJS")
     @RenderSection("JavaScript", required: false)
+    @RenderSection("styles", required: false)
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -23,6 +37,11 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Reporting", "Index", "Reporting")</li>
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Edit User Roles", "EditUserRoles", "Authentication")</li>
+                    <li>@Html.ActionLink("Edit Farm Blocks", "EditBlocks", "FarmManagement")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Logout","logout","home")</li>
                 </ul>
             </div>
         </div>
@@ -31,7 +50,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - SAMBUG Application</p>
+            <p>&copy; @DateTime.Now.Year - SAMBUG</p>
         </footer>
     </div>
 

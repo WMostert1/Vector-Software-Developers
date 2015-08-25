@@ -40,12 +40,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BugReporting\IBugReporting.cs" />
+    <Compile Include="BugSecurity\DTO\EditUserRoleRequest.cs" />
     <Compile Include="BugSecurity\DTO\LoginRequest.cs" />
     <Compile Include="BugSecurity\DTO\LoginResponse.cs" />
     <Compile Include="BugSecurity\DTO\RecoverAccountRequest.cs" />
     <Compile Include="BugSecurity\DTO\RecoverAccountResponse.cs" />
     <Compile Include="BugSecurity\DTO\RegisterRequest.cs" />
     <Compile Include="BugSecurity\DTO\RegisterResponse.cs" />
+    <Compile Include="BugSecurity\DTO\ViewEditUserRolesResponse.cs" />
     <Compile Include="BugSecurity\Exceptions\InvalidInputException.cs" />
     <Compile Include="BugSecurity\Exceptions\NotRegisteredException.cs" />
     <Compile Include="BugSecurity\Exceptions\UserExistsException.cs" />

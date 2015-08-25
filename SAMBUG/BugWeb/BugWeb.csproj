@@ -142,14 +142,17 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BlockViewModel.cs" />
+    <Compile Include="Models\EditUserRoleViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\SecurityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\BlockEdit.css" />
+    <Content Include="Content\EditBlocks.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bug.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -165,6 +168,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\MapControls.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -190,10 +194,12 @@
     <Content Include="Views\FarmManagement\CreateBlock.cshtml" />
     <Content Include="Views\FarmManagement\UpdateBlock.cshtml" />
     <Content Include="Views\FarmManagement\DeleteBlock.cshtml" />
-    <Content Include="Views\FarmManagement\BlockEdit.cshtml" />
     <Content Include="Views\Reporting\Tabular.cshtml" />
     <Content Include="Views\Reporting\Graphical.cshtml" />
     <Content Include="Views\Reporting\Index.cshtml" />
+    <Content Include="Views\FarmManagement\EditBlocks.cshtml" />
+    <Content Include="Views\Authentication\EditUserRoles.cshtml" />
+    <Content Include="Views\Home\_HeatMap.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
