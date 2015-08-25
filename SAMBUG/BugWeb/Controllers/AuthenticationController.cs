@@ -48,7 +48,11 @@ namespace BugWeb.Controllers
                     Farms=loginResponse.User.Farms,
                     Roles=loginResponse.User.Roles
                 };
+
                 Session["UserInfo"] = user;
+                //todo: implement muliple farm support
+                Session["ActiveFarm"] = loginResponse.User.Farms[0];
+
                 //check to go to home page or farm setup
                 int blockCount = 0;
                 foreach (Farm f in user.Farms){

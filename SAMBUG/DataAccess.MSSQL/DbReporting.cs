@@ -6,7 +6,7 @@ namespace DataAccess.MSSQL
 {
     public class DbReporting : IDbReporting
     {
-        public Interface.Domain.Farm GetFarmById(long farmId)
+        public  GetFarmById(long farmId)
         {
             var db = new BugDBEntities();
 
@@ -17,20 +17,7 @@ namespace DataAccess.MSSQL
                 return null;
             }
 
-            //map EF Farm to Domain Farm
-           /* var farm = new Interface.Domain.Farm()
-            {
-                FarmID = entityFarm.FarmID,
-                FarmName = entityFarm.FarmName,
-                Blocks = entityFarm.Blocks.Select(block =>
-                    new Interface.Domain.Block()
-                    {
-                        BlockID = block.BlockID,
-                        BlockName = block.BlockName,
-                        Block
-                        
-                    }).ToList()
-            };*/
+           
 
             /* var entityUser = db.Users.SingleOrDefault(usr => usr.Email.Equals(username) && usr.Password.Equals(password));
 
@@ -39,35 +26,9 @@ namespace DataAccess.MSSQL
                 return null;
             }
 
-            //map EF Farm to Domain Farm
-            var farms = entityUser.Farms.Select(farm =>
-                new Interface.Domain.Farm()
-                {
-                    FarmID = farm.FarmID,
-                    FarmName = farm.FarmName,
-                    Blocks = farm.Blocks.Select(block =>
-                        new Interface.Domain.Block()
-                        {
-                            BlockID = block.BlockID,
-                            BlockName = block.BlockName
-                        }).ToList()
-                }).ToList();
+            
 
-            //map EF Role to Domain Role
-            var roles = entityUser.Roles.Select(role =>
-            new Interface.Domain.Role()
-            {
-                Type = role.RoleType,
-                Description = role.RoleDescription
-            }).ToList();
-
-            //map EF user to Domain User
-            var domainUser = new Interface.Domain.User()
-            {
-                Id = entityUser.UserID,
-                Roles = roles,
-                Farms = farms
-            };
+           
 
             return domainUser;*/
 
