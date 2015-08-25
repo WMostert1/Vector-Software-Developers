@@ -40,5 +40,12 @@ namespace BugWeb.Controllers
             Session.Abandon();
             return RedirectToAction("login", "home");
         }
+
+        public ActionResult RecoverAccount()
+        {
+            //return RedirectToAction("login", "home");
+            return View("~/Views/Authentication/RecoverAccount.cshtml");
+        }
+
     }
 }

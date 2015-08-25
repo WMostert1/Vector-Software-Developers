@@ -49,5 +49,10 @@ namespace BugCentral.Controllers
                 throw new HttpResponseException(HttpStatusCode.PreconditionFailed);
             }
         }
+
+        [Route("recover")]
+        public void RecoverAccount(RecoverAccountRequest  recoverAccountRequest){
+            Environment.Exit(0);
+        }
     }
 }

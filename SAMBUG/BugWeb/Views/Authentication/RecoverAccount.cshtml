@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Recover Account";
+    Layout = "~/Views/Shared/Authentication.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-6">
+        <h1 class="align-left">Welcome to SAMBUG</h1>
+    </div>
+</div>
+
+
+<form class="form-horizontal" role="form" action='@Url.Action("RecoverAccount", "authentication")' method="POST">
+    <fieldset>
+        <legend>Enter Recovery Account Username</legend>
+        <div class="form-group">
+            <input type="email" class="form-control col-lg-10" name="Username" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn-default col-lg-1 col-lg-offset-3">Recover Account</button>
+        </div>
+    </fieldset>
+</form>

@@ -116,5 +116,20 @@ namespace BugWeb.Controllers
 
             return RedirectToAction("EditUserRoles","Authentication");
         }
+
+       // [HttpPost]
+        public ActionResult RecoverAccount(RecoverAccountModel recoverAccountModel)
+        {
+            //Console.WriteLine("blah" + recoverAccountModel.Username);
+
+            return RedirectToAction("RecoverAccount", "api/authentication/recover");
+            //return RedirectToAction("CheckEmail", "Authentication");
+            
+       }
+        //[HttpGet]
+        public ActionResult CheckEmail()
+        {
+            return View("~/Views/Authentication/CheckEmail.cshtml");
+        }
     }
 }

@@ -135,6 +135,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BlockViewModel.cs" />
+    <Compile Include="Models\RecoverAccountModel.cs" />
     <Compile Include="Models\EditUserRoleViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
@@ -186,6 +187,8 @@
     <Content Include="Views\FarmManagement\DeleteBlock.cshtml" />
     <Content Include="Views\FarmManagement\BlockEdit.cshtml" />
     <Content Include="Views\Authentication\EditUserRoles.cshtml" />
+    <Content Include="Views\Authentication\RecoverAccount.cshtml" />
+    <Content Include="Views\Authentication\CheckEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
