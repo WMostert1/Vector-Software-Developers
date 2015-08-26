@@ -16,9 +16,9 @@ namespace BugBusiness.BugSecurity
     public class BugSecurity : IBugSecurity
     {
 
-        private readonly IDbAuthentication _dbAuthentication;
+        private readonly IDbBugSecurity _dbAuthentication;
 
-        public BugSecurity(IDbAuthentication dbAuthentication)
+        public BugSecurity(IDbBugSecurity dbAuthentication)
         {
             _dbAuthentication = dbAuthentication;
         }

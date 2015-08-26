@@ -47,6 +47,10 @@
     <Reference Include="Autofac.Integration.WebApi">
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper, Version=4.0.4.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -155,13 +159,9 @@
       <Project>{6aadb819-c1d4-41d8-964a-3242a094716c}</Project>
       <Name>BugBusiness</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DataAccess.Interface\DataAccess.Interface.csproj">
-      <Project>{02c58a1b-5945-4a36-acc6-df1a10052947}</Project>
-      <Name>DataAccess.Interface</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataAccess.MSSQL\DataAccess.MSSQL.csproj">
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj">
       <Project>{f45bc879-abb9-4d04-8868-dac9191ef054}</Project>
-      <Name>DataAccess.MSSQL</Name>
+      <Name>DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

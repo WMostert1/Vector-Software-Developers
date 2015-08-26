@@ -48,10 +48,6 @@
     <Reference Include="Autofac.Integration.Mvc">
       <HintPath>..\packages\Autofac.Mvc5.3.3.4\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=4.0.4.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.4.0.4\lib\net45\AutoMapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -175,7 +171,9 @@
     <Content Include="Scripts\Table.js" />
     <Content Include="Scripts\xdate.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -220,13 +218,9 @@
       <Project>{6aadb819-c1d4-41d8-964a-3242a094716c}</Project>
       <Name>BugBusiness</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DataAccess.Interface\DataAccess.Interface.csproj">
-      <Project>{02c58a1b-5945-4a36-acc6-df1a10052947}</Project>
-      <Name>DataAccess.Interface</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataAccess.MSSQL\DataAccess.MSSQL.csproj">
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj">
       <Project>{f45bc879-abb9-4d04-8868-dac9191ef054}</Project>
-      <Name>DataAccess.MSSQL</Name>
+      <Name>DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -1,9 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 using Should;
 using Autofac.Extras.Moq;
-using DataAccess.Interface;
-using DataAccess.Interface.Domain;
 
 namespace BugBusiness.Tests
 {
@@ -37,8 +34,9 @@ namespace BugBusiness.Tests
             var bugReporting = _autoMock.Create<BugReporting.BugReporting>();*/
 
             //Act
-           //Assert
-
+            //Assert
+            var x = 0;
+            x.ShouldEqual(0);
         }
     }
 }

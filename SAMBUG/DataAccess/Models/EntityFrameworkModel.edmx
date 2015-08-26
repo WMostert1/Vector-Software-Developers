@@ -1,0 +1,637 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BugDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Block">
+          <Key>
+            <PropertyRef Name="BlockID" />
+          </Key>
+          <Property Name="BlockID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FarmID" Type="bigint" Nullable="false" />
+          <Property Name="BlockName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastModifiedID" Type="int" />
+          <Property Name="TMStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Farm">
+          <Key>
+            <PropertyRef Name="FarmID" />
+          </Key>
+          <Property Name="FarmID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="FarmName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastModifiedID" Type="int" />
+          <Property Name="TMStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleType" Type="int" Nullable="false" />
+          <Property Name="RoleDescription" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastModifiedID" Type="int" />
+          <Property Name="TMStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ScoutBug">
+          <Key>
+            <PropertyRef Name="ScoutBugID" />
+          </Key>
+          <Property Name="ScoutBugID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ScoutStopID" Type="bigint" Nullable="false" />
+          <Property Name="SpeciesID" Type="bigint" Nullable="false" />
+          <Property Name="NumberOfBugs" Type="int" Nullable="false" />
+          <Property Name="FieldPicture" Type="image" Nullable="false" />
+          <Property Name="Comments" Type="varchar" MaxLength="100" />
+          <Property Name="LastModifiedID" Type="int" />
+          <Property Name="TMStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ScoutStop">
+          <Key>
+            <PropertyRef Name="ScoutStopID" />
+          </Key>
+          <Property Name="ScoutStopID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="BlockID" Type="bigint" Nullable="false" />
+          <Property Name="NumberOfTrees" Type="int" Nullable="false" />
+          <Property Name="Latitude" Type="real" Nullable="false" />
+          <Property Name="Longitude" Type="real" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedID" Type="int" />
+          <Property Name="TMStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Species">
+          <Key>
+            <PropertyRef Name="SpeciesID" />
+          </Key>
+          <Property Name="SpeciesID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SpeciesName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Lifestage" Type="int" Nullable="false" />
+          <Property Name="IdealPicture" Type="image" Nullable="false" />
+          <Property Name="IsPest" Type="bit" Nullable="false" />
+          <Property Name="LastModifiedID" Type="int" />
+          <Property Name="TMStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Treatment">
+          <Key>
+            <PropertyRef Name="TreatmentID" />
+          </Key>
+          <Property Name="TreatmentID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BlockID" Type="bigint" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Comments" Type="varchar" MaxLength="100" />
+          <Property Name="LastModifiedID" Type="int" />
+          <Property Name="TMStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastModifiedID" Type="int" />
+          <Property Name="TMStamp" Type="datetime" />
+        </EntityType>
+        <EntityType Name="UserRole">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="RoleID" Type="bigint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Farm_ToBlock">
+          <End Role="Farm" Type="Self.Farm" Multiplicity="1" />
+          <End Role="Block" Type="Self.Block" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Farm">
+              <PropertyRef Name="FarmID" />
+            </Principal>
+            <Dependent Role="Block">
+              <PropertyRef Name="FarmID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Farm_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Farm" Type="Self.Farm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Farm">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScoutBug_ToScoutStop">
+          <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="1" />
+          <End Role="ScoutBug" Type="Self.ScoutBug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScoutStop">
+              <PropertyRef Name="ScoutStopID" />
+            </Principal>
+            <Dependent Role="ScoutBug">
+              <PropertyRef Name="ScoutStopID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScoutBug_ToSpecies">
+          <End Role="Species" Type="Self.Species" Multiplicity="1" />
+          <End Role="ScoutBug" Type="Self.ScoutBug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Species">
+              <PropertyRef Name="SpeciesID" />
+            </Principal>
+            <Dependent Role="ScoutBug">
+              <PropertyRef Name="SpeciesID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScoutStop_ToBlock">
+          <End Role="Block" Type="Self.Block" Multiplicity="1" />
+          <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Block">
+              <PropertyRef Name="BlockID" />
+            </Principal>
+            <Dependent Role="ScoutStop">
+              <PropertyRef Name="BlockID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScoutStop_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="ScoutStop">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Treatment_ToBlock">
+          <End Role="Block" Type="Self.Block" Multiplicity="1" />
+          <End Role="Treatment" Type="Self.Treatment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Block">
+              <PropertyRef Name="BlockID" />
+            </Principal>
+            <Dependent Role="Treatment">
+              <PropertyRef Name="BlockID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_ToRole">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserRole_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserRole" Type="Self.UserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserRole">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BugDBModelStoreContainer">
+          <EntitySet Name="Block" EntityType="Self.Block" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Farm" EntityType="Self.Farm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScoutBug" EntityType="Self.ScoutBug" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScoutStop" EntityType="Self.ScoutStop" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Species" EntityType="Self.Species" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Treatment" EntityType="Self.Treatment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Farm_ToBlock" Association="Self.FK_Farm_ToBlock">
+            <End Role="Farm" EntitySet="Farm" />
+            <End Role="Block" EntitySet="Block" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Farm_ToUser" Association="Self.FK_Farm_ToUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="Farm" EntitySet="Farm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScoutBug_ToScoutStop" Association="Self.FK_ScoutBug_ToScoutStop">
+            <End Role="ScoutStop" EntitySet="ScoutStop" />
+            <End Role="ScoutBug" EntitySet="ScoutBug" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScoutBug_ToSpecies" Association="Self.FK_ScoutBug_ToSpecies">
+            <End Role="Species" EntitySet="Species" />
+            <End Role="ScoutBug" EntitySet="ScoutBug" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScoutStop_ToBlock" Association="Self.FK_ScoutStop_ToBlock">
+            <End Role="Block" EntitySet="Block" />
+            <End Role="ScoutStop" EntitySet="ScoutStop" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScoutStop_ToUser" Association="Self.FK_ScoutStop_ToUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="ScoutStop" EntitySet="ScoutStop" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Treatment_ToBlock" Association="Self.FK_Treatment_ToBlock">
+            <End Role="Block" EntitySet="Block" />
+            <End Role="Treatment" EntitySet="Treatment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_ToRole" Association="Self.FK_UserRole_ToRole">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserRole_ToUser" Association="Self.FK_UserRole_ToUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserRole" EntitySet="UserRole" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BugDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Block">
+          <Key>
+            <PropertyRef Name="BlockID" />
+          </Key>
+          <Property Name="BlockID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FarmID" Type="Int64" Nullable="false" />
+          <Property Name="BlockName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Farm" Relationship="Self.FK_Farm_ToBlock" FromRole="Block" ToRole="Farm" />
+          <NavigationProperty Name="ScoutStops" Relationship="Self.FK_ScoutStop_ToBlock" FromRole="Block" ToRole="ScoutStop" />
+          <NavigationProperty Name="Treatments" Relationship="Self.FK_Treatment_ToBlock" FromRole="Block" ToRole="Treatment" />
+        </EntityType>
+        <EntityType Name="Farm">
+          <Key>
+            <PropertyRef Name="FarmID" />
+          </Key>
+          <Property Name="FarmID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="FarmName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Blocks" Relationship="Self.FK_Farm_ToBlock" FromRole="Farm" ToRole="Block" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Farm_ToUser" FromRole="Farm" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleType" Type="Int32" Nullable="false" />
+          <Property Name="RoleDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Users" Relationship="Self.UserRole" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <EntityType Name="ScoutBug">
+          <Key>
+            <PropertyRef Name="ScoutBugID" />
+          </Key>
+          <Property Name="ScoutBugID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ScoutStopID" Type="Int64" Nullable="false" />
+          <Property Name="SpeciesID" Type="Int64" Nullable="false" />
+          <Property Name="NumberOfBugs" Type="Int32" Nullable="false" />
+          <Property Name="FieldPicture" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="Comments" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ScoutStop" Relationship="Self.FK_ScoutBug_ToScoutStop" FromRole="ScoutBug" ToRole="ScoutStop" />
+          <NavigationProperty Name="Species" Relationship="Self.FK_ScoutBug_ToSpecies" FromRole="ScoutBug" ToRole="Species" />
+        </EntityType>
+        <EntityType Name="ScoutStop">
+          <Key>
+            <PropertyRef Name="ScoutStopID" />
+          </Key>
+          <Property Name="ScoutStopID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="BlockID" Type="Int64" Nullable="false" />
+          <Property Name="NumberOfTrees" Type="Int32" Nullable="false" />
+          <Property Name="Latitude" Type="Single" Nullable="false" />
+          <Property Name="Longitude" Type="Single" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Block" Relationship="Self.FK_ScoutStop_ToBlock" FromRole="ScoutStop" ToRole="Block" />
+          <NavigationProperty Name="ScoutBugs" Relationship="Self.FK_ScoutBug_ToScoutStop" FromRole="ScoutStop" ToRole="ScoutBug" />
+          <NavigationProperty Name="User" Relationship="Self.FK_ScoutStop_ToUser" FromRole="ScoutStop" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Species">
+          <Key>
+            <PropertyRef Name="SpeciesID" />
+          </Key>
+          <Property Name="SpeciesID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SpeciesName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Lifestage" Type="Int32" Nullable="false" />
+          <Property Name="IdealPicture" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="IsPest" Type="Boolean" Nullable="false" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ScoutBugs" Relationship="Self.FK_ScoutBug_ToSpecies" FromRole="Species" ToRole="ScoutBug" />
+        </EntityType>
+        <EntityType Name="Treatment">
+          <Key>
+            <PropertyRef Name="TreatmentID" />
+          </Key>
+          <Property Name="TreatmentID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BlockID" Type="Int64" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Comments" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Block" Relationship="Self.FK_Treatment_ToBlock" FromRole="Treatment" ToRole="Block" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastModifiedID" Type="Int32" />
+          <Property Name="TMStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Farms" Relationship="Self.FK_Farm_ToUser" FromRole="User" ToRole="Farm" />
+          <NavigationProperty Name="ScoutStops" Relationship="Self.FK_ScoutStop_ToUser" FromRole="User" ToRole="ScoutStop" />
+          <NavigationProperty Name="Roles" Relationship="Self.UserRole" FromRole="User" ToRole="Role" />
+        </EntityType>
+        <Association Name="FK_Farm_ToBlock">
+          <End Role="Farm" Type="Self.Farm" Multiplicity="1" />
+          <End Role="Block" Type="Self.Block" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Farm">
+              <PropertyRef Name="FarmID" />
+            </Principal>
+            <Dependent Role="Block">
+              <PropertyRef Name="FarmID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScoutStop_ToBlock">
+          <End Role="Block" Type="Self.Block" Multiplicity="1" />
+          <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Block">
+              <PropertyRef Name="BlockID" />
+            </Principal>
+            <Dependent Role="ScoutStop">
+              <PropertyRef Name="BlockID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Treatment_ToBlock">
+          <End Role="Block" Type="Self.Block" Multiplicity="1" />
+          <End Role="Treatment" Type="Self.Treatment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Block">
+              <PropertyRef Name="BlockID" />
+            </Principal>
+            <Dependent Role="Treatment">
+              <PropertyRef Name="BlockID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Farm_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Farm" Type="Self.Farm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Farm">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScoutBug_ToScoutStop">
+          <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="1" />
+          <End Role="ScoutBug" Type="Self.ScoutBug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ScoutStop">
+              <PropertyRef Name="ScoutStopID" />
+            </Principal>
+            <Dependent Role="ScoutBug">
+              <PropertyRef Name="ScoutStopID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScoutBug_ToSpecies">
+          <End Role="Species" Type="Self.Species" Multiplicity="1" />
+          <End Role="ScoutBug" Type="Self.ScoutBug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Species">
+              <PropertyRef Name="SpeciesID" />
+            </Principal>
+            <Dependent Role="ScoutBug">
+              <PropertyRef Name="SpeciesID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScoutStop_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="ScoutStop">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserRole">
+          <End Role="Role" Type="Self.Role" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="BugDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Blocks" EntityType="Self.Block" />
+          <EntitySet Name="Farms" EntityType="Self.Farm" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="ScoutBugs" EntityType="Self.ScoutBug" />
+          <EntitySet Name="ScoutStops" EntityType="Self.ScoutStop" />
+          <EntitySet Name="Species" EntityType="Self.Species" />
+          <EntitySet Name="Treatments" EntityType="Self.Treatment" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Farm_ToBlock" Association="Self.FK_Farm_ToBlock">
+            <End Role="Farm" EntitySet="Farms" />
+            <End Role="Block" EntitySet="Blocks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScoutStop_ToBlock" Association="Self.FK_ScoutStop_ToBlock">
+            <End Role="Block" EntitySet="Blocks" />
+            <End Role="ScoutStop" EntitySet="ScoutStops" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Treatment_ToBlock" Association="Self.FK_Treatment_ToBlock">
+            <End Role="Block" EntitySet="Blocks" />
+            <End Role="Treatment" EntitySet="Treatments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Farm_ToUser" Association="Self.FK_Farm_ToUser">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Farm" EntitySet="Farms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScoutBug_ToScoutStop" Association="Self.FK_ScoutBug_ToScoutStop">
+            <End Role="ScoutStop" EntitySet="ScoutStops" />
+            <End Role="ScoutBug" EntitySet="ScoutBugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScoutBug_ToSpecies" Association="Self.FK_ScoutBug_ToSpecies">
+            <End Role="Species" EntitySet="Species" />
+            <End Role="ScoutBug" EntitySet="ScoutBugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScoutStop_ToUser" Association="Self.FK_ScoutStop_ToUser">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ScoutStop" EntitySet="ScoutStops" />
+          </AssociationSet>
+          <AssociationSet Name="UserRole" Association="Self.UserRole">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BugDBModelStoreContainer" CdmEntityContainer="BugDBEntities">
+          <EntitySetMapping Name="Blocks">
+            <EntityTypeMapping TypeName="BugDBModel.Block">
+              <MappingFragment StoreEntitySet="Block">
+                <ScalarProperty Name="BlockID" ColumnName="BlockID" />
+                <ScalarProperty Name="FarmID" ColumnName="FarmID" />
+                <ScalarProperty Name="BlockName" ColumnName="BlockName" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Farms">
+            <EntityTypeMapping TypeName="BugDBModel.Farm">
+              <MappingFragment StoreEntitySet="Farm">
+                <ScalarProperty Name="FarmID" ColumnName="FarmID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="FarmName" ColumnName="FarmName" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="BugDBModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleType" ColumnName="RoleType" />
+                <ScalarProperty Name="RoleDescription" ColumnName="RoleDescription" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScoutBugs">
+            <EntityTypeMapping TypeName="BugDBModel.ScoutBug">
+              <MappingFragment StoreEntitySet="ScoutBug">
+                <ScalarProperty Name="ScoutBugID" ColumnName="ScoutBugID" />
+                <ScalarProperty Name="ScoutStopID" ColumnName="ScoutStopID" />
+                <ScalarProperty Name="SpeciesID" ColumnName="SpeciesID" />
+                <ScalarProperty Name="NumberOfBugs" ColumnName="NumberOfBugs" />
+                <ScalarProperty Name="FieldPicture" ColumnName="FieldPicture" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScoutStops">
+            <EntityTypeMapping TypeName="BugDBModel.ScoutStop">
+              <MappingFragment StoreEntitySet="ScoutStop">
+                <ScalarProperty Name="ScoutStopID" ColumnName="ScoutStopID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="BlockID" ColumnName="BlockID" />
+                <ScalarProperty Name="NumberOfTrees" ColumnName="NumberOfTrees" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Species">
+            <EntityTypeMapping TypeName="BugDBModel.Species">
+              <MappingFragment StoreEntitySet="Species">
+                <ScalarProperty Name="SpeciesID" ColumnName="SpeciesID" />
+                <ScalarProperty Name="SpeciesName" ColumnName="SpeciesName" />
+                <ScalarProperty Name="Lifestage" ColumnName="Lifestage" />
+                <ScalarProperty Name="IdealPicture" ColumnName="IdealPicture" />
+                <ScalarProperty Name="IsPest" ColumnName="IsPest" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Treatments">
+            <EntityTypeMapping TypeName="BugDBModel.Treatment">
+              <MappingFragment StoreEntitySet="Treatment">
+                <ScalarProperty Name="TreatmentID" ColumnName="TreatmentID" />
+                <ScalarProperty Name="BlockID" ColumnName="BlockID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="BugDBModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="LastModifiedID" ColumnName="LastModifiedID" />
+                <ScalarProperty Name="TMStamp" ColumnName="TMStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="UserRole" TypeName="BugDBModel.UserRole" StoreEntitySet="UserRole">
+            <EndProperty Name="Role">
+              <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+            </EndProperty>
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserID" ColumnName="UserID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

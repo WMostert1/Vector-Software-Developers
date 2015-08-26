@@ -39,6 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BugReporting\DTO\GetCapturedDataRequest.cs" />
+    <Compile Include="BugReporting\DTO\GetCapturedDataResponse.cs" />
+    <Compile Include="BugReporting\DTO\ScoutBugDto.cs" />
+    <Compile Include="BugReporting\DTO\ScoutStopDto.cs" />
+    <Compile Include="BugReporting\DTO\TreatmentDto.cs" />
     <Compile Include="BugReporting\IBugReporting.cs" />
     <Compile Include="BugSecurity\DTO\EditUserRoleRequest.cs" />
     <Compile Include="BugSecurity\DTO\LoginRequest.cs" />
@@ -75,14 +80,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataAccess.Interface\DataAccess.Interface.csproj">
-      <Project>{02c58a1b-5945-4a36-acc6-df1a10052947}</Project>
-      <Name>DataAccess.Interface</Name>
-    </ProjectReference>
+    <Folder Include="BugReporting\Exceptions\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BugReporting\DTO\" />
-    <Folder Include="BugReporting\Exceptions\" />
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj">
+      <Project>{f45bc879-abb9-4d04-8868-dac9191ef054}</Project>
+      <Name>DataAccess</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
