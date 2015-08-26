@@ -8,5 +8,6 @@ namespace BugBusiness.Interface.BugReporting.DTO
 {
     public class GetCapturedDataRequest
     {
+        public long FarmId { get; set; }
     }
 }

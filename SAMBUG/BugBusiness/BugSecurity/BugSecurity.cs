@@ -16,16 +16,16 @@ namespace BugBusiness.BugSecurity
     public class BugSecurity : IBugSecurity
     {
 
-        private readonly IDbBugSecurity _dbAuthentication;
+        private readonly IDbBugSecurity _dbBugSecurity;
 
-        public BugSecurity(IDbBugSecurity dbAuthentication)
+        public BugSecurity(IDbBugSecurity dbBugSecurity)
         {
-            _dbAuthentication = dbAuthentication;
+            _dbBugSecurity = dbBugSecurity;
         }
 
         public LoginResponse Login(LoginRequest loginRequest)
         {
-            User user = _dbAuthentication.GetUserByCredentials(loginRequest.Username, loginRequest.Password);
+            User user = _dbBugSecurity.GetUserByCredentials(loginRequest.Username, loginRequest.Password);
 
             if (user == null)
                 throw new NotRegisteredException();
@@ -59,7 +59,7 @@ namespace BugBusiness.BugSecurity
                 throw new InvalidInputException();
             }
 
-            bool queryResult = _dbAuthentication.InsertNewUser(registerRequest.Username, registerRequest.Password, registerRequest.FarmName);
+            bool queryResult = _dbBugSecurity.InsertNewUser(registerRequest.Username, registerRequest.Password, registerRequest.FarmName);
 
             if (queryResult == false)
             {
@@ -77,14 +77,14 @@ namespace BugBusiness.BugSecurity
 
         public ViewEditUserRolesResponse GetUsers()
         {
-            var users = _dbAuthentication.GetAllUsers();
+            var users = _dbBugSecurity.GetAllUsers();
             return new ViewEditUserRolesResponse { Users = users };
         }
 
         public void EditUserRoles(EditUserRoleRequest editUserRoleRequest)
         {
 
-            _dbAuthentication.EditUserRoles(editUserRoleRequest.UserId, editUserRoleRequest.IsGrower,
+            _dbBugSecurity.EditUserRoles(editUserRoleRequest.UserId, editUserRoleRequest.IsGrower,
                 editUserRoleRequest.IsAdministrator);
 
         }

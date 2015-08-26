@@ -7,15 +7,23 @@ namespace DataAccess.MSSQL
 {
     public class DbBugReporting : IDbBugReporting
     {
-        public Farm GetFarmById(long farmId)
+        public List<ScoutStop> GetScoutStopsByFarmId(long farmId)
         {
             var db = new BugDBEntities();
 
-            Farm farm = db.Farms.SingleOrDefault(frm => frm.FarmID.Equals(farmId));
-            
-            return farm;
+            List<ScoutStop> scoutStops = db.ScoutStops.Select(stop => stop).Where(stop => stop.Block.Farm.FarmID.Equals(farmId)).ToList();
+
+            return scoutStops;
 
         }
-         
+
+        public List<Treatment> GetTreatmentsByFarmId(long farmId)
+        {
+            var db = new BugDBEntities();
+
+            List<Treatment> treatments = db.Treatments.Select(tr => tr).Where(tr => tr.Block.Farm.FarmID.Equals(farmId)).ToList();
+
+            return treatments;
+        }
     }
 }
