@@ -1,6 +1,6 @@
 ﻿CREATE TRIGGER [trg_BlockStamp]
 	ON [dbo].[Block]
-	FOR INSERT, UPDATE
+	AFTER INSERT, UPDATE
 	AS
 	BEGIN
 		SET NOCOUNT ON
