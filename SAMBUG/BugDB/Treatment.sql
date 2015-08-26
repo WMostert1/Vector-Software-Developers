@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Treatment]
 (
-	[TreatmentID] BIGINT NOT NULL PRIMARY KEY IDENTITY ,
+	[TreatmentID] BIGINT NOT NULL PRIMARY KEY IDENTITY,
 	[BlockID] BIGINT NOT NULL,
 	[Date] DATETIME NOT NULL,
 	[Comments] VARCHAR(100),
@@ -8,3 +8,4 @@
 	[TMStamp] DATETIME,
 	CONSTRAINT [FK_Treatment_ToBlock] FOREIGN KEY ([BlockID]) REFERENCES [Block]([BlockID])
 )
+

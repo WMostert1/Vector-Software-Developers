@@ -4,7 +4,7 @@
 	[ScoutStopID] BIGINT NOT NULL,
 	[SpeciesID] BIGINT NOT NULL,
 	[NumberOfBugs] INT NOT NULL,
-	[FieldPicture] IMAGE NOT NULL,
+	[FieldPicture] VARBINARY(MAX) NOT NULL,
 	[Comments] VARCHAR(100),
 	[LastModifiedID] INT,
 	[TMStamp] DATETIME,
