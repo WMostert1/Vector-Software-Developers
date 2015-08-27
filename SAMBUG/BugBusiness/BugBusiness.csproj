@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BugAuthentication\BugAuthentication.cs" />
+    <Compile Include="BugAuthentication\HelperClass\EmailSender.cs" />
     <Compile Include="BugSecurity\BugSecurity.cs" />
     <Compile Include="FarmManagement\FarmManagement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
 using BugBusiness.Interface.BugSecurity;
+using BugBusiness.BugAuthentication;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
@@ -22,11 +23,12 @@ namespace BugWeb.Controllers
     {
 
         private readonly IBugSecurity _bugSecurity;
-
+        private readonly BugAuthentication _bugAuthentication;
 
         public AuthenticationController(IBugSecurity bugSecurity)
         {
             _bugSecurity = bugSecurity;
+            _bugAuthentication = new BugAuthentication();
         }
 
         public ActionResult Login(LoginViewModel loginViewModel)
@@ -121,9 +123,9 @@ namespace BugWeb.Controllers
         public ActionResult RecoverAccount(RecoverAccountModel recoverAccountModel)
         {
             //Console.WriteLine("blah" + recoverAccountModel.Username);
-
-            return RedirectToAction("RecoverAccount", "api/authentication/recover");
-            //return RedirectToAction("CheckEmail", "Authentication");
+            RecoverAccountRequest req =new RecoverAccountRequest();
+            _bugAuthentication.RecoverAccount("kaleabtessera@gmail.com");
+            return RedirectToAction("CheckEmail", "Authentication");
             
        }
         //[HttpGet]

@@ -8,6 +8,7 @@ using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using Newtonsoft.Json.Linq;
+using BugCentral.HelperClass;
 
 namespace BugCentral.Controllers
 {
@@ -51,8 +52,9 @@ namespace BugCentral.Controllers
         }
 
         [Route("recover")]
-        public void RecoverAccount(RecoverAccountRequest  recoverAccountRequest){
-            Environment.Exit(0);
+        public void Post([FromBody] RecoverAccountRequest recoverAccountRequest)
+        {
+            EmailSender es = new EmailSender("kaleabtessera@gmail.com");
         }
     }
 }
