@@ -17,7 +17,7 @@ namespace DataAccess.MSSQL
         public Interface.Domain.User GetUserByCredentials(string username, string password)
         {
             var db = new BugDBEntities();
-            
+
             var entityUser = db.Users.SingleOrDefault(usr => usr.Email.Equals(username) && usr.Password.Equals(password));
 
             if (entityUser == default(User))
@@ -29,20 +29,21 @@ namespace DataAccess.MSSQL
             var farms = entityUser.Farms.Select(farm =>
                 new Interface.Domain.Farm()
                 {
-                    FarmID=farm.FarmID,
-                    FarmName=farm.FarmName,
-                    Blocks=farm.Blocks.Select(block=>
+                    FarmID = farm.FarmID,
+                    FarmName = farm.FarmName,
+                    Blocks = farm.Blocks.Select(block =>
                         new Interface.Domain.Block()
                         {
-                            BlockID=block.BlockID,
-                            BlockName=block.BlockName
+                            BlockID = block.BlockID,
+                            BlockName = block.BlockName
                         }).ToList()
                 }).ToList();
 
             //map EF Role to Domain Role
             var roles = entityUser.Roles.Select(role =>
-            new Interface.Domain.Role(){
-                Type = role.RoleType, 
+            new Interface.Domain.Role()
+            {
+                Type = role.RoleType,
                 Description = role.RoleDescription,
                 RoleId = role.RoleID
             }).ToList();
@@ -52,11 +53,11 @@ namespace DataAccess.MSSQL
             {
                 UserId = entityUser.UserID,
                 Roles = roles,
-                Farms=farms
+                Farms = farms
             };
 
             return domainUser;
-            
+
         }
 
         //TODO: Remove magic number => 1
@@ -95,19 +96,23 @@ namespace DataAccess.MSSQL
 
         public ICollection<Interface.Domain.User> GetAllUsers()
         {
-            var db  = new BugDBEntities();
-            var db_users =  db.Users.ToList();
+            var db = new BugDBEntities();
+            var db_users = db.Users.ToList();
 
 
             return (from user in db_users
-                let roles = user.Roles.Select(role => new Interface.Domain.Role()
-                {
-                    Type = role.RoleType, Description = role.RoleDescription, RoleId = role.RoleID
-                }).ToList()
-                select new Interface.Domain.User()
-                {
-                    Email = user.Email, Roles = roles, UserId = user.UserID
-                }).ToList();
+                    let roles = user.Roles.Select(role => new Interface.Domain.Role()
+                    {
+                        Type = role.RoleType,
+                        Description = role.RoleDescription,
+                        RoleId = role.RoleID
+                    }).ToList()
+                    select new Interface.Domain.User()
+                    {
+                        Email = user.Email,
+                        Roles = roles,
+                        UserId = user.UserID
+                    }).ToList();
 
         }
 
@@ -142,5 +147,21 @@ namespace DataAccess.MSSQL
             }
             db.SaveChanges();
         }
+
+
+        public bool ChangeUserPassword(string username, string password)
+        {
+            var db = new BugDBEntities();
+            try { 
+            User user = db.Users.SingleOrDefault(usr => usr.Email == username);
+            user.Password = password;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+            return true;
+        }
+
     }
 }

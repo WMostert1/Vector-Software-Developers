@@ -189,6 +189,7 @@
     <Content Include="Views\Authentication\EditUserRoles.cshtml" />
     <Content Include="Views\Authentication\RecoverAccount.cshtml" />
     <Content Include="Views\Authentication\CheckEmail.cshtml" />
+    <Content Include="Views\Authentication\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

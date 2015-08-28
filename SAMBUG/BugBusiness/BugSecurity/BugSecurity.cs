@@ -88,5 +88,10 @@ namespace BugBusiness.BugSecurity
                 editUserRoleRequest.IsAdministrator);
 
         }
+
+        public bool ChangeUserPassword(string username, string password){
+            return _dbAuthentication.ChangeUserPassword(username, password);
+
+        }
     }
 }

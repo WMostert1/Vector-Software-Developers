@@ -28,7 +28,7 @@ namespace BugWeb.Controllers
         public AuthenticationController(IBugSecurity bugSecurity)
         {
             _bugSecurity = bugSecurity;
-            _bugAuthentication = new BugAuthentication();
+            _bugAuthentication = new BugAuthentication(_bugSecurity);
         }
 
         public ActionResult Login(LoginViewModel loginViewModel)
@@ -122,9 +122,7 @@ namespace BugWeb.Controllers
        // [HttpPost]
         public ActionResult RecoverAccount(RecoverAccountModel recoverAccountModel)
         {
-            //Console.WriteLine("blah" + recoverAccountModel.Username);
-            RecoverAccountRequest req =new RecoverAccountRequest();
-            _bugAuthentication.RecoverAccount("kaleabtessera@gmail.com");
+            _bugAuthentication.RecoverAccount(recoverAccountModel.Username, "http://localhost:53249/Home/ChangePassword");
             return RedirectToAction("CheckEmail", "Authentication");
             
        }
@@ -133,5 +131,12 @@ namespace BugWeb.Controllers
         {
             return View("~/Views/Authentication/CheckEmail.cshtml");
         }
+
+        public ActionResult ChangePassword(LoginViewModel loginViewModel)
+        {
+            _bugAuthentication.ChangePassword(loginViewModel.Username, loginViewModel.Password);
+            return RedirectToAction("login", "home");
+        }
+
     }
 }

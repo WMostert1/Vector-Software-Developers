@@ -15,6 +15,6 @@ namespace BugBusiness.Interface.BugSecurity
         RecoverAccountResponse RecoverAccount(RecoverAccountRequest recoverAccountRequest);
         ViewEditUserRolesResponse GetUsers();
         void EditUserRoles(EditUserRoleRequest editUserRoleRequest);
-
+        bool ChangeUserPassword(string username, string password);
     }
 }

@@ -14,6 +14,7 @@ namespace DataAccess.Interface
         bool InsertNewUser(string username, string password, string farmName);
         ICollection<User> GetAllUsers();
         void EditUserRoles(long userId, bool isGrower, bool isAdministrator);
+        bool ChangeUserPassword(string username, string password);
         
     }
 }

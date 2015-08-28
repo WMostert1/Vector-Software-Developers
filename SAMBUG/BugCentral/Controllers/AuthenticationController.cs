@@ -51,10 +51,10 @@ namespace BugCentral.Controllers
             }
         }
 
-        [Route("recover")]
+       /* [Route("recover")]
         public void Post([FromBody] RecoverAccountRequest recoverAccountRequest)
         {
             EmailSender es = new EmailSender("kaleabtessera@gmail.com");
-        }
+        }*/
     }
 }

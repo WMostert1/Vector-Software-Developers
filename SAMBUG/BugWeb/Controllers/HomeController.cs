@@ -47,5 +47,10 @@ namespace BugWeb.Controllers
             return View("~/Views/Authentication/RecoverAccount.cshtml");
         }
 
+        public ActionResult ChangePassword()
+        {
+            return View("~/Views/Authentication/ChangePassword.cshtml");
+        }
+
     }
 }
