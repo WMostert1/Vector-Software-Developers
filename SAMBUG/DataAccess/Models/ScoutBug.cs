@@ -20,8 +20,8 @@ namespace DataAccess.Models
         public int NumberOfBugs { get; set; }
         public byte[] FieldPicture { get; set; }
         public string Comments { get; set; }
-        public Nullable<int> LastModifiedID { get; set; }
-        public Nullable<System.DateTime> TMStamp { get; set; }
+        public string LastModifiedID { get; set; }
+        public System.DateTime TMStamp { get; set; }
     
         public virtual ScoutStop ScoutStop { get; set; }
         public virtual Species Species { get; set; }

@@ -82,27 +82,21 @@
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Role.cs">
-      <SubType>Code</SubType>
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ScoutBug.cs">
-      <SubType>Code</SubType>
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ScoutStop.cs">
-      <SubType>Code</SubType>
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Species.cs">
-      <SubType>Code</SubType>
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Treatment.cs">
-      <SubType>Code</SubType>
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
-      <SubType>Code</SubType>
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
     <Compile Include="MSSQL\DbBugSecurity.cs" />

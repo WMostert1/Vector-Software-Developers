@@ -1,11 +1,11 @@
-﻿CREATE TRIGGER [trg_BlockStamp]
-	ON [dbo].[Block]
+﻿CREATE TRIGGER [trg_ScoutStopStamp]
+	ON [dbo].[ScoutStop]
 	AFTER UPDATE
 	AS
 	BEGIN
 		SET NOCOUNT ON
 		IF UPDATE(TMStamp) OR UPDATE(LastModifiedID) RETURN;
-		UPDATE [dbo].[Block]
+		UPDATE [dbo].[ScoutStop]
 		SET TMStamp = GETDATE(), LastModifiedID = CURRENT_USER
-		WHERE BlockID IN (SELECT BlockID FROM deleted)
+		WHERE ScoutStopID IN (SELECT ScoutStopID FROM deleted)
 	END

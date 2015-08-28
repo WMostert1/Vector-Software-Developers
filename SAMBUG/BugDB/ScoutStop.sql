@@ -7,8 +7,8 @@
 	[Latitude] REAL NOT NULL,
 	[Longitude] REAL NOT NULL,
 	[Date] DATETIME NOT NULL,
-	[LastModifiedID] INT,
-	[TMStamp] DATETIME,
+	[LastModifiedID] SYSNAME DEFAULT CURRENT_USER NOT NULL,
+	[TMStamp] DATETIME DEFAULT GETDATE() NOT NULL	
 	CONSTRAINT [FK_ScoutStop_ToUser] FOREIGN KEY ([UserID]) REFERENCES [User]([UserID]),
 	CONSTRAINT [FK_ScoutStop_ToBlock] FOREIGN KEY ([BlockID]) REFERENCES [Block]([BlockID])
 )

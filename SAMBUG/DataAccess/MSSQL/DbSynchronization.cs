@@ -21,9 +21,9 @@ namespace DataAccess.MSSQL
                     NumberOfTrees = numberOfTrees,
                     Latitude = latitude,
                     Longitude = longitude,
-                    Date = date,
-                    LastModifiedID = lastModifiedID,
-                    TMStamp = tmStamp
+                    Date = date
+                    /*LastModifiedID = lastModifiedID,
+                    TMStamp = tmStamp*/
                 };
                 db.ScoutStops.Add(scoutStop);
                 db.SaveChanges();
@@ -48,9 +48,9 @@ namespace DataAccess.MSSQL
                     SpeciesID = speciesID,
                     NumberOfBugs = numberOfBugs,
                     FieldPicture = fieldImage,
-                    Comments = comments,
-                    LastModifiedID = lastModifiedID,
-                    TMStamp = tmpStamp
+                    Comments = comments
+                    /*LastModifiedID = lastModifiedID,
+                    TMStamp = tmpStamp*/
                 };
                 db.ScoutBugs.Add(scoutBug);
                 db.SaveChanges();
