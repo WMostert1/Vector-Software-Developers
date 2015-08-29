@@ -70,8 +70,16 @@
     <Build Include="ScoutBug.sql" />
     <Build Include="Species.sql" />
     <Build Include="UserRole.sql" />
+    <Build Include="trg_BlockStamp.sql" />
+    <Build Include="trg_UserStamp.sql" />
+    <Build Include="trg_FarmStamp.sql" />
+    <Build Include="trg_RoleStamp.sql" />
+    <Build Include="trg_ScoutBugStamp.sql" />
+    <Build Include="trg_ScoutStopStamp.sql" />
+    <Build Include="trg_SpeciesStamp.sql" />
+    <Build Include="trg_TreatmentStamp.sql" />
   </ItemGroup>
   <ItemGroup>
-    <RefactorLog Include="BugDB.refactorlog" />
+    <PostDeploy Include="Initialisation.sql" />
   </ItemGroup>
 </Project>

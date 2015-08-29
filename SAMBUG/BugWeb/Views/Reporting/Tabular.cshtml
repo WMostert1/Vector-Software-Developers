@@ -1,0 +1,44 @@
+﻿@model DataAccess.Interface.Domain.User
+@{
+    ViewBag.Title = "Tabular";
+}
+
+
+@section scripts{
+    <script src="~/Scripts/Table.js"></script>
+}
+
+
+
+<h3>Blocks:</h3>
+<select id="blocks" class="form-control">
+    <option value="all">All Blocks</option>
+    @foreach (var x in @Model.Farms)
+    {
+        foreach (var y in x.Blocks)
+        {
+            <option value=@y.BlockName>@y.BlockName</option>
+        }
+
+    }
+</select>
+
+<h3>Time Range:</h3>
+<h5>From</h5>
+<input type="date" id="timeFrom" class="form-control">
+<h5>To</h5>
+<input type="date" id="timeTo" class="form-control">
+
+<h3>Species:</h3>
+<select id="species" class="form-control">
+    <option value="all">All Species</option>
+</select>
+
+<h3>View By:</h3>
+<select id="view" class="form-control">
+    <option value="date">Date</option>
+    <option value="species">Species (Pests)</option>
+    <option value="blockName">Blocks</option>
+</select>
+
+<button style="margin-top: 15px" class="btn-default" onclick="generate()">Generate tables</button>

@@ -4,10 +4,10 @@
 	[ScoutStopID] BIGINT NOT NULL,
 	[SpeciesID] BIGINT NOT NULL,
 	[NumberOfBugs] INT NOT NULL,
-	[FieldPicture] IMAGE NOT NULL,
-	[Comments] VARCHAR(100),
-	[LastModifiedID] INT,
-	[TMStamp] DATETIME,
+	[FieldPicture] VARBINARY(MAX) NOT NULL,
+	[Comments] VARCHAR(500),
+	[LastModifiedID] SYSNAME DEFAULT CURRENT_USER NOT NULL,
+	[TMStamp] DATETIME DEFAULT GETDATE() NOT NULL	
 	CONSTRAINT [FK_ScoutBug_ToScoutStop] FOREIGN KEY ([ScoutStopID]) REFERENCES [ScoutStop]([ScoutStopID]),
 	CONSTRAINT [FK_ScoutBug_ToSpecies] FOREIGN KEY ([SpeciesID]) REFERENCES [Species]([SpeciesID])
 )

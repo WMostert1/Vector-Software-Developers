@@ -66,6 +66,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BugReportingTest.cs" />
     <Compile Include="BugSecurityTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FarmManagementTest.cs" />
@@ -79,13 +80,9 @@
       <Project>{6aadb819-c1d4-41d8-964a-3242a094716c}</Project>
       <Name>BugBusiness</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DataAccess.Interface\DataAccess.Interface.csproj">
-      <Project>{02c58a1b-5945-4a36-acc6-df1a10052947}</Project>
-      <Name>DataAccess.Interface</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataAccess.MSSQL\DataAccess.MSSQL.csproj">
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj">
       <Project>{f45bc879-abb9-4d04-8868-dac9191ef054}</Project>
-      <Name>DataAccess.MSSQL</Name>
+      <Name>DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

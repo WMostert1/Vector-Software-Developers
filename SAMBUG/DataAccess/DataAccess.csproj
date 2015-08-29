@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F45BC879-ABB9-4D04-8868-DAC9191EF054}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataAccess</RootNamespace>
+    <AssemblyName>DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interface\Domain\Block.cs" />
+    <Compile Include="Interface\Domain\Farm.cs" />
+    <Compile Include="Interface\Domain\Role.cs" />
+    <Compile Include="Interface\Domain\ScoutBug.cs" />
+    <Compile Include="Interface\Domain\ScoutStop.cs" />
+    <Compile Include="Interface\Domain\Species.cs" />
+    <Compile Include="Interface\Domain\Treatment.cs" />
+    <Compile Include="Interface\Domain\User.cs" />
+    <Compile Include="Interface\IDbBugSecurity.cs" />
+    <Compile Include="Interface\IDbFarmManagement.cs" />
+    <Compile Include="Interface\IDbBugReporting.cs" />
+    <Compile Include="Interface\IDbSynchronization.cs" />
+    <Compile Include="Models\Block.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityFrameworkModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityFrameworkModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityFrameworkModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EntityFrameworkModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityFrameworkModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Farm.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Role.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ScoutBug.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ScoutStop.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Species.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Treatment.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MSSQL\DbBugSecurity.cs" />
+    <Compile Include="MSSQL\DbFarmManagement.cs" />
+    <Compile Include="MSSQL\DbBugReporting.cs" />
+    <Compile Include="MSSQL\DbSynchronization.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="Models\EntityFrameworkModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EntityFrameworkModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Models\EntityFrameworkModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityFrameworkModel.edmx</DependentUpon>
+      <LastGenOutput>EntityFrameworkModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Models\EntityFrameworkModel.edmx.diagram">
+      <DependentUpon>EntityFrameworkModel.edmx</DependentUpon>
+    </None>
+    <None Include="Models\EntityFrameworkModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EntityFrameworkModel.edmx</DependentUpon>
+      <LastGenOutput>EntityFrameworkModel.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
