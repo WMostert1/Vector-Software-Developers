@@ -12,8 +12,8 @@
           <Property Name="BlockID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FarmID" Type="bigint" Nullable="false" />
           <Property Name="BlockName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="TMStamp" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="Farm">
           <Key>
@@ -22,8 +22,8 @@
           <Property Name="FarmID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserID" Type="bigint" Nullable="false" />
           <Property Name="FarmName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="TMStamp" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -32,8 +32,8 @@
           <Property Name="RoleID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RoleType" Type="int" Nullable="false" />
           <Property Name="RoleDescription" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="TMStamp" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="ScoutBug">
           <Key>
@@ -45,8 +45,8 @@
           <Property Name="NumberOfBugs" Type="int" Nullable="false" />
           <Property Name="FieldPicture" Type="varbinary(max)" Nullable="false" />
           <Property Name="Comments" Type="varchar" MaxLength="500" />
-          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="TMStamp" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="ScoutStop">
           <Key>
@@ -58,8 +58,8 @@
           <Property Name="Latitude" Type="real" Nullable="false" />
           <Property Name="Longitude" Type="real" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
-          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="TMStamp" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="Species">
           <Key>
@@ -70,8 +70,8 @@
           <Property Name="Lifestage" Type="int" Nullable="false" />
           <Property Name="IdealPicture" Type="varbinary(max)" Nullable="false" />
           <Property Name="IsPest" Type="bit" Nullable="false" />
-          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="TMStamp" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="Treatment">
           <Key>
@@ -81,8 +81,8 @@
           <Property Name="BlockID" Type="bigint" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Comments" Type="varchar" MaxLength="500" />
-          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="TMStamp" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -91,8 +91,8 @@
           <Property Name="UserID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="TMStamp" Type="datetime" Nullable="false" />
+          <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="UserRole">
           <Key>
@@ -252,8 +252,8 @@
           <Property Name="BlockID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FarmID" Type="Int64" Nullable="false" />
           <Property Name="BlockName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastModifiedID" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="TMStamp" Nullable="false" Precision="3" Type="DateTime" />
+          <Property Name="LastModifiedID" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" Type="String" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Nullable="false" Precision="3" Type="DateTime" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Farm" Relationship="Self.FK_Farm_ToBlock" FromRole="Block" ToRole="Farm" />
           <NavigationProperty Name="ScoutStops" Relationship="Self.FK_ScoutStop_ToBlock" FromRole="Block" ToRole="ScoutStop" />
           <NavigationProperty Name="Treatments" Relationship="Self.FK_Treatment_ToBlock" FromRole="Block" ToRole="Treatment" />
@@ -265,8 +265,8 @@
           <Property Name="FarmID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserID" Type="Int64" Nullable="false" />
           <Property Name="FarmName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Blocks" Relationship="Self.FK_Farm_ToBlock" FromRole="Farm" ToRole="Block" />
           <NavigationProperty Name="User" Relationship="Self.FK_Farm_ToUser" FromRole="Farm" ToRole="User" />
         </EntityType>
@@ -277,8 +277,8 @@
           <Property Name="RoleID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RoleType" Type="Int32" Nullable="false" />
           <Property Name="RoleDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Users" Relationship="Self.UserRole" FromRole="Role" ToRole="User" />
         </EntityType>
         <EntityType Name="ScoutBug">
@@ -291,8 +291,8 @@
           <Property Name="NumberOfBugs" Type="Int32" Nullable="false" />
           <Property Name="FieldPicture" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <Property Name="Comments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="ScoutStop" Relationship="Self.FK_ScoutBug_ToScoutStop" FromRole="ScoutBug" ToRole="ScoutStop" />
           <NavigationProperty Name="Species" Relationship="Self.FK_ScoutBug_ToSpecies" FromRole="ScoutBug" ToRole="Species" />
         </EntityType>
@@ -306,8 +306,8 @@
           <Property Name="Latitude" Type="Single" Nullable="false" />
           <Property Name="Longitude" Type="Single" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Block" Relationship="Self.FK_ScoutStop_ToBlock" FromRole="ScoutStop" ToRole="Block" />
           <NavigationProperty Name="ScoutBugs" Relationship="Self.FK_ScoutBug_ToScoutStop" FromRole="ScoutStop" ToRole="ScoutBug" />
         </EntityType>
@@ -320,8 +320,8 @@
           <Property Name="Lifestage" Type="Int32" Nullable="false" />
           <Property Name="IdealPicture" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
           <Property Name="IsPest" Type="Boolean" Nullable="false" />
-          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="ScoutBugs" Relationship="Self.FK_ScoutBug_ToSpecies" FromRole="Species" ToRole="ScoutBug" />
         </EntityType>
         <EntityType Name="Treatment">
@@ -332,8 +332,8 @@
           <Property Name="BlockID" Type="Int64" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Comments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Block" Relationship="Self.FK_Treatment_ToBlock" FromRole="Treatment" ToRole="Block" />
         </EntityType>
         <EntityType Name="User">
@@ -343,8 +343,8 @@
           <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Farms" Relationship="Self.FK_Farm_ToUser" FromRole="User" ToRole="Farm" />
           <NavigationProperty Name="Roles" Relationship="Self.UserRole" FromRole="User" ToRole="Role" />
         </EntityType>
