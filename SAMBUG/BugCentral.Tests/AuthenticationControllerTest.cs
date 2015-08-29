@@ -3,9 +3,6 @@ using System.Web.Http;
 using System.Web.UI.WebControls;
 using BugCentral.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Autofac.Extras.Moq;
-using BugBusiness.Interface.BugSecurity;
-using BugBusiness.Interface.BugSecurity.DTO;
 using Should;
 
 namespace BugCentral.Tests

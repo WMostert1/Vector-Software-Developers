@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using System.Web.Http.Results;
 using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
@@ -11,12 +10,13 @@ using Newtonsoft.Json.Linq;
 using DataAccess.Interface;
 
 using System.Web;
-using System.Web.Mvc;
+
 using System.Text;
+using System.Web.Mvc;
 
 namespace BugCentral.Controllers
 {
-    [RoutePrefix("Synchronization")]
+    [System.Web.Http.RoutePrefix("Synchronization")]
     public class SynchronizationController : Controller
     {
         private IDbSynchronization dbSynchronization { get; set; }
@@ -28,7 +28,7 @@ namespace BugCentral.Controllers
            // json = _json;
         }
 
-         [Route("sync")]
+         [System.Web.Http.Route("sync")]
         public Boolean sync(string json)
         {
             try

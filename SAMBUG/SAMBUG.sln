@@ -13,9 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugCentral", "BugCentral\Bu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugCentral.Tests", "BugCentral.Tests\BugCentral.Tests.csproj", "{3CA2B5CE-9D7C-43CF-A425-6E5F3AC4300E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Interface", "DataAccess.Interface\DataAccess.Interface.csproj", "{02C58A1B-5945-4A36-ACC6-DF1A10052947}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.MSSQL", "DataAccess.MSSQL\DataAccess.MSSQL.csproj", "{F45BC879-ABB9-4D04-8868-DAC9191EF054}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{F45BC879-ABB9-4D04-8868-DAC9191EF054}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugBusiness", "BugBusiness\BugBusiness.csproj", "{6AADB819-C1D4-41D8-964A-3242A094716C}"
 EndProject
@@ -87,16 +85,6 @@ Global
 		{3CA2B5CE-9D7C-43CF-A425-6E5F3AC4300E}.Release|ARM.ActiveCfg = Release|Any CPU
 		{3CA2B5CE-9D7C-43CF-A425-6E5F3AC4300E}.Release|x64.ActiveCfg = Release|Any CPU
 		{3CA2B5CE-9D7C-43CF-A425-6E5F3AC4300E}.Release|x86.ActiveCfg = Release|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Release|ARM.ActiveCfg = Release|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Release|x64.ActiveCfg = Release|Any CPU
-		{02C58A1B-5945-4A36-ACC6-DF1A10052947}.Release|x86.ActiveCfg = Release|Any CPU
 		{F45BC879-ABB9-4D04-8868-DAC9191EF054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F45BC879-ABB9-4D04-8868-DAC9191EF054}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F45BC879-ABB9-4D04-8868-DAC9191EF054}.Debug|ARM.ActiveCfg = Debug|Any CPU

@@ -191,7 +191,7 @@ namespace BugBusiness.Tests
                 .Returns((Block)null);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
-            GetBlockByIDResult getblockbyidResult = farmManagement.GetBlockByID(new GetBlockByIDRequest()
+            farmManagement.GetBlockByID(new GetBlockByIDRequest()
             {
                 BlockID = Int64.MaxValue
             });
@@ -210,7 +210,7 @@ namespace BugBusiness.Tests
                 .Returns((Block)null);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
-            GetBlockByIDResult getblockbyidResult = farmManagement.GetBlockByID(new GetBlockByIDRequest()
+            farmManagement.GetBlockByID(new GetBlockByIDRequest()
             {
                 BlockID = 0
             });
@@ -229,7 +229,7 @@ namespace BugBusiness.Tests
             _autoMock
                 .Mock<IDbFarmManagement>()
                 .Setup(dbFarmManagement => dbFarmManagement.UpdateBlock(2, "UpdateTest"))
-                .Returns(true);
+                .Returns(1);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
             UpdateBlockByIDResult updateblockbyidResult = farmManagement.UpdateBlockByID(new UpdateBlockByIDRequest()
@@ -249,7 +249,7 @@ namespace BugBusiness.Tests
             _autoMock
                 .Mock<IDbFarmManagement>()
                 .Setup(dbFarmManagement => dbFarmManagement.UpdateBlock(Int64.MaxValue, "UpdateTest"))
-                .Returns(false);
+                .Returns(0);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
             farmManagement.UpdateBlockByID(new UpdateBlockByIDRequest()
@@ -268,7 +268,7 @@ namespace BugBusiness.Tests
             _autoMock
                 .Mock<IDbFarmManagement>()
                 .Setup(dbFarmManagement => dbFarmManagement.UpdateBlock(0, ""))
-                .Returns(false);
+                .Returns(0);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
             farmManagement.UpdateBlockByID(new UpdateBlockByIDRequest()
@@ -312,7 +312,7 @@ namespace BugBusiness.Tests
                 .Returns(false);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
-            DeleteBlockByIDResult deleteblockbyidResult = farmManagement.DeleteBlockByID(new DeleteBlockByIDRequest()
+            farmManagement.DeleteBlockByID(new DeleteBlockByIDRequest()
             {
                 BlockID = Int64.MaxValue
             });
@@ -330,7 +330,7 @@ namespace BugBusiness.Tests
                 .Returns(false);
             var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
             //Act
-            DeleteBlockByIDResult deleteblockbyidResult = farmManagement.DeleteBlockByID(new DeleteBlockByIDRequest()
+            farmManagement.DeleteBlockByID(new DeleteBlockByIDRequest()
             {
                 BlockID = 0
             });

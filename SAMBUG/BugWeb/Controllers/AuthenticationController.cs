@@ -14,7 +14,7 @@ using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
 using DataAccess.Interface.Domain;
-using Newtonsoft.Json;
+using BugWeb.Security;
 
 
 namespace BugWeb.Controllers
@@ -45,13 +45,18 @@ namespace BugWeb.Controllers
                 LoginResponse loginResponse = _bugSecurity.Login(loginRequest);
 
                 //set up session
+                //todo: we should rather store ids in the session rather than the entire objects
                 User user = new User()
                 {
                     UserId=loginResponse.User.UserId,
                     Farms=loginResponse.User.Farms,
                     Roles=loginResponse.User.Roles
                 };
+
                 Session["UserInfo"] = user;
+                //todo: implement muliple farm support (for now farm 1 is default)
+                Session["ActiveFarm"] = loginResponse.User.Farms[0].FarmID;
+
                 //check to go to home page or farm setup
                 int blockCount = 0;
                 foreach (Farm f in user.Farms){
@@ -63,7 +68,9 @@ namespace BugWeb.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("index", "farmmanagement");
+                    //todo: I don't know where this is supposed to redirect to
+                    //return RedirectToAction("index", "farmmanagement");
+                    return RedirectToAction("index", "home");
                 }
             }
             catch (NotRegisteredException)
@@ -101,6 +108,8 @@ namespace BugWeb.Controllers
         [HttpGet]
         public ActionResult EditUserRoles()
         {
+            if (!SecurityProvider.isAdmin(Session))
+                return View("~/Views/Shared/Error.cshtml");
             ViewEditUserRolesResponse response = _bugSecurity.GetUsers();
             return View(response);
         }
@@ -108,7 +117,8 @@ namespace BugWeb.Controllers
         [HttpPost]
         public ActionResult EditUserRoles(EditUserRoleViewModel editUserRoleViewModel)
         {
-            
+            if (!SecurityProvider.isAdmin(Session))
+                return View("~/Views/Shared/Error.cshtml");
             _bugSecurity.EditUserRoles(new EditUserRoleRequest
             {
                 UserId = editUserRoleViewModel.UserId,

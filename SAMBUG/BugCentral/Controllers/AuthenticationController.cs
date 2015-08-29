@@ -24,7 +24,7 @@ namespace BugCentral.Controllers
         }
         
         
-
+        [Route("login")]
         public LoginResponse Post([FromBody] LoginRequest loginRequest)
         {
             try

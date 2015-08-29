@@ -5,7 +5,6 @@ using DataAccess.Interface;
 using DataAccess.Interface.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Should;
-using System;
 using System.Collections.Generic;
 
 namespace BugBusiness.Tests
@@ -32,7 +31,7 @@ namespace BugBusiness.Tests
         {
             //Arrange
             _autoMock
-                .Mock<IDbAuthentication>()
+                .Mock<IDbBugSecurity>()
                 .Setup(dbAuthentication => dbAuthentication.GetUserByCredentials("Test1", "321"))
                 .Returns(new User()
                 {
@@ -67,7 +66,7 @@ namespace BugBusiness.Tests
         {
             //Arrange
             _autoMock
-                .Mock<IDbAuthentication>()
+                .Mock<IDbBugSecurity>()
                 .Setup(dbAuthentication => dbAuthentication.GetUserByCredentials("Test2", "123"))
                 .Returns((User)null);
             
@@ -88,14 +87,14 @@ namespace BugBusiness.Tests
         {
             //Arrange
             _autoMock
-               .Mock<IDbAuthentication>()
+               .Mock<IDbBugSecurity>()
                .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "321", "Farm1"))
                .Returns(true);
 
             var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
            
             //Act
-            RegisterResponse registerResponse = bugSecurity.Register(new RegisterRequest()
+           bugSecurity.Register(new RegisterRequest()
             {
                 Username = "TestEmail@TestHost.com",
                 UsernameConfirmation = "TestEmail@TestHost.com",
@@ -113,14 +112,14 @@ namespace BugBusiness.Tests
         {
             //Arrange
             _autoMock
-               .Mock<IDbAuthentication>()
+               .Mock<IDbBugSecurity>()
                .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "54321", "Farm1"))
                .Returns(false);
 
             var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
 
             //Act
-            RegisterResponse registerResponse = bugSecurity.Register(new RegisterRequest()
+            bugSecurity.Register(new RegisterRequest()
             {
                 Username = "TestEmail@TestHost.com",
                 UsernameConfirmation = "TestEmail@TestHost.com",
@@ -137,7 +136,7 @@ namespace BugBusiness.Tests
         {
             //Arrange
             _autoMock
-               .Mock<IDbAuthentication>().SetReturnsDefault(true);
+               .Mock<IDbBugSecurity>().SetReturnsDefault(true);
 
             var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
 
@@ -183,14 +182,14 @@ namespace BugBusiness.Tests
         {
             //Arrange
             _autoMock
-               .Mock<IDbAuthentication>()
+               .Mock<IDbBugSecurity>()
                .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "54321", "Farm1"))
                .Returns(true);
 
             var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
 
             //Act
-            RegisterResponse registerResponse = bugSecurity.Register(new RegisterRequest()
+            bugSecurity.Register(new RegisterRequest()
             {
                 Username = "TestEmail@TestHost.com",
                 UsernameConfirmation = "different@differentHost.com",
