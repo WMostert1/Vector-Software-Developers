@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BugDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BugDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Block">
           <Key>
             <PropertyRef Name="BlockID" />
@@ -53,7 +53,6 @@
             <PropertyRef Name="ScoutStopID" />
           </Key>
           <Property Name="ScoutStopID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserID" Type="bigint" Nullable="false" />
           <Property Name="BlockID" Type="bigint" Nullable="false" />
           <Property Name="NumberOfTrees" Type="int" Nullable="false" />
           <Property Name="Latitude" Type="real" Nullable="false" />
@@ -163,18 +162,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ScoutStop_ToUser">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="ScoutStop">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Treatment_ToBlock">
           <End Role="Block" Type="Self.Block" Multiplicity="1" />
           <End Role="Treatment" Type="Self.Treatment" Multiplicity="*" />
@@ -241,10 +228,6 @@
             <End Role="Block" EntitySet="Block" />
             <End Role="ScoutStop" EntitySet="ScoutStop" />
           </AssociationSet>
-          <AssociationSet Name="FK_ScoutStop_ToUser" Association="Self.FK_ScoutStop_ToUser">
-            <End Role="User" EntitySet="User" />
-            <End Role="ScoutStop" EntitySet="ScoutStop" />
-          </AssociationSet>
           <AssociationSet Name="FK_Treatment_ToBlock" Association="Self.FK_Treatment_ToBlock">
             <End Role="Block" EntitySet="Block" />
             <End Role="Treatment" EntitySet="Treatment" />
@@ -258,8 +241,7 @@
             <End Role="UserRole" EntitySet="UserRole" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BugDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -270,8 +252,8 @@
           <Property Name="BlockID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FarmID" Type="Int64" Nullable="false" />
           <Property Name="BlockName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModifiedID" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" Type="String" />
+          <Property Name="TMStamp" Nullable="false" Precision="3" Type="DateTime" />
           <NavigationProperty Name="Farm" Relationship="Self.FK_Farm_ToBlock" FromRole="Block" ToRole="Farm" />
           <NavigationProperty Name="ScoutStops" Relationship="Self.FK_ScoutStop_ToBlock" FromRole="Block" ToRole="ScoutStop" />
           <NavigationProperty Name="Treatments" Relationship="Self.FK_Treatment_ToBlock" FromRole="Block" ToRole="Treatment" />
@@ -319,7 +301,6 @@
             <PropertyRef Name="ScoutStopID" />
           </Key>
           <Property Name="ScoutStopID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int64" Nullable="false" />
           <Property Name="BlockID" Type="Int64" Nullable="false" />
           <Property Name="NumberOfTrees" Type="Int32" Nullable="false" />
           <Property Name="Latitude" Type="Single" Nullable="false" />
@@ -329,7 +310,6 @@
           <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Block" Relationship="Self.FK_ScoutStop_ToBlock" FromRole="ScoutStop" ToRole="Block" />
           <NavigationProperty Name="ScoutBugs" Relationship="Self.FK_ScoutBug_ToScoutStop" FromRole="ScoutStop" ToRole="ScoutBug" />
-          <NavigationProperty Name="User" Relationship="Self.FK_ScoutStop_ToUser" FromRole="ScoutStop" ToRole="User" />
         </EntityType>
         <EntityType Name="Species">
           <Key>
@@ -366,7 +346,6 @@
           <Property Name="LastModifiedID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Farms" Relationship="Self.FK_Farm_ToUser" FromRole="User" ToRole="Farm" />
-          <NavigationProperty Name="ScoutStops" Relationship="Self.FK_ScoutStop_ToUser" FromRole="User" ToRole="ScoutStop" />
           <NavigationProperty Name="Roles" Relationship="Self.UserRole" FromRole="User" ToRole="Role" />
         </EntityType>
         <Association Name="FK_Farm_ToBlock">
@@ -441,18 +420,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ScoutStop_ToUser">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="ScoutStop" Type="Self.ScoutStop" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="ScoutStop">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="UserRole">
           <End Role="Role" Type="Self.Role" Multiplicity="*" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -489,10 +456,6 @@
           <AssociationSet Name="FK_ScoutBug_ToSpecies" Association="Self.FK_ScoutBug_ToSpecies">
             <End Role="Species" EntitySet="Species" />
             <End Role="ScoutBug" EntitySet="ScoutBugs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ScoutStop_ToUser" Association="Self.FK_ScoutStop_ToUser">
-            <End Role="User" EntitySet="Users" />
-            <End Role="ScoutStop" EntitySet="ScoutStops" />
           </AssociationSet>
           <AssociationSet Name="UserRole" Association="Self.UserRole">
             <End Role="Role" EntitySet="Roles" />
@@ -556,7 +519,6 @@
             <EntityTypeMapping TypeName="BugDBModel.ScoutStop">
               <MappingFragment StoreEntitySet="ScoutStop">
                 <ScalarProperty Name="ScoutStopID" ColumnName="ScoutStopID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="BlockID" ColumnName="BlockID" />
                 <ScalarProperty Name="NumberOfTrees" ColumnName="NumberOfTrees" />
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />

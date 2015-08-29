@@ -20,7 +20,6 @@ namespace DataAccess.Models
         }
     
         public long ScoutStopID { get; set; }
-        public long UserID { get; set; }
         public long BlockID { get; set; }
         public int NumberOfTrees { get; set; }
         public float Latitude { get; set; }
@@ -31,6 +30,5 @@ namespace DataAccess.Models
     
         public virtual Block Block { get; set; }
         public virtual ICollection<ScoutBug> ScoutBugs { get; set; }
-        public virtual User User { get; set; }
     }
 }

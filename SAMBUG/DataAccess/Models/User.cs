@@ -17,7 +17,6 @@ namespace DataAccess.Models
         public User()
         {
             this.Farms = new HashSet<Farm>();
-            this.ScoutStops = new HashSet<ScoutStop>();
             this.Roles = new HashSet<Role>();
         }
     
@@ -28,7 +27,6 @@ namespace DataAccess.Models
         public System.DateTime TMStamp { get; set; }
     
         public virtual ICollection<Farm> Farms { get; set; }
-        public virtual ICollection<ScoutStop> ScoutStops { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
     }
 }

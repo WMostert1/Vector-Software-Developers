@@ -6,7 +6,7 @@ namespace DataAccess.MSSQL
 {
     class DbSynchronization : IDbSynchronization
     {
-       
+       //TODO: Some fields are commented out because db structure has changed
         public bool PersistBugStops(Int64 scoutStopID, Int64 userID, Int64 blockID, int numberOfTrees, float latitude, float longitude, DateTime date, int lastModifiedID, DateTime tmStamp)
         {
 
@@ -16,7 +16,7 @@ namespace DataAccess.MSSQL
                 var scoutStop = new ScoutStop()
                 {
                     ScoutStopID = scoutStopID,
-                    UserID = userID,
+                    //UserID = userID,
                     BlockID = blockID,
                     NumberOfTrees = numberOfTrees,
                     Latitude = latitude,

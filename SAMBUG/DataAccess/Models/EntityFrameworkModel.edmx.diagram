@@ -19,7 +19,6 @@
         <AssociationConnector Association="BugDBModel.FK_Farm_ToUser" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToScoutStop" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToSpecies" ManuallyRouted="false" />
-        <AssociationConnector Association="BugDBModel.FK_ScoutStop_ToUser" ManuallyRouted="false" />
         <AssociationConnector Association="BugDBModel.UserRole" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>

@@ -20,9 +20,9 @@ namespace BugCentral.Controllers
         {
             _bugSecurity = bugSecurity;
         }
-        
-        
 
+
+        [Route("login")]
         public LoginResponse Post([FromBody] LoginRequest loginRequest)
         {
             try
