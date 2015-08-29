@@ -89,9 +89,9 @@ namespace BugBusiness.BugSecurity
 
         }
 
-        public bool ChangeUserPassword(string username, string password){
-            return _dbAuthentication.ChangeUserPassword(username, password);
-
+        public bool ChangeUserPassword(string username1, string password1){
+            _dbBugSecurity.ChangeUserPassword(username1, password1); // ChangeUserPassword(username, password);
+            return true;
         }
     }
 }

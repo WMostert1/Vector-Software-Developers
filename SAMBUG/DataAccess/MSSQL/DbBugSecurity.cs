@@ -2,6 +2,7 @@
 using System.Linq;
 using DataAccess.Interface;
 using DataAccess.Models;
+using System;
 
 namespace DataAccess.MSSQL
 {
@@ -145,7 +146,7 @@ namespace DataAccess.MSSQL
 
         public bool ChangeUserPassword(string username, string password)
         {
-            var db = new BugDBEntities();
+           /* var db = new BugDBEntities();
             try { 
             User user = db.Users.SingleOrDefault(usr => usr.Email == username);
             user.Password = password;
@@ -154,6 +155,7 @@ namespace DataAccess.MSSQL
             {
                 return false;
             }
+            return true;*/
             return true;
         }
 
