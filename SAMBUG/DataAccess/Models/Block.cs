@@ -23,8 +23,6 @@ namespace DataAccess.Models
         public long BlockID { get; set; }
         public long FarmID { get; set; }
         public string BlockName { get; set; }
-        public string LastModifiedID { get; set; }
-        public System.DateTime TMStamp { get; set; }
     
         public virtual Farm Farm { get; set; }
         public virtual ICollection<ScoutStop> ScoutStops { get; set; }

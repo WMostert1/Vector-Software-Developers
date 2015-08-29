@@ -24,8 +24,6 @@ namespace DataAccess.Models
         public int Lifestage { get; set; }
         public byte[] IdealPicture { get; set; }
         public bool IsPest { get; set; }
-        public string LastModifiedID { get; set; }
-        public System.DateTime TMStamp { get; set; }
     
         public virtual ICollection<ScoutBug> ScoutBugs { get; set; }
     }

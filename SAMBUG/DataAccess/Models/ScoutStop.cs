@@ -25,8 +25,6 @@ namespace DataAccess.Models
         public float Latitude { get; set; }
         public float Longitude { get; set; }
         public System.DateTime Date { get; set; }
-        public string LastModifiedID { get; set; }
-        public System.DateTime TMStamp { get; set; }
     
         public virtual Block Block { get; set; }
         public virtual ICollection<ScoutBug> ScoutBugs { get; set; }
