@@ -145,6 +145,7 @@
     <Compile Include="Models\EditUserRoleViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
+    <Compile Include="Models\ReportingViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\SecurityProvider.cs" />
   </ItemGroup>
