@@ -146,17 +146,18 @@ namespace DataAccess.MSSQL
 
         public bool ChangeUserPassword(string username, string password)
         {
-           /* var db = new BugDBEntities();
+            var db = new BugDBEntities();
             try { 
             User user = db.Users.SingleOrDefault(usr => usr.Email == username);
             user.Password = password;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
-            return true;*/
+            db.SaveChanges();
             return true;
+            //return true;
         }
 
     }

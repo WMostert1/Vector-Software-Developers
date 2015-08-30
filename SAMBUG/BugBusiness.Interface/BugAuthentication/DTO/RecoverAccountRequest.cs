@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BugWeb.Models
+namespace BugBusiness.Interface.BugAuthentication.DTO
 {
-    public class RecoverAccountModel
+    public class RecoverAccountRequest
     {
         public string EmailTo { get; set; }
         public string Link { get; set; }

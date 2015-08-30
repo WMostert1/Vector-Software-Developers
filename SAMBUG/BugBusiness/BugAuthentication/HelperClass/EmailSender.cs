@@ -20,7 +20,7 @@ namespace BugCentral.HelperClass
 
             fromAddress = new MailAddress(from, "Admin");
             toAddress = new MailAddress(To, "User");
-            fromPassword = Password; // "27ATEHBruKal1129";
+            fromPassword = Password; 
         } 
 
         public void setEmail(String Subject , String Body){

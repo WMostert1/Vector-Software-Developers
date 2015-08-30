@@ -46,6 +46,7 @@
     <Compile Include="BugReporting\BugReporting.cs" />
     <Compile Include="BugAuthentication\BugAuthentication.cs" />
     <Compile Include="BugAuthentication\HelperClass\EmailSender.cs" />
+    <Compile Include="BugScouting\BugScouting.cs" />
     <Compile Include="BugSecurity\BugSecurity.cs" />
     <Compile Include="FarmManagement\FarmManagement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +64,7 @@
       <Name>DataAccess</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

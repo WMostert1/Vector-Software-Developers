@@ -13,6 +13,10 @@ using System.Web;
 
 using System.Text;
 using System.Web.Mvc;
+using BugCentral.Controllers.DTO;
+using BugCentral.Controllers.Exceptions;
+using System.Reflection;
+using System.IO;
 
 namespace BugCentral.Controllers
 {
@@ -25,18 +29,36 @@ namespace BugCentral.Controllers
         public SynchronizationController(IDbSynchronization _dbSynchronization ) //, String _json)
         {
             dbSynchronization = _dbSynchronization;
+            
            // json = _json;
         }
 
-         [System.Web.Http.Route("sync")]
-        public Boolean sync(string json)
+        public void ReadInJson(String location)
         {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), location);
+            json = System.IO.File.ReadAllText(path);
+            //json = System.IO.File.ReadAllText(location);
+        }
+
+        public SynResult sync()
+        {
+            
+
+            JObject jsonFile;
+            JObject actualData;
+            Boolean success = true;
             try
             {
-                JObject jsonFile = JObject.Parse(json);
+                jsonFile = JObject.Parse(json);
+                actualData = JObject.Parse(jsonFile["syncData"].ToString());
+            }
+            catch(Exception){
+                success = false;
+                throw new ParsingException();
+            }
 
-                JObject actualData = JObject.Parse(jsonFile["syncData"].ToString());
-
+            //The exceptions for functions below qill be thrown by dbSynchronizaion
+            try{
                 foreach (var scoutStop in actualData["ScoutStops"])
                 {
                     Int64 scoutStopID = Convert.ToInt64(scoutStop["ScoutStopID"].ToString());
@@ -49,7 +71,7 @@ namespace BugCentral.Controllers
                     int lastModifiedID = Convert.ToInt16(scoutStop["LastModifiedID"].ToString());
                     DateTime tmStamp = Convert.ToDateTime(scoutStop["TMStamp"].ToString());
 
-                    dbSynchronization.PersistBugStops(scoutStopID, userID, blockID, numberOfTrees, latitude, longitude, date, lastModifiedID, tmStamp);
+                    dbSynchronization.PersistScoutStops(scoutStopID, userID, blockID, numberOfTrees, latitude, longitude, date, lastModifiedID, tmStamp);
                 }
 
                 foreach (var scoutBugs in actualData["ScoutBugs"])
@@ -66,13 +88,15 @@ namespace BugCentral.Controllers
                     dbSynchronization.PersistScoutBugs(scoutBugID, scoutStopID, speciesID, numberOfBugs, fieldPicture, comments, lastModifiedID, tmStamp);
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
+            catch(Exception){
+                success = false;   
             }
 
-            return true;
+            SynResult synR = new SynResult();
+            synR.json = json;
+            synR.Passed = success;
+
+            return synR;
 
         }
     }

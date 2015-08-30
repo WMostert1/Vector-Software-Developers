@@ -132,6 +132,9 @@
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\DTO\SynRequest.cs" />
+    <Compile Include="Controllers\DTO\SynResult.cs" />
+    <Compile Include="Controllers\Exceptions\ParsingException.cs" />
     <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Controllers\SynchronizationController.cs" />
     <Compile Include="Global.asax.cs">

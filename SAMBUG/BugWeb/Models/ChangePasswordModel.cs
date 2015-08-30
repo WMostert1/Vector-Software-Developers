@@ -5,9 +5,9 @@ using System.Web;
 
 namespace BugWeb.Models
 {
-    public class RecoverAccountModel
+    public class ChangePasswordModel
     {
-        public string EmailTo { get; set; }
-        public string Link { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

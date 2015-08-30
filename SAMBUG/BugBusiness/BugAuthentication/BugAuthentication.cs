@@ -7,9 +7,13 @@ using DataAccess.Interface;
 using DataAccess.Interface.Domain;
 using BugCentral.HelperClass;
 using BugBusiness.Interface.BugSecurity;
+using BugBusiness.Interface.BugAuthentication;
+using BugBusiness.Interface.BugAuthentication.DTO;
+using BugBusiness.Interface.BugAuthentication.Exceptions;
+
 namespace BugBusiness.BugAuthentication
 {
-    public class BugAuthentication
+    public class BugAuthentication : IBugAuthentication
     {
         const string from = "kaleabtessera@gmail.com";
         const string fromPassword = "27ATEHBruKal1129";
@@ -22,16 +26,31 @@ namespace BugBusiness.BugAuthentication
         }
 
 
-        public Boolean RecoverAccount(String to, String link){
-            EmailSender email = new EmailSender(from, fromPassword, to);
-            email.setEmail("Recover Password", link);
+        public RecoverAccountResult RecoverAccount(RecoverAccountRequest recoverAccountRequest)
+        {
+            EmailSender email = new EmailSender(from, fromPassword, recoverAccountRequest.EmailTo);
+            email.setEmail("Recover Password", recoverAccountRequest.Link);
+
+
+            if (email.sendEmail() == false)
+            {
+                throw new FailedEmailSendException();
+            }
+
+            return new RecoverAccountResult();
             
-            return email.sendEmail();
         }
 
-        public void ChangePassword(String uName, String uPass)
+        public ChangePasswordResult ChangePassword(ChangePasswordRequest changePasswordRequest)
         {
-            _bugSecurity.ChangeUserPassword(uName, uPass);
+
+            if (_bugSecurity.ChangeUserPassword(changePasswordRequest.Email, changePasswordRequest.Password) == false)
+            {
+                throw new FailedChangePasswordException();
+            }
+                
+
+            return new ChangePasswordResult();
 
         }
 

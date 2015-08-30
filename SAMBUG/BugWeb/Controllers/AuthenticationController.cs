@@ -15,6 +15,8 @@ using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
 using DataAccess.Interface.Domain;
 using BugWeb.Security;
+using BugBusiness.Interface.BugAuthentication;
+using BugBusiness.Interface.BugAuthentication.DTO;
 
 
 namespace BugWeb.Controllers
@@ -23,7 +25,7 @@ namespace BugWeb.Controllers
     {
 
         private readonly IBugSecurity _bugSecurity;
-        private readonly BugAuthentication _bugAuthentication;
+        private readonly IBugAuthentication _bugAuthentication;
 
         public AuthenticationController(IBugSecurity bugSecurity)
         {
@@ -132,7 +134,14 @@ namespace BugWeb.Controllers
        // [HttpPost]
         public ActionResult RecoverAccount(RecoverAccountModel recoverAccountModel)
         {
-            _bugAuthentication.RecoverAccount(recoverAccountModel.Username, "http://localhost:53249/Home/ChangePassword");
+            recoverAccountModel.Link = "http://localhost:53249/Home/ChangePassword";
+            BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest recoverAccountRequest = new BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest()
+            {
+                EmailTo = recoverAccountModel.EmailTo,
+                Link = recoverAccountModel.Link
+            };
+
+            _bugAuthentication.RecoverAccount(recoverAccountRequest);
             return RedirectToAction("CheckEmail", "Authentication");
             
        }
@@ -142,9 +151,17 @@ namespace BugWeb.Controllers
             return View("~/Views/Authentication/CheckEmail.cshtml");
         }
 
-        public ActionResult ChangePassword(LoginViewModel loginViewModel)
+        public ActionResult ChangePassword(ChangePasswordModel changePasswordModel)
         {
-            _bugAuthentication.ChangePassword(loginViewModel.Username, loginViewModel.Password);
+
+
+            ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest()
+            {
+                Email = changePasswordModel.Email,
+                Password = changePasswordModel.Password
+            }; 
+            //_bugAuthentication.ChangePassword(loginViewModel.Username, loginViewModel.Password);
+            _bugAuthentication.ChangePassword(changePasswordRequest);
             return RedirectToAction("login", "home");
         }
 

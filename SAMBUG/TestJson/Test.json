@@ -1,0 +1,54 @@
+{
+  "syncData":{
+   "ScoutStops": [
+      {
+        
+        "ScoutStopID": 1345,
+        "UserID"   : 2458,
+        "BlockID" : 14,
+        "NumberOfTrees": 4,
+        "Latitude" : "-198,8564854484", 
+        "Longitude": "198,8564854484", 
+        "Date" : "12-12-2012",
+        "LastModifiedID" : 5,
+        "TMStamp" : "0001/01/01 12:00:00 AM"
+      },
+       {
+        
+        "ScoutStopID": 134125,
+        "UserID"   : 2451128,
+        "BlockID" : 3,
+        "NumberOfTrees": 4,
+        "Latitude" : "-198,8564854484", 
+        "Longitude": "198,564854484",
+        "Date" : "11-11-2012",
+         "LastModifiedID" : 5,
+        "TMStamp" : "0001/01/01 12:00:00 AM"
+      }
+   ],
+   "ScoutBugs": [
+      {
+        "ScoutBugID" : 12214,
+        "ScoutStopID": 11215,
+        "SpeciesID"   : 2121545,
+        "NumberOfBugs" : 3,
+        "FieldPicture": "{xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}",
+        "Comments" : "1sdfsfsfs fsdfsdfsdf", 
+      "LastModifiedID" : 57,
+        "TMStamp" : "0001/01/01 12:00:00 AM"
+      },
+       {
+        
+        "ScoutBugID" : 12212124,
+        "ScoutStopID": 1215,
+        "SpeciesID"   : 21545,
+        "NumberOfBugs" : 10,
+        "FieldPicture": "{xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}",
+        "Comments" : "1sdfsfsfs fsdfsdfsdf", 
+         "LastModifiedID" : 85,
+        "TMStamp" : "0001/01/01 12:00:00 AM"
+      }
+   ]
+  
+  }
+} 
