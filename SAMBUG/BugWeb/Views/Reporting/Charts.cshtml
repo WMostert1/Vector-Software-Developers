@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Charts";
+}
+
+@section styles
+{
+     @Styles.Render("~/Content/css/chartist");
+     @Styles.Render("~/Content/css/reporting");
+}
+
+<div id="chart" class="ct-minor-seventh"></div>
+<button id="btnGetData"type="button" data-url="~/api/reporting/1" onclick="loadData()">Get Data</button>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/chartist");
+    @Scripts.Render("~/bundles/reporting");
+}
+

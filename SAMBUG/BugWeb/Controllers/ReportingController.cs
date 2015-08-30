@@ -53,9 +53,9 @@ namespace BugWeb.Controllers
         }
 
         // GET: reporting/graphical
-        public ActionResult Graphical()
+        public ActionResult Charts()
         {
-            throw new NotImplementedException();
+            return View();
         }
     }
 }

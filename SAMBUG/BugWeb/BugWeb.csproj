@@ -150,6 +150,8 @@
     <Compile Include="Security\SecurityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\chartist.min.css" />
+    <Content Include="Content\charts.css" />
     <Content Include="Content\EditBlocks.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -161,9 +163,10 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\chartist.js" />
+    <Content Include="Scripts\charts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <Content Include="Scripts\jquery.editblocks.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
@@ -198,7 +201,7 @@
     <Content Include="Views\FarmManagement\UpdateBlock.cshtml" />
     <Content Include="Views\FarmManagement\DeleteBlock.cshtml" />
     <Content Include="Views\Reporting\Tabular.cshtml" />
-    <Content Include="Views\Reporting\Graphical.cshtml" />
+    <Content Include="Views\Reporting\Charts.cshtml" />
     <Content Include="Views\Reporting\Index.cshtml" />
     <Content Include="Views\FarmManagement\EditBlocks.cshtml" />
     <Content Include="Views\Authentication\EditUserRoles.cshtml" />
