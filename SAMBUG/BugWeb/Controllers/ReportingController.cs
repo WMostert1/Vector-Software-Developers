@@ -20,34 +20,12 @@ namespace BugWeb.Controllers
         public ActionResult Tabular()
         {
             ReportingViewModel report = new ReportingViewModel();
-            report.Farms = new List<ReportingViewModel.FarmViewModel>();
-
-
+            
             report.ActiveFarmId = (long)Session["ActiveFarm"];
 
             User usr = (User)Session["UserInfo"];
-            report.UserId = usr.UserId;
 
-
-            foreach (var frm in usr.Farms)
-            {
-                ReportingViewModel.FarmViewModel farmModel = new ReportingViewModel.FarmViewModel();
-                farmModel.Blocks = new List<ReportingViewModel.BlockViewModel>();
-                farmModel.FarmName = frm.FarmName;
-
-
-                foreach (var block in frm.Blocks)
-                {
-                    ReportingViewModel.BlockViewModel blockModel = new ReportingViewModel.BlockViewModel()
-                    {
-                        BlockName = block.BlockName
-                    };
-
-                    farmModel.Blocks.Add(blockModel);
-                }
-
-                report.Farms.Add(farmModel);
-            }
+            report.Farms = AutoMapper.Mapper.Map<List<ReportingViewModel.FarmViewModel>>(usr.Farms);
 
             return View(report);
         }
