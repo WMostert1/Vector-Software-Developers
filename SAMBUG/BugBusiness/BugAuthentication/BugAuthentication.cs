@@ -15,24 +15,27 @@ namespace BugBusiness.BugAuthentication
 {
     public class BugAuthentication : IBugAuthentication
     {
-        const string from = "kaleabtessera@gmail.com";
-        const string fromPassword = "27ATEHBruKal1129";
+        //const string from = "kaleabtessera@gmail.com";
+        //const string fromPassword = "27ATEHBruKal1129";
 
         private readonly IBugSecurity _bugSecurity;
+
 
         public BugAuthentication(IBugSecurity bugSecurity)
         {
             _bugSecurity = bugSecurity;
+            
+
         }
 
 
         public RecoverAccountResult RecoverAccount(RecoverAccountRequest recoverAccountRequest)
         {
-            EmailSender email = new EmailSender(from, fromPassword, recoverAccountRequest.EmailTo);
-            email.setEmail("Recover Password", recoverAccountRequest.Link);
+            EmailSender _Email = new EmailSender(recoverAccountRequest.From,recoverAccountRequest.FromPassword, recoverAccountRequest.EmailTo);
+            _Email.setEmail("Recover Password", recoverAccountRequest.Link);
 
 
-            if (email.sendEmail() == false)
+            if (_Email.sendEmail() == false)
             {
                 throw new FailedEmailSendException();
             }

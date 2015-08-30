@@ -7,7 +7,7 @@ using System.Web;
 
 namespace BugCentral.HelperClass
 {
-    class EmailSender
+    public class EmailSender
     {
         public String Result { get; set; }
         public MailAddress fromAddress { get; set; }

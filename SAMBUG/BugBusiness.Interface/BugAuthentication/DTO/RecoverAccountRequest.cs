@@ -10,5 +10,7 @@ namespace BugBusiness.Interface.BugAuthentication.DTO
     {
         public string EmailTo { get; set; }
         public string Link { get; set; }
+        public string From { get; set; }
+        public string FromPassword { get; set; }
     }
 }

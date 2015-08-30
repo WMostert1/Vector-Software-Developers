@@ -94,6 +94,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="BugAuthentication\HelperClass\" />
     <Folder Include="BugReporting\Exceptions\" />
   </ItemGroup>
   <ItemGroup>

@@ -137,6 +137,8 @@ namespace BugWeb.Controllers
             recoverAccountModel.Link = "http://localhost:53249/Home/ChangePassword";
             BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest recoverAccountRequest = new BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest()
             {
+                From = "kaleabtessera@gmail.com",
+                FromPassword = "27ATEHBruKal1129",
                 EmailTo = recoverAccountModel.EmailTo,
                 Link = recoverAccountModel.Link
             };
