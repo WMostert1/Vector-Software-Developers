@@ -10,14 +10,13 @@
 <label for="blocks">Blocks:</label>
 <select id="blocks" class="form-control">
     <option value="all">All Blocks</option>
-    @foreach (var x in @Model.Farms)
-    {
-        foreach (var y in x.Blocks)
+    
+        @foreach (var y in @Model.Farm.Blocks)
         {
             <option value=@y.BlockName>@y.BlockName</option>
         }
 
-    }
+    
 </select>
 
 <label for="timeRange">Time Range:</label>
@@ -42,4 +41,4 @@
     <option value="blockName">Blocks</option>
 </select>
 
-<button style="margin-top: 15px" data-url="~api/reporting/@Model.UserId" class="btn-default" onclick="generate()">Generate tables</button>
+<button style="margin-top: 15px" data-url="~api/reporting/@Model.ActiveFarmId" class="btn-default" onclick="generate()">Generate tables</button>
