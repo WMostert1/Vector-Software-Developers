@@ -4,20 +4,21 @@
 }
 @section scripts
 {
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.8/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.8/js/jquery.dataTables.js"></script>
     <script src="~/Scripts/Table.js"></script>
 }
 
 <label for="blocks">Blocks:</label>
 <select id="blocks" class="form-control">
     <option value="all">All Blocks</option>
-    @foreach (var x in @Model.Farms)
-    {
-        foreach (var y in x.Blocks)
+    
+        @foreach (var y in @Model.Farm.Blocks)
         {
             <option value=@y.BlockName>@y.BlockName</option>
         }
 
-    }
+    
 </select>
 
 <label for="timeRange">Time Range:</label>
@@ -42,4 +43,6 @@
     <option value="blockName">Blocks</option>
 </select>
 
-<button style="margin-top: 15px" data-url="~api/reporting/@Model.UserId" class="btn-default" onclick="generate()">Generate tables</button>
+<button style="margin-top: 15px" id="generateBut" data-url="http://localhost:53358/api/reporting/@Model.ActiveFarmId" class="btn-default" onclick="generate()">Generate tables</button>
+
+<table id="table"></table>

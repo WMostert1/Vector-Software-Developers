@@ -8,7 +8,7 @@ namespace BugWeb.Models
     public class ReportingViewModel
     {
         public long ActiveFarmId { get; set; }
-        public ICollection<FarmViewModel> Farms;
+        public FarmViewModel Farm;
 
         public class FarmViewModel
         {

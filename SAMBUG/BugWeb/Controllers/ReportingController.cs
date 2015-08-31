@@ -19,18 +19,17 @@ namespace BugWeb.Controllers
         // GET: reporting/tabular
         public ActionResult Tabular()
         {
-            ReportingViewModel report = new ReportingViewModel();
-            
-            report.ActiveFarmId = (long)Session["ActiveFarm"];
-
             User usr = (User)Session["UserInfo"];
-
-            report.Farms = AutoMapper.Mapper.Map<List<ReportingViewModel.FarmViewModel>>(usr.Farms);
+            
+            ReportingViewModel report = new ReportingViewModel();
+            report.ActiveFarmId = (long)Session["ActiveFarm"];
+            //TODO: Using first farm as active farm (In future, dont rely on Session)
+            report.Farm = AutoMapper.Mapper.Map<ReportingViewModel.FarmViewModel>(usr.Farms[0]);
 
             return View(report);
         }
 
-        // GET: reporting/graphical
+        // GET: reporting/charts
         public ActionResult Charts()
         {
             return View();
