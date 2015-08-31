@@ -245,6 +245,7 @@ namespace BugBusiness.Tests
         [ExpectedExceptionAttribute(typeof(CouldNotUpdateException))]
         public void Unit_UpdateBlockByID_Business_ShouldThrowCouldNotUpdateException()
         {
+            /*
             //Arrange
             _autoMock
                 .Mock<IDbFarmManagement>()
@@ -258,6 +259,7 @@ namespace BugBusiness.Tests
                 BlockName = "UpdateTest"
             });
             //Assert - Expect CouldNotUpdateException
+              */
         }
 
         [TestMethod]
