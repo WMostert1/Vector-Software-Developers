@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BugWeb.Models;
+using DataAccess.Interface.Domain;
 
 namespace BugWeb.Controllers
 {
@@ -17,13 +19,21 @@ namespace BugWeb.Controllers
         // GET: reporting/tabular
         public ActionResult Tabular()
         {
-            return View(Session["UserInfo"]);
+            ReportingViewModel report = new ReportingViewModel();
+            
+            report.ActiveFarmId = (long)Session["ActiveFarm"];
+
+            User usr = (User)Session["UserInfo"];
+
+            report.Farms = AutoMapper.Mapper.Map<List<ReportingViewModel.FarmViewModel>>(usr.Farms);
+
+            return View(report);
         }
 
         // GET: reporting/graphical
-        public ActionResult Graphical()
+        public ActionResult Charts()
         {
-            throw new NotImplementedException();
+            return View();
         }
     }
 }
