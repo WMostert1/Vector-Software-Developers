@@ -12,14 +12,13 @@
 <label for="blocks">Blocks:</label>
 <select id="blocks" class="form-control">
     <option value="all">All Blocks</option>
-    @foreach (var x in @Model.Farms)
-    {
-        foreach (var y in x.Blocks)
+    
+        @foreach (var y in @Model.Farm.Blocks)
         {
             <option value=@y.BlockName>@y.BlockName</option>
         }
 
-    }
+    
 </select>
 
 <label for="timeRange">Time Range:</label>
