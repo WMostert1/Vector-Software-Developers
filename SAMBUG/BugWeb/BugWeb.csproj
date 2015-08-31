@@ -230,7 +230,7 @@
     <Content Include="Views\Reporting\Index.cshtml" />
     <Content Include="Views\FarmManagement\EditBlocks.cshtml" />
     <Content Include="Views\Authentication\EditUserRoles.cshtml" />
-    <Content Include="Views\Home\_HeatMap.cshtml" />
+    <Content Include="Views\Reporting\Map.cshtml" />
     <Content Include="Views\Authentication\RecoverAccount.cshtml" />
     <Content Include="Views\Authentication\CheckEmail.cshtml" />
     <Content Include="Views\Authentication\ChangePassword.cshtml" />

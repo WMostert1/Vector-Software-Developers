@@ -1,17 +1,39 @@
 ﻿var map, heatmap;
-
+var stops = {};
 function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 13,
-        center: { lat: -25.771141, lng: 28.224394 },
-        mapTypeId: google.maps.MapTypeId.SATELLITE
-    });
+    $.get("../api/apireporting/1", function (data) {
+        stops = data;
 
-    heatmap = new google.maps.visualization.HeatmapLayer({
-        data: getPoints(),
-        map: map
+  
+    }).done(function () {
+        
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+           
+            center: { lat: stops.ScoutStops[0].Latitude, lng: stops.ScoutStops[0].Longitude },
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+        });
+
+        heatmap = new google.maps.visualization.HeatmapLayer({
+            data: getPoints(),
+            map: map
+        });
+        
     });
 }
+
+function getPoints() {
+    var mapsArr = [];
+   
+    for (var i = 0; i < stops.ScoutStops.length;i++) {
+   
+        mapsArr.push(new google.maps.LatLng(stops.ScoutStops[i].Latitude, stops.ScoutStops[i].Longitude));
+    }
+
+    return mapsArr;
+
+}
+
 
 function toggleHeatmap() {
     heatmap.setMap(heatmap.getMap() ? null : map);
@@ -38,33 +60,11 @@ function changeGradient() {
 }
 
 function changeRadius() {
-    heatmap.set('radius', heatmap.get('radius') ? null : 20);
+    heatmap.set('radius', heatmap.get('radius') ? null : 40);
 }
 
 function changeOpacity() {
     heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
 }
 
-// Heatmap data: 500 Points
-function getPoints() {
-    var scoutStops = [{
-        "Block": { "ScoutStops": [], "Treatments": [], "BlockID": 0, "FarmID": 0, "LastModifiedID": 0 },
-        "ScoutBugs": [],
-        "User": { "Farms": [], "ScoutStops": [], "LastModifiedID": 0, "RoleID": 0, "UserID": 0 },
-        "BlockID": 3,
-        "LastModifiedID": 3,
-        "Latitude": -25.771141,
-        "Longitude": 28.224394,
-        "NumberOfTrees": 5,
-        "ScoutStopID": 1,
-        "UserID": 3
-    }];
-
-    var mapsArr = [];
-  for(var stop in scoutStops)
-    mapsArr.push(new google.maps.LatLng(stop.Latitude, stop.Longitude));
-    
-    return mapsArr;
-
-    }
 

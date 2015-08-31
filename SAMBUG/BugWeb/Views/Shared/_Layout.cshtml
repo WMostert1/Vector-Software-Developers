@@ -4,7 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="http://css-spinners.com/css/spinner/whirly.css" type="text/css">
     <style>
+
     #panel {
     background-color: #fff;
     border: 1px solid #999;
@@ -36,11 +38,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Reporting", "Index", "Reporting")</li>
+                    
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Edit User Roles", "EditUserRoles", "Authentication")</li>
-                    <li>@Html.ActionLink("Edit Farm Blocks", "EditBlocks", "FarmManagement")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                   
                     <li>@Html.ActionLink("Logout","logout","home")</li>
                 </ul>
             </div>
