@@ -71,6 +71,9 @@
     <Compile Include="BugSecurity\Exceptions\NotRegisteredException.cs" />
     <Compile Include="BugSecurity\Exceptions\UserExistsException.cs" />
     <Compile Include="BugSecurity\IBugSecurity.cs" />
+    <Compile Include="BugScouting\DTO\SynRequest.cs" />
+    <Compile Include="BugScouting\DTO\SynResult.cs" />
+    <Compile Include="Exceptions\ParsingException.cs" />
     <Compile Include="FarmManagement\DTO\AddBlockRequest.cs" />
     <Compile Include="FarmManagement\DTO\AddBlockResult.cs" />
     <Compile Include="FarmManagement\DTO\DeleteBlockByIDRequest.cs" />

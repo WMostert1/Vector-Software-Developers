@@ -6,31 +6,32 @@ using System.Web.Http.Results;
 using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
+using BugBusiness.Interface.BugScouting.DTO;
 using Newtonsoft.Json.Linq;
 using DataAccess.Interface;
+
 
 using System.Web;
 
 using System.Text;
 using System.Web.Mvc;
-using BugCentral.Controllers.DTO;
-using BugCentral.Controllers.Exceptions;
+
 using System.Reflection;
 using System.IO;
 
 namespace BugCentral.Controllers
 {
-    [System.Web.Http.RoutePrefix("Synchronization")]
-    public class SynchronizationController : Controller
+    
+    public class ApiSynchronizationController : Controller
     {
         private IDbSynchronization dbSynchronization { get; set; }
         private string json;
-    
-        public SynchronizationController(IDbSynchronization _dbSynchronization ) //, String _json)
+
+        public ApiSynchronizationController(IDbSynchronization _dbSynchronization) //, String _json)
         {
             dbSynchronization = _dbSynchronization;
-            
-           // json = _json;
+
+            // json = _json;
         }
 
         public void ReadInJson(String location)
@@ -40,9 +41,9 @@ namespace BugCentral.Controllers
             //json = System.IO.File.ReadAllText(location);
         }
 
-        public SynResult sync()
+         public SynResult sync()
         {
-            
+
 
             JObject jsonFile;
             JObject actualData;
@@ -52,13 +53,15 @@ namespace BugCentral.Controllers
                 jsonFile = JObject.Parse(json);
                 actualData = JObject.Parse(jsonFile["syncData"].ToString());
             }
-            catch(Exception){
+            catch (Exception)
+            {
                 success = false;
                 throw new ParsingException();
             }
 
             //The exceptions for functions below qill be thrown by dbSynchronizaion
-            try{
+            try
+            {
                 foreach (var scoutStop in actualData["ScoutStops"])
                 {
                     Int64 scoutStopID = Convert.ToInt64(scoutStop["ScoutStopID"].ToString());
@@ -88,8 +91,9 @@ namespace BugCentral.Controllers
                     dbSynchronization.PersistScoutBugs(scoutBugID, scoutStopID, speciesID, numberOfBugs, fieldPicture, comments, lastModifiedID, tmStamp);
                 }
             }
-            catch(Exception){
-                success = false;   
+            catch (Exception)
+            {
+                success = false;
             }
 
             SynResult synR = new SynResult();
@@ -99,5 +103,7 @@ namespace BugCentral.Controllers
             return synR;
 
         }
+
+       
     }
 }

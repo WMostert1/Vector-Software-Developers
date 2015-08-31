@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 using Autofac;
 using Autofac.Integration.Mvc;
+using Autofac.Integration.WebApi;
 using BugBusiness.BugSecurity;
 using BugBusiness.Interface.BugSecurity;
 using BugBusiness.BugReporting;
@@ -14,6 +15,8 @@ using BugBusiness.FarmManagement;
 using BugBusiness.Interface.FarmManagement;
 using DataAccess.Interface;
 using DataAccess.MSSQL;
+using System.Web.Http;
+using System.Reflection;
 
 namespace BugWeb
 {
@@ -21,13 +24,12 @@ namespace BugWeb
     {
         public static void RegisterIoc()
         {
-            //build IoC container and register controllers
             var builder = new ContainerBuilder();
 
-            // Register MVC controllers.
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-            // Register other types
+            // Add your registrations
             builder.RegisterType<DbBugSecurity>().As<IDbBugSecurity>();
             builder.RegisterType<BugSecurity>().As<IBugSecurity>();
 
@@ -37,11 +39,17 @@ namespace BugWeb
             builder.RegisterType<DbFarmManagement>().As<IDbFarmManagement>();
             builder.RegisterType<FarmManagement>().As<IFarmManagement>();
 
-            // Acquire IoC Container
             var container = builder.Build();
 
-            // Set AutoFac to be the dependency resolver.
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            // Set the dependency resolver for Web API.
+            var webApiResolver = new AutofacWebApiDependencyResolver(container);
+            GlobalConfiguration.Configuration.DependencyResolver = webApiResolver;
+
+            // Set the dependency resolver for MVC.
+            var mvcResolver = new AutofacDependencyResolver(container);
+            DependencyResolver.SetResolver(mvcResolver);
+
+            
         }
     }
 }

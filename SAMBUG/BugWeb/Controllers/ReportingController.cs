@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using BugWeb.Models;
 using DataAccess.Interface.Domain;
 
+
 namespace BugWeb.Controllers
 {
     public class ReportingController : Controller

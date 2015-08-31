@@ -12,13 +12,13 @@ using BugCentral.HelperClass;
 
 namespace BugCentral.Controllers
 {
-    [RoutePrefix("api/authentication")]
-    public class AuthenticationController : ApiController
+    [RoutePrefix("apiauthentication")]
+    public class ApiAuthenticationController : ApiController
     {
 
         private readonly IBugSecurity _bugSecurity;
 
-        public AuthenticationController(IBugSecurity bugSecurity)
+        public ApiAuthenticationController(IBugSecurity bugSecurity)
         {
             _bugSecurity = bugSecurity;
         }
@@ -33,14 +33,15 @@ namespace BugCentral.Controllers
             }
             catch (NotRegisteredException)
             {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);  
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
         }
 
         [Route("register")]
         public RegisterResponse Post([FromBody] RegisterRequest registerRequest)
         {
-           try{
+            try
+            {
                 RegisterResponse registerResponse = _bugSecurity.Register(registerRequest);
                 return registerResponse;
             }
@@ -50,10 +51,10 @@ namespace BugCentral.Controllers
             }
         }
 
-       /* [Route("recover")]
-        public void Post([FromBody] RecoverAccountRequest recoverAccountRequest)
-        {
-            EmailSender es = new EmailSender("kaleabtessera@gmail.com");
-        }*/
+        /* [Route("recover")]
+         public void Post([FromBody] RecoverAccountRequest recoverAccountRequest)
+         {
+             EmailSender es = new EmailSender("kaleabtessera@gmail.com");
+         }*/
     }
 }

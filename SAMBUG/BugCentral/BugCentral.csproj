@@ -139,12 +139,6 @@
     <Compile Include="App_Start\AutoFacConfig.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\AuthenticationController.cs" />
-    <Compile Include="Controllers\DTO\SynRequest.cs" />
-    <Compile Include="Controllers\DTO\SynResult.cs" />
-    <Compile Include="Controllers\Exceptions\ParsingException.cs" />
-    <Compile Include="Controllers\ReportingController.cs" />
-    <Compile Include="Controllers\SynchronizationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -161,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BugBusiness.Interface\BugBusiness.Interface.csproj">

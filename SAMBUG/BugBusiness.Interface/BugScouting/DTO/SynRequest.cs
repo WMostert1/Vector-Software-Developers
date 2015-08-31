@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace BugCentral.Controllers.DTO
+namespace BugBusiness.Interface.BugScouting.DTO 
 {
     public class SynRequest
     {

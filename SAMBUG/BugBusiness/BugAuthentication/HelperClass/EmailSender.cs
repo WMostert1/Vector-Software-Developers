@@ -45,7 +45,7 @@ namespace BugCentral.HelperClass
             })
             
                 try { smtp.Send(message); }
-                catch(Exception e)
+                catch(Exception)
                 {
                     return false;
                 }
