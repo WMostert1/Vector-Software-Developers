@@ -57,6 +57,7 @@ namespace BugWeb.Controllers
 
                 Session["UserInfo"] = user;
                 //todo: implement muliple farm support (for now farm 1 is default)
+                if(loginResponse.User.Farms.Count != 0)
                 Session["ActiveFarm"] = loginResponse.User.Farms[0].FarmID;
 
                 //check to go to home page or farm setup
