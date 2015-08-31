@@ -33,6 +33,8 @@ namespace BugWeb.Controllers
             _bugAuthentication = new BugAuthentication(_bugSecurity);
         }
 
+
+
         public ActionResult Login(LoginViewModel loginViewModel)
         {
 
