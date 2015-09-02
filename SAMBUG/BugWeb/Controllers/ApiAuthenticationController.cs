@@ -8,11 +8,11 @@ using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using Newtonsoft.Json.Linq;
-using BugCentral.HelperClass;
 
-namespace BugCentral.Controllers
+
+namespace BugWeb.Controllers
 {
-    [RoutePrefix("apiauthentication")]
+    
     public class ApiAuthenticationController : ApiController
     {
 
@@ -23,8 +23,8 @@ namespace BugCentral.Controllers
             _bugSecurity = bugSecurity;
         }
 
-        [Route("login")]
-        public LoginResponse Post([FromBody] LoginRequest loginRequest)
+       [HttpPost]
+        public LoginResponse Login([FromBody] LoginRequest loginRequest)
         {
             try
             {
@@ -37,8 +37,8 @@ namespace BugCentral.Controllers
             }
         }
 
-        [Route("register")]
-        public RegisterResponse Post([FromBody] RegisterRequest registerRequest)
+        [HttpPost]
+        public RegisterResponse Register([FromBody] RegisterRequest registerRequest)
         {
             try
             {

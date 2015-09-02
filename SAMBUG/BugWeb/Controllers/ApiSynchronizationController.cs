@@ -14,34 +14,32 @@ using DataAccess.Interface;
 using System.Web;
 
 using System.Text;
-using System.Web.Mvc;
 
 using System.Reflection;
 using System.IO;
+using System.Web.Http;
 
-namespace BugCentral.Controllers
+namespace BugWeb.Controllers
 {
     
-    public class ApiSynchronizationController : Controller
+    public class ApiSynchronizationController : ApiController
     {
         private IDbSynchronization dbSynchronization { get; set; }
         private string json;
 
-        public ApiSynchronizationController(IDbSynchronization _dbSynchronization) //, String _json)
+        public ApiSynchronizationController(IDbSynchronization _dbSynchronization)
         {
             dbSynchronization = _dbSynchronization;
-
-            // json = _json;
         }
 
         public void ReadInJson(String location)
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), location);
             json = System.IO.File.ReadAllText(path);
-            //json = System.IO.File.ReadAllText(location);
+            
         }
-
-         public SynResult sync()
+           [HttpPost]
+         public SynResult persistCachedData([FromBody] SyncRequest request)
         {
 
 
