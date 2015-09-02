@@ -15,6 +15,11 @@ namespace BugWeb
             AutoMapper.Mapper.CreateMap<DataAccess.Models.ScoutStop, BugBusiness.Interface.BugReporting.DTO.ScoutStopDto>();
             AutoMapper.Mapper.CreateMap<DataAccess.Models.ScoutBug, BugBusiness.Interface.BugReporting.DTO.ScoutBugDto>();
 
+            AutoMapper.Mapper.CreateMap<BugBusiness.Interface.BugScouting.DTO.ScoutStopDTO,DataAccess.Models.ScoutStop>();
+            AutoMapper.Mapper.CreateMap<BugBusiness.Interface.BugScouting.DTO.ScoutBugDTO,DataAccess.Models.ScoutBug>()
+               .ForMember(dest => dest.FieldPicture,
+               opts => opts.MapFrom(src => (byte[])(Array)src.FieldPicture)); 
+
             //TODO: update the following with the mapping from DataAccess.Models instead of old Domain models
             AutoMapper.Mapper.CreateMap<Farm, Models.ReportingViewModel.FarmViewModel>();
             AutoMapper.Mapper.CreateMap<Block, Models.ReportingViewModel.BlockViewModel>();

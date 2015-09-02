@@ -52,10 +52,8 @@
     <Compile Include="BugReporting\DTO\ScoutStopDto.cs" />
     <Compile Include="BugReporting\DTO\TreatmentDto.cs" />
     <Compile Include="BugReporting\IBugReporting.cs" />
-    <Compile Include="BugScouting\DTO\PersistScoutBugsRequest.cs" />
-    <Compile Include="BugScouting\DTO\PersistScoutStopsResult.cs" />
-    <Compile Include="BugScouting\DTO\PersistScoutStopsRequest.cs" />
-    <Compile Include="BugScouting\DTO\PersistScoutBugsResult.cs" />
+    <Compile Include="BugScouting\DTO\ScoutBugDTO.cs" />
+    <Compile Include="BugScouting\DTO\ScoutStopDTO.cs" />
     <Compile Include="BugScouting\Exceptions\PersistScoutStopException.cs" />
     <Compile Include="BugScouting\Exceptions\PersistScoutBugException.cs" />
     <Compile Include="BugScouting\IBugScouting.cs" />
@@ -72,7 +70,7 @@
     <Compile Include="BugSecurity\Exceptions\UserExistsException.cs" />
     <Compile Include="BugSecurity\IBugSecurity.cs" />
     <Compile Include="BugScouting\DTO\SyncRequest.cs" />
-    <Compile Include="BugScouting\DTO\SynResult.cs" />
+    <Compile Include="BugScouting\DTO\SyncResult.cs" />
     <Compile Include="Exceptions\ParsingException.cs" />
     <Compile Include="FarmManagement\DTO\AddBlockRequest.cs" />
     <Compile Include="FarmManagement\DTO\AddBlockResult.cs" />

@@ -5,9 +5,8 @@ using System.Web;
 
 namespace BugBusiness.Interface.BugScouting.DTO
 {
-    public class SynResult
+    public class SyncResult
     {
-        public string json { get; set; }
-        public Boolean Passed { get; set; }
+        public bool success { get; set; }
     }
 }

@@ -59,7 +59,7 @@
     <Compile Include="Interface\IDbBugSecurity.cs" />
     <Compile Include="Interface\IDbFarmManagement.cs" />
     <Compile Include="Interface\IDbBugReporting.cs" />
-    <Compile Include="Interface\IDbSynchronization.cs" />
+    <Compile Include="Interface\IDbScouting.cs" />
     <Compile Include="Models\Block.cs">
       <DependentUpon>EntityFrameworkModel.tt</DependentUpon>
     </Compile>
@@ -102,7 +102,7 @@
     <Compile Include="MSSQL\DbBugSecurity.cs" />
     <Compile Include="MSSQL\DbFarmManagement.cs" />
     <Compile Include="MSSQL\DbBugReporting.cs" />
-    <Compile Include="MSSQL\DbSynchronization.cs" />
+    <Compile Include="MSSQL\DbScouting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

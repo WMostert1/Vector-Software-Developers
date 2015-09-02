@@ -17,6 +17,8 @@ using DataAccess.Interface;
 using DataAccess.MSSQL;
 using System.Web.Http;
 using System.Reflection;
+using BugBusiness.BugScouting;
+using BugBusiness.Interface.BugScouting;
 
 namespace BugWeb
 {
@@ -38,6 +40,11 @@ namespace BugWeb
 
             builder.RegisterType<DbFarmManagement>().As<IDbFarmManagement>();
             builder.RegisterType<FarmManagement>().As<IFarmManagement>();
+
+            builder.RegisterType<DbScouting>().As<IDbScouting>();
+            builder.RegisterType<BugScouting>().As<IBugScouting>();
+            
+            
 
             var container = builder.Build();
 

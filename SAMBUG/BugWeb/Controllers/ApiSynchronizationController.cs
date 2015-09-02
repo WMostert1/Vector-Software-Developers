@@ -9,96 +9,41 @@ using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugBusiness.Interface.BugScouting.DTO;
 using Newtonsoft.Json.Linq;
 using DataAccess.Interface;
-
-
 using System.Web;
-
 using System.Text;
-
 using System.Reflection;
 using System.IO;
 using System.Web.Http;
+using BugBusiness.Interface.BugScouting;
 
 namespace BugWeb.Controllers
 {
     
     public class ApiSynchronizationController : ApiController
     {
-        private IDbSynchronization dbSynchronization { get; set; }
+        private readonly IBugScouting _bugScouting;
         private string json;
 
-        public ApiSynchronizationController(IDbSynchronization _dbSynchronization)
+        public ApiSynchronizationController(IBugScouting bugScouting)
         {
-            dbSynchronization = _dbSynchronization;
+            _bugScouting = bugScouting;
         }
 
-        public void ReadInJson(String location)
-        {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), location);
-            json = System.IO.File.ReadAllText(path);
-            
-        }
-           [HttpPost]
-         public SynResult persistCachedData([FromBody] SyncRequest request)
-        {
 
-
-            JObject jsonFile;
-            JObject actualData;
-            Boolean success = true;
+        [HttpPost]
+         public SyncResult persistCachedData([FromBody] SyncRequest request)
+        {
+            //TODO: The Date isn't begin parsed correctly. Need to look @ Android side Date representation
             try
             {
-                jsonFile = JObject.Parse(json);
-                actualData = JObject.Parse(jsonFile["syncData"].ToString());
+                    _bugScouting.persistScoutingData(request);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                success = false;
-                throw new ParsingException();
+                return new SyncResult { success = false };
             }
 
-            //The exceptions for functions below qill be thrown by dbSynchronizaion
-            try
-            {
-                foreach (var scoutStop in actualData["ScoutStops"])
-                {
-                    Int64 scoutStopID = Convert.ToInt64(scoutStop["ScoutStopID"].ToString());
-                    Int64 userID = Convert.ToInt64(scoutStop["UserID"].ToString());
-                    Int64 blockID = Convert.ToInt64(scoutStop["BlockID"].ToString());
-                    int numberOfTrees = Convert.ToInt16(scoutStop["NumberOfTrees"].ToString());
-                    float latitude = float.Parse(scoutStop["Latitude"].ToString().Replace(".", ","));
-                    float longitude = float.Parse(scoutStop["Longitude"].ToString().Replace(".", ","));
-                    DateTime date = Convert.ToDateTime(scoutStop["Date"].ToString());
-                    int lastModifiedID = Convert.ToInt16(scoutStop["LastModifiedID"].ToString());
-                    DateTime tmStamp = Convert.ToDateTime(scoutStop["TMStamp"].ToString());
-
-                    dbSynchronization.PersistScoutStops(scoutStopID, userID, blockID, numberOfTrees, latitude, longitude, date, lastModifiedID, tmStamp);
-                }
-
-                foreach (var scoutBugs in actualData["ScoutBugs"])
-                {
-                    Int64 scoutBugID = Convert.ToInt64(scoutBugs["ScoutBugID"].ToString());
-                    Int64 scoutStopID = Convert.ToInt64(scoutBugs["ScoutStopID"].ToString());
-                    Int64 speciesID = Convert.ToInt64(scoutBugs["SpeciesID"].ToString());
-                    int numberOfBugs = Convert.ToInt16(scoutBugs["NumberOfBugs"].ToString());
-                    byte[] fieldPicture = Encoding.ASCII.GetBytes(scoutBugs["FieldPicture"].ToString());
-                    String comments = scoutBugs["Comments"].ToString();
-                    int lastModifiedID = Convert.ToInt16(scoutBugs["LastModifiedID"].ToString());
-                    DateTime tmStamp = Convert.ToDateTime(scoutBugs["TMStamp"].ToString());
-
-                    dbSynchronization.PersistScoutBugs(scoutBugID, scoutStopID, speciesID, numberOfBugs, fieldPicture, comments, lastModifiedID, tmStamp);
-                }
-            }
-            catch (Exception)
-            {
-                success = false;
-            }
-
-            SynResult synR = new SynResult();
-            synR.json = json;
-            synR.Passed = success;
-
-            return synR;
+            return new SyncResult { success = true };
 
         }
 

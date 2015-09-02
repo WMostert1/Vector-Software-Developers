@@ -2,6 +2,7 @@
 using BugBusiness.Interface.BugScouting.DTO;
 using BugBusiness.Interface.BugScouting.Exceptions;
 using DataAccess.Interface;
+using DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,25 +13,39 @@ namespace BugBusiness.BugScouting
 {
     public class BugScouting: IBugScouting
     {
-        private IDbSynchronization dbSynchronization { get; set; }
-        BugScouting(IDbSynchronization _dbSynchronization)
+        private readonly IDbScouting _dbScouting;
+        public BugScouting(IDbScouting dbScouting)
         {
-            dbSynchronization = _dbSynchronization;
+            _dbScouting = dbScouting;
         }
 
-        public PersistScoutStopsResult PersistScoutStops(PersistScoutStopsRequest persistScoutStopsRequest)//Int64 scoutStopID, Int64 userID, Int64 blockID, int numberOfTrees, float latitude, float longitude, DateTime date, int lastModifiedID, DateTime tmStamp)
-        {
-            if(dbSynchronization.PersistScoutStops(persistScoutStopsRequest.ScoutStopID, persistScoutStopsRequest.UserID, persistScoutStopsRequest.BlockID, persistScoutStopsRequest.NumberOfTrees, persistScoutStopsRequest.Latitude, persistScoutStopsRequest.Longitude, persistScoutStopsRequest.Date, persistScoutStopsRequest.LastModifiedID, persistScoutStopsRequest.TmStamp) == false)
-                throw new PersistScoutStopsException();
+       public void persistScoutingData(SyncRequest request){
+           //Build up for EF
+           foreach (var stop in request.ScoutStops)
+           {
+               if (stop.ScoutBugs == null)
+                  stop.ScoutBugs = new List<ScoutBugDTO>();
 
-            return new PersistScoutStopsResult();
-        }
-        public PersistScoutBugsResult PersistScoutBugs(PersistScoutBugsRequest persistScoutBugsRequest)//Int64 scoutBugID, Int64 scoutStopID, Int64 speciesID, int numberOfBugs, byte[] fieldImage, string comments, int lastModifiedID, DateTime tmpStamp)
-        {
-            if(dbSynchronization.PersistScoutBugs(persistScoutBugsRequest.ScoutBugID,persistScoutBugsRequest.ScoutStopID,persistScoutBugsRequest.SpeciesID,persistScoutBugsRequest.NumberOfBugs,persistScoutBugsRequest.FieldImage,persistScoutBugsRequest.Comments,persistScoutBugsRequest.LastModifiedID,persistScoutBugsRequest.TmStamp) == false)
+               foreach (var bug in request.scoutBugs)
+               {
+                   if (bug.ScoutStopID == stop.ScoutStopID)
+                   {
+                       if(bug.ScoutStop != null)
+                       bug.ScoutStop = stop;
+
+                       stop.ScoutBugs.Add(bug);
+                   }
+               }
+           }
+
+           //TODO: The sbyte[] array isn't properly being converted to a byte[] - mocked out in _dbScouting for now
+           //TODO: The date is being mocked out in _dbScouting
+           List<ScoutStop> ScoutStops = AutoMapper.Mapper.Map<List<ScoutStop>>(request.ScoutStops);
+           
+
+            if(!_dbScouting.PersistScoutStops(ScoutStops))
                     throw new PersistScoutBugsException();
 
-            return new PersistScoutBugsResult();
         }
     }
 }
