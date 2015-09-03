@@ -38,7 +38,7 @@ import vsd.co.za.sambugapp.DomainModels.ScoutStop;
  *
  */
 public class SynchronizeTask extends AsyncTask<Void,Void,Void>{
-    private static final String SYNC_SERVICE_URL = "http://localhost:53358/api/authentication/login";
+    private static final String SYNC_SERVICE_URL = "http://www.sambug.co.za/api/ApiSynchronization/persistCachedData";
     private static final int SOCKET_TIMEOUT_MS = 10000; //10 seconds
     private static SynchronizeTask mInstance;
     private static Context context;
@@ -93,7 +93,9 @@ public class SynchronizeTask extends AsyncTask<Void,Void,Void>{
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    if (response.get("ResponseCode").equals(true)) {
+                    Toast.makeText(context,"Server contacted.", Toast.LENGTH_SHORT).show();
+                    if (response.get("success").equals(true)){
+                        Toast.makeText(context,"Scout data successfully pushed to server", Toast.LENGTH_SHORT).show();
                         ScoutBugDAO scoutBugDAO = new ScoutBugDAO(context);
                         ScoutStopDAO scoutStopDAO = new ScoutStopDAO(context);
                         try {
@@ -112,6 +114,7 @@ public class SynchronizeTask extends AsyncTask<Void,Void,Void>{
                             Log.e("Deletion", e.toString());
                         }
                     }
+                    else Toast.makeText(context,"ERROR: Scout data unsuccessfully pushed to server", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     Log.e("JSONError", e.toString());
                 }
@@ -119,6 +122,7 @@ public class SynchronizeTask extends AsyncTask<Void,Void,Void>{
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context,"Error connecting to server.", Toast.LENGTH_SHORT).show();
                 Log.e("NetworkingError:", error.toString());
             }
         });
