@@ -1,4 +1,5 @@
-﻿@model BugWeb.Models.ReportingViewModel
+﻿@using System.Web.Razor.Generator
+@model BugWeb.Models.ReportingViewModel
 @{
     ViewBag.Title = "Tabular";
 }
@@ -43,6 +44,6 @@
     <option value="blockName">Blocks</option>
 </select>
 
-<button style="margin-top: 15px" id="generateBut" data-url="./api/apireporting/get/@Model.ActiveFarmId" class="btn-default" onclick="generate()">Generate tables</button>
+<button style="margin-top: 15px" id="generateBut" data-url="@Url.Content("~/api/reporting/" + @Model.ActiveFarmId)" class="btn-default" onclick="generate()">Generate tables</button>
 
 <table id="table"></table>

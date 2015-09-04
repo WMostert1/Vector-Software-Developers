@@ -1,4 +1,5 @@
-﻿
+﻿@model BugWeb.Models.ReportingViewModel
+
 @{
     ViewBag.Title = "Charts";
 }
@@ -10,10 +11,12 @@
 }
 
 <div id="chart" class="ct-minor-seventh"></div>
-<button id="btnGetData"type="button" data-url="~/api/apireporting/get/1" onclick="loadData()">Get Data</button>
 
 @section scripts
 {
+    <script type="application/javascript">
+        var reportingAPI_URL = "@Url.Content("~/api/reporting/" + @Model.ActiveFarmId)";
+    </script>
     @Scripts.Render("~/bundles/chartist")
     @Scripts.Render("~/bundles/reporting")
 }

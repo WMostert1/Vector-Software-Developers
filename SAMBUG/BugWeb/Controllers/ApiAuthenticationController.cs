@@ -12,10 +12,9 @@ using Newtonsoft.Json.Linq;
 
 namespace BugWeb.Controllers
 {
-    
+    [RoutePrefix("api/authentication")]
     public class ApiAuthenticationController : ApiController
     {
-
         private readonly IBugSecurity _bugSecurity;
 
         public ApiAuthenticationController(IBugSecurity bugSecurity)
@@ -24,6 +23,7 @@ namespace BugWeb.Controllers
         }
 
        [HttpPost]
+        [Route("login")]
         public LoginResponse Login([FromBody] LoginRequest loginRequest)
         {
             try
@@ -38,6 +38,7 @@ namespace BugWeb.Controllers
         }
 
         [HttpPost]
+        [Route("register")]
         public RegisterResponse Register([FromBody] RegisterRequest registerRequest)
         {
             try

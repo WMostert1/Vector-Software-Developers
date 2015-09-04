@@ -1,7 +1,7 @@
 ﻿var map, heatmap;
 var stops = {};
 function initMap() {
-    $.get("../api/apireporting/get/1", function (data) {
+    $.get("../api/reporting/1", function (data) {
         stops = data;
 
   

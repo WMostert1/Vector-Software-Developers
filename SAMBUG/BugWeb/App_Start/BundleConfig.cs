@@ -11,8 +11,8 @@ namespace BugWeb
         {
             bundles.UseCdn = true;
 
-            string  cdnJSChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.js",
-                    cdnCSSChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.css";
+            const string    cdnJsChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.js",
+                            cdnCssChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.css";
 
             bundles
                 .Add(new ScriptBundle("~/bundles/jquery")
@@ -42,7 +42,7 @@ namespace BugWeb
                 .Include("~/Scripts/charts.js"));
 
             bundles
-                .Add(new ScriptBundle("~/bundles/chartist", cdnJSChartist)
+                .Add(new ScriptBundle("~/bundles/chartist", cdnJsChartist)
                 .Include("~/Scripts/chartist.js"));
                 
             bundles
@@ -55,7 +55,7 @@ namespace BugWeb
                 .Include("~/Content/chartist.min.css", "~/Content/charts.css"));
 
             bundles
-                .Add(new StyleBundle("~/Content/css/chartist", cdnCSSChartist)
+                .Add(new StyleBundle("~/Content/css/chartist", cdnCssChartist)
                 .Include("~/Content/chartist.min.css"));
 
         }

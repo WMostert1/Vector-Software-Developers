@@ -13,37 +13,36 @@ using System.Web;
 using System.Text;
 using System.Reflection;
 using System.IO;
+using System.Net.Http;
 using System.Web.Http;
 using BugBusiness.Interface.BugScouting;
 
 namespace BugWeb.Controllers
 {
-    
+    [RoutePrefix("api/synchronization")]
     public class ApiSynchronizationController : ApiController
     {
         private readonly IBugScouting _bugScouting;
-        private string json;
 
         public ApiSynchronizationController(IBugScouting bugScouting)
         {
             _bugScouting = bugScouting;
         }
 
-
         [HttpPost]
-         public SyncResult persistCachedData([FromBody] SyncRequest request)
+         public HttpResponseMessage PersistCachedData([FromBody] SyncRequest request)
         {
-            //TODO: The Date isn't begin parsed correctly. Need to look @ Android side Date representation
+            //TODO: The Date isn't being parsed correctly. Need to look @ Android side Date representation
             try
             {
                     _bugScouting.persistScoutingData(request);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return new SyncResult { success = false };
+                throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
 
-            return new SyncResult { success = true };
+            return new HttpResponseMessage(HttpStatusCode.Created);
 
         }
 

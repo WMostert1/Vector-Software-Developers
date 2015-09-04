@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace BugWeb.Controllers
 {
-   
+    [RoutePrefix("api/reporting")]
     public class ApiReportingController : ApiController
     {
         private readonly IBugReporting _bugReporting;
@@ -20,7 +20,7 @@ namespace BugWeb.Controllers
             _bugReporting = bugReporting;
         }
 
-        
+        [Route("{id}")]
         public GetCapturedDataResponse Get(long id)
         {
             var response = _bugReporting.GetCapturedData(new GetCapturedDataRequest() { FarmId = id });

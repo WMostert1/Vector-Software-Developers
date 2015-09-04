@@ -70,7 +70,6 @@
     <Compile Include="BugSecurity\Exceptions\UserExistsException.cs" />
     <Compile Include="BugSecurity\IBugSecurity.cs" />
     <Compile Include="BugScouting\DTO\SyncRequest.cs" />
-    <Compile Include="BugScouting\DTO\SyncResult.cs" />
     <Compile Include="Exceptions\ParsingException.cs" />
     <Compile Include="FarmManagement\DTO\AddBlockRequest.cs" />
     <Compile Include="FarmManagement\DTO\AddBlockResult.cs" />
