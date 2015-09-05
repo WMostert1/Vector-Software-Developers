@@ -14,6 +14,5 @@ namespace BugBusiness.Interface.BugReporting.DTO
         public ICollection<ScoutBugDto> ScoutBugs { get; set; }
         public float Latitude { get; set; }
         public float Longitude { get; set; }
-
     }
 }

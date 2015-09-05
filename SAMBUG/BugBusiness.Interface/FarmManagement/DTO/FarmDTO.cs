@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
-    public class GetFarmByIDResult
+    public class FarmDTO
     {
-        public FarmDTO Farm { get; set; }
+        public long FarmID { get; set; }
+        public string FarmName { get; set; }
+        public List<BlockDTO> Blocks { get; set; }
     }
 }

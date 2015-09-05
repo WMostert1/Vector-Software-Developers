@@ -2,10 +2,10 @@
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using DataAccess.Interface;
-using DataAccess.Interface.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Should;
 using System.Collections.Generic;
+using DataAccess.Models;
 
 namespace BugBusiness.Tests
 {
@@ -35,11 +35,11 @@ namespace BugBusiness.Tests
                 .Setup(dbAuthentication => dbAuthentication.GetUserByCredentials("Test1", "321"))
                 .Returns(new User()
                 {
-                    UserId = 1,
+                    UserID = 1,
                     Roles = new List<Role>()
                     {
-                        new Role(){Description = "Admin", Type = 1},
-                        new Role(){Description = "Grower", Type = 2}
+                        new Role(){RoleDescription = "Admin", RoleType = 1},
+                        new Role(){RoleDescription = "Grower", RoleType = 2}
                     }
                 });
 
@@ -53,10 +53,10 @@ namespace BugBusiness.Tests
             });
 
             //Assert
-            loginResponse.User.UserId.ShouldEqual(1);
+            loginResponse.User.UserID.ShouldEqual(1);
             
-            loginResponse.User.Roles[0].Type.ShouldEqual(1);
-            loginResponse.User.Roles[1].Type.ShouldEqual(2);
+            loginResponse.User.Roles[0].RoleType.ShouldEqual(1);
+            loginResponse.User.Roles[1].RoleType.ShouldEqual(2);
 
         }
 

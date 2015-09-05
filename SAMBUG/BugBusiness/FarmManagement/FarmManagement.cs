@@ -7,7 +7,7 @@ using BugBusiness.Interface.FarmManagement;
 using BugBusiness.Interface.FarmManagement.DTO;
 using BugBusiness.Interface.FarmManagement.Exceptions;
 using DataAccess.Interface;
-using DataAccess.Interface.Domain;
+using DataAccess.Models;
 
 namespace BugBusiness.FarmManagement
 {
@@ -51,8 +51,12 @@ namespace BugBusiness.FarmManagement
                 throw new NoBlocksException();
             }
 
-            GetBlocksByFarmResult result = new GetBlocksByFarmResult();
-            result.Blocks = blocks;
+            List<BlockDTO> blockDTOList = AutoMapper.Mapper.Map<List<BlockDTO>>(blocks);
+
+            GetBlocksByFarmResult result = new GetBlocksByFarmResult()
+            {
+                Blocks = blockDTOList
+            };
 
             return result;
         }
@@ -71,8 +75,12 @@ namespace BugBusiness.FarmManagement
                 throw new NoSuchBlockExistsException();
             }
 
-            GetBlockByIDResult getblockbyidResult = new GetBlockByIDResult();
-            getblockbyidResult.Block = block;
+            BlockDTO blockDTO = AutoMapper.Mapper.Map<BlockDTO>(block);
+
+            GetBlockByIDResult getblockbyidResult = new GetBlockByIDResult()
+            {
+                Block=blockDTO
+            };
 
             return getblockbyidResult;
         }
@@ -91,9 +99,11 @@ namespace BugBusiness.FarmManagement
                 throw new NoSuchFarmExistsException();
             }
 
+            FarmDTO farmDTO = AutoMapper.Mapper.Map<FarmDTO>(farm);
+
             GetFarmByIDResult getfarmbyidResult = new GetFarmByIDResult()
             {
-                Farm = farm
+                Farm = farmDTO
             };
 
             return getfarmbyidResult;
@@ -132,6 +142,35 @@ namespace BugBusiness.FarmManagement
             }
 
             return new DeleteBlockByIDResult();
+        }
+
+        public GetPestsPerTreeByBlockResult GetPestsPerTreeByBlock(GetPestsPerTreeByBlockRequest getpestspertreebyblockRequest)
+        {
+            if (getpestspertreebyblockRequest.BlockID <= 0)
+            {
+                throw new InvalidInputException();
+            }
+
+            List<Object> queryResult = _dbFarmManagement.GetTreatmentInfoByBlock(getpestspertreebyblockRequest.BlockID);
+
+            if (queryResult == null)
+            {
+                throw new NoSuchBlockExistsException();
+            }
+
+            return new GetPestsPerTreeByBlockResult() { PestsPerTree = (double)queryResult[0],LastTreatment=queryResult[1].ToString() };
+        }
+
+        public AddTreatmentResult AddTreatment(AddTreatmentRequest addtreatmentRequest)
+        {
+            if (addtreatmentRequest.BlockID <= 0)
+            {
+                throw new InvalidInputException();
+            }
+
+            _dbFarmManagement.InsertNewTreatment(addtreatmentRequest.BlockID, addtreatmentRequest.TreatmentDate, addtreatmentRequest.TreatmentComments);
+
+            return new AddTreatmentResult();
         }
     }
 }

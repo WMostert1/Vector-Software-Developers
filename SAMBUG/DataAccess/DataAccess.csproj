@@ -48,14 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interface\Domain\Block.cs" />
-    <Compile Include="Interface\Domain\Farm.cs" />
-    <Compile Include="Interface\Domain\Role.cs" />
-    <Compile Include="Interface\Domain\ScoutBug.cs" />
-    <Compile Include="Interface\Domain\ScoutStop.cs" />
-    <Compile Include="Interface\Domain\Species.cs" />
-    <Compile Include="Interface\Domain\Treatment.cs" />
-    <Compile Include="Interface\Domain\User.cs" />
     <Compile Include="Interface\IDbBugSecurity.cs" />
     <Compile Include="Interface\IDbFarmManagement.cs" />
     <Compile Include="Interface\IDbBugReporting.cs" />

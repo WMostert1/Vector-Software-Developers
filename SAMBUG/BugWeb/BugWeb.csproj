@@ -170,6 +170,7 @@
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\ReportingViewModel.cs" />
+    <Compile Include="Models\TreatmentViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\SecurityProvider.cs" />
   </ItemGroup>
@@ -230,6 +231,7 @@
     <Content Include="Views\Authentication\RecoverAccount.cshtml" />
     <Content Include="Views\Authentication\CheckEmail.cshtml" />
     <Content Include="Views\Authentication\ChangePassword.cshtml" />
+    <Content Include="Views\FarmManagement\Treatments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
