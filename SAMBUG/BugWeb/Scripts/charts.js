@@ -1,7 +1,12 @@
-﻿//chart settings as constants
-var options = {
-    
-}
+﻿var view = $("#view").value,
+    against = $("#against").value,
+    constraints = new Array(),
+    goupBy = $("#groupBy").value;
+
+
+var dataSet;
+console.log(reportingApiUrl);
+
 
 
 

@@ -36,9 +36,9 @@ namespace BugWeb.Controllers
             User usr = (User)Session["UserInfo"];
 
             var report = new ReportingViewModel();
-            report.ActiveFarmId = (long) Session["ActiveFarm"];
-            report.Farm = AutoMapper.Mapper.Map<ReportingViewModel.FarmViewModel>(
-               usr.Farms.Single(farm => farm.FarmID.Equals(report.ActiveFarmId)));
+            //report.ActiveFarmId = (long) Session["ActiveFarm"];
+            //report.Farm = AutoMapper.Mapper.Map<ReportingViewModel.FarmViewModel>(
+            //   usr.Farms.Single(farm => farm.FarmID.Equals(report.ActiveFarmId)));
             
            return View(report);
         }
