@@ -14,41 +14,95 @@
     </script>
 }
 
-<label for="blocks">Blocks:</label>
-<select id="blocks" class="form-control">
-    <option value="all">All Blocks</option>
-    
-        @foreach (var y in @Model.Farm.Blocks)
-        {
-            <option svalue="@y.BlockName">@y.BlockName</option>
-        }
+@section styles
+{
+    @Styles.Render("~/Content/table.css");
+}
 
-    
-</select>
 
-<label for="timeRange">Time Range:</label>
-<div id="timeRange">
+<div id="firstContentRow" class="row">
+    <div class="col-sm-12 constraints">
+        <div id="constraintsDiv" class="panel-group">
+            <div class="panel panel-default" style="padding: 0px">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span id="collapseIcon" data-toggle="collapse" data-target="#collapsibleTable" class="glyphicon glyphicon-collapse"></span>
+                        <span id="resetIcon" class="glyphicon glyphicon-refresh pull-right"></span>
+                        <strong> Constraints</strong>
+                    </h1>
+                </div>
+                <div id="collapsibleTable" class="panel-collapse collapse in">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th>Blocks</th>
+                            <td>
+                                <select id="blocks" class="form-control">
+                                    <option value="all">All Blocks</option>
 
-    <label for="timeFrom">Starting date:</label>
-    <input type="date" id="timeFrom" class="form-control">
+                                    @foreach (var y in @Model.Farm.Blocks)
+                                    {
+                                        <option svalue="@y.BlockName">@y.BlockName</option>
+                                    }
 
-    <label for="timeTo">Ending date:</label>
-    <input type="date" id="timeTo" class="form-control">
+
+                                </select>
+                            </td>
+                            <th>Date</th>
+                            <td rowspan="3">
+                                <label for="timeFrom">From:</label>
+                                <input type="date" id="timeFrom" class="form-control">
+
+                                <label for="timeTo">To:</label>
+                                <input type="date" id="timeTo" class="form-control"><br/>
+                                <input id="dateAny" type="checkbox"> Any
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Species</th>
+                            <td>
+                                <select id="species" class="form-control">
+                                    <option value="all">All Species</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Species instars</th>
+                            <td>
+                                <select id="speciesStage" class="form-control">
+                                    <option value="all">All instars</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>View by</th>
+                            <td>
+                                <select id="view" class="form-control">
+                                    <option value="default">Default Table</option>
+                                    <option value="date">Date</option>
+                                    <option value="species">Species (Pests)</option>
+                                    <option value="blockName">Blocks</option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div id="tableDiv">
+            <table id="table"></table>
+        </div>
+    </div>
 </div>
 
-<label for="species">Bug Species:</label>
-<select id="species" class="form-control">
-    <option value="all">All Species</option>
-</select>
 
-<label for="view">View by:</label>
-<select id="view" class="form-control">
-    <option value="default">Default Table</option>
-    <option value="date">Date</option>
-    <option value="species">Species (Pests)</option>
-    <option value="blockName">Blocks</option>
-</select>
 
 <button style="margin-top: 15px" id="generateBut" data-url="@Url.Content("~/api/reporting/" + @Model.ActiveFarmId)" class="btn-default" onclick="generate()">Generate tables</button>
 
-<table id="table"></table>
+
+
+
+

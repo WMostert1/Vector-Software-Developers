@@ -54,6 +54,10 @@ $("#view").change(function () {
     generate();
 });
 
+$("#dateAny").change(function() {
+    generate();
+})
+
 function setFromDate() {
     var date = new XDate();
     var newDate = date.addYears(-10, true);
@@ -173,7 +177,7 @@ function filterData() {
         console.log(obj.speciesName);
         console.log(obj.lifestage);
         if ((obj.blockName === block || block === "all") &&
-        (obj.date >= fromDate && obj.date <= toDate) &&
+        ((obj.date >= fromDate && obj.date <= toDate) || (document.getElementById("dateAny").checked)) &&
         (speciesLifeStage === "all" || (obj.lifestage === speciesLifeStage && obj.speciesName === speciesName))){
             return true;
         }
