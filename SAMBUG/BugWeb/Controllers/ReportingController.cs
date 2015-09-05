@@ -32,7 +32,7 @@ namespace BugWeb.Controllers
         // GET: reporting/charts
         public ActionResult Charts()
         {
-            User usr = (User)Session["UserInfo"];
+            UserDTO usr = (UserDTO)Session["UserInfo"];
 
             var report = new ReportingViewModel();
             report.ActiveFarmId = (long) Session["ActiveFarm"];
