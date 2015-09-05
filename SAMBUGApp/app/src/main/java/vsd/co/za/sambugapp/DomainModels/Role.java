@@ -8,9 +8,8 @@ import java.util.HashSet;
  */
 public class Role {
     public int RoleID;
-    public String RoleDescription;
-    public int LastModifiedID;
-    public Date TMStamp;
+    public int Type;
+    public String Description;
 
     public Role() {
         this.Users = new HashSet<User>();
@@ -25,27 +24,11 @@ public class Role {
     }
 
     public String getRoleDescription() {
-        return RoleDescription;
+        return Description;
     }
 
     public void setRoleDescription(String roleDescription) {
-        RoleDescription = roleDescription;
-    }
-
-    public Integer getLastModifiedID() {
-        return LastModifiedID;
-    }
-
-    public void setLastModifiedID(Integer lastModifiedID) {
-        LastModifiedID = lastModifiedID;
-    }
-
-    public Date getTMStamp() {
-        return TMStamp;
-    }
-
-    public void setTMStamp(Date TMStamp) {
-        this.TMStamp = TMStamp;
+        Description = roleDescription;
     }
 
     public HashSet<User> getUsers() {

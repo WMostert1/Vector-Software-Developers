@@ -14,8 +14,6 @@ public class ScoutBug implements Serializable{
     public int NumberOfBugs;
     public byte[] FieldPicture;
     public String Comments;
-    public int LastModifiedID;
-    public Date TMStamp;
 
     public ScoutStop ScoutStop;
     public Species Species;
@@ -66,22 +64,6 @@ public class ScoutBug implements Serializable{
 
     public void setComments(String comments) {
         Comments = comments;
-    }
-
-    public Integer getLastModifiedID() {
-        return LastModifiedID;
-    }
-
-    public void setLastModifiedID(Integer lastModifiedID) {
-        LastModifiedID = lastModifiedID;
-    }
-
-    public Date getTMStamp() {
-        return TMStamp;
-    }
-
-    public void setTMStamp(Date TMStamp) {
-        this.TMStamp = TMStamp;
     }
 
     public vsd.co.za.sambugapp.DomainModels.ScoutStop getScoutStop() {

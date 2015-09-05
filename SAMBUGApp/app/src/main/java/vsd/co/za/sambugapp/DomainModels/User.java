@@ -10,19 +10,15 @@ import java.util.HashSet;
 public class User implements Serializable {
     public User() {
         this.Farms = new HashSet<Farm>();
-        this.ScoutStops = new HashSet<ScoutStop>();
+
     }
 
     public int UserID;
-    public int RoleID;
     public String Email;
-    public String Password;
-    public int LastModifiedID;
-    public Date TMStamp;
 
     public HashSet<Farm> Farms;
-    public Role Role;
-    public HashSet<ScoutStop> ScoutStops;
+    public HashSet<Role> Roles;
+
 
     public int getUserID() {
         return UserID;
@@ -30,14 +26,6 @@ public class User implements Serializable {
 
     public void setUserID(int userID) {
         UserID = userID;
-    }
-
-    public int getRoleID() {
-        return RoleID;
-    }
-
-    public void setRoleID(int roleID) {
-        RoleID = roleID;
     }
 
     public String getEmail() {
@@ -48,30 +36,6 @@ public class User implements Serializable {
         Email = email;
     }
 
-    public String getPassword() {
-        return Password;
-    }
-
-    public void setPassword(String password) {
-        Password = password;
-    }
-
-    public Integer getLastModifiedID() {
-        return LastModifiedID;
-    }
-
-    public void setLastModifiedID(Integer lastModifiedID) {
-        LastModifiedID = lastModifiedID;
-    }
-
-    public Date getTMStamp() {
-        return TMStamp;
-    }
-
-    public void setTMStamp(Date TMStamp) {
-        this.TMStamp = TMStamp;
-    }
-
     public HashSet<Farm> getFarms() {
         return Farms;
     }
@@ -80,19 +44,12 @@ public class User implements Serializable {
         Farms = farms;
     }
 
-    public vsd.co.za.sambugapp.DomainModels.Role getRole() {
-        return Role;
+    public HashSet<Role> getRoles() {
+        return Roles;
     }
 
-    public void setRole(vsd.co.za.sambugapp.DomainModels.Role role) {
-        Role = role;
+    public void setRoles(HashSet<Role> roles) {
+        Roles = roles;
     }
 
-    public HashSet<ScoutStop> getScoutStops() {
-        return ScoutStops;
-    }
-
-    public void setScoutStops(HashSet<ScoutStop> scoutStops) {
-        ScoutStops = scoutStops;
-    }
 }

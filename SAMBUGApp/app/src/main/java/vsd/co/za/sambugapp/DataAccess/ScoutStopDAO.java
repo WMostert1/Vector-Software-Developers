@@ -48,8 +48,6 @@ public class ScoutStopDAO extends DataSourceAdapter{
         values.put(DBHelper.COLUMN_LATITUDE, scoutStop.getLatitude());
         values.put(DBHelper.COLUMN_LONGITUDE, scoutStop.getLongitude());
         values.put(DBHelper.COLUMN_DATE, scoutStop.getDate().toString());
-        values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, scoutStop.getLastModifiedID());
-        values.put(DBHelper.COLUMN_TIMESTAMP, scoutStop.getTMStamp().toString());
         database.update(DBHelper.TABLE_SCOUT_STOP, values, DBHelper.COLUMN_SCOUT_STOP_ID + " = " + id, null);
     }
 
@@ -61,8 +59,6 @@ public class ScoutStopDAO extends DataSourceAdapter{
         values.put(DBHelper.COLUMN_LATITUDE, scoutStop.getLatitude());
         values.put(DBHelper.COLUMN_LONGITUDE, scoutStop.getLongitude());
         values.put(DBHelper.COLUMN_DATE, scoutStop.getDate().toString());
-        values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, scoutStop.getLastModifiedID());
-        values.put(DBHelper.COLUMN_TIMESTAMP, scoutStop.getTMStamp().toString());
         long scoutStopID = database.insert(DBHelper.TABLE_SCOUT_STOP, null, values);
 
             ScoutBugDAO scoutBugDAO = new ScoutBugDAO(context);
@@ -135,15 +131,8 @@ public class ScoutStopDAO extends DataSourceAdapter{
             e.printStackTrace();
             scoutStop.setDate(null);
         }
-        scoutStop.setLastModifiedID(cursor.getInt(7));
-        String date = cursor.getString(8);
-        try {
-            //TODO: Get this bloody thing to parse the date correctly
-            scoutStop.setTMStamp(DateFormat.getDateTimeInstance().parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            scoutStop.setTMStamp(null);
-        }
+
+
         return scoutStop;
     }
     

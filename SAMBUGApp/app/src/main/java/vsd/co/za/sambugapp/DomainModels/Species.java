@@ -19,8 +19,6 @@ public class Species implements Serializable {
     public int Lifestage;
     public byte[] IdealPicture;
     public boolean IsPest;
-    public int LastModifiedID;
-    public Date TMStamp;
 
     public HashSet<ScoutBug> ScoutBugs;
 
@@ -64,21 +62,6 @@ public class Species implements Serializable {
         IsPest = isPest;
     }
 
-    public Integer getLastModifiedID() {
-        return LastModifiedID;
-    }
-
-    public void setLastModifiedID(Integer lastModifiedID) {
-        LastModifiedID = lastModifiedID;
-    }
-
-    public Date getTMStamp() {
-        return TMStamp;
-    }
-
-    public void setTMStamp(Date TMStamp) {
-        this.TMStamp = TMStamp;
-    }
 
     public HashSet<ScoutBug> getScoutBugs() {
         return ScoutBugs;

@@ -11,8 +11,6 @@ public class Farm implements Serializable {
     public int FarmID;
     public int UserID;
     public String FarmName;
-    public int LastModifiedID;
-    public Date TMStamp;
 
     public HashSet<Block> Blocks;
     public User User;
@@ -43,22 +41,6 @@ public class Farm implements Serializable {
 
     public void setFarmName(String farmName) {
         FarmName = farmName;
-    }
-
-    public Integer getLastModifiedID() {
-        return LastModifiedID;
-    }
-
-    public void setLastModifiedID(Integer lastModifiedID) {
-        LastModifiedID = lastModifiedID;
-    }
-
-    public Date getTMStamp() {
-        return TMStamp;
-    }
-
-    public void setTMStamp(Date TMStamp) {
-        this.TMStamp = TMStamp;
     }
 
     public HashSet<Block> getBlocks() {

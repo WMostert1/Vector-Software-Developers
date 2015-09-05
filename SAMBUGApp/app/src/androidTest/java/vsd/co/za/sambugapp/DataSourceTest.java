@@ -52,7 +52,7 @@ public class DataSourceTest extends AndroidTestCase {
         scoutStopDAO.open();
         ScoutStop scoutStop = new ScoutStop();
         scoutStop.setDate(new Date());
-        scoutStop.setTMStamp(new Date());
+
 
         int id = (int)scoutStopDAO.insert(scoutStop);
 
@@ -65,7 +65,7 @@ public class DataSourceTest extends AndroidTestCase {
 
         ScoutStop newScoutStop = new ScoutStop();
         newScoutStop.setDate(new Date());
-        newScoutStop.setTMStamp(new Date());
+
         newScoutStop.setScoutStopID((int) scoutStopDAO.insert(newScoutStop));
 
         List<ScoutStop> all = scoutStopDAO.getAllScoutStops();
@@ -99,7 +99,7 @@ public class DataSourceTest extends AndroidTestCase {
             Species species = new Species();
             species.setSpeciesName("TestSpecies");
             species.setIdealPicture(new byte[]{});
-            species.setTMStamp(new Date());
+
         
             int id = (int)speciesDAO.insert(species);
             
@@ -113,7 +113,7 @@ public class DataSourceTest extends AndroidTestCase {
         Species newSpecies = new Species();
         newSpecies.setSpeciesName("All Species");
         newSpecies.setIdealPicture(new byte[]{});
-        newSpecies.setTMStamp(new Date());
+
         newSpecies.setSpeciesID((int) speciesDAO.insert(newSpecies));
 
         List<Species> all = speciesDAO.getAllSpecies();
@@ -202,7 +202,7 @@ public class DataSourceTest extends AndroidTestCase {
             ScoutBug bug = new ScoutBug();
             bug.Comments = "Testing single insert and query";
             bug.setFieldPicture(new byte[]{});
-            bug.setTMStamp(new Date());
+
             bug.setScoutBugID((int) scoutBugDAO.insert(bug));
 
             int id = bug.getScoutBugID();
@@ -215,7 +215,7 @@ public class DataSourceTest extends AndroidTestCase {
             ScoutBug newBug = new ScoutBug();
             newBug.Comments = "Testing get all";
             newBug.setFieldPicture(new byte[]{});
-            newBug.setTMStamp(new Date());
+
             newBug.setScoutBugID((int) scoutBugDAO.insert(newBug));
 
             List<ScoutBug> all = scoutBugDAO.getAllScoutBugs();

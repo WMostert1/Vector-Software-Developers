@@ -45,8 +45,6 @@ public class ScoutBugDAO extends DataSourceAdapter {
         values.put(DBHelper.COLUMN_NUMBER_OF_BUGS, scoutBug.getNumberOfBugs());
         values.put(DBHelper.COLUMN_FIELD_PICTURE, scoutBug.getFieldPicture());
         values.put(DBHelper.COLUMN_COMMENTS, scoutBug.getComments());
-        values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, scoutBug.getLastModifiedID());
-        values.put(DBHelper.COLUMN_TIMESTAMP, scoutBug.getTMStamp().toString());
         database.update(DBHelper.TABLE_SCOUT_BUG, values, DBHelper.COLUMN_SCOUT_BUG_ID + " = " + id, null);
     }
 
@@ -57,9 +55,6 @@ public class ScoutBugDAO extends DataSourceAdapter {
         values.put(DBHelper.COLUMN_NUMBER_OF_BUGS, scoutBug.getNumberOfBugs());
         values.put(DBHelper.COLUMN_FIELD_PICTURE, scoutBug.getFieldPicture());
         values.put(DBHelper.COLUMN_COMMENTS, scoutBug.getComments());
-        values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, scoutBug.getLastModifiedID());
-        if(scoutBug.getTMStamp() == null) scoutBug.setTMStamp(new Date());
-        values.put(DBHelper.COLUMN_TIMESTAMP, scoutBug.getTMStamp().toString());
         return database.insert(DBHelper.TABLE_SCOUT_BUG, null, values);
     }
 
@@ -113,13 +108,7 @@ public class ScoutBugDAO extends DataSourceAdapter {
         scoutBug.setNumberOfBugs(cursor.getInt(3));
         scoutBug.setFieldPicture(cursor.getBlob(4));
         scoutBug.setComments(cursor.getString(5));
-        scoutBug.setLastModifiedID(cursor.getInt(6));
         String date = cursor.getString(7);
-        try {
-            scoutBug.setTMStamp(new Date(date));
-        } catch (Exception e) {
-            scoutBug.setTMStamp(new Date());
-        }
 
 //        try {
 //            //TODO: Get this bloody thing to parse the date correctly

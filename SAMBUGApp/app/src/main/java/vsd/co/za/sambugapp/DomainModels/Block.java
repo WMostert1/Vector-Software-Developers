@@ -18,8 +18,6 @@ public class Block implements Serializable{
     public int BlockID;
     public int FarmID;
     public String BlockName;
-    public int LastModifiedID;
-    public Date TMStamp;
 
     public Farm Farm;
     public HashSet<ScoutStop> ScoutStops;
@@ -35,14 +33,6 @@ public class Block implements Serializable{
 
     public void setBlockName(String blockName) {
         BlockName = blockName;
-    }
-
-    public void setLastModifiedID(Integer lastModifiedID) {
-        LastModifiedID = lastModifiedID;
-    }
-
-    public void setTMStamp(Date TMStamp) {
-        this.TMStamp = TMStamp;
     }
 
     public void setFarm(Farm farm) {
@@ -67,14 +57,6 @@ public class Block implements Serializable{
 
     public String getBlockName() {
         return BlockName;
-    }
-
-    public Integer getLastModifiedID() {
-        return LastModifiedID;
-    }
-
-    public Date getTMStamp() {
-        return TMStamp;
     }
 
     public Farm getFarm() {

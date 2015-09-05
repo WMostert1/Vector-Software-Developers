@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DataAccess.DBHelper;
+import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.Block;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 
@@ -43,18 +44,10 @@ import vsd.co.za.sambugapp.DomainModels.Farm;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private WebAPI mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -63,7 +56,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mLoginFormView;
 
     public static final String USER_FARM = "za.co.vsd.user_farm";
-    private final String TAG="LoginActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,33 +92,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         //Initialise the database if it's not been created yet
         DBHelper dbHelper = new DBHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        dbHelper.getWritableDatabase();
 
-        //testing
-        JSONObject obj=new JSONObject();
-        Log.e(TAG,"HELLO");
-        try {
-            obj.put("Name", "Keags");
-            ArrayList<Block> blocks=new ArrayList<>();
-            JSONArray array=new JSONArray();
-            for (int i=0;i<2;i++){
-                Block block=new Block();
-                block.setBlockID(i);
-                block.setBlockName("Block " + i);
-                JSONObject temp=new JSONObject();
-                temp.put("ID",block.getBlockID());
-                temp.put("Name",block.getBlockName());
-                array.put(temp);
-            }
-            obj.put("Blocks",array);
-            JSONArray arr=obj.getJSONArray("Blocks");
-            for (int i=0;i<arr.length();i++){
-                JSONObject arrObj=arr.getJSONObject(i);
-                Log.e(TAG,arrObj.getString("ID")+arrObj.getString("Name"));
-            }
-        }catch(Exception ex){
-            Log.e(TAG, ex.getMessage());
-        }
     }
 
     private void populateAutoComplete() {
@@ -139,6 +107,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
+        //TODO: Don't try multiple times to login
         if (mAuthTask != null) {
             return;
         }
@@ -179,103 +148,22 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            /*showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);*/
+            showProgress(true);
 
-            //send login request
-            Farm resultFarm=loginRequest(email,password);
-            //test login request
-            if (resultFarm==null){
-                Toast.makeText(getApplicationContext(),"Login failed!",Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent(getApplicationContext(),ScoutTripActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putSerializable(USER_FARM,resultFarm);
-                intent.putExtras(bundle);
-                startActivity(intent);
+            WebAPI.attemptLogin(email,password,getApplicationContext());
             }
         }
-    }
+
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.matches("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 0;
     }
 
-    private Farm loginRequest(String email,String password){
-        //create login request
-        JSONObject loginRequest=new JSONObject();
-        try {
-            loginRequest.put("Username", email);
-            loginRequest.put("Password", password);
-        } catch (JSONException ex){
-            Log.e(TAG,ex.getMessage());
-        }
-        //send login request
-        //String result=sendLoginRequest();
-        Farm farm;
-        if (email.equals("m@m.m")){
-            JSONObject resultJSON=new JSONObject();
-            try {
-                resultJSON.put("FarmID", 1);
-                resultJSON.put("UserID", 3);
-                resultJSON.put("FarmName", "Spektakel");
-                JSONArray tempArr=new JSONArray();
-                for (int i=1;i<4;i++){
-                    Block block=new Block();
-                    block.setBlockID(i);
-                    block.setFarmID(1);
-                    block.setBlockName("Block " + i);
-                    JSONObject temp=new JSONObject();
-                    temp.put("BlockID",block.getBlockID());
-                    temp.put("FarmID",block.getFarmID());
-                    temp.put("BlockName",block.getBlockName());
-                    tempArr.put(temp);
-                }
-                resultJSON.put("Blocks",tempArr);
-            }catch(JSONException ex){
-                Log.e(TAG,ex.getMessage());
-            }
-            //farmid,userid,farmname,list of blocks
-            return handleLoginResult(resultJSON.toString());
-        } else return null;
-    }
 
-    private Farm handleLoginResult(String jsonString){
-        Farm farm;
-        try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            farm=new Farm();
-            farm.setFarmID(jsonObject.getInt("FarmID"));
-            farm.setUserID(jsonObject.getInt("UserID"));
-            farm.setFarmName(jsonObject.getString("FarmName"));
-            JSONArray jsonArray=jsonObject.getJSONArray("Blocks");
-            HashSet<Block> blockList=new HashSet<>();
-            for (int i=0;i<jsonArray.length();i++){
-                JSONObject tempJson=jsonArray.getJSONObject(i);
-                Block tempBlock=new Block();
-                tempBlock.setBlockID(tempJson.getInt("BlockID"));
-                tempBlock.setFarmID(tempJson.getInt("FarmID"));
-                tempBlock.setBlockName(tempJson.getString("BlockName"));
-                blockList.add(tempBlock);
-            }
-            farm.setBlocks(blockList);
-        }catch (JSONException ex){
-            Log.e(TAG,ex.getMessage());
-            farm=null;
-        }
-        return farm;
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -367,6 +255,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    /*
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -378,8 +267,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+        protected Boolean doInBackground(Void... params){
 
             try {
                 // Simulate network access.
@@ -388,7 +276,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
+            /*for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
@@ -396,7 +284,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 }
             }
 
-            // TODO: register the new account here.
+
+
             return true;
         }
 
@@ -419,5 +308,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
         }
     }
+     */
 }
 

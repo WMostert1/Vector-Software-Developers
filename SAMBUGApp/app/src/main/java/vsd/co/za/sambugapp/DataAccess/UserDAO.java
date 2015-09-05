@@ -26,9 +26,8 @@ public class UserDAO extends DataSourceAdapter {
         public long insert(User user){
         ContentValues values = new ContentValues();
         values.put(DBHelper.COLUMN_EMAIL,user.getEmail());
-        values.put(DBHelper.COLUMN_PASSWORD,user.getPassword());
-        values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, user.getLastModifiedID());
-        values.put(DBHelper.COLUMN_TIMESTAMP,user.getTMStamp().toString());
+
+
         return database.insert(DBHelper.TABLE_USER,null,values);
         }
 

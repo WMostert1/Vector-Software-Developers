@@ -373,8 +373,6 @@ public class enterDataActivity extends ActionBarActivity {
     public synchronized void createScoutStop() {
         stop = new ScoutStop();
         stop.setDate(new Date());
-        stop.setLastModifiedID(farm.getUserID());
-        stop.setTMStamp(new Date());
         stop.setUserID(farm.getUserID());
         if(myLocation != null){
             stop.setLatitude((float) myLocation.getLatitude());
@@ -476,9 +474,6 @@ public class enterDataActivity extends ActionBarActivity {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         imageTaken.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         currBug.setFieldPicture(stream.toByteArray());
-        //TODO: change to user id eventually
-        currBug.setLastModifiedID(1);
-        currBug.setTMStamp(new Date());
         stop.ScoutBugs.add(currBug);
         allBugs.add(currBug);
 

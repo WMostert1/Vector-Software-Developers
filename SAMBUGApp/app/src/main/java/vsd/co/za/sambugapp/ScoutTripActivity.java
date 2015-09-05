@@ -17,19 +17,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 
-import vsd.co.za.sambugapp.DataAccess.ScoutBugDAO;
 import vsd.co.za.sambugapp.DataAccess.ScoutStopDAO;
-import vsd.co.za.sambugapp.DataAccess.SynchronizeTask;
+import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.*;
 
 
@@ -204,7 +198,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         }
         Toast.makeText(getApplicationContext(),"You are done. Go home.",Toast.LENGTH_LONG).show();
 
-        SynchronizeTask.getInstance(getApplicationContext()).execute();
+        WebAPI.attemptSyncCachedScoutingData(getApplicationContext());
 
         return true;
     }

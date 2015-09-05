@@ -18,8 +18,6 @@ public class ScoutStop implements Serializable {
     public float Longitude;
 
     public java.util.Date Date;
-    public int LastModifiedID;
-    public Date TMStamp;
 
     public Block Block;
     public HashSet<ScoutBug> ScoutBugs;
@@ -99,22 +97,6 @@ public class ScoutStop implements Serializable {
 
     public void setDate(java.util.Date date) {
         Date = date;
-    }
-
-    public Integer getLastModifiedID() {
-        return LastModifiedID;
-    }
-
-    public void setLastModifiedID(Integer lastModifiedID) {
-        LastModifiedID = lastModifiedID;
-    }
-
-    public java.util.Date getTMStamp() {
-        return TMStamp;
-    }
-
-    public void setTMStamp(java.util.Date TMStamp) {
-        this.TMStamp = TMStamp;
     }
 
     public vsd.co.za.sambugapp.DomainModels.Block getBlock() {
