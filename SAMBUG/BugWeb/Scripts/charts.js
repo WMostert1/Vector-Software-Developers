@@ -1,11 +1,20 @@
-﻿var view = $("#view").value,
-    against = $("#against").value,
+﻿//Register events that interchange collapse icon
+$("#collapsibleTable").on("show.bs.collapse", function () {
+    $("#collapseIconSpan").attr("class", "glyphicon glyphicon-collapse-down");
+});
+
+$("#collapsibleTable").on("hide.bs.collapse", function () {
+    $("#collapseIconSpan").attr("class", "glyphicon glyphicon-expand");
+});
+
+//Define view model
+var view = $("#viewSelect").value,
+    against = $("#againstSelect").value,
     constraints = new Array(),
-    goupBy = $("#groupBy").value;
+    goupBy = $("#groupBySelect").value;
 
-
+//AJAX Dataset
 var dataSet;
-console.log(reportingApiUrl);
 
 
 

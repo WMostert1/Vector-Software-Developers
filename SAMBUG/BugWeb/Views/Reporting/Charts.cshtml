@@ -15,8 +15,8 @@
 
 
         <!--Y-axis options for chart-->
-        <label for="view">View</label>
-        <select id="view" class="form-control">
+        <label for="viewSelect">View</label>
+        <select id="viewSelect" class="form-control">
             <option value="bugsPerTree">Bugs per Tree</option>
             <option value="numberOfBugs">Number of Bugs</option>
             <option value="blockName">Number of Trees</option>
@@ -24,8 +24,8 @@
 
 
         <!--X-axis options for chart-->
-        <label for="against">Against</label>
-        <select id="against" class="form-control">
+        <label for="againstSelect">Against</label>
+        <select id="againstSelect" class="form-control">
             <option value="date">Date</option>
             <option value="blockName">Block</option>
             <option value="speciesName">Species</option>
@@ -34,25 +34,25 @@
 
 
         <!--Grouping options to determine chart type and series-->
-        <label for="group">Group By</label>
-        <select id="group" class="form-control">
+        <label for="groupBySelect">Group By</label>
+        <select id="groupBySelect" class="form-control">
             <option value="none">None</option>
             <option value="blockName">Block</option>
             <option value="speciesName">Species</option>
             <option value="speciesLifeStage">Species Life Stage</option>
-        </select>
+        </select><br/>
 
 
         <!--table of constraints for chart data-->
-        <div class="panel-group">
-            <div class="panel panel-default">
+        <div id="constraintsDiv" class="panel-group">
+            <div class="panel panel-default" style="padding: 0px">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <span data-toggle="collapse" data-target="#collapsibleTable" class="glyphicon glyphicon-triangle-right"></span><strong> Constraints</strong>
+                        <span id="collapseIconSpan" data-toggle="collapse" data-target="#collapsibleTable" class="glyphicon glyphicon-expand"></span><strong> Constraints</strong>
                     </h1>
                 </div>
                 <div id="collapsibleTable" class="panel-collapse collapse">
-                    <table id="constraintOptions" class="table table-striped">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Type</th>
@@ -90,11 +90,6 @@
                 </div>
             </div>
         </div>
-        
-       
-
-
-        
 
 
     </div>
