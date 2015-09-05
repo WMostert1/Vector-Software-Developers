@@ -1,7 +1,8 @@
 ﻿var dataObj;
 var scoutStopObjects  = new Array();
 var treatmentObjects;
-var speciesObjects;
+var speciesAndStagesObjects = new Array();
+var speciesNames = new Array();
 
 $(document).ready(function ()
 {
@@ -10,35 +11,31 @@ $(document).ready(function ()
     getDataFromServer();
 });
 
+function setFromDate() {
+    var date = new XDate();
+    var newDate = date.addMonths(-6, true);
+    $("#timeFrom").val(newDate.toString("yyyy-MM-dd"));
+
+};
+
+function setToDate() {
+    var date = new XDate();
+    $("#timeTo").val(date.toString("yyyy-MM-dd"));
+}
+
+
 function getDataFromServer() {
     var url = document.getElementById("generateBut").getAttribute("data-url");
 
     $.get(url, function (data)
     {
         dataObj = data;
-        transform();
+        transformDataToArrays();
     }, "json");
 }
 
-
-function generate() {
-    $('#table').DataTable({
-        data: scoutStopObjects,
-        columns: [
-            {"title": "Block", data:'blockName'},
-            {"title": "Date", data: 'date' },
-            {"title": "Number of Trees", data: 'numOfTrees' },
-            {"title": "Bug Species", data: 'speciesName' },
-            {"title": "Life stage", data: 'lifestage' },
-            {"title": "Number of Bugs", data: 'numOfBugs' },
-            {"title": "Comments", data: 'comment' }
-        ]
-    });
-};
-
 //TODO: check if dataObj is null
-//TODO: put in species
-function transform() {
+function transformDataToArrays() {
     var stop;
     var bug;
     var rowObject;
@@ -46,9 +43,10 @@ function transform() {
     for (var i = 0; i < dataObj.ScoutStops.length; i++) {
         stop = dataObj.ScoutStops[i];
 
-        console.log(stop.ScoutBugs.length);
         for (var x = 0; x < stop.ScoutBugs.length; x++) {
             bug = stop.ScoutBugs[x];
+
+            addToSpeciesArray(bug.SpeciesSpeciesName, bug.SpeciesLifestage);
 
             rowObject =
             {
@@ -65,20 +63,88 @@ function transform() {
         }
     }
 
+    setSpecies();
     generate();
 }
 
-function setFromDate() {
-    var date = new XDate();
-    var newDate = date.addMonths(-6, true);
-    $("#timeFrom").val(newDate.toString("yyyy-MM-dd"));
+//TODO: change display value to show optgroup and option
+function addToSpeciesArray(species, lifestage) {
 
+    var found = false;
+    for (var i = 0; i < speciesAndStagesObjects.length; i++) {
+        var speciesObj = speciesAndStagesObjects[i];
+
+        if (speciesObj.name === species && speciesObj.stage === lifestage) {
+            found = true;
+        }
+    }
+
+    if (found === false) {
+        var toAddObject =
+        {
+            name: species,
+            stage: lifestage
+        };
+
+        speciesAndStagesObjects.push(toAddObject);
+        speciesNames.push(species);
+        speciesNames = _.uniq(speciesNames);
+    }
+}
+
+function generate() {
+    $('#table').DataTable({
+        data: scoutStopObjects,
+        columns: [
+            { "title": "Block", data: 'blockName' },
+            { "title": "Date", data: 'date' },
+            { "title": "Number of Trees", data: 'numOfTrees' },
+            { "title": "Bug Species", data: 'speciesName' },
+            { "title": "Life stage", data: 'lifestage' },
+            { "title": "Number of Bugs", data: 'numOfBugs' },
+            { "title": "Comments", data: 'comment' }
+        ]
+    });
 };
 
-function setToDate() {
-    var date = new XDate();
-    $("#timeTo").val(date.toString("yyyy-MM-dd"));
-}
+
+function setSpecies() {
+
+    var filtered = new Array();
+    var name;
+    var optGroup;
+    var option;
+    var select = document.getElementById('species');;
+
+    for (var i = 0; i < speciesNames.length; i++) {
+        name = speciesNames[i];
+
+        filtered = speciesAndStagesObjects.filter(function(obj) {
+            if (obj.name === name)
+                return true;
+        });
+
+        optGroup = document.createElement("OPTGROUP");
+
+        optGroup.value = name;
+        optGroup.innerHTML = name;
+        optGroup.text = name;
+        optGroup.innerText = name;
+        optGroup.label = name;
+
+        for (var j = 0; j < filtered.length; j++) {
+            option = document.createElement("OPTION");
+            option.value = filtered[j].stage;
+            option.innerHTML = filtered[j].stage;
+            optGroup.appendChild(option);
+        }
+
+
+        select.appendChild(optGroup);
+
+        }
+    }
+
 
 
 
