@@ -5,8 +5,8 @@ using DataAccess.Interface;
 using Should;
 using BugBusiness.Interface.FarmManagement.DTO;
 using BugBusiness.Interface.FarmManagement.Exceptions;
-using DataAccess.Interface.Domain;
 using System.Collections.Generic;
+using DataAccess.Models;
 
 namespace BugBusiness.Tests
 {
@@ -27,9 +27,9 @@ namespace BugBusiness.Tests
             _autoMock.Dispose();
         }
 
-        ///////////////////////////
-        /// AddBlock Unit Tests ///
-        ///////////////////////////
+        ////////////////
+        /// AddBlock ///
+        ////////////////
 
         [TestMethod]
         public void Unit_AddBlock_Business_ShouldAddBlock()
@@ -336,6 +336,52 @@ namespace BugBusiness.Tests
             {
                 BlockID = 0
             });
+            //Assert - Expect InvalidInputException
+        }
+
+        ////////////////////
+        /// AddTreatment ///
+        ////////////////////
+
+        [TestMethod]
+        public void Unit_AddTreatment_Business_ShouldAddTreatment()
+        {
+            //Arrange
+            _autoMock
+                .Mock<IDbFarmManagement>()
+                .Setup(dbFarmManagement => dbFarmManagement.InsertNewTreatment(1, DateTime.Today, "Testing Treatment Addition"))
+                .Returns(true);
+            var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
+            //Act
+            AddTreatmentResult addTreatmentResult = farmManagement.AddTreatment(new AddTreatmentRequest()
+            {
+                BlockID = 1,
+                TreatmentDate = DateTime.Today,
+                TreatmentComments="Testing Treatment Addition"
+            });
+
+            //Assert
+            addTreatmentResult.ShouldNotBeNull();
+        }
+
+        [TestMethod]
+        [ExpectedExceptionAttribute(typeof(InvalidInputException))]
+        public void Unit_AddTreatment_Business_ShouldThrowInvalidInputException()
+        {
+            //Arrange
+            _autoMock
+                .Mock<IDbFarmManagement>()
+                .Setup(dbFarmManagement => dbFarmManagement.InsertNewTreatment(0, DateTime.Today,""))
+                .Returns(false);
+            var farmManagement = _autoMock.Create<FarmManagement.FarmManagement>();
+            //Act
+            farmManagement.AddTreatment(new AddTreatmentRequest()
+            {
+                BlockID = 0,
+                TreatmentDate=DateTime.Today,
+                TreatmentComments = ""
+            });
+
             //Assert - Expect InvalidInputException
         }
     }

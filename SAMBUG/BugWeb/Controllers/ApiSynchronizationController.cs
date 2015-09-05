@@ -38,7 +38,7 @@ namespace BugWeb.Controllers
             {
                     _bugScouting.persistScoutingData(request);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new SyncResult { success = false };
             }

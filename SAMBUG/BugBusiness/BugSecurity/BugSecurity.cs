@@ -8,7 +8,8 @@ using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using DataAccess.Interface;
-using DataAccess.Interface.Domain;
+using DataAccess.Models;
+
 
 namespace BugBusiness.BugSecurity
 {
@@ -29,10 +30,12 @@ namespace BugBusiness.BugSecurity
 
             if (user == null)
                 throw new NotRegisteredException();
-            
+
+            UserDTO userDTO = AutoMapper.Mapper.Map<UserDTO>(user);
+
             var loginResponse = new LoginResponse()
             {
-                User = user
+                User = userDTO
             };
         
             return loginResponse;
@@ -78,7 +81,10 @@ namespace BugBusiness.BugSecurity
         public ViewEditUserRolesResponse GetUsers()
         {
             var users = _dbBugSecurity.GetAllUsers();
-            return new ViewEditUserRolesResponse { Users = users };
+
+            List<UserDTO> userDTOList = AutoMapper.Mapper.Map<List<UserDTO>>(users);
+
+            return new ViewEditUserRolesResponse { Users = userDTOList };
         }
 
         public void EditUserRoles(EditUserRoleRequest editUserRoleRequest)

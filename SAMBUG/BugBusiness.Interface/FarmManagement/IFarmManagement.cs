@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BugBusiness.Interface.FarmManagement.DTO;
-using DataAccess.Interface.Domain;
 
 namespace BugBusiness.Interface.FarmManagement
 {
@@ -16,5 +15,7 @@ namespace BugBusiness.Interface.FarmManagement
         GetFarmByIDResult GetFarmByID(GetFarmByIDRequest getfarmbyidRequest);
         UpdateBlockByIDResult UpdateBlockByID(UpdateBlockByIDRequest updateblockbyidRequest);
         DeleteBlockByIDResult DeleteBlockByID(DeleteBlockByIDRequest deleteblockbyidRequest);
+        GetPestsPerTreeByBlockResult GetPestsPerTreeByBlock(GetPestsPerTreeByBlockRequest getpestspertreebyblockRequest);
+        AddTreatmentResult AddTreatment(AddTreatmentRequest addtreatmentRequest);
     }
 }
