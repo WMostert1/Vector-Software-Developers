@@ -7,6 +7,7 @@
 @section styles
 {
      @Styles.Render("~/Content/css/chartist")
+     @Styles.Render("~/Content/css/bootstrap-tagsinput")
      @Styles.Render("~/Content/css/reporting")
 }
 
@@ -15,8 +16,8 @@
 
 
         <!--Y-axis options for chart-->
-        <label for="viewSelect">View</label>
-        <select id="viewSelect" class="form-control">
+        <label for="view">View</label>
+        <select id="view" class="form-control">
             <option value="bugsPerTree">Bugs per Tree</option>
             <option value="numberOfBugs">Number of Bugs</option>
             <option value="blockName">Number of Trees</option>
@@ -24,8 +25,8 @@
 
 
         <!--X-axis options for chart-->
-        <label for="againstSelect">Against</label>
-        <select id="againstSelect" class="form-control">
+        <label for="against">Against</label>
+        <select id="against" class="form-control">
             <option value="date">Date</option>
             <option value="blockName">Block</option>
             <option value="speciesName">Species</option>
@@ -34,8 +35,8 @@
 
 
         <!--Grouping options to determine chart type and series-->
-        <label for="groupBySelect">Group By</label>
-        <select id="groupBySelect" class="form-control">
+        <label for="groupBy">Group By</label>
+        <select id="groupBy" class="form-control">
             <option value="none">None</option>
             <option value="blockName">Block</option>
             <option value="speciesName">Species</option>
@@ -48,7 +49,9 @@
             <div class="panel panel-default" style="padding: 0px">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <span id="collapseIconSpan" data-toggle="collapse" data-target="#collapsibleTable" class="glyphicon glyphicon-expand"></span><strong> Constraints</strong>
+                        <span id="collapseIcon" data-toggle="collapse" data-target="#collapsibleTable" class="glyphicon glyphicon-expand"></span>
+                        <span id="resetIcon" class="glyphicon glyphicon-refresh pull-right"></span>
+                        <strong> Constraints</strong>
                     </h1>
                 </div>
                 <div id="collapsibleTable" class="panel-collapse collapse">
@@ -63,27 +66,42 @@
                             <tr>
                                 <th>Date</th>
                                 <td>
-                                    <label for="dateFrom">From:</label>
-                                    <input type="date" id="dateFrom" class="form-control">
-                                    <label for="dateTo">To:</label>
-                                    <input type="date" id="dateTo" class="form-control">
+                                    <label for="constraintDateFrom">From:</label>
+                                    <input type="date" id="constraintDateFrom" class="form-control">
+                                    <label for="constraintDateTo">To:</label>
+                                    <input type="date" id="constraintDateTo" class="form-control"><br/>
+                                    <input id="constraintDateAny" type="checkbox" checked> Any
                                 </td>
                             </tr>
                             <tr>
-                                <th>Block</th>
-                                <td>Moe</td>
+                                <th>Blocks</th>
+                                <td>
+                                    <input id="constraintBlocks" class="form-control" type="text" data-role="tagsinput"/>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Species</th>
-                                <td>Dooley</td>
+                                <td><input id="constraintSpecies" class="form-control" type="text" data-role="tagsinput" /></td>
                             </tr>
                             <tr>
                                 <th>Species Life Stage</th>
-                                <td>Dooley</td>
+                                <td>
+                                    <label for="constraintLifeStageLower">From:</label>
+                                    <input id="constraintLifeStageLower" class="form-control" type="number" min="1" max="4" value="1" />
+                                    <label for="constraintLifeStageUpper">To:</label>
+                                    <input id="constraintLifeStageUpper" class="form-control" type="number" min="1" max="4" value="2" /><br/>
+                                    <input id="constraintLifeStageAny" type="checkbox" checked> Any
+                                </td>
                             </tr>
                             <tr>
                                 <th>Number of Trees</th>
-                                <td>Dooley</td>
+                                <td>
+                                    <label for="constraintTreesLower">From:</label>
+                                    <input id="constraintTreesLower" class="form-control" type="number" min="1" value="1"/>
+                                    <label for="constraintTreesUpper">To:</label>
+                                    <input id="constraintTreesUpper" class="form-control" type="number" min="1" value="10"/><br/>
+                                    <input id ="constraintTreesAny" type="checkbox" checked> Any
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -94,7 +112,7 @@
 
     </div>
     <div class="col-sm-8">
-        <div id="chart" class="ct-chart ct-minor-seventh"></div>
+        <div id="chart" class="ct-chart ct-golden-section"></div>
     </div>
 </div>
 
@@ -104,6 +122,8 @@
         var reportingApiUrl = "@Url.Content("~/api/reporting/2")";
     </script>
     @Scripts.Render("~/bundles/chartist")
+    @Scripts.Render("~/bundles/typeahead")
+    @Scripts.Render("~/bundles/bootstrap-tagsinput")
     @Scripts.Render("~/bundles/reporting")
 }
 

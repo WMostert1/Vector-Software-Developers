@@ -1,3 +1,7 @@
 ﻿#firstContentRow {
     margin-top: 25px;
 }
+
+#resetIcon, #collapseIcon {
+    cursor: pointer;
+}
