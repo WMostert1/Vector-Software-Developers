@@ -1,5 +1,4 @@
-﻿@using System.Web.Razor.Generator
-@model BugWeb.Models.ReportingViewModel
+﻿@model BugWeb.Models.ReportingViewModel
 @{
     ViewBag.Title = "Tabular";
 }
@@ -7,7 +6,8 @@
 {
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.8/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.8/js/jquery.dataTables.js"></script>
-    <script src="~/Scripts/Table.js"></script>
+    <script type="text/javascript" charset="utf8" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="~/Scripts/table.js"></script>
 }
 
 <label for="blocks">Blocks:</label>
@@ -39,6 +39,7 @@
 
 <label for="view">View by:</label>
 <select id="view" class="form-control">
+    <option value="default">Default Table</option>
     <option value="date">Date</option>
     <option value="species">Species (Pests)</option>
     <option value="blockName">Blocks</option>
@@ -46,4 +47,6 @@
 
 <button style="margin-top: 15px" id="generateBut" data-url="@Url.Content("~/api/reporting/" + @Model.ActiveFarmId)" class="btn-default" onclick="generate()">Generate tables</button>
 
-<table id="table"></table>
+<div class="wirly-loader">
+    <table id="table"></table>
+</div>
