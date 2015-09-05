@@ -11,7 +11,7 @@ namespace BugBusiness.Interface.FarmManagement.DTO
     {
         public long BlockID { get; set; }
         public string BlockName { get; set; }
-        public ICollection<TreatmentDto> Treatments { get; set; }
-        public ICollection<ScoutStopDto> ScoutStops { get; set; }
+        public List<TreatmentDto> Treatments { get; set; }
+        public List<ScoutStopDto> ScoutStops { get; set; }
     }
 }
