@@ -8,6 +8,10 @@
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.8/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="~/Scripts/table.js"></script>
+
+    <script type="application/javascript">
+        var url = "@Url.Content("~/api/reporting/" + @Model.ActiveFarmId)";
+    </script>
 }
 
 <label for="blocks">Blocks:</label>
@@ -16,7 +20,7 @@
     
         @foreach (var y in @Model.Farm.Blocks)
         {
-            <option value=@y.BlockName>@y.BlockName</option>
+            <option svalue="@y.BlockName">@y.BlockName</option>
         }
 
     
@@ -47,6 +51,4 @@
 
 <button style="margin-top: 15px" id="generateBut" data-url="@Url.Content("~/api/reporting/" + @Model.ActiveFarmId)" class="btn-default" onclick="generate()">Generate tables</button>
 
-<div class="wirly-loader">
-    <table id="table"></table>
-</div>
+<table id="table"></table>

@@ -1,8 +1,15 @@
-﻿var dataObj;
+﻿//TODO: Do treatment data
+//TODO: Do view by filters
+//TODO: Do admin farm
+//TODO: Add table dynamically
+//TODO:Change starting date back
+
+var dataObj;
 var scoutStopObjects  = new Array();
 var treatmentObjects;
 var speciesAndStagesObjects = new Array();
 var speciesNames = new Array();
+var dataTables;
 
 $(document).ready(function ()
 {
@@ -11,9 +18,45 @@ $(document).ready(function ()
     getDataFromServer();
 });
 
+$("#blocks").change(function () {
+    generate();
+});
+
+$("#timeFrom").change(function () {
+    generate();
+});
+
+$("#timeto").change(function () {
+    generate();
+});
+
+$("#species").change(function () {
+    var optGroup = $("#species :selected").parent().attr("label");
+    var option = $("#species :selected").val();
+
+    if (option !== "all") {
+        $(this).blur().find(":selected").text(optGroup + " - " + option);
+    }
+
+    generate();
+});
+
+$("#species").focus(function () {
+    $(this).find("option").each(function () {
+        var text = $(this).text().split(" - ");
+        $(this).text(text[1]);
+
+    });
+
+});
+
+$("#view").change(function () {
+    generate();
+});
+
 function setFromDate() {
     var date = new XDate();
-    var newDate = date.addMonths(-6, true);
+    var newDate = date.addYears(-10, true);
     $("#timeFrom").val(newDate.toString("yyyy-MM-dd"));
 
 };
@@ -25,8 +68,6 @@ function setToDate() {
 
 
 function getDataFromServer() {
-    var url = document.getElementById("generateBut").getAttribute("data-url");
-
     $.get(url, function (data)
     {
         dataObj = data;
@@ -39,6 +80,7 @@ function transformDataToArrays() {
     var stop;
     var bug;
     var rowObject;
+    var date;
 
     for (var i = 0; i < dataObj.ScoutStops.length; i++) {
         stop = dataObj.ScoutStops[i];
@@ -48,10 +90,11 @@ function transformDataToArrays() {
 
             addToSpeciesArray(bug.SpeciesSpeciesName, bug.SpeciesLifestage);
 
+            date = new XDate(stop.Date);
             rowObject =
             {
                 blockName: stop.BlockBlockName,
-                date: stop.Date,
+                date: date.toString("yyyy-MM-dd"),
                 numOfTrees: stop.NumberOfTrees,
                 speciesName: bug.SpeciesSpeciesName,
                 lifestage: bug.SpeciesLifestage,
@@ -64,7 +107,7 @@ function transformDataToArrays() {
     }
 
     setSpecies();
-    generate();
+    generateFirst();
 }
 
 //TODO: change display value to show optgroup and option
@@ -92,22 +135,52 @@ function addToSpeciesArray(species, lifestage) {
     }
 }
 
-function generate() {
-    $('#table').DataTable({
-        data: scoutStopObjects,
+function generateFirst() {
+    var data = filterData();
+    dataTables = $("#table").DataTable({
+        data: data,
         columns: [
-            { "title": "Block", data: 'blockName' },
-            { "title": "Date", data: 'date' },
-            { "title": "Number of Trees", data: 'numOfTrees' },
-            { "title": "Bug Species", data: 'speciesName' },
-            { "title": "Life stage", data: 'lifestage' },
-            { "title": "Number of Bugs", data: 'numOfBugs' },
-            { "title": "Comments", data: 'comment' }
+            { "title": "Block", data: "blockName" },
+            { "title": "Date", data: "date" },
+            { "title": "Number of Trees", data: "numOfTrees" },
+            { "title": "Bug Species", data: "speciesName" },
+            { "title": "Life stage", data: "lifestage" },
+            { "title": "Number of Bugs", data: "numOfBugs" },
+            { "title": "Comments", data: "comment" }
         ]
     });
 };
 
+function generate() {
+    var newData = filterData();
+    console.log(newData);
+    dataTables.clear().draw();
+    dataTables.rows.add(newData);
+    dataTables.columns.adjust().draw();
+};
 
+function filterData() {
+    var block = $("#blocks").val();
+    var fromDate = $("#timeFrom").val();
+    var toDate = $("#timeTo").val();
+    var speciesLifeStage = $("#species").val();
+    var speciesName = $("#species :selected").parent().attr("label");
+
+    console.log(speciesName);
+    console.log(speciesLifeStage);
+
+    var appliedFilters = scoutStopObjects.filter(function (obj) {
+        console.log(obj.speciesName);
+        console.log(obj.lifestage);
+        if ((obj.blockName === block || block === "all") &&
+        (obj.date >= fromDate && obj.date <= toDate) &&
+        (speciesLifeStage === "all" || (obj.lifestage === speciesLifeStage && obj.speciesName === speciesName))){
+            return true;
+        }
+    });
+
+    return appliedFilters;
+}
 function setSpecies() {
 
     var filtered = new Array();
