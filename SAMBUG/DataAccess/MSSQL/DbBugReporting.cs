@@ -25,5 +25,14 @@ namespace DataAccess.MSSQL
 
             return treatments;
         }
+
+        public List<Species> GetSpeciesByFarmId(long farmId)
+        {
+            var db = new BugDBEntities();
+
+            List<Species> species = db.ScoutBugs.Select(sb => sb).Where(sb => sb.ScoutStop.Block.Farm.FarmID.Equals(farmId)).Select(sb => sb.Species).ToList();
+
+            return species;
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace BugWeb
             AutoMapper.Mapper.CreateMap<DataAccess.Models.Treatment, BugBusiness.Interface.BugReporting.DTO.TreatmentDto>();
             AutoMapper.Mapper.CreateMap<DataAccess.Models.ScoutStop, BugBusiness.Interface.BugReporting.DTO.ScoutStopDto>();
             AutoMapper.Mapper.CreateMap<DataAccess.Models.ScoutBug, BugBusiness.Interface.BugReporting.DTO.ScoutBugDto>();
+            AutoMapper.Mapper.CreateMap<DataAccess.Models.Species, BugBusiness.Interface.BugReporting.DTO.SpeciesDto>();
 
             AutoMapper.Mapper.CreateMap<BugBusiness.Interface.BugScouting.DTO.ScoutStopDTO,DataAccess.Models.ScoutStop>();
             AutoMapper.Mapper.CreateMap<BugBusiness.Interface.BugScouting.DTO.ScoutBugDTO,DataAccess.Models.ScoutBug>()

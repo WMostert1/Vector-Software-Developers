@@ -7,5 +7,6 @@ namespace DataAccess.Interface
     {
         List<ScoutStop> GetScoutStopsByFarmId(long farmId);
         List<Treatment> GetTreatmentsByFarmId(long farmId);
+        List<Species> GetSpeciesByFarmId(long farmId);
     }
 }

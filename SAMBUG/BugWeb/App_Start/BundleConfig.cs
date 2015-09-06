@@ -13,7 +13,8 @@ namespace BugWeb
 
             const string cdnJsChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.js",
                 cdnCssChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.css",
-                cdnJsTypeAhead = "https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.js";
+                cdnJsTypeAhead = "https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.js",
+                cdnCssSpinner = "http://css-spinners.com/css/spinner/whirly.css";
 
             bundles
                 .Add(new ScriptBundle("~/bundles/jquery")
@@ -70,6 +71,9 @@ namespace BugWeb
             bundles
                 .Add(new StyleBundle("~/Content/css/chartist", cdnCssChartist)
                 .Include("~/Content/chartist.min.css"));
+
+            bundles
+                .Add(new StyleBundle("~/Content/css/spinner", cdnCssSpinner));
 
         }
     }

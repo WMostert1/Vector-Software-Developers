@@ -24,23 +24,31 @@ var dataSet;
 var scoutStops;
 var treatments;
 
-
+setFromDate();
+setToDate();
 
 function resetConstraints() {
-    $("#constraintDateFrom").val("");
-    $("#constraintDateTo").val("");
-    $("#constraintDateAny").prop("checked", true);
+    setFromDate();
+    setToDate();
+    $("#constraintDateAny").prop("checked", false);
     $("#constraintBlocks").val("");
     $("#constraintBlocks").tagsinput("removeAll");
     $("#constraintSpecies").tagsinput("removeAll");
-    $("#constraintLifeStageLower").val("1");
-    $("#constraintLifeStageUpper").val("2");
-    $("#constraintLifeStageAny").prop("checked", true);
+    $("#constraintLifeStage").tagsinput("removeAll");
     $("#constraintTreesLower").val("1");
     $("#constraintTreesUpper").val("10");
     $("#constraintTreesAny").prop("checked",true);
 }
 
+function setFromDate() {
+    var date = new XDate().addMonths(-6, true);
+    $("#constraintDateFrom").val(date.toString("yyyy-MM-dd"));
+};
+
+function setToDate() {
+    var date = new XDate();
+    $("#constraintDateTo").val(date.toString("yyyy-MM-dd"));
+}
 
 //function that will be triggered when a change was made to the filter values
 function chartData(points, labels) {

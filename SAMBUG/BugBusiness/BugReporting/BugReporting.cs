@@ -44,5 +44,20 @@ namespace BugBusiness.BugReporting
                 Treatments = treatmentsDto
             };
         }
+
+        public GetSpeciesResponse GetSpecies(GetSpeciesRequest getSpeciesRequest)
+        {
+            List<Species> species = _dbBugReporting.GetSpeciesByFarmId(getSpeciesRequest.FarmId);
+            
+            if (!species.Any() )
+                return null;
+
+            List<SpeciesDto> speciesDto = AutoMapper.Mapper.Map<List<SpeciesDto>>(species);
+            
+            return new GetSpeciesResponse()
+            {
+                Species = speciesDto
+            };
+        }
     }
 }

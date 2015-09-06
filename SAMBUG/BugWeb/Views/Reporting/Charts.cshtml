@@ -11,6 +11,7 @@
      @Styles.Render("~/Content/css/reporting")
 }
 
+
 <div id="firstContentRow" class="row">
     <div class="col-sm-4">
 
@@ -46,7 +47,7 @@
 
         <!--table of constraints for chart data-->
         <div id="constraintsDiv" class="panel-group">
-            <div class="panel panel-default" style="padding: 0px">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h1 class="panel-title">
                         <span id="collapseIcon" data-toggle="collapse" data-target="#collapsibleTable" class="glyphicon glyphicon-expand"></span>
@@ -57,69 +58,67 @@
                 <div id="collapsibleTable" class="panel-collapse collapse">
                     <table class="table table-striped">
                         <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Settings</th>
-                            </tr>
+                        <tr>
+                            <th>Type</th>
+                            <th>Settings</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th>Date</th>
-                                <td>
-                                    <label for="constraintDateFrom">From:</label>
-                                    <input type="date" id="constraintDateFrom" class="form-control">
-                                    <label for="constraintDateTo">To:</label>
-                                    <input type="date" id="constraintDateTo" class="form-control"><br/>
-                                    <input id="constraintDateAny" type="checkbox" checked> Any
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Blocks</th>
-                                <td>
-                                    <input id="constraintBlocks" class="form-control" type="text" data-role="tagsinput"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Species</th>
-                                <td><input id="constraintSpecies" class="form-control" type="text" data-role="tagsinput" /></td>
-                            </tr>
-                            <tr>
-                                <th>Species Life Stage</th>
-                                <td>
-                                    <label for="constraintLifeStageLower">From:</label>
-                                    <input id="constraintLifeStageLower" class="form-control" type="number" min="1" max="4" value="1" />
-                                    <label for="constraintLifeStageUpper">To:</label>
-                                    <input id="constraintLifeStageUpper" class="form-control" type="number" min="1" max="4" value="2" /><br/>
-                                    <input id="constraintLifeStageAny" type="checkbox" checked> Any
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Number of Trees</th>
-                                <td>
-                                    <label for="constraintTreesLower">From:</label>
-                                    <input id="constraintTreesLower" class="form-control" type="number" min="1" value="1"/>
-                                    <label for="constraintTreesUpper">To:</label>
-                                    <input id="constraintTreesUpper" class="form-control" type="number" min="1" value="10"/><br/>
-                                    <input id ="constraintTreesAny" type="checkbox" checked> Any
-                                </td>
-                            </tr>
+                        <tr>
+                            <th>Date</th>
+                            <td>
+                                <label for="constraintDateFrom">From:</label>
+                                <input type="date" id="constraintDateFrom" class="form-control">
+                                <label for="constraintDateTo">To:</label>
+                                <input type="date" id="constraintDateTo" class="form-control"><br/>
+                                <input id="constraintDateAny" type="checkbox" checked> Any
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Blocks</th>
+                            <td>
+                                <input id="constraintBlocks" class="form-control" type="text" data-role="tagsinput"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Species</th>
+                            <td>
+                                <input id="constraintSpecies" class="form-control" type="text" data-role="tagsinput"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Species Life Stage</th>
+                            <td>
+                                <input id="constraintLifeStage" class="form-control" type="text" data-role="tagsinput" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Number of Trees</th>
+                            <td>
+                                <label for="constraintTreesLower">From:</label>
+                                <input id="constraintTreesLower" class="form-control" type="number" min="1" value="1"/>
+                                <label for="constraintTreesUpper">To:</label>
+                                <input id="constraintTreesUpper" class="form-control" type="number" min="1" value="10"/><br/>
+                                <input id="constraintTreesAny" type="checkbox" checked> Any
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
-
     </div>
-    <div class="col-sm-8">
-        <div id="chart" class="ct-chart ct-golden-section"></div>
+    <div class="col-sm-8 inflateDiv">
+
+        <div id="chart" class="whirly-loader ct-chart ct-golden-section"></div>
+
     </div>
 </div>
 
 @section scripts
 {
     <script type="application/javascript">
-        var reportingApiUrl = "@Url.Content("~/api/reporting/2")";
+        var reportingApiUrl = "@Url.Content("~/api/records/2")";
     </script>
     @Scripts.Render("~/bundles/chartist")
     @Scripts.Render("~/bundles/typeahead")

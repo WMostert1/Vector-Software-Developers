@@ -1,35 +1,33 @@
-﻿using BugBusiness.Interface.BugReporting;
-using BugBusiness.Interface.BugReporting.DTO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-
+using BugBusiness.Interface.BugReporting;
+using BugBusiness.Interface.BugReporting.DTO;
 
 namespace BugWeb.Controllers
 {
-    [RoutePrefix("api/reporting")]
-    public class ApiReportingController : ApiController
+    [RoutePrefix("api/species")]
+    public class ApiSpeciesController : ApiController
     {
         private readonly IBugReporting _bugReporting;
 
-        public ApiReportingController(IBugReporting bugReporting)
+        public ApiSpeciesController(IBugReporting bugReporting)
         {
             _bugReporting = bugReporting;
         }
 
         [Route("{id}")]
-        public GetCapturedDataResponse Get(long id)
+        public GetSpeciesResponse Get(long id)
         {
-            var response = _bugReporting.GetCapturedData(new GetCapturedDataRequest() { FarmId = id });
+            var response = _bugReporting.GetSpecies(new GetSpeciesRequest() { FarmId = id });
 
             if (response == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
             return response;
         }
-
     }
 }
