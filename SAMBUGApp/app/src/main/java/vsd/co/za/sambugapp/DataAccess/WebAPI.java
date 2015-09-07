@@ -140,6 +140,10 @@ public class WebAPI {
         }
     }
 
+    private class UserWrapper{
+        public User User;
+    }
+
     private static class AuthLoginTask extends AsyncTask<String,Void,User>{
 
         private Context context;
@@ -165,13 +169,14 @@ public class WebAPI {
                     //TODO: Parse request
                     final Gson gson = new Gson();
                     String json = gson.toJson(new User());
-                    User user = gson.fromJson(response.toString(), User.class);
 
-
+                    UserWrapper userWrapper = gson.fromJson(response.toString(), UserWrapper.class);
+                    User user = userWrapper.User;
 
 
 
                     Intent intent = new Intent(context,ScoutTripActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Bundle bundle=new Bundle();
                     Farm activeFarm = user.getFarms().iterator().next();
                     bundle.putSerializable(LoginActivity.USER_FARM,activeFarm);
@@ -183,6 +188,7 @@ public class WebAPI {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context,"Login not successful",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context,LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                    // Bundle bundle=new Bundle();
                    // Farm activeFarm = user.getFarms().iterator().next();
                     //bundle.putSerializable(LoginActivity.USER_FARM,activeFarm);
