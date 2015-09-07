@@ -10,7 +10,7 @@
     <script src="~/Scripts/table.js"></script>
 
     <script type="application/javascript">
-        var url = "@Url.Content("~/api/reporting/" + @Model.ActiveFarmId)";
+        var url = "@Url.Content("~/api/records/" + @Model.ActiveFarmId)";
     </script>
 }
 
@@ -35,6 +35,23 @@
                     <table class="table">
                         <tbody>
                         <tr>
+                            <th>Farm</th>
+                            <td>
+                                <select if="farm" class="form-control">
+                                    <option value="all">All farms</option>
+                                </select>
+                            </td>
+                            <th>Date</th>
+                            <td rowspan="3">
+                                <label for="timeFrom">From:</label>
+                                <input type="date" id="timeFrom" class="form-control">
+
+                                <label for="timeTo">To:</label>
+                                <input type="date" id="timeTo" class="form-control"><br />
+                                <input id="dateAny" type="checkbox"> Any
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Blocks</th>
                             <td>
                                 <select id="blocks" class="form-control">
@@ -44,19 +61,9 @@
                                     {
                                         <option svalue="@y.BlockName">@y.BlockName</option>
                                     }
-
-
                                 </select>
                             </td>
-                            <th>Date</th>
-                            <td rowspan="3">
-                                <label for="timeFrom">From:</label>
-                                <input type="date" id="timeFrom" class="form-control">
 
-                                <label for="timeTo">To:</label>
-                                <input type="date" id="timeTo" class="form-control"><br/>
-                                <input id="dateAny" type="checkbox"> Any
-                            </td>
                         </tr>
                         <tr>
                             <th>Species</th>
@@ -73,8 +80,6 @@
                                     <option value="all">All instars</option>
                                 </select>
                             </td>
-                        </tr>
-                        <tr>
                             <th>View by</th>
                             <td>
                                 <select id="view" class="form-control">

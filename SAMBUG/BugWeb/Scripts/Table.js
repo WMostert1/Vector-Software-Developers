@@ -1,13 +1,15 @@
 ﻿//TODO: Do treatment data
-//TODO: Do view by filters
+//TODO: Do view by filter
 //TODO: Do admin farm
 //TODO: Add table dynamically
-//TODO:Change starting date back
+//TODO: Change starting date back
+//TODO: Validate input
+//TODO: Do csv
+//TODO: Change to send farm
 
-var dataObj;
+
 var scoutStopObjects  = new Array();
 var treatmentObjects;
-var speciesAndStagesObjects = new Array();
 var speciesNames = new Array();
 var dataTables;
 
@@ -70,17 +72,15 @@ function setToDate() {
     $("#timeTo").val(date.toString("yyyy-MM-dd"));
 }
 
-
 function getDataFromServer() {
     $.get(url, function (data)
     {
-        dataObj = data;
-        transformDataToArrays();
+        transformDataToArrays(data);
     }, "json");
 }
 
 //TODO: check if dataObj is null
-function transformDataToArrays() {
+function transformDataToArrays(dataObj) {
     var stop;
     var bug;
     var rowObject;
@@ -92,11 +92,10 @@ function transformDataToArrays() {
         for (var x = 0; x < stop.ScoutBugs.length; x++) {
             bug = stop.ScoutBugs[x];
 
-            addToSpeciesArray(bug.SpeciesSpeciesName, bug.SpeciesLifestage);
-
             date = new XDate(stop.Date);
             rowObject =
             {
+                farmName: stop.BlockBlockFarmName,
                 blockName: stop.BlockBlockName,
                 date: date.toString("yyyy-MM-dd"),
                 numOfTrees: stop.NumberOfTrees,
@@ -109,37 +108,10 @@ function transformDataToArrays() {
             scoutStopObjects.push(rowObject);
         }
     }
-
-    setSpecies();
-    generateFirst();
+    generateFirstTime();
 }
 
-//TODO: change display value to show optgroup and option
-function addToSpeciesArray(species, lifestage) {
-
-    var found = false;
-    for (var i = 0; i < speciesAndStagesObjects.length; i++) {
-        var speciesObj = speciesAndStagesObjects[i];
-
-        if (speciesObj.name === species && speciesObj.stage === lifestage) {
-            found = true;
-        }
-    }
-
-    if (found === false) {
-        var toAddObject =
-        {
-            name: species,
-            stage: lifestage
-        };
-
-        speciesAndStagesObjects.push(toAddObject);
-        speciesNames.push(species);
-        speciesNames = _.uniq(speciesNames);
-    }
-}
-
-function generateFirst() {
+function generateFirstTime() {
     var data = filterData();
     dataTables = $("#table").DataTable({
         data: data,
@@ -155,6 +127,7 @@ function generateFirst() {
     });
 };
 
+//TODO: change to also do view by
 function generate() {
     var newData = filterData();
     console.log(newData);
@@ -164,19 +137,16 @@ function generate() {
 };
 
 function filterData() {
+    var farm = $("#farm").val();
     var block = $("#blocks").val();
     var fromDate = $("#timeFrom").val();
     var toDate = $("#timeTo").val();
     var speciesLifeStage = $("#species").val();
     var speciesName = $("#species :selected").parent().attr("label");
 
-    console.log(speciesName);
-    console.log(speciesLifeStage);
-
     var appliedFilters = scoutStopObjects.filter(function (obj) {
-        console.log(obj.speciesName);
-        console.log(obj.lifestage);
-        if ((obj.blockName === block || block === "all") &&
+        if ((obj.farmName === farm || farm === 'all') &&
+        (obj.blockName === block || block === "all") &&
         ((obj.date >= fromDate && obj.date <= toDate) || (document.getElementById("dateAny").checked)) &&
         (speciesLifeStage === "all" || (obj.lifestage === speciesLifeStage && obj.speciesName === speciesName))){
             return true;
@@ -185,7 +155,8 @@ function filterData() {
 
     return appliedFilters;
 }
-function setSpecies() {
+
+/*function setSpecies() {
 
     var filtered = new Array();
     var name;
@@ -220,7 +191,32 @@ function setSpecies() {
         select.appendChild(optGroup);
 
         }
+    }*/
+
+/*//TODO: change display value to show optgroup and option
+function addToSpeciesArray(species, lifestage) {
+
+    var found = false;
+    for (var i = 0; i < speciesAndStagesObjects.length; i++) {
+        var speciesObj = speciesAndStagesObjects[i];
+
+        if (speciesObj.name === species && speciesObj.stage === lifestage) {
+            found = true;
+        }
     }
+
+    if (found === false) {
+        var toAddObject =
+        {
+            name: species,
+            stage: lifestage
+        };
+
+        speciesAndStagesObjects.push(toAddObject);
+        speciesNames.push(species);
+        speciesNames = _.uniq(speciesNames);
+    }
+}*/
 
 
 
