@@ -35,6 +35,14 @@ $(".chartControl").change(updateChartSettings);
 
 
 /*
+    Bind event handler that centers Y-Axis Title on window resize
+*/
+$(window).resize(centerYAxisTitle);
+
+
+
+
+/*
     Initialisations
 */
 initChartSettings();
@@ -51,7 +59,7 @@ function initChartSettings() {
     $(".chartControl").change();
 }
 
-function updateLabels() {
+function updateTitles() {
     $("#chartTitle h1").text(
         $("#view").val() + " vs " + $("#against").val()
     );
@@ -63,6 +71,8 @@ function updateLabels() {
     $("#xAxisTitle h4").text(
         $("#against").val()
     );
+
+    centerYAxisTitle();
 }
 
 function loadSpeciesData() {
@@ -83,12 +93,7 @@ function loadSpeciesData() {
 }
 
 function loadDataRecords() {
-    //TODO: perform this after data was retrieved
-    $("#chartContainer").toggleClass("chartContainerOnLoad");
-    $("#chart").toggleClass("whirly-loader");
-    $(".chartLabel").css("visibility", "visible");
-
-    chartData();
+    
 
     $.get(recordsUrl, function (data, status) {
 
@@ -103,7 +108,11 @@ function loadDataRecords() {
         var blockNames = extractBlocks(data);
         initSuggestions("constraintBlocks", blockNames);
 
+        $("#chartContainer").toggleClass("chartContainerOnLoad");
+        $("#chart").toggleClass("whirly-loader");
+        $(".chartLabel").css("visibility", "visible");
         
+        chartData();
 
     }, "Json");
 }
@@ -155,7 +164,7 @@ function initSuggestions(id, data) {
 }
 
 function updateChart() {
-
+    
 }
 
 function verifyChartSettings() {
@@ -214,8 +223,8 @@ function updateChartSettings() {
 
     try {
         verifyChartSettings();
-        updateLabels();
         updateChart();
+        updateTitles();
     } catch (e) {
         //e.name and e.message
     }
@@ -237,3 +246,6 @@ function resetConstraints() {
     $("#constraintTreesAny").change();
 }
 
+function centerYAxisTitle() {
+    $("#yAxisTitle").css("top", 0.5 * $("#chartContainer").height() + "px");
+}
