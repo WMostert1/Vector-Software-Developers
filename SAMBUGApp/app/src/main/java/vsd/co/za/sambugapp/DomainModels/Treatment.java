@@ -10,8 +10,6 @@ public class Treatment {
     public int BlockID;
     public Date Date;
     public String Comments;
-    public Integer LastModifiedID;
-    public Date TMStamp;
 
     public Block Block;
 
@@ -45,22 +43,6 @@ public class Treatment {
 
     public void setComments(String comments) {
         Comments = comments;
-    }
-
-    public Integer getLastModifiedID() {
-        return LastModifiedID;
-    }
-
-    public void setLastModifiedID(Integer lastModifiedID) {
-        LastModifiedID = lastModifiedID;
-    }
-
-    public java.util.Date getTMStamp() {
-        return TMStamp;
-    }
-
-    public void setTMStamp(java.util.Date TMStamp) {
-        this.TMStamp = TMStamp;
     }
 
     public vsd.co.za.sambugapp.DomainModels.Block getBlock() {

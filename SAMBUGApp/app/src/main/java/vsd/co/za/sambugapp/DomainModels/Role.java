@@ -7,14 +7,13 @@ import java.util.HashSet;
  * Created by Aeolus on 2015-07-13.
  */
 public class Role {
+    public int RoleID;
+    public int Type;
+    public String Description;
+
     public Role() {
         this.Users = new HashSet<User>();
     }
-
-    public int RoleID;
-    public String RoleDescription;
-    public Integer LastModifiedID;
-    public Date TMStamp;
 
     public int getRoleID() {
         return RoleID;
@@ -25,27 +24,11 @@ public class Role {
     }
 
     public String getRoleDescription() {
-        return RoleDescription;
+        return Description;
     }
 
     public void setRoleDescription(String roleDescription) {
-        RoleDescription = roleDescription;
-    }
-
-    public Integer getLastModifiedID() {
-        return LastModifiedID;
-    }
-
-    public void setLastModifiedID(Integer lastModifiedID) {
-        LastModifiedID = lastModifiedID;
-    }
-
-    public Date getTMStamp() {
-        return TMStamp;
-    }
-
-    public void setTMStamp(Date TMStamp) {
-        this.TMStamp = TMStamp;
+        Description = roleDescription;
     }
 
     public HashSet<User> getUsers() {
