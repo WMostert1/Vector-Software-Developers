@@ -1,4 +1,18 @@
-﻿//Register delegates that interchange "collapse and expand icons"
+﻿/*
+    Chart settings and other globals
+*/
+
+//TODO: remember to update chart settings before the first draw of the chart
+var chartSettings = {};
+
+var scoutStops;
+var treatments;
+
+
+
+/*
+    Bind event handlers that interchange "collapse and expand icons"
+*/
 $("#collapsibleTable").on("show.bs.collapse", function () {
     $("#collapseIcon").attr("class", "glyphicon glyphicon-collapse-down");
 });
@@ -8,49 +22,160 @@ $("#collapsibleTable").on("hide.bs.collapse", function () {
 });
 
 
-//Register delegate that resets constraints to defaults
+/*
+    Bind event handler that resets constraints to defaults
+*/
 $("#resetIcon").on("click", resetConstraints);
 
 
-//Defaults for view model
-var view = $("#view").value,
-    against = $("#against").value,
-    constraints = new Array(),
-    goupBy = $("#groupBy").value;
+/*
+    Bind event handler that responds to changes made in chart controls/constraints
+*/
+$(".chartControl").change(updateChartSettings);
 
-//AJAX Main Dataset
-var dataSet;
 
-var scoutStops;
-var treatments;
+/*
+    Initialisations
+*/
+initChartSettings();
+loadSpeciesData();
+loadDataRecords();
 
-setFromDate();
-setToDate();
 
-function resetConstraints() {
+/*
+    Function Definitions
+*/
+function initChartSettings() {
     setFromDate();
     setToDate();
-    $("#constraintDateAny").prop("checked", false);
-    $("#constraintBlocks").val("");
-    $("#constraintBlocks").tagsinput("removeAll");
-    $("#constraintSpecies").tagsinput("removeAll");
-    $("#constraintLifeStage").tagsinput("removeAll");
-    $("#constraintTreesLower").val("1");
-    $("#constraintTreesUpper").val("10");
-    $("#constraintTreesAny").prop("checked",true);
+    $(".chartControl").change();
 }
 
+function updateLabels() {
+    $("#chartTitle h1").text(
+        $("#view").val() + " vs " + $("#against").val()
+    );
+
+    $("#yAxisTitle h4").text(
+        $("#view").val()
+    );
+
+    $("#xAxisTitle h4").text(
+        $("#against").val()
+    );
+}
+
+function loadSpeciesData() {
+    $.get(speciesUrl, function(data, status) {
+
+        if (status === "error" || status === "timeout") {
+            alert("Some information couldn't be retrieved from the server. Please check your connection and try again.");
+            return;
+        }
+
+        var lifeStages = flattenSpecies("Lifestage", data);
+        var speciesNames = flattenSpecies("SpeciesName", data);
+
+        initSuggestions("constraintSpecies", speciesNames);
+        initSuggestions("constraintLifeStage", lifeStages);
+
+    }, "Json");
+}
+
+function loadDataRecords() {
+    $("#chartContainer").toggleClass("chartContainerOnLoad");
+    $("#chart").toggleClass("whirly-loader");
+    $(".chartLabel").css("visibility", "visible");
+
+    chartData();
+
+    $.get(recordsUrl, function (data, status) {
+
+        if (status === "error" || status === "timeout") {
+            alert("Some information couldn't be retrieved from the server. Please check your connection and try again.");
+            return;
+        }
+        console.log(data);
+        treatments = data.Treatments;
+        scoutStops = flattenScoutStops(data);
+
+        var blockNames = extractBlocks(data);
+        initSuggestions("constraintBlocks", blockNames);
+
+        
+
+    }, "Json");
+}
+
+function flattenScoutStops(data) {
+    var result = [];
+
+   /* $.each(data.ScoutStops, function (index, scoutStop) {
+        $.each(scoutStop.ScoutBugs);
+    });*/
+}
+
+function extractBlocks(data) {
+    var result = [];
+
+    $.each(data.ScoutStops, function (index, scoutStop) {
+        if ($.inArray(scoutStop.BlockBlockName, result) === -1)
+            result.push(scoutStop.BlockBlockName);
+    });
+
+    return result;
+}
+
+function flattenSpecies(flattenTo, data) {
+    var result = [];
+
+    $.each(data.Species, function (index, species) {
+        if ($.inArray(species[flattenTo], result) === -1)
+            result.push(species[flattenTo]);
+    });
+
+    return result;
+}
+
+function initSuggestions(id, data) {
+    // constructs the suggestion engine
+    var suggestions = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: data
+    });
+
+    $("#" + id).tagsinput({
+        typeaheadjs: {
+            source: suggestions
+        },
+        freeInput: false
+    });
+}
+
+function updateChart() {
+
+}
+
+function verifyChartSettings() {
+
+}
+
+
 function setFromDate() {
-    var date = new XDate().addMonths(-6, true);
-    $("#constraintDateFrom").val(date.toString("yyyy-MM-dd"));
+    $("#constraintDateFrom")
+        .val(new XDate().addMonths(-6, true).toString("yyyy-MM-dd"));
 };
 
 function setToDate() {
-    var date = new XDate();
-    $("#constraintDateTo").val(date.toString("yyyy-MM-dd"));
+    $("#constraintDateTo").val(new XDate().toString("yyyy-MM-dd"));
 }
 
-//function that will be triggered when a change was made to the filter values
+
+
+
+
+
 function chartData(points, labels) {
     var x = new Chartist.Line("#chart", {
         series: [
@@ -72,4 +197,42 @@ function chartData(points, labels) {
     });
 }
 
-chartData();
+
+
+/*
+    Event Handlers
+*/
+function updateChartSettings() {
+    if ($(this).attr("type") === "checkbox")
+        chartSettings[$(this).attr("id")] = $(this).prop("checked");
+    else {
+        chartSettings[$(this).attr("id")] = $(this).val();
+    }
+
+    console.log($(this).attr("id") + " - " + chartSettings[$(this).attr("id")]);
+
+    try {
+        verifyChartSettings();
+        updateLabels();
+        updateChart();
+    } catch (e) {
+        //e.name and e.message
+    }
+}
+
+function resetConstraints() {
+    setFromDate();
+    setToDate();
+    $("#constraintDateAny").prop("checked", false);
+    $("#constraintDateAny").change();
+    $("#constraintBlocks").tagsinput("removeAll");
+    $("#constraintSpecies").tagsinput("removeAll");
+    $("#constraintLifeStage").tagsinput("removeAll");
+    $("#constraintTreesLower").val("1");
+    $("#constraintTreesLower").change();
+    $("#constraintTreesUpper").val("10");
+    $("#constraintTreesUpper").change();
+    $("#constraintTreesAny").prop("checked", true);
+    $("#constraintTreesAny").change();
+}
+

@@ -8,7 +8,6 @@ namespace BugBusiness.Interface.BugReporting.DTO
 {
     public class GetCapturedDataResponse
     {
-        public string FarmName { get; set; }
         public ICollection<ScoutStopDto> ScoutStops { get; set; }
         public ICollection<TreatmentDto> Treatments { get; set; } 
     }

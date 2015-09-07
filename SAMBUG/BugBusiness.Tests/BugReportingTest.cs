@@ -44,7 +44,7 @@ namespace BugBusiness.Tests
             var bugReporting = _autoMock.Create<BugReporting.BugReporting>();
 
             //Act
-            var test = bugReporting.GetCapturedData(new GetCapturedDataRequest(){FarmId = 12345});
+            var test = bugReporting.GetCapturedData(new GetCapturedDataRequest(){UserId = 12345});
 
             //Assert
             test.ShouldBeNull();

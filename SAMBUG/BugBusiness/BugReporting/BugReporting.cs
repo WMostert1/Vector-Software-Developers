@@ -21,33 +21,43 @@ namespace BugBusiness.BugReporting
 
         public GetCapturedDataResponse GetCapturedData(GetCapturedDataRequest getCapturedDataRequest)
         {
-            List<ScoutStop> scoutStops = _dbBugReporting.GetScoutStopsByFarmId(getCapturedDataRequest.FarmId);
-            List<Treatment> treatments = _dbBugReporting.GetTreatmentsByFarmId(getCapturedDataRequest.FarmId);
+            List<ScoutStop> scoutStops = _dbBugReporting.GetScoutStopsByUserId(getCapturedDataRequest.UserId);
+            List<Treatment> treatments = _dbBugReporting.GetTreatmentsByUserId(getCapturedDataRequest.UserId);
 
             if (!scoutStops.Any() && !treatments.Any())
                 return null;
-
-            string farmName;
-
-            if (!scoutStops.Any())
-                farmName = treatments[0].Block.Farm.FarmName;
-            else
-                farmName = scoutStops[0].Block.Farm.FarmName;
             
             List<ScoutStopDto> scoutStopsDto = AutoMapper.Mapper.Map<List<ScoutStopDto>>(scoutStops);
             List<TreatmentDto> treatmentsDto = AutoMapper.Mapper.Map<List<TreatmentDto>>(treatments);
 
             return new GetCapturedDataResponse()
             {
-                FarmName = farmName,
                 ScoutStops = scoutStopsDto,
                 Treatments = treatmentsDto
             };
         }
 
-        public GetSpeciesResponse GetSpecies(GetSpeciesRequest getSpeciesRequest)
+        public GetCapturedDataResponse GetAllCapturedData()
         {
-            List<Species> species = _dbBugReporting.GetSpeciesByFarmId(getSpeciesRequest.FarmId);
+            List<ScoutStop> scoutStops = _dbBugReporting.GetAllScoutStops();
+            List<Treatment> treatments = _dbBugReporting.GetAllTreatments();
+
+            if (!scoutStops.Any() && !treatments.Any())
+                return null;
+
+            List<ScoutStopDto> scoutStopsDto = AutoMapper.Mapper.Map<List<ScoutStopDto>>(scoutStops);
+            List<TreatmentDto> treatmentsDto = AutoMapper.Mapper.Map<List<TreatmentDto>>(treatments);
+
+            return new GetCapturedDataResponse()
+            {
+                ScoutStops = scoutStopsDto,
+                Treatments = treatmentsDto
+            };
+        }
+
+        public GetSpeciesResponse GetSpecies()
+        {
+            List<Species> species = _dbBugReporting.GetAllSpecies();
             
             if (!species.Any() )
                 return null;

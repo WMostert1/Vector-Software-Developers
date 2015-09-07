@@ -6,11 +6,45 @@
     cursor: pointer;
 }
 
-.inflateDiv {
-    height: 70vh;
+#chart {
+    position: relative;
+    background-color: lightgrey;
+}
+
+#chartTitle {
+    position: relative;
+    background-color: lightblue;
+}
+
+#yAxisTitle {
+    background-color: lightgreen;
+    position: relative;
+    float: left;
+    -ms-transform: rotate(-90deg); /* IE 9 !2!!1!*/
+    -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera !2!!1!*/
+    transform: rotate(-90deg);
+    
+}
+
+#xAxisTitle {
+    position: relative;
+    background-color: antiquewhite;
+    clear: both;
+}
+
+#chartContainer {
+    position: relative;
+    overflow: hidden;
+}
+
+.chartContainerOnLoad {
+    height: 60vh;
 }
 
 .whirly-loader {
     top: 50%;
-    left: 50%;
+}
+
+.chartLabel {
+    visibility: hidden;
 }

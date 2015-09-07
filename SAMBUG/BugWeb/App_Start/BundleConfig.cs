@@ -73,6 +73,10 @@ namespace BugWeb
                 .Include("~/Content/chartist.min.css"));
 
             bundles
+                .Add(new StyleBundle("~/Content/css/typeahead")
+                .Include("~/Content/typeahead.css"));
+
+            bundles
                 .Add(new StyleBundle("~/Content/css/spinner", cdnCssSpinner));
 
         }

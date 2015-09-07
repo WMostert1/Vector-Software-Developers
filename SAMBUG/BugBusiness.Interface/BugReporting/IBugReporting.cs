@@ -10,6 +10,7 @@ namespace BugBusiness.Interface.BugReporting
     public interface IBugReporting
     {
         GetCapturedDataResponse GetCapturedData(GetCapturedDataRequest getCapturedDataRequest);
-        GetSpeciesResponse GetSpecies(GetSpeciesRequest getSpeciesRequest);
+        GetCapturedDataResponse GetAllCapturedData();
+        GetSpeciesResponse GetSpecies();
     }
 }

@@ -19,15 +19,10 @@ namespace BugWeb.Controllers
             _bugReporting = bugReporting;
         }
 
-        [Route("{id}")]
-        public GetSpeciesResponse Get(long id)
+        [Route("")]
+        public GetSpeciesResponse Get()
         {
-            var response = _bugReporting.GetSpecies(new GetSpeciesRequest() { FarmId = id });
-
-            if (response == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return response;
+            return _bugReporting.GetSpecies();
         }
     }
 }

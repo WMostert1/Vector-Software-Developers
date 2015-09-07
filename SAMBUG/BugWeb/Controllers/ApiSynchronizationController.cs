@@ -30,6 +30,7 @@ namespace BugWeb.Controllers
         }
 
         [HttpPost]
+        [Route("")]
          public HttpResponseMessage PersistCachedData([FromBody] SyncRequest request)
         {
             //TODO: The Date isn't being parsed correctly. Need to look @ Android side Date representation

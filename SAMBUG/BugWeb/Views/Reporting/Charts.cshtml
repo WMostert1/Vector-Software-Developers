@@ -7,41 +7,42 @@
 @section styles
 {
      @Styles.Render("~/Content/css/chartist")
+     @Styles.Render("~/Content/css/typeahead")
      @Styles.Render("~/Content/css/bootstrap-tagsinput")
      @Styles.Render("~/Content/css/reporting")
 }
 
 
 <div id="firstContentRow" class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
 
 
         <!--Y-axis options for chart-->
         <label for="view">View</label>
-        <select id="view" class="form-control">
-            <option value="bugsPerTree">Bugs per Tree</option>
-            <option value="numberOfBugs">Number of Bugs</option>
-            <option value="blockName">Number of Trees</option>
+        <select id="view" class="form-control chartControl">
+            <option value="Bugs Per Tree">Bugs per Tree</option>
+            <option value="Number of Bugs">Number of Bugs</option>
+            <option value="Number of Trees">Number of Trees</option>
         </select><br/>
 
 
         <!--X-axis options for chart-->
         <label for="against">Against</label>
-        <select id="against" class="form-control">
-            <option value="date">Date</option>
-            <option value="blockName">Block</option>
-            <option value="speciesName">Species</option>
-            <option value="speciesLifeStage">Species Life Stage</option>
+        <select id="against" class="form-control chartControl">
+            <option value="Date">Date</option>
+            <option value="Block">Block</option>
+            <option value="Species">Species</option>
+            <option value="Species Life Stage">Species Life Stage</option>
         </select><br/>
 
 
         <!--Grouping options to determine chart type and series-->
-        <label for="groupBy">Group By</label>
-        <select id="groupBy" class="form-control">
-            <option value="none">None</option>
-            <option value="blockName">Block</option>
-            <option value="speciesName">Species</option>
-            <option value="speciesLifeStage">Species Life Stage</option>
+        <label for="grouping">Group By</label>
+        <select id="grouping" class="form-control chartControl">
+            <option value="None">None</option>
+            <option value="Block">Block</option>
+            <option value="Species">Species</option>
+            <option value="Species Life Stage">Species Life Stage</option>
         </select><br/>
 
 
@@ -68,38 +69,38 @@
                             <th>Date</th>
                             <td>
                                 <label for="constraintDateFrom">From:</label>
-                                <input type="date" id="constraintDateFrom" class="form-control">
+                                <input type="date" id="constraintDateFrom" class="form-control chartControl">
                                 <label for="constraintDateTo">To:</label>
-                                <input type="date" id="constraintDateTo" class="form-control"><br/>
-                                <input id="constraintDateAny" type="checkbox" checked> Any
+                                <input type="date" id="constraintDateTo" class="form-control chartControl"><br/>
+                                <input id="constraintDateAny" type="checkbox" class="chartControl" checked> Any
                             </td>
                         </tr>
                         <tr>
                             <th>Blocks</th>
                             <td>
-                                <input id="constraintBlocks" class="form-control" type="text" data-role="tagsinput"/>
+                                <input id="constraintBlocks" class="form-control chartControl" type="text"/>
                             </td>
                         </tr>
                         <tr>
                             <th>Species</th>
                             <td>
-                                <input id="constraintSpecies" class="form-control" type="text" data-role="tagsinput"/>
+                                <input id="constraintSpecies" class="form-control chartControl" type="text"/>
                             </td>
                         </tr>
                         <tr>
                             <th>Species Life Stage</th>
                             <td>
-                                <input id="constraintLifeStage" class="form-control" type="text" data-role="tagsinput" />
+                                <input id="constraintLifeStage" class="form-control chartControl" type="text"/>
                             </td>
                         </tr>
                         <tr>
                             <th>Number of Trees</th>
                             <td>
                                 <label for="constraintTreesLower">From:</label>
-                                <input id="constraintTreesLower" class="form-control" type="number" min="1" value="1"/>
+                                <input id="constraintTreesLower" class="form-control chartControl" type="number" min="1" value="1"/>
                                 <label for="constraintTreesUpper">To:</label>
-                                <input id="constraintTreesUpper" class="form-control" type="number" min="1" value="10"/><br/>
-                                <input id="constraintTreesAny" type="checkbox" checked> Any
+                                <input id="constraintTreesUpper" class="form-control chartControl" type="number" min="1" value="10"/><br/>
+                                <input id="constraintTreesAny" type="checkbox" class="chartControl" checked> Any
                             </td>
                         </tr>
                         </tbody>
@@ -108,17 +109,28 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-8 inflateDiv">
-
-        <div id="chart" class="whirly-loader ct-chart ct-golden-section"></div>
-
+    <div class="col-sm-9 text-center" style="background-color: lightcoral">
+        <div id="chartTitle" class="chartLabel">
+            <h1></h1>
+        </div>
+        <div id="yAxisTitle" class="chartLabel">
+            <h4></h4>
+        </div>
+        <div id="chartContainer">
+            <div id="chart" class="whirly-loader ct-chart ct-golden-section"></div>
+        </div>
+        <div id="xAxisTitle" class="chartLabel">
+            <h4></h4>
+        </div>
     </div>
 </div>
+
 
 @section scripts
 {
     <script type="application/javascript">
-        var reportingApiUrl = "@Url.Content("~/api/records/2")";
+        var recordsUrl = "@Url.Content("~/api/records/1")";
+        var speciesUrl = "@Url.Content("~/api/species")";
     </script>
     @Scripts.Render("~/bundles/chartist")
     @Scripts.Render("~/bundles/typeahead")
