@@ -44,4 +44,9 @@
             android:text="10"
             android:layout_marginLeft="20dp"/>
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Edit"/>
 </LinearLayout>

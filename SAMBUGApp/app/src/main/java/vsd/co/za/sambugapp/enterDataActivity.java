@@ -1,8 +1,6 @@
 package vsd.co.za.sambugapp;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,11 +9,9 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,15 +25,12 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DomainModels.Block;
@@ -237,6 +230,7 @@ public class enterDataActivity extends ActionBarActivity {
             npTrees.setMinValue(1);
             npTrees.setMaxValue(100);
             npTrees.setWrapSelectorWheel(false);
+            npTrees.setValue(stop.getNumberOfTrees());
         }
 
         npBugs = (NumberPicker) findViewById(R.id.npNumBugs);
@@ -382,8 +376,8 @@ public class enterDataActivity extends ActionBarActivity {
 
     }
 
-    public void collapseBlockEditing(View v) {
-        LinearLayout layout = (LinearLayout) findViewById(R.id.blockEditingLayout);
+    public void collapseScoutStopDetails(View v) {
+        LinearLayout layout = (LinearLayout) findViewById(R.id.scoutStopDetailsLayout);
         Block tempBlock = null;
         if (v != null) {
             blockInfoCollapsed = true;
@@ -399,7 +393,7 @@ public class enterDataActivity extends ActionBarActivity {
             stop.setNumberOfTrees(npTrees.getValue());
         }
         layout.removeAllViews();
-        layout.inflate(getApplicationContext(), R.layout.collapsed_block_info, layout);
+        layout.inflate(getApplicationContext(), R.layout.collapsed_scout_stop_details, layout);
         TextView lblBlockName = (TextView) layout.findViewById(R.id.lblBlockName);
         lblBlockName.setText(stop.getBlock().getBlockName());
         TextView lblNumTrees = (TextView) layout.findViewById(R.id.lblNumTrees);
@@ -408,6 +402,16 @@ public class enterDataActivity extends ActionBarActivity {
         openLayout.setVisibility(View.VISIBLE);
         Button openButton = (Button) findViewById(R.id.btnAddBug);
         openButton.setVisibility(View.VISIBLE);
+    }
+
+    public void expandScoutStopDetails(View v) {
+        LinearLayout layout = (LinearLayout) findViewById(R.id.scoutStopDetailsLayout);
+        //remove layout children
+        layout.removeAllViews();
+        //set new layout to expanded version
+        layout.inflate(getApplicationContext(), R.layout.expanded_scout_stop_details, layout);
+        //initialise pickers and stuff
+        initializeNumberPickers();
     }
 
     public void updateAddedBugsView(){
