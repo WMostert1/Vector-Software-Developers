@@ -83,6 +83,7 @@ function loadSpeciesData() {
 }
 
 function loadDataRecords() {
+    //TODO: perform this after data was retrieved
     $("#chartContainer").toggleClass("chartContainerOnLoad");
     $("#chart").toggleClass("whirly-loader");
     $(".chartLabel").css("visibility", "visible");
