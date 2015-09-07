@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -71,13 +72,9 @@ public class enterDataActivity extends ActionBarActivity {
     }
 
     public void setiReceive(Intent iReceive) {
-        Log.e("Good", "HElppoooooooooooooooooooo");
         this.iReceive = iReceive;
     }
-
-    boolean first = true;
-    // Spinner
-
+    
     LocationManager mLocationManager;
     Location myLocation = null;
 
@@ -93,6 +90,7 @@ public class enterDataActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
+
         Log.e("CHECK", "Create");
         allBugs = new HashSet<>();
         if (savedInstanceState!=null){
@@ -107,17 +105,16 @@ public class enterDataActivity extends ActionBarActivity {
         acceptStop(savedInstanceState);
         setTitle(farm.getFarmName());
         if (!blockInfoCollapsed) {
-            Log.d("CHECK", "Not collapsing");
             populateSpinner();
             RelativeLayout layout = (RelativeLayout) findViewById(R.id.numberOfTreesLayout);
             layout.setVisibility(View.INVISIBLE);
             Button btn = (Button) findViewById(R.id.btnAddBug);
             btn.setVisibility(View.INVISIBLE);
         } else {
-            Log.d("CHECK", "collapsing");
             collapseBlockEditing(null);
         }
         initializeNumberPickers();
+
     }
 
     /**
@@ -147,7 +144,6 @@ public class enterDataActivity extends ActionBarActivity {
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
-        Log.d("BLAH", "SAVING");
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(BUG_COUNT, numberOfBugs);
         savedInstanceState.putSerializable(BUG_LIST,allBugs);
@@ -159,7 +155,6 @@ public class enterDataActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         numberOfBugs = npBugs.getValue();
-        Log.d("BLAH", "PAusing");
     }
 
     /**
@@ -178,14 +173,6 @@ public class enterDataActivity extends ActionBarActivity {
             imageTaken = imageTaken2;
             addBug();
         }
-    }
-
-    public Spinner getMySpin() {
-        return mySpin;
-    }
-
-    public void setMySpin(Spinner mySpin) {
-        this.mySpin = mySpin;
     }
 
     /**
@@ -256,7 +243,6 @@ public class enterDataActivity extends ActionBarActivity {
         npBugs.setMinValue(0);
         npBugs.setMaxValue(100);
         npBugs.setWrapSelectorWheel(false);
-
     }
 
     
@@ -382,7 +368,6 @@ public class enterDataActivity extends ActionBarActivity {
 
 
     private void usePassedStop(ScoutStop sp){
-        //stop.duplicateStop(sp);
         stop=sp;
         currBlock = stop.getBlock();
     }
@@ -393,9 +378,7 @@ public class enterDataActivity extends ActionBarActivity {
      *
      */
     public void addBug() {
-        // table = (TableLayout) findViewById(R.id.tblLayout);
         storeCurrentBug();
-        //bugNumber++;
         updateAddedBugsView();
 
     }
@@ -415,16 +398,7 @@ public class enterDataActivity extends ActionBarActivity {
             stop.setBlockID(tempBlock.getBlockID());
             stop.setBlock(tempBlock);
             stop.setNumberOfTrees(npTrees.getValue());
-        } else {
-            tempBlock = stop.getBlock();
         }
-//        Block tempBlock=null;
-//        for (Block b:farm.getBlocks()){
-//            if (b.getBlockName().equals(blockName)){
-//                tempBlock=b;
-//                break;
-//            }
-//        }
         layout.removeAllViews();
         layout.inflate(getApplicationContext(), R.layout.collapsed_block_info, layout);
         TextView lblBlockName = (TextView) layout.findViewById(R.id.lblBlockName);
@@ -462,12 +436,6 @@ public class enterDataActivity extends ActionBarActivity {
             currBug.setFieldPicture(stream.toByteArray());
         }
 
-        // TableRow rowNumberPicker;
-        // rowNumberPicker = (TableRow) table.getChildAt(table.getChildCount() - 3);
-
-        // NumberPicker currNumberPicker = (NumberPicker) rowNumberPicker.getChildAt(1);
-
-        //currBug.setNumberOfBugs(currNumberPicker.getValue());
         currBug.setNumberOfBugs(numberOfBugs);
         currBug.setSpecies(species);
         currBug.setSpeciesID(species.getSpeciesID());

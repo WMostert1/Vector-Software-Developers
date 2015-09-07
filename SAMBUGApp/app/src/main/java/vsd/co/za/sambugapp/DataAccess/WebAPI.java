@@ -166,14 +166,9 @@ public class WebAPI {
             JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,AUTHENTICATION_URL,loginRequest,new Response.Listener<JSONObject>(){
                 @Override
                 public void onResponse(JSONObject response) {
-                    //TODO: Parse request
                     final Gson gson = new Gson();
-                    String json = gson.toJson(new User());
-
                     UserWrapper userWrapper = gson.fromJson(response.toString(), UserWrapper.class);
                     User user = userWrapper.User;
-
-
 
                     Intent intent = new Intent(context,ScoutTripActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -186,14 +181,11 @@ public class WebAPI {
             },new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context,"Login not successful",Toast.LENGTH_SHORT).show();
+
                     Intent intent = new Intent(context,LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                   // Bundle bundle=new Bundle();
-                   // Farm activeFarm = user.getFarms().iterator().next();
-                    //bundle.putSerializable(LoginActivity.USER_FARM,activeFarm);
-                   // intent.putExtras(bundle);
                     context.startActivity(intent);
+                    Toast.makeText(context,"Login unsuccessful. Please try again.",Toast.LENGTH_LONG).show();
                 }
             });
 

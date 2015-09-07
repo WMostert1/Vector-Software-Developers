@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -49,6 +50,8 @@ public class ScoutTripActivity extends ActionBarActivity {
     private Farm farm;
 
     public int updateIndex=-1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +91,7 @@ public class ScoutTripActivity extends ActionBarActivity {
         acceptFarm(getIntent());
 
         setTitle(farm.getFarmName());
+
     }
 
     @Override
