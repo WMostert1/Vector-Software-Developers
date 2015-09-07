@@ -17,27 +17,7 @@ import vsd.co.za.sambugapp.R;
  * Created by Aeolus on 2015-07-10.ssss
  */
 public class DBHelper<T> extends SQLiteOpenHelper {
-
-
-    public static final String COLUMN_LAST_MODIFIED_ID = "LastModifiedID";
-    public static final String COLUMN_TIMESTAMP = "TMStamp";
-
-    public static final String TABLE_BLOCK = "Block";
     public static final String COLUMN_BLOCK_ID = "BlockID";
-    public static final String COLUMN_BLOCK_NAME = "BlockName";
-
-    public static final String TABLE_FARM = "Farm";
-    public static final String COLUMN_FARM_ID = "FarmID";
-    public static final String COLUMN_FARM_NAME = "FarmName";
-
-    public static final String TABLE_USER = "User";
-    public static final String COLUMN_USER_ID = "UserID";
-    public static final String COLUMN_EMAIL = "Email";
-    public static final String COLUMN_PASSWORD = "Password";
-
-    public static final String TABLE_ROLE = "Role";
-    public static final String COLUMN_ROLE_ID = "RoleID";
-    public static final String COLUMN_ROLE_DESCRIPTION = "RoleDescription";
 
     public static final String TABLE_SCOUT_BUG = "ScoutBug";
     public static final String COLUMN_SCOUT_BUG_ID = "ScoutBugID";
@@ -59,8 +39,7 @@ public class DBHelper<T> extends SQLiteOpenHelper {
     public static final String COLUMN_IDEAL_PICTURE = "IdealPicture";
     public static final String COLUMN_IS_PEST = "IsPest";
 
-    public static final String TABLE_TREATMENT = "Treatment";
-    public static final String COLUMN_TREATMENT_ID = "TreatmentID";
+
 
     //Please increment the counter whenever you edit the database structure
     public static final int DATABASE_VERSION = 1;
@@ -77,14 +56,11 @@ public class DBHelper<T> extends SQLiteOpenHelper {
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         sqlScripts = new ArrayList<String>();
-        sqlScripts.add(context.getResources().getString(R.string.create_block));
-        sqlScripts.add(context.getResources().getString(R.string.create_farm));
-        sqlScripts.add(context.getResources().getString(R.string.create_role));
+
         sqlScripts.add(context.getResources().getString(R.string.create_scoutbug));
         sqlScripts.add(context.getResources().getString(R.string.create_scoutstop));
         sqlScripts.add(context.getResources().getString(R.string.create_species));
-        sqlScripts.add(context.getResources().getString(R.string.create_treatment));
-        sqlScripts.add(context.getResources().getString(R.string.create_user));
+
 
     }
 

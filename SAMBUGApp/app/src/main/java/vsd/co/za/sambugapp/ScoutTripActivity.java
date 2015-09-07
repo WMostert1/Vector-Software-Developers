@@ -172,7 +172,8 @@ public class ScoutTripActivity extends ActionBarActivity {
      */
     public void finishTrip(View v){
         persistData();
-        finish();
+        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -187,12 +188,6 @@ public class ScoutTripActivity extends ActionBarActivity {
             //persist each scout stop
             for (ScoutStop scoutStop : scoutTrip.getStopList()){
                 long scoutStopID = scoutStopDAO.insert(scoutStop);
-//                scoutBugDAO.open();
-//                for (ScoutBug scoutBug : scoutStop.getScoutBugs()){
-//                    scoutBug.setScoutStopID((int)scoutStopID);
-//                    scoutBugDAO.insert(scoutBug);
-//                }
-//                scoutBugDAO.close();
             }
 
             scoutStopDAO.close();

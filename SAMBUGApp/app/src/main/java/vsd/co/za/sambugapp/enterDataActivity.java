@@ -359,7 +359,6 @@ public class enterDataActivity extends ActionBarActivity {
     public synchronized void createScoutStop() {
         stop = new ScoutStop();
         stop.setDate(new Date());
-        stop.setUserID(farm.getUserID());
         if(myLocation != null){
             stop.setLatitude((float) myLocation.getLatitude());
             stop.setLongitude((float) myLocation.getLongitude());

@@ -11,11 +11,11 @@ import vsd.co.za.sambugapp.DataAccess.DBHelper;
 import vsd.co.za.sambugapp.DataAccess.ScoutBugDAO;
 import vsd.co.za.sambugapp.DataAccess.ScoutStopDAO;
 import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
-import vsd.co.za.sambugapp.DataAccess.UserDAO;
+
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 import vsd.co.za.sambugapp.DomainModels.Species;
-import vsd.co.za.sambugapp.DomainModels.User;
+
 
 
 /**
@@ -43,7 +43,7 @@ public class DataSourceTest extends AndroidTestCase {
         speciesDAO.open();
         speciesDAO.loadPresets();
         List<Species> presetValues = speciesDAO.getAllSpecies();
-        assertEquals("Didnt persist everyting", 16, presetValues.size());
+        assertEquals("Didn't persist everything", 16, presetValues.size());
         speciesDAO.close();
     }
 
@@ -144,57 +144,7 @@ public class DataSourceTest extends AndroidTestCase {
         speciesDAO.close();
     }
 
-    public void testUserCRD() throws Exception{
-        /*
-        UserDAO userDAO = new UserDAO(context);
-        userDAO.open();
-        User user = new User();
-        user.setEmail("TestUser");
 
-        user.setTMStamp(new Date());
-
-        int id = (int)userDAO.insert(user);
-
-        assertEquals("Insertion couldn't take place",true,id >= 0);
-        user.setUserID(id);
-
-        User returnedBug = userDAO.getUserByID(id);
-        assertEquals(user.getEmail(), returnedBug.getEmail());
-        assertEquals(user.getUserID(), returnedBug.getUserID());
-
-        User newUser = new User();
-        newUser.setEmail("All User");
-        newUser.setTMStamp(new Date());
-        newUser.setUserID((int) userDAO.insert(newUser));
-
-        List<User> all = userDAO.getAllUsers();
-
-        assertEquals(2,userDAO.getAllUsers().size());
-
-        assertEquals(all.get(0).getEmail(),user.getEmail());
-        assertEquals(all.get(0).getUserID(),user.getUserID());
-
-        assertEquals(all.get(1).getEmail(),newUser.getEmail());
-        assertEquals(all.get(1).getUserID(),newUser.getUserID());
-
-        assertEquals(false,userDAO.isEmpty());
-
-        userDAO.delete(user);
-        assertEquals(false, userDAO.isEmpty());
-
-        all = userDAO.getAllUsers();
-
-        assertEquals(all.get(0).getEmail(),newUser.getEmail());
-        assertEquals(all.get(0).getUserID(),newUser.getUserID());
-
-        userDAO.delete(newUser);
-
-        assertEquals(true,userDAO.isEmpty());
-
-
-        userDAO.close();
-        */
-    }
 
     public void testScoutBugCRD() throws Exception{
         ScoutBugDAO scoutBugDAO = new ScoutBugDAO(context);

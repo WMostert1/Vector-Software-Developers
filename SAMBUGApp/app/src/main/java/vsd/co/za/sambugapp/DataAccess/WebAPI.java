@@ -2,6 +2,7 @@ package vsd.co.za.sambugapp.DataAccess;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,7 @@ import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 import vsd.co.za.sambugapp.DomainModels.User;
 import vsd.co.za.sambugapp.LoginActivity;
+import vsd.co.za.sambugapp.R;
 import vsd.co.za.sambugapp.ScoutTripActivity;
 
 /**
@@ -140,9 +142,6 @@ public class WebAPI {
         }
     }
 
-    private class UserWrapper{
-        public User User;
-    }
 
     private static class AuthLoginTask extends AsyncTask<String,Void,User>{
 
@@ -169,6 +168,13 @@ public class WebAPI {
                     final Gson gson = new Gson();
                     UserWrapper userWrapper = gson.fromJson(response.toString(), UserWrapper.class);
                     User user = userWrapper.User;
+
+                    SharedPreferences sharedPref = context.getSharedPreferences(
+                            context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(context.getString(R.string.logged_in_user), response.toString());
+                    editor.commit();
 
                     Intent intent = new Intent(context,ScoutTripActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

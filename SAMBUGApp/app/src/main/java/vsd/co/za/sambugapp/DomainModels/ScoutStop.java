@@ -11,7 +11,6 @@ import java.util.HashSet;
 public class ScoutStop implements Serializable {
 
     public int ScoutStopID;
-    public int UserID;
     public int BlockID;
     public int NumberOfTrees;
     public float Latitude;
@@ -21,7 +20,6 @@ public class ScoutStop implements Serializable {
 
     public Block Block;
     public HashSet<ScoutBug> ScoutBugs;
-    public User User;
 
     public ScoutStop() {
         NumberOfTrees = 0;
@@ -29,7 +27,6 @@ public class ScoutStop implements Serializable {
         Longitude = 0;
         Block = new Block();
         ScoutBugs = new HashSet<>();
-        User = new User();
     }
 
     public double getPestsPerTree() {
@@ -51,14 +48,6 @@ public class ScoutStop implements Serializable {
         ScoutStopID = scoutStopID;
     }
 
-    public int getUserID() {
-        return UserID;
-    }
-
-    public void setUserID(int userID) {
-        UserID = userID;
-    }
-
     public int getBlockID() {
         return BlockID;
     }
@@ -77,6 +66,14 @@ public class ScoutStop implements Serializable {
 
     public float getLatitude() {
         return Latitude;
+    }
+
+    public void setLatitude(String latitude){
+        Latitude = Float.valueOf(latitude);
+    }
+
+    public void setLongitude(String longitude){
+        Longitude = Float.valueOf(longitude);
     }
 
     public void setLatitude(float latitude) {
@@ -113,13 +110,5 @@ public class ScoutStop implements Serializable {
 
     public void setScoutBugs(HashSet<ScoutBug> scoutBugs) {
         ScoutBugs = scoutBugs;
-    }
-
-    public vsd.co.za.sambugapp.DomainModels.User getUser() {
-        return User;
-    }
-
-    public void setUser(vsd.co.za.sambugapp.DomainModels.User user) {
-        User = user;
     }
 }
