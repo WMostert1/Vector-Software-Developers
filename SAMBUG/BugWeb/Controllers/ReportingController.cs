@@ -4,8 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BugWeb.Models;
-using DataAccess.Interface.Domain;
-
+using BugBusiness.Interface.BugSecurity.DTO;
 
 namespace BugWeb.Controllers
 {

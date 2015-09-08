@@ -10,6 +10,7 @@
                 android:weightSum="90"
                 tools:context="vsd.co.za.sambugapp.ScoutTripActivity"
               android:background="#ff7f7d81">
+
         <Button
             android:id="@+id/btnAddStop"
             android:layout_width="wrap_content"
@@ -19,7 +20,14 @@
             android:layout_weight="5"
             android:layout_marginBottom="10dp"
             android:text="+"
-            android:onClick="addStopActivityStart" />
+            android:onClick="addStopActivityStart"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stops"
+        android:layout_gravity="left"
+        android:textStyle="bold"/>
 
     <ListView
         android:id="@+id/lstStops"
@@ -27,6 +35,14 @@
         android:layout_weight="50"
         android:layout_height="0dp"
         android:layout_marginBottom="15dp"></ListView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pests Per Tree"
+        android:layout_gravity="left"
+        android:textStyle="bold"/>
+
     <ListView
         android:id="@+id/lstPestsPerTree"
         android:layout_width="match_parent"

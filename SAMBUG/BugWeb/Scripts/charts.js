@@ -101,7 +101,7 @@ function loadDataRecords() {
             alert("Some information couldn't be retrieved from the server. Please check your connection and try again.");
             return;
         }
-        console.log(data);
+        
         treatments = data.Treatments;
         scoutStops = flattenScoutStops(data);
 
@@ -235,6 +235,7 @@ function resetConstraints() {
     setToDate();
     $("#constraintDateAny").prop("checked", false);
     $("#constraintDateAny").change();
+    $("#constraintFarms").tagsinput("removeAll");
     $("#constraintBlocks").tagsinput("removeAll");
     $("#constraintSpecies").tagsinput("removeAll");
     $("#constraintLifeStage").tagsinput("removeAll");

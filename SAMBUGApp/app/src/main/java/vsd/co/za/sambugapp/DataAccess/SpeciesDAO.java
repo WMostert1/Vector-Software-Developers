@@ -97,14 +97,6 @@ public class SpeciesDAO extends DataSourceAdapter {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 speciesEntry.setIdealPicture(stream.toByteArray());
 
-                try {
-                    String date = DateFormat.getDateTimeInstance().format(new Date());
-                    speciesEntry.setTMStamp(DateFormat.getDateTimeInstance().parse(date));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    speciesEntry.setTMStamp(null);
-                }
-                speciesEntry.setLastModifiedID(null);
                 speciesEntry.setIsPest(true);
                 speciesEntry.setLifestage(instarNo + 1);
                 insert(speciesEntry);
@@ -125,21 +117,18 @@ public class SpeciesDAO extends DataSourceAdapter {
         values.put(DBHelper.COLUMN_LIFESTAGE, species.getLifestage());
         values.put(DBHelper.COLUMN_IDEAL_PICTURE, species.getIdealPicture());
         values.put(DBHelper.COLUMN_IS_PEST, species.isPest());
-        values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, species.getLastModifiedID());
-        values.put(DBHelper.COLUMN_TIMESTAMP, species.getTMStamp().toString());
+
         database.update(DBHelper.TABLE_SPECIES, values, DBHelper.COLUMN_SPECIES_ID + " = " + id, null);
     }
 
-    public void insert(Species species) {
+    public long insert(Species species) {
         ContentValues values = new ContentValues();
         values.put(DBHelper.COLUMN_SPECIES_NAME, species.getSpeciesName());
         values.put(DBHelper.COLUMN_LIFESTAGE, species.getLifestage());
         values.put(DBHelper.COLUMN_IDEAL_PICTURE, species.getIdealPicture());
         values.put(DBHelper.COLUMN_IS_PEST, species.isPest());
-        values.put(DBHelper.COLUMN_LAST_MODIFIED_ID, species.getLastModifiedID());
-        values.put(DBHelper.COLUMN_TIMESTAMP, species.getTMStamp().toString());
 
-        database.insert(DBHelper.TABLE_SPECIES, null, values);
+        return database.insert(DBHelper.TABLE_SPECIES, null, values);
     }
 
     public List<Species> getAllSpecies() {
@@ -161,7 +150,7 @@ public class SpeciesDAO extends DataSourceAdapter {
         database.delete(DBHelper.TABLE_SPECIES, null, null);
     }
 
-    public Species getSpecies(int id) {
+    public Species getSpeciesByID(int id) {
         Cursor cursor = database.query(DBHelper.TABLE_SPECIES, allColumns, DBHelper.COLUMN_SPECIES_ID + " = " + id, null, null, null, null);
         cursor.moveToFirst();
         if (cursor.isAfterLast()) {
@@ -191,15 +180,7 @@ public class SpeciesDAO extends DataSourceAdapter {
         species.setLifestage(cursor.getInt(2));
         species.setIdealPicture(cursor.getBlob(3));
         species.setIsPest(cursor.getInt(4) == 1);
-        species.setLastModifiedID(cursor.getInt(5));
-        String date = cursor.getString(6);
-        try {
-            //TODO: Get this bloody thing to parse the date correctly
-            species.setTMStamp(DateFormat.getDateTimeInstance().parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            species.setTMStamp(null);
-        }
+
         return species;
     }
 }

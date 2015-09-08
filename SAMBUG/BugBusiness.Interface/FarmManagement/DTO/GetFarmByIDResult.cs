@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataAccess.Interface.Domain;
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
     public class GetFarmByIDResult
     {
-        public Farm Farm { get; set; }
+        public FarmDTO Farm { get; set; }
     }
 }

@@ -1,0 +1,27 @@
+﻿table {
+    width:50%;
+    border:3px solid grey;
+    text-align:center;
+    margin-left:25%;
+    margin-top:5%;
+}
+
+thead{
+    border:3px solid grey;
+    font-size:large;
+}
+
+tr{
+    border:1px solid grey;
+    font-weight:bold;
+}
+
+div .form-group{
+    display:inline;
+}
+
+#btnSubmit{
+    margin-top:5%;
+}
+
+
