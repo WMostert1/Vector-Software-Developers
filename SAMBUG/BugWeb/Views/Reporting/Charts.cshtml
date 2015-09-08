@@ -76,6 +76,12 @@
                             </td>
                         </tr>
                         <tr>
+                            <th>Farms</th>
+                            <td>
+                                <input id="constraintFarms" class="form-control chartControl" type="text"/>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Blocks</th>
                             <td>
                                 <input id="constraintBlocks" class="form-control chartControl" type="text"/>
@@ -129,8 +135,10 @@
 @section scripts
 {
     <script type="application/javascript">
+        var userRole = "";
         var recordsUrl = "@Url.Content("~/api/records/1")";
         var speciesUrl = "@Url.Content("~/api/species")";
+    
     </script>
     @Scripts.Render("~/bundles/chartist")
     @Scripts.Render("~/bundles/typeahead")
