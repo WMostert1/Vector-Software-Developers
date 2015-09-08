@@ -6,65 +6,30 @@
 //TODO: Validate input
 //TODO: Do csv
 //TODO: Change to send farm
-
+//TODO: extract common between charts and tables
 
 var scoutStopObjects  = new Array();
 var treatmentObjects;
 var speciesNames = new Array();
 var dataTables;
 
+$(".constraint").change(function () {
+    generate();
+});
+
+//TODO: might change the gact that we get data here
 $(document).ready(function ()
 {
     setFromDate();
     setToDate();
-    getDataFromServer();
+    getCapturedDataFromServer();
+    getSpeciesFromServer();
 });
-
-$("#blocks").change(function () {
-    generate();
-});
-
-$("#timeFrom").change(function () {
-    generate();
-});
-
-$("#timeto").change(function () {
-    generate();
-});
-
-$("#species").change(function () {
-    var optGroup = $("#species :selected").parent().attr("label");
-    var option = $("#species :selected").val();
-
-    if (option !== "all") {
-        $(this).blur().find(":selected").text(optGroup + " - " + option);
-    }
-
-    generate();
-});
-
-$("#species").focus(function () {
-    $(this).find("option").each(function () {
-        var text = $(this).text().split(" - ");
-        $(this).text(text[1]);
-
-    });
-
-});
-
-$("#view").change(function () {
-    generate();
-});
-
-$("#dateAny").change(function() {
-    generate();
-})
 
 function setFromDate() {
     var date = new XDate();
     var newDate = date.addYears(-10, true);
     $("#timeFrom").val(newDate.toString("yyyy-MM-dd"));
-
 };
 
 function setToDate() {
@@ -72,9 +37,15 @@ function setToDate() {
     $("#timeTo").val(date.toString("yyyy-MM-dd"));
 }
 
-function getDataFromServer() {
+function getCapturedDataFromServer() {
     $.get(url, function (data)
     {
+        transformDataToArrays(data);
+    }, "json");
+}
+
+function getSpeciesFromServer() {
+    $.get(url, function (data) {
         transformDataToArrays(data);
     }, "json");
 }
