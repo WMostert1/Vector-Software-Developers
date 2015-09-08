@@ -134,11 +134,10 @@
 
 @section scripts
 {
+    @*add the proper url that directs to a userId endpoint i.e. Session["UserInfo"]*@
     <script type="application/javascript">
-        var userRole = "";
-        var recordsUrl = "@Url.Content("~/api/records/1")";
+        var recordsUrl = "@Url.Content("~/api/records/" + @Model.recordsUrlSuffix)";
         var speciesUrl = "@Url.Content("~/api/species")";
-    
     </script>
     @Scripts.Render("~/bundles/chartist")
     @Scripts.Render("~/bundles/typeahead")

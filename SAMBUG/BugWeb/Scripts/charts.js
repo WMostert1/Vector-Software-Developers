@@ -105,6 +105,8 @@ function loadDataRecords() {
         treatments = data.Treatments;
         scoutStops = flattenScoutStops(data);
 
+        console.log(treatments);
+
         var blockNames = extractBlocks(data);
         initSuggestions("constraintBlocks", blockNames);
 

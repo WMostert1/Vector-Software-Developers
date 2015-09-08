@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
+using System.Web.Mvc;
+using BugBusiness.Interface.BugSecurity.DTO;
+using BugWeb.Security;
 
 namespace BugWeb.Models
 {
     public class ReportingViewModel
     {
-        public long ActiveFarmId { get; set; }
-        public FarmViewModel Farm;
-
-        public class FarmViewModel
+        public ReportingViewModel(HttpSessionStateBase session)
         {
-            public string FarmName;
-            public ICollection<BlockViewModel> Blocks;
+            RecordsUrlSuffix = SecurityProvider.isAdmin(session) ? "" :  ((UserDTO)session["UserInfo"]).UserID.ToString();
         }
 
-        public class BlockViewModel
-        {
-            public string BlockName;
-        }
+        public string RecordsUrlSuffix { get; private set; }
     }
 }

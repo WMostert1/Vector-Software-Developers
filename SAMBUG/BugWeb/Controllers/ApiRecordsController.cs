@@ -31,6 +31,7 @@ namespace BugWeb.Controllers
             return response;
         }
 
+        [Route("")]
         public GetCapturedDataResponse GetAll()
         {
             var response = _bugReporting.GetAllCapturedData();

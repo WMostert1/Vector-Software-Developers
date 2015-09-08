@@ -51,18 +51,11 @@ namespace BugWeb.Controllers
                 //set up session
                 //todo: we should rather store ids in the session rather than the entire objects
                 //todo: even though entire object takes up space, what about the added amount of calls to db we must make otherwise??
-                UserDTO user = new UserDTO()
-                {
-                    UserID=loginResponse.User.UserID,
-                    Farms=loginResponse.User.Farms,
-                    Roles=loginResponse.User.Roles
-                };
-
-                Session["UserInfo"] = user;
+               Session["UserInfo"] = loginResponse.User;
 
                 //check to go to home page or farm setup
                 int blockCount = 0;
-                foreach (FarmDTO f in user.Farms){
+                foreach (FarmDTO f in loginResponse.User.Farms){
                     blockCount += f.Blocks.Count;
                 }
                 if (blockCount > 0)
