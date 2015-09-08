@@ -27,7 +27,7 @@ namespace BugWeb.Controllers
         public ActionResult Charts()
         {
             return View(new ReportingViewModel(Session));
-        }
+		}
 
         public ActionResult Map()
         {

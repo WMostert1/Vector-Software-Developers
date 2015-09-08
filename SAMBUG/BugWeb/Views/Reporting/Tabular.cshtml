@@ -1,5 +1,4 @@
-﻿@model BugWeb.Models.ReportingViewModel
-@{
+﻿@{
     ViewBag.Title = "Tabular";
 }
 @section scripts
@@ -10,7 +9,14 @@
     <script src="~/Scripts/table.js"></script>
 
     <script type="application/javascript">
-        var url = "@Url.Content("~/api/records/" + @Model.ActiveFarmId)";
+        var usr = (User) @Session["UserInfo"];
+      @foreach (var y in (Role) usr.Roles)
+      {
+          if (y.Type == = 0)
+      }
+        var url = "@Url.Content("~/api/records/" + @Session[])";
+
+
     </script>
 }
 
@@ -37,24 +43,24 @@
                         <tr>
                             <th>Farm</th>
                             <td>
-                                <select if="farm" class="form-control">
+                                <select if="farm" class="form-control constraint">
                                     <option value="all">All farms</option>
                                 </select>
                             </td>
                             <th>Date</th>
                             <td rowspan="3">
                                 <label for="timeFrom">From:</label>
-                                <input type="date" id="timeFrom" class="form-control">
+                                <input type="date" id="timeFrom" class="form-control constraint">
 
                                 <label for="timeTo">To:</label>
-                                <input type="date" id="timeTo" class="form-control"><br />
+                                <input type="date" id="timeTo" class="form-control constraint"><br />
                                 <input id="dateAny" type="checkbox"> Any
                             </td>
                         </tr>
                         <tr>
                             <th>Blocks</th>
                             <td>
-                                <select id="blocks" class="form-control">
+                                <select id="blocks" class="form-control constraint">
                                     <option value="all">All Blocks</option>
 
                                     @foreach (var y in @Model.Farm.Blocks)
@@ -68,7 +74,7 @@
                         <tr>
                             <th>Species</th>
                             <td>
-                                <select id="species" class="form-control">
+                                <select id="species" class="form-control constraint">
                                     <option value="all">All Species</option>
                                 </select>
                             </td>
@@ -76,13 +82,13 @@
                         <tr>
                             <th>Species instars</th>
                             <td>
-                                <select id="speciesStage" class="form-control">
+                                <select id="speciesStage" class="form-control constraint">
                                     <option value="all">All instars</option>
                                 </select>
                             </td>
                             <th>View by</th>
                             <td>
-                                <select id="view" class="form-control">
+                                <select id="view" class="form-control constraint">
                                     <option value="default">Default Table</option>
                                     <option value="date">Date</option>
                                     <option value="species">Species (Pests)</option>
