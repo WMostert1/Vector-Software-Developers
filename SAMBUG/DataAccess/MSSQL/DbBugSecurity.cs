@@ -9,7 +9,7 @@ namespace DataAccess.MSSQL
     //TODO: possible use of AutoMapper in the future
     public class DbBugSecurity : IDbBugSecurity
     {
-        public Interface.Domain.User GetUserByCredentials(string username, string password)
+        public User GetUserByCredentials(string username, string password)
         {
             var db = new BugDBEntities();
 
@@ -22,31 +22,32 @@ namespace DataAccess.MSSQL
 
             //map EF Farm to Domain Farm
             var farms = entityUser.Farms.Select(farm =>
-                new Interface.Domain.Farm()
+                new Farm()
                 {
                     FarmID = farm.FarmID,
                     FarmName = farm.FarmName,
                     Blocks = farm.Blocks.Select(block =>
-                        new Interface.Domain.Block()
+                        new Block()
                         {
                             BlockID = block.BlockID,
-                            BlockName = block.BlockName
+                            BlockName = block.BlockName,
+                            ScoutStops=block.ScoutStops
                         }).ToList()
                 }).ToList();
 
             //map EF Role to Domain Role
             var roles = entityUser.Roles.Select(role =>
-            new Interface.Domain.Role()
+            new Role()
             {
-                Type = role.RoleType,
-                Description = role.RoleDescription,
-                RoleId = role.RoleID
+                RoleType = role.RoleType,
+                RoleDescription = role.RoleDescription,
+                RoleID = role.RoleID
             }).ToList();
 
             //map EF user to Domain User
-            var domainUser = new Interface.Domain.User()
+            var domainUser = new User()
             {
-                UserId = entityUser.UserID,
+                UserID = entityUser.UserID,
                 Roles = roles,
                 Farms = farms
             };
@@ -89,24 +90,24 @@ namespace DataAccess.MSSQL
             return true;
         }
 
-        public ICollection<Interface.Domain.User> GetAllUsers()
+        public ICollection<User> GetAllUsers()
         {
             var db = new BugDBEntities();
             var db_users = db.Users.ToList();
 
 
             return (from user in db_users
-                    let roles = user.Roles.Select(role => new Interface.Domain.Role()
+                    let roles = user.Roles.Select(role => new Role()
                     {
-                        Type = role.RoleType,
-                        Description = role.RoleDescription,
-                        RoleId = role.RoleID
+                        RoleType = role.RoleType,
+                        RoleDescription = role.RoleDescription,
+                        RoleID = role.RoleID
                     }).ToList()
-                    select new Interface.Domain.User()
+                    select new User()
                     {
                         Email = user.Email,
                         Roles = roles,
-                        UserId = user.UserID
+                        UserID = user.UserID
                     }).ToList();
 
         }

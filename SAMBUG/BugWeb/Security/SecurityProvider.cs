@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using DataAccess.Interface.Domain;
+using BugBusiness.Interface.BugSecurity.DTO;
 
 namespace BugWeb.Security
 {
@@ -24,8 +24,8 @@ namespace BugWeb.Security
                 return false;
             } else
             {
-                User user = (User)session["UserInfo"];
-                if (user.Roles.SingleOrDefault(role => role.Type.Equals(ADMIN_ROLE))==default(Role))
+                UserDTO user = (UserDTO)session["UserInfo"];
+                if (user.Roles.SingleOrDefault(role => role.RoleType.Equals(ADMIN_ROLE))==default(RoleDTO))
                 {
                     return false;
                 }
@@ -41,8 +41,8 @@ namespace BugWeb.Security
             }
             else
             {
-                User user = (User)session["UserInfo"];
-                if (user.Roles.SingleOrDefault(role => role.Type.Equals(GROWER_ROLE)) == null)
+                UserDTO user = (UserDTO)session["UserInfo"];
+                if (user.Roles.SingleOrDefault(role => role.RoleType.Equals(GROWER_ROLE)) == null)
                 {
                     return false;
                 }

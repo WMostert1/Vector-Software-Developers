@@ -4,8 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BugWeb.Models;
-using DataAccess.Interface.Domain;
-
+using BugBusiness.Interface.BugSecurity.DTO;
 
 namespace BugWeb.Controllers
 {
@@ -20,8 +19,8 @@ namespace BugWeb.Controllers
         // GET: reporting/tabular
         public ActionResult Tabular()
         {
-            var usr = (User)Session["UserInfo"];
-
+            UserDTO usr = (UserDTO)Session["UserInfo"];
+            
             var report = new ReportingViewModel();
             report.ActiveFarmId = (long)Session["ActiveFarm"];
             report.Farm = AutoMapper.Mapper.Map<ReportingViewModel.FarmViewModel>(
@@ -33,7 +32,7 @@ namespace BugWeb.Controllers
         // GET: reporting/charts
         public ActionResult Charts()
         {
-            User usr = (User)Session["UserInfo"];
+            UserDTO usr = (UserDTO)Session["UserInfo"];
 
             var report = new ReportingViewModel();
             //report.ActiveFarmId = (long) Session["ActiveFarm"];

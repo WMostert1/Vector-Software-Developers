@@ -13,10 +13,10 @@ using BugBusiness.BugAuthentication;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using BugWeb.Models;
-using DataAccess.Interface.Domain;
 using BugWeb.Security;
 using BugBusiness.Interface.BugAuthentication;
 using BugBusiness.Interface.BugAuthentication.DTO;
+using BugBusiness.Interface.FarmManagement.DTO;
 
 
 namespace BugWeb.Controllers
@@ -50,18 +50,19 @@ namespace BugWeb.Controllers
 
                 //set up session
                 //todo: we should rather store ids in the session rather than the entire objects
-                User user = new User()
+                //todo: even though entire object takes up space, what about the added amount of calls to db we must make otherwise??
+                UserDTO user = new UserDTO()
                 {
-                    UserId=loginResponse.User.UserId,
+                    UserID=loginResponse.User.UserID,
                     Farms=loginResponse.User.Farms,
                     Roles=loginResponse.User.Roles
                 };
 
                 Session["UserInfo"] = user;
-                
+
                 //check to go to home page or farm setup
                 int blockCount = 0;
-                foreach (Farm f in user.Farms){
+                foreach (FarmDTO f in user.Farms){
                     blockCount += f.Blocks.Count;
                 }
                 if (blockCount > 0)
@@ -112,7 +113,11 @@ namespace BugWeb.Controllers
         {
             if (!SecurityProvider.isAdmin(Session))
                 return View("~/Views/Shared/Error.cshtml");
+
             ViewEditUserRolesResponse response = _bugSecurity.GetUsers();
+
+            //List<UserDTO> userDTOList = AutoMapper.Mapper.Map<List<UserDTO>>(response);
+
             return View(response);
         }
 

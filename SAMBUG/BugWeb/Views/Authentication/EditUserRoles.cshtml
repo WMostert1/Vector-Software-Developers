@@ -1,9 +1,9 @@
-﻿@using DataAccess.Interface.Domain
+﻿@using BugBusiness.Interface.BugSecurity.DTO
 @model BugBusiness.Interface.BugSecurity.DTO.ViewEditUserRolesResponse
 
 @{
     ViewBag.Title = "User Roles";
-    ICollection<User> users = Model.Users;
+    ICollection<UserDTO> users = AutoMapper.Mapper.Map<ICollection<UserDTO>>(Model.Users);
 }
 
 <h2>@ViewBag.Title</h2>
@@ -25,10 +25,10 @@
                 {
 
                     <div class="row">
-                        <div class="col-lg-8">@Html.DisplayFor(roleItem => role.Description)</div>
+                        <div class="col-lg-8">@Html.DisplayFor(roleItem => role.RoleDescription)</div>
                     </div>
 
-                    <div id="@Html.Raw("modal" + item.UserId)" class="modal fade" role="dialog">
+                    <div id="@Html.Raw("modal" + item.UserID)" class="modal fade" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -38,8 +38,8 @@
                                 <div class="modal-body">
 
                                     <p>Please choose roles for @item.Email</p>
-                                    <form id="form_@item.UserId" method="POST" action="./EditUserRoles">
-                                        <input type="number" value="@item.UserId" name="UserId" hidden/>
+                                    <form id="form_@item.UserID" method="POST" action="./EditUserRoles">
+                                        <input type="number" value="@item.UserID" name="UserId" hidden/>
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                 <input type="checkbox" id="isGrower" name="isGrower" value="true" aria-label="..." >
@@ -57,7 +57,7 @@
                                     </form>
                                     <br/>
                                    
-                                    <button type="button" class="btn btn-success" onclick=@Html.Raw("validateForm($('#form_"+item.UserId+"'))")>Save</button>
+                                    <button type="button" class="btn btn-success" onclick=@Html.Raw("validateForm($('#form_"+item.UserID+"'))")>Save</button>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -71,7 +71,7 @@
             </div>
 
 
-            <div class="col-sm-4"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("modal" + item.UserId)">Edit</button>
+            <div class="col-sm-4"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("modal" + item.UserID)">Edit</button>
             </div>
         </div>
         <br/>

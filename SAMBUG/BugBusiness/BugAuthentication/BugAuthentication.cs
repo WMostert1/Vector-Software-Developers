@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Interface;
-using DataAccess.Interface.Domain;
 using BugCentral.HelperClass;
 using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugAuthentication;
