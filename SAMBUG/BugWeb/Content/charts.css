@@ -7,27 +7,33 @@
 }
 
 #yAxisTitle {
+    background-color: lightgreen;
     position: relative;
     float: left;
+}
+
+#yAxisTitle h4 {
+    display: block;
+    transform-origin: 50% 0%;
     -ms-transform: rotate(-90deg); /* IE 9 !2!!1!*/
     -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera !2!!1!*/
     transform: rotate(-90deg);
-    
+}
+
+#chartContainer {
+    overflow: auto;
 }
 
 #xAxisTitle {
     clear: both;
 }
 
-#chartContainer {
-    overflow: hidden;
-}
-
-.chartContainerOnLoad {
+.chartAndLabelContainerOnLoad {
     height: 60vh;
 }
 
 .whirly-loader {
+    position: relative;
     top: 50%;
 }
 

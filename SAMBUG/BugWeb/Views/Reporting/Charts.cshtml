@@ -116,17 +116,20 @@
         </div>
     </div>
     <div class="col-sm-9 text-center">
-        <div id="chartTitle" class="chartLabel">
-            <h1></h1>
-        </div>
-        <div id="yAxisTitle" class="chartLabel">
-            <h4></h4>
-        </div>
-        <div id="chartContainer" class="chartContainerOnLoad">
-            <div id="chart" class="whirly-loader ct-chart ct-golden-section"></div>
-        </div>
-        <div id="xAxisTitle" class="chartLabel">
-            <h4></h4>
+        <div id="chartAndLabelContainer" class="chartAndLabelContainerOnLoad">
+            <aside id="yAxisTitle" class="chartLabel">
+                <h4></h4>
+            </aside>
+            <div id="chartContainer" class="whirly-loader">
+                <div id="chartTitle" class="chartLabel">
+                    <h1></h1>
+                </div>
+                <div id="chart" class="ct-chart ct-golden-section"></div>
+                <div id="xAxisTitle" class="chartLabel">
+                    <h4></h4>
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>
@@ -136,8 +139,8 @@
 {
     @*add the proper url that directs to a userId endpoint i.e. Session["UserInfo"]*@
     <script type="application/javascript">
-        var recordsUrl = "@Url.Content("~/api/records/" + @Model.recordsUrlSuffix)";
-        var speciesUrl = "@Url.Content("~/api/species")";
+        var recordsUrl = "@Url.Content("~/api/records/")"; //@Model.RecordsUrlSuffix)";
+        var pestsUrl = "@Url.Content("~/api/species")";
     </script>
     @Scripts.Render("~/bundles/chartist")
     @Scripts.Render("~/bundles/typeahead")
