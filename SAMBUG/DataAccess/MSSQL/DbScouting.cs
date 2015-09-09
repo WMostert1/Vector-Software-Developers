@@ -18,13 +18,7 @@ namespace DataAccess.MSSQL
 
                 foreach (var stop in stops)
                 {
-                    //=====================================
-                    stop.Date = DateTime.Now;               //  TODO: Get the data representation from Android > Web right
-                    byte[] test = {1,2};                    //  This needs to be removed. 
-                    foreach(var b in stop.ScoutBugs)        //  Mock's out the wrong formatted data
-                    b.FieldPicture = test;
-                    //=====================================
-
+                    //Fixed Date and sByte to byte conversion.
                     db.ScoutStops.Add(stop);
                 }
 

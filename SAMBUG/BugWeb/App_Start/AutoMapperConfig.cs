@@ -20,9 +20,10 @@ namespace BugWeb
             AutoMapper.Mapper.CreateMap<DataAccess.Models.Role, BugBusiness.Interface.BugSecurity.DTO.RoleDTO>();
 
             AutoMapper.Mapper.CreateMap<BugBusiness.Interface.BugScouting.DTO.ScoutStopDTO,DataAccess.Models.ScoutStop>();
-            AutoMapper.Mapper.CreateMap<BugBusiness.Interface.BugScouting.DTO.ScoutBugDTO,DataAccess.Models.ScoutBug>()
+            AutoMapper.Mapper.CreateMap<sbyte, byte>().ConvertUsing(src => (byte)src);
+            AutoMapper.Mapper.CreateMap<BugBusiness.Interface.BugScouting.DTO.ScoutBugDTO, DataAccess.Models.ScoutBug>()
                .ForMember(dest => dest.FieldPicture,
-               opts => opts.MapFrom(src => (byte[])(Array)src.FieldPicture));
+                   opts => opts. MapFrom(src => AutoMapper.Mapper.Map<byte[]>(src.FieldPicture))); 
 
             AutoMapper.Mapper.CreateMap<BugBusiness.Interface.FarmManagement.DTO.FarmDTO, Models.ReportingViewModel.FarmViewModel>();
             AutoMapper.Mapper.CreateMap<BugBusiness.Interface.FarmManagement.DTO.BlockDTO, Models.ReportingViewModel.BlockViewModel>();

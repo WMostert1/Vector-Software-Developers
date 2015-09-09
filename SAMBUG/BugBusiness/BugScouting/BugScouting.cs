@@ -38,10 +38,7 @@ namespace BugBusiness.BugScouting
                }
            }
 
-           //TODO: The sbyte[] array isn't properly being converted to a byte[] - mocked out in _dbScouting for now
-           //TODO: The date is being mocked out in _dbScouting
            List<ScoutStop> ScoutStops = AutoMapper.Mapper.Map<List<ScoutStop>>(request.ScoutStops);
-           
 
             if(!_dbScouting.PersistScoutStops(ScoutStops))
                     throw new PersistScoutBugsException();
