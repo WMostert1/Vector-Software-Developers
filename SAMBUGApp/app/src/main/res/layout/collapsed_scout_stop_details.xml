@@ -9,14 +9,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <CheckedTextView
             android:id="@+id/tvBlockName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Block Name:"
             android:layout_marginLeft="100dp"/>
 
-        <TextView
+        <CheckedTextView
             android:id="@+id/lblBlockName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,14 +30,14 @@
         android:orientation="horizontal"
         android:layout_marginTop="10dp">
 
-        <TextView
+        <CheckedTextView
             android:id="@+id/tvNumTrees"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Number of Trees:"
             android:layout_marginLeft="70dp"/>
 
-        <TextView
+        <CheckedTextView
             android:id="@+id/lblNumTrees"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

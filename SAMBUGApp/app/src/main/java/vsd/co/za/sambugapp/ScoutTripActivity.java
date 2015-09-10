@@ -2,10 +2,13 @@ package vsd.co.za.sambugapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,17 +21,21 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import vsd.co.za.sambugapp.DataAccess.ScoutStopDAO;
 import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.*;
 
 
-public class ScoutTripActivity extends ActionBarActivity {
+public class ScoutTripActivity extends AppCompatActivity {
 
 
     //Variables for proper communication between activities
@@ -47,7 +54,8 @@ public class ScoutTripActivity extends ActionBarActivity {
     private ListView lstPestsPerTree;
     private ScoutStopAdapter lstStopsAdapter;
     private PestsPerTreeAdapter lstPestsPerTreeAdapter;
-    private Farm farm;
+    private Spinner spnFarms;
+    private List<Farm> farms;
 
     public int updateIndex=-1;
 
@@ -66,13 +74,14 @@ public class ScoutTripActivity extends ActionBarActivity {
         }
         setContentView(R.layout.activity_scout_trip);
 
+        //set toolbar (ActionBar)
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null);
+        Spinner spinner = (Spinner) toolbar.findViewById(R.id.spnFarms);
+
+
         lstStops = (ListView) findViewById(R.id.lstStops);
-        lstStops.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                updateStopActivityStart(position);
-            }
-        });
         lstStopsAdapter = new ScoutStopAdapter(scoutTrip.getStopList());
         lstStops.setAdapter(lstStopsAdapter);
 
@@ -88,10 +97,11 @@ public class ScoutTripActivity extends ActionBarActivity {
             lstStopsAdapter.notifyDataSetChanged();
         }
 
-        acceptFarm(getIntent());
-
-        setTitle(farm.getFarmName());
-
+        acceptFarms(getIntent());
+        spnFarms = (Spinner) toolbar.findViewById(R.id.spnFarms);
+        ArrayAdapter<Farm> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, farms);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnFarms.setAdapter(adapter);
     }
 
     @Override
@@ -110,10 +120,9 @@ public class ScoutTripActivity extends ActionBarActivity {
         Intent intent=new Intent(this,enterDataActivity.class);
         Bundle b = new Bundle();
         b.putSerializable(SCOUT_STOP,null);
-        b.putSerializable(USER_FARM,farm);
+        b.putSerializable(USER_FARM, (Farm) spnFarms.getSelectedItem());
         intent.putExtras(b);
         startActivityForResult(intent, NEW_STOP);
-        //handle new stop object
     }
 
     public void addStop(ScoutStop stop){
@@ -121,21 +130,6 @@ public class ScoutTripActivity extends ActionBarActivity {
             scoutTrip.getStopList().clear();
         scoutTrip.addStop(stop);
         hasStops = true;
-    }
-
-    /**
-     * Start EnterDataActivity to update ScoutStop object.
-     * @param position Index of ScoutStop in stop list.
-     */
-    public void updateStopActivityStart(int position){
-        //Enter EnterDataActivity for editing the stop
-        updateIndex=position;
-        Intent intent=new Intent(this,enterDataActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putSerializable(SCOUT_STOP, scoutTrip.getStop(position));
-        bundle.putSerializable(USER_FARM, farm);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, UPDATE_STOP);
     }
 
     /**
@@ -150,20 +144,9 @@ public class ScoutTripActivity extends ActionBarActivity {
      * Initialise farm object.
      * @param intent Intent passed in from LoginActivity.
      */
-    public void acceptFarm(Intent intent){
-        /*farm=new Farm();
-        farm.setFarmID(1);
-        farm.setFarmName("DEEZ NUTS");
-        HashSet<Block> blocks=new HashSet<>();
-        for (int j=1;j<=10;j++){
-            Block obj=new Block();
-            obj.setBlockID(j);
-            obj.setBlockName("Block #" + j);
-            blocks.add(obj);
-        }
-        farm.setBlocks(blocks);*/
+    public void acceptFarms(Intent intent) {
         Bundle b=intent.getExtras();
-        farm=(Farm)b.get(LoginActivity.USER_FARM);
+        farms = new ArrayList<>((HashSet<Farm>) b.getSerializable(LoginActivity.USER_FARMS));
     }
 
     /**

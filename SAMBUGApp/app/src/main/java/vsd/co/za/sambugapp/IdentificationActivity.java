@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 
@@ -38,9 +39,11 @@ public class IdentificationActivity extends AppCompatActivity {
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
     private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
+    public static final String BUG_COUNT = "za.co.vsd.bug_count";
     private ImageView mImageView = null;
     private Bitmap bitmap = null;
     private Species currentEntry = null;
+    private NumberPicker npBugCount;
     private int createCounter = 0;
 
 
@@ -99,6 +102,12 @@ public class IdentificationActivity extends AppCompatActivity {
 
             setContentView(R.layout.activity_identification);
 
+        //initalise Number of Bugs NumberPicker
+        npBugCount = (NumberPicker) findViewById(R.id.npNumBugs);
+        npBugCount.setMinValue(0);
+        npBugCount.setMaxValue(100);
+        npBugCount.setValue(0);
+
             GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
             gridview.setAdapter(new ImageAdapter(this));
 
@@ -110,10 +119,10 @@ public class IdentificationActivity extends AppCompatActivity {
                         speciesDAO.open();
                         currentEntry = speciesDAO.getSpeciesByID(position + 1);
                         Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
-                        ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
+                        //ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
                         byte[] imgData = currentEntry.getIdealPicture();
-                        comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
-                                imgData.length));
+                        //comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
+                        //      imgData.length));
                         speciesDAO.close();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -229,6 +238,7 @@ public class IdentificationActivity extends AppCompatActivity {
         Bitmap currentPicture = bitmap;
         currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
         bundle.putParcelable("Image", currentPicture);
+        bundle.putInt(BUG_COUNT, npBugCount.getValue());
         output.putExtras(bundle);
         setResult(RESULT_OK, output);
         finish();

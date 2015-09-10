@@ -61,7 +61,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mProgressView;
     private View mLoginFormView;
 
-    public static final String USER_FARM = "za.co.vsd.user_farm";
+    public static final String USER_FARMS = "za.co.vsd.user_farms";
 
 
     @Override
@@ -120,8 +120,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             Intent intent = new Intent(getApplicationContext(), ScoutTripActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = new Bundle();
-            Farm activeFarm = userWrapper.User.getFarms().iterator().next();
-            bundle.putSerializable(LoginActivity.USER_FARM, activeFarm);
+            HashSet<Farm> activeFarms = userWrapper.User.getFarms();
+            bundle.putSerializable(USER_FARMS, activeFarms);
             intent.putExtras(bundle);
             startActivity(intent);
         }

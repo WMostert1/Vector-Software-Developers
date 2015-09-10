@@ -21,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import vsd.co.za.sambugapp.DataAccess.DTO.CacheSyncDTO;
 import vsd.co.za.sambugapp.DomainModels.Farm;
@@ -179,8 +181,8 @@ public class WebAPI {
                     Intent intent = new Intent(context,ScoutTripActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Bundle bundle=new Bundle();
-                    Farm activeFarm = user.getFarms().iterator().next();
-                    bundle.putSerializable(LoginActivity.USER_FARM,activeFarm);
+                    HashSet<Farm> activeFarms = user.getFarms();
+                    bundle.putSerializable(LoginActivity.USER_FARMS, activeFarms);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }

@@ -11,6 +11,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -40,33 +43,21 @@ import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 import vsd.co.za.sambugapp.DomainModels.Species;
 
 
-public class enterDataActivity extends ActionBarActivity {
-    private final String BUG_COUNT="za.co.vsd.bug_count";
+public class enterDataActivity extends AppCompatActivity {
     private final String BUG_LIST="za.co.vsd.bug_list";
     private final String SCOUT_STOP = "za.co.vsd.scout_stop";
     private final String BLOCK_INFO_COLLAPSED = "za.co.vsd.block_info_collapsed";
     private boolean blockInfoCollapsed = false;
-    private int numberOfBugs = -1;
+    private int bugCount = -1;
     ScoutStop stop = null;
     Species species;
     Spinner mySpin;
     NumberPicker npTrees;
-    NumberPicker npBugs;
     ScoutBug currBug;
     Farm farm;
     Block currBlock;
     Bitmap imageTaken;
     HashSet<ScoutBug> allBugs;
-    TableLayout table;
-    Intent iReceive;
-
-    public Intent getiReceive() {
-        return iReceive;
-    }
-
-    public void setiReceive(Intent iReceive) {
-        this.iReceive = iReceive;
-    }
     
     LocationManager mLocationManager;
     Location myLocation = null;
@@ -84,30 +75,33 @@ public class enterDataActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
 
-        Log.e("CHECK", "Create");
+        acceptBlocks();
+        acceptStop(savedInstanceState);
+
+        //set toolbar (ActionBar)
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null);
+        CheckedTextView txtFarmName = (CheckedTextView) toolbar.findViewById(R.id.txtFarmName);
+        txtFarmName.setText(farm.getFarmName());
+
         allBugs = new HashSet<>();
         if (savedInstanceState!=null){
             allBugs=(HashSet<ScoutBug>)savedInstanceState.get(BUG_LIST);
             blockInfoCollapsed = savedInstanceState.getBoolean(BLOCK_INFO_COLLAPSED);
-            numberOfBugs = savedInstanceState.getInt(BUG_COUNT);
             updateAddedBugsView();
         }
-        iReceive = getIntent();
         receiveGeoLocation();
-        acceptBlocks();
-        acceptStop(savedInstanceState);
-        setTitle(farm.getFarmName());
+
         if (!blockInfoCollapsed) {
-            populateSpinner();
-            RelativeLayout layout = (RelativeLayout) findViewById(R.id.numberOfTreesLayout);
-            layout.setVisibility(View.INVISIBLE);
+            expandScoutStopDetails(null);
+            //RelativeLayout layout = (RelativeLayout) findViewById(R.id.bugDetailsLayout);
+            //layout.setVisibility(View.INVISIBLE);
             Button btn = (Button) findViewById(R.id.btnAddBug);
             btn.setVisibility(View.INVISIBLE);
         } else {
-            collapseBlockEditing(null);
+            collapseScoutStopDetails(null);
         }
-        initializeNumberPickers();
-
     }
 
     /**
@@ -138,7 +132,6 @@ public class enterDataActivity extends ActionBarActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt(BUG_COUNT, numberOfBugs);
         savedInstanceState.putSerializable(BUG_LIST,allBugs);
         savedInstanceState.putSerializable(SCOUT_STOP, stop);
         savedInstanceState.putBoolean(BLOCK_INFO_COLLAPSED, blockInfoCollapsed);
@@ -147,7 +140,6 @@ public class enterDataActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        numberOfBugs = npBugs.getValue();
     }
 
     /**
@@ -164,6 +156,7 @@ public class enterDataActivity extends ActionBarActivity {
             species = (Species) speciesReceived.get(IdentificationActivity.IDENTIFICATION_SPECIES);
             Bitmap imageTaken2 = (Bitmap)speciesReceived.getParcelable("Image");
             imageTaken = imageTaken2;
+            bugCount = speciesReceived.getInt(IdentificationActivity.BUG_COUNT);
             addBug();
         }
     }
@@ -175,7 +168,7 @@ public class enterDataActivity extends ActionBarActivity {
         if (savedInstanceState != null) {
             stop = (ScoutStop) savedInstanceState.getSerializable(SCOUT_STOP);
         } else {
-            Bundle scoutStop = getiReceive().getExtras();
+            Bundle scoutStop = getIntent().getExtras();
             ScoutStop sp = (ScoutStop) scoutStop.get(ScoutTripActivity.SCOUT_STOP);
             if (sp == null) {
                 createScoutStop();
@@ -187,7 +180,7 @@ public class enterDataActivity extends ActionBarActivity {
      * Gets the blocks from the farm object passed.
      */
     public Farm acceptBlocks() {
-        Bundle scoutStop = getiReceive().getExtras();
+        Bundle scoutStop = getIntent().getExtras();
         Farm frm = (Farm) scoutStop.get(ScoutTripActivity.USER_FARM);
         if(frm != null) {
             setFarm(frm);
@@ -201,9 +194,8 @@ public class enterDataActivity extends ActionBarActivity {
      */
     public void populateSpinner() {
         mySpin = (Spinner) findViewById(R.id.spnBlocks);
-        ArrayAdapter<String> dataAdapter;
 
-        HashSet<Block> blockArray = new HashSet<>();
+        HashSet<Block> blockArray;
         blockArray = farm.getBlocks();
 
         List<Block> list = new ArrayList<Block>(blockArray);
@@ -221,24 +213,13 @@ public class enterDataActivity extends ActionBarActivity {
         mySpin.setSelection(pos);
     }
 
-    /**
-     * Initializes the number pickers to the appropriate values.
-     */
-    public void initializeNumberPickers() {
-        if (!blockInfoCollapsed) {
-            npTrees = (NumberPicker) findViewById(R.id.npNumTrees);
-            npTrees.setMinValue(1);
-            npTrees.setMaxValue(100);
-            npTrees.setWrapSelectorWheel(false);
-            npTrees.setValue(stop.getNumberOfTrees());
-        }
-
-        npBugs = (NumberPicker) findViewById(R.id.npNumBugs);
-        npBugs.setMinValue(0);
-        npBugs.setMaxValue(100);
-        npBugs.setWrapSelectorWheel(false);
+    public void initialiseTreeNumberPicker() {
+        npTrees = (NumberPicker) findViewById(R.id.npNumTrees);
+        npTrees.setMinValue(1);
+        npTrees.setMaxValue(100);
+        npTrees.setWrapSelectorWheel(false);
+        npTrees.setValue(stop.getNumberOfTrees());
     }
-
     
     public void sendToScoutTripActivity(View view) {
 
@@ -317,28 +298,6 @@ public class enterDataActivity extends ActionBarActivity {
     }
 
     /**
-     * Error message if gps is off.
-     */
-    public void createErrorMessage() {
-        new AlertDialog.Builder(enterDataActivity.this)
-                .setTitle("Switch on gps")
-                .setMessage("Please ensure your gps is switched on.")
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        moveGPSScreen();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-
-    }
-
-    /**
      * Moves to the GPS screen.
      */
     public synchronized void moveGPSScreen() {
@@ -357,6 +316,7 @@ public class enterDataActivity extends ActionBarActivity {
             stop.setLatitude((float) myLocation.getLatitude());
             stop.setLongitude((float) myLocation.getLongitude());
         }
+        stop.setNumberOfTrees(0);
     }
 
 
@@ -393,13 +353,13 @@ public class enterDataActivity extends ActionBarActivity {
             stop.setNumberOfTrees(npTrees.getValue());
         }
         layout.removeAllViews();
-        layout.inflate(getApplicationContext(), R.layout.collapsed_scout_stop_details, layout);
+        layout.inflate(enterDataActivity.this, R.layout.collapsed_scout_stop_details, layout);
         TextView lblBlockName = (TextView) layout.findViewById(R.id.lblBlockName);
         lblBlockName.setText(stop.getBlock().getBlockName());
         TextView lblNumTrees = (TextView) layout.findViewById(R.id.lblNumTrees);
         lblNumTrees.setText(stop.getNumberOfTrees() + "");
-        RelativeLayout openLayout = (RelativeLayout) findViewById(R.id.numberOfTreesLayout);
-        openLayout.setVisibility(View.VISIBLE);
+        //RelativeLayout openLayout = (RelativeLayout) findViewById(R.id.bugDetailsLayout);
+        //openLayout.setVisibility(View.VISIBLE);
         Button openButton = (Button) findViewById(R.id.btnAddBug);
         openButton.setVisibility(View.VISIBLE);
     }
@@ -409,9 +369,18 @@ public class enterDataActivity extends ActionBarActivity {
         //remove layout children
         layout.removeAllViews();
         //set new layout to expanded version
-        layout.inflate(getApplicationContext(), R.layout.expanded_scout_stop_details, layout);
+        layout.inflate(enterDataActivity.this, R.layout.expanded_scout_stop_details, layout);
         //initialise pickers and stuff
-        initializeNumberPickers();
+        populateSpinner();
+        initialiseTreeNumberPicker();
+        //button click listener
+        Button btn = (Button) layout.findViewById(R.id.btnCollapse);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapseScoutStopDetails(v);
+            }
+        });
     }
 
     public void updateAddedBugsView(){
@@ -435,11 +404,10 @@ public class enterDataActivity extends ActionBarActivity {
 
         if(imageTaken != null){
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            imageTaken.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            imageTaken.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             currBug.setFieldPicture(stream.toByteArray());
         }
-
-        currBug.setNumberOfBugs(numberOfBugs);
+        currBug.setNumberOfBugs(bugCount);
         currBug.setSpecies(species);
         currBug.setSpeciesID(species.getSpeciesID());
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -448,9 +416,5 @@ public class enterDataActivity extends ActionBarActivity {
         stop.ScoutBugs.add(currBug);
         allBugs.add(currBug);
 
-    }
-
-    public Farm getFarm() {
-        return farm;
     }
 }

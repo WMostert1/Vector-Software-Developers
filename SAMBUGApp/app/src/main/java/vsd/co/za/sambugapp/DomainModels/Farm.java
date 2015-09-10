@@ -60,4 +60,8 @@ public class Farm implements Serializable {
         User = user;
     }
 
+    public String toString() {
+        return getFarmName();
+    }
+
 }
