@@ -8,7 +8,7 @@ var viewModelToMemberMap = {
     Date: "date",
     Block: "blockName",
     Species: "speciesName",
-    "Bugs Per Tree": "bugsPerTree",
+    "Bugs per Tree": "bugsPerTree",
     "Species Life Stage": "lifeStage"
 }
 
@@ -131,7 +131,9 @@ function getUniqueEntries(flattenTo, data) {
     var result = [];
 
     $.each(data, function(index, object) {
-        if ($.inArray(object[flattenTo], result) === -1)
+        if ($.grep(result, function(d) {
+            return object[flattenTo].valueOf() === d.valueOf();
+        }).length === 0)
             result.push(object[flattenTo]);
     });
 
@@ -268,27 +270,6 @@ function updateTitles() {
     centerYAxisTitle();
 }
 
-function updateChartSettings() {
-    
-    //save data in the correct format depending on the type of input
-    switch ($(this).attr("type")) {
-    case "checkbox":
-        chartSettings[$(this).attr("id")] = $(this).prop("checked");
-        break;
-    case "date":
-        chartSettings[$(this).attr("id")] = new Date($(this).val());
-        break;
-    case "number":
-        chartSettings[$(this).attr("id")] = parseInt($(this).val());
-        break;
-    default:
-        chartSettings[$(this).attr("id")] = $(this).val();
-        break;
-    }
-
-    updateChart(chartSettings);
-}
-
 function initFromDate() {
     $("#constraintDateFrom")
         .val(new XDate().addMonths(-6, true).toString("yyyy-MM-dd"));
@@ -298,13 +279,25 @@ function initToDate() {
     $("#constraintDateTo").val(new XDate().toString("yyyy-MM-dd"));
 }
 
+function updateChart(settings) {
+    var filteredScoutStops = filterScoutStops(scoutStops, settings);
+    var filteredTreatments = [];
+
+    if (settings.constraintShowTreatments)
+        filteredTreatments = filterTreatments(treatments, settings);
+
+    plot(filteredScoutStops, filteredTreatments, settings);
+
+    updateTitles();
+}
+
 function plot(filteredScoutStops, filteredTreatments, settings) {
     //todo: must check how labels are going to work, do that here
 
-    var plotParameters = determinePlotParameters(settings, filteredScoutStops);
-
     //get categorised data ( or unaltered data if no grouping is applied)
-    var categorisedStops = groupBy(settings.grouping, filteredScoutStops);
+    var categorisedStops = groupBy(viewModelToMemberMap[settings.grouping], filteredScoutStops);
+
+    var plotParameters = determinePlotParameters(settings, categorisedStops);
 
     var x = new Chartist.Line("#chart", {
         //data  
@@ -312,8 +305,8 @@ function plot(filteredScoutStops, filteredTreatments, settings) {
             {
                 name: "FirstSeries",
                 data: [
-                    { x: 5},
-                    { x: 6}
+                    { x: 1000, y: 5},
+                    { x: 100, y: 10}
                 ]
             }
         ]
@@ -323,10 +316,10 @@ function plot(filteredScoutStops, filteredTreatments, settings) {
         showPoint: false,
         axisX: {
 //X axis options
-            type: Chartist.FixedScaleAxis,
-            //type: Chartist.AutoScaleAxis,
+            //type: Chartist.FixedScaleAxis,
+            type: Chartist.AutoScaleAxis,
             onlyInteger: true,
-    //labelInterpolationFnc: interpolateLabelDate
+            //labelInterpolationFnc: interpolateLabelDate
 },
         series: {
 //series options
@@ -345,11 +338,7 @@ function isCategorical(setting) {
     return (setting !== "Date");
 }
 
-function groupBy(setting, stops) {
-    //define a mapping between the setting's name 
-    //  and the member name in stops
-    var memberName = viewModelToMemberMap[setting];
-
+function groupBy(memberName, stops) {
     //note that the first element of each subarray is used to store the category name
     var categorisedStops = [];
 
@@ -365,7 +354,7 @@ function groupBy(setting, stops) {
 
     $.each(categories, function (i, c) {
         var category = $.grep(stops, function(s) {
-            return s[memberName] === c;
+            return s[memberName].valueOf() === c.valueOf();
         });
 
         category.unshift(c);
@@ -393,8 +382,37 @@ function determinePlotParameters(settings, categorisedStops) {
     //  create a Series object that will be consumed by chartist
     //  ie {name: ...., data: [{x:...,y:...},...]}
     $.each(categorisedStops, function(i, c) {
+        var s = {};
+        s.name = c.shift();
 
+        //ensure x values are sorted in ascending order
+        var sortedXCategorisedData = groupBy(xMemberName, c).sort(predicateSort);
+
+        getXYpoints(yMemberName, chartType, labels, sortedXCategorisedData);
+        
     });
+
+    console.log("\n\n");
+}
+
+function getXYpoints(yMember, chartType, labels, xCategorisedPoints) {
+    var xAliases = [];
+    var ys = [];
+
+    $.each(xCategorisedPoints, function (i, ps) {
+       xAliases.push(ps.shift());
+    });
+
+    console.log(xAliases);
+}
+
+function predicateSort(a, b) {
+    if (a[0].valueOf() > b[0].valueOf()) {
+        return 1;
+    } else if (a[0].valueOf() < b[0].valueOf()) {
+        return -1;
+    }
+    return 0;
 }
 
 function interpolateLabelDate(value) {
@@ -440,17 +458,28 @@ function verifyTreesInput(evt) {
     }
 }
 
-function updateChart(settings) {
-    console.log(filterScoutStops(scoutStops, settings));
-    var filteredScoutStops = filterScoutStops(scoutStops, settings);
-    var filteredTreatments = [];
+function updateChartSettings() {
 
-    if (settings.constraintShowTreatments)
-        filteredTreatments = filterTreatments(treatments, settings);
+    //save data in the correct format depending on the type of input
+    switch ($(this).attr("type")) {
+        case "checkbox":
+            chartSettings[$(this).attr("id")] = $(this).prop("checked");
+            break;
+        case "date":
+            chartSettings[$(this).attr("id")] = new Date($(this).val());
+            break;
+        case "number":
+            chartSettings[$(this).attr("id")] = parseInt($(this).val());
+            break;
+        default:
+            chartSettings[$(this).attr("id")] = $(this).val();
+            break;
+    }
 
-    plot(filteredScoutStops, filteredTreatments, settings);
-
-    updateTitles();
+    //ensure that data has arrived before attempting to chart the data
+    if (scoutStops !== null) {
+        updateChart(chartSettings);
+    }
 }
 
 function resetConstraints() {
