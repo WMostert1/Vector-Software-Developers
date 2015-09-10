@@ -1,11 +1,7 @@
-﻿//TODO: Change starting date back
-//TODO: Validate input
+﻿//TODO: Validate input
 //TODO: Extract common between charts and tables and maps
-//TODO: Test that dates work (change them to XDATE for comparing)
-//TODO: take stripes away for constraints
 //TODO: show abrie all plugins and look at changing the order stuff of columns
-//TODO: fix whirly thing
-
+//TODO: test whirly loader with slow database
 //---------------------------Get data from server, the onchange events is also here---------------------------
 $(document).ready(function ()
 {
@@ -45,7 +41,7 @@ function getSpeciesFromServer() {
 //------------------Set all input to defualt values, initially and throughout execution------------------------
 function setFromDate() {
     var date = new XDate();
-    var newDate = date.addYears(-10, true);
+    var newDate = date.addMonths(-6, true);
     $(".dateFrom").val(newDate.toString("yyyy-MM-dd"));
 };
 

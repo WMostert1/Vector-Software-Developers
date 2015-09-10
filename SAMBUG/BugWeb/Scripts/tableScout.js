@@ -132,6 +132,8 @@ function setBlocksScout(farm) {
 };
 
 function generateFirstTimeScout() {
+    $("#scoutTableDiv").toggleClass("whirly-loader");
+    $("#scoutTableDiv").css("margin-top", "30px");
     var data = filterDataScout();
     var table = $(document.createElement("table"));
     table.attr("id", "scoutTable");
@@ -190,15 +192,18 @@ function filterDataScout()
 {
     var farm = $("#farmScout").val();
     var block = $("#blocksScout").val();
-    var fromDate = $("#timeFromScout").val();
-    var toDate = $("#timeToScout").val();
+    var fromDate = new Date($("#timeFromScout").val());
+    var toDate = new Date($("#timeToScout").val());
     var speciesLifeStage = $("#speciesStageScout").val();
     var speciesName = $("#speciesScout").val();
+
+    console.log(fromDate);
+    console.log(toDate);
 
     var appliedFilters = scoutStopObjects.filter(function (obj) {
         if ((obj.farmName === farm || farm === "all") &&
         (obj.blockName === block || block === "all") &&
-        ((obj.date >= fromDate && obj.date <= toDate) || $("#dateAnyScout").is(":checked")) &&
+        ((new Date(obj.date) >= fromDate && new Date(obj.date) <= toDate) || $("#dateAnyScout").is(":checked")) &&
         (speciesLifeStage === "all" || (obj.lifeStage).toString() === speciesLifeStage) &&
         (speciesName === "all" || obj.speciesName === speciesName)) {
             return true;
@@ -222,5 +227,5 @@ function resetScoutConstraints() {
     $("#speciesStageScout").val("all");
     setFromDate();
     setToDate();
-    $("#dateAnyScout").attr("checked", false);
+    $("#dateAnyScout").prop("checked", true);
 }

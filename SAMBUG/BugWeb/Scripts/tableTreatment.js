@@ -72,6 +72,8 @@ function setBlocksTreatment(farm) {
 };
 
 function generateFirstTimeTreatment() {
+    $("#treatmentTableDiv").toggleClass("whirly-loader");
+    $("#treatmentTableDiv").css("margin-top", "30px");
     var data = filterDataTreatment();
     var table = $(document.createElement("table"));
     table.attr("id", "treatmentTable");
@@ -142,5 +144,5 @@ function resetTreatmentConstraints() {
     $("#blocksTreatment").val("all");
     setFromDate();
     setToDate();
-    $("#dateAnyTreatment").attr("checked", false);
+    $("#dateAnyTreatment").prop("checked", true);
 }
