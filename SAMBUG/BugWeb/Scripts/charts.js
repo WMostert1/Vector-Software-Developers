@@ -9,6 +9,8 @@ var viewModelToMemberMap = {
     Block: "blockName",
     Species: "speciesName",
     "Bugs per Tree": "bugsPerTree",
+    "Number of Bugs": "numberOfBugs",
+    "Number of Trees": "numberOfTrees",
     "Species Life Stage": "lifeStage"
 }
 
@@ -101,7 +103,7 @@ function loadDataRecords() {
 
         treatments = flattenTreatments(data.Treatments);
         scoutStops = flattenScoutStops(data.ScoutStops);
-
+        
         var farmNames = getUniqueEntries("farmName", scoutStops.concat(treatments));
 
         initSuggestions("constraintFarms", farmNames);
@@ -160,11 +162,11 @@ function flattenScoutStops(data) {
                 farmName: scoutStop.BlockFarmFarmName,
                 blockName: scoutStop.BlockBlockName,
                 date: new Date(scoutStop.Date),
-                numberOfTrees: scoutStop.NumberOfTrees,
+                numberOfTrees: parseInt(scoutStop.NumberOfTrees),
                 speciesName: b.SpeciesSpeciesName,
                 lifeStage: mapSpeciesLifeStage(b.SpeciesLifestage),
                 bugsPerTree: b.NumberOfBugs / scoutStop.NumberOfTrees,
-                numberOfBugs: b.NumberOfBugs,
+                numberOfBugs: parseInt(b.NumberOfBugs),
                 comments: b.Comments
             };
         }));
@@ -297,37 +299,9 @@ function plot(filteredScoutStops, filteredTreatments, settings) {
     //get categorised data ( or unaltered data if no grouping is applied)
     var categorisedStops = groupBy(viewModelToMemberMap[settings.grouping], filteredScoutStops);
 
-    var plotParameters = determinePlotParameters(settings, categorisedStops);
+    var parameters = determinePlotParameters(settings, categorisedStops);
 
-    var x = new Chartist.Line("#chart", {
-        //data  
-        series: [
-            {
-                name: "FirstSeries",
-                data: [
-                    { x: 1000, y: 5},
-                    { x: 100, y: 10}
-                ]
-            }
-        ]
-    }, {
-//options
-        //seriesBarDistance: 20,
-        showPoint: false,
-        axisX: {
-//X axis options
-            //type: Chartist.FixedScaleAxis,
-            type: Chartist.AutoScaleAxis,
-            onlyInteger: true,
-            //labelInterpolationFnc: interpolateLabelDate
-},
-        series: {
-//series options
-            FirstSeries: {
-                linesmooth: false
-            }
-        }
-    });
+    var x = new Chartist[parameters.chartType]("#chart", parameters.data, parameters.options);
 }
 
 function getBugsPerTree(stop) {
@@ -375,36 +349,77 @@ function determinePlotParameters(settings, categorisedStops) {
     var chartType = isCategorical(settings.against) ? "Bar" : "Line";
 
     var parameters = {};
-    var labels = [];
-    var series = [];
 
+    parameters.chartType = chartType;
+
+    if (chartType === "Line") {
+        getLineChartParameters(parameters, xMemberName, yMemberName, categorisedStops);
+    } else {
+        getBarChartParamaters(parameters, xMemberName, yMemberName, categorisedStops);
+    }
+
+    return parameters;
+
+}
+
+function getLineChartParameters(parameters, xMemberName, yMemberName, categorisedStops) {
     //for each array of stops in catStops
     //  create a Series object that will be consumed by chartist
     //  ie {name: ...., data: [{x:...,y:...},...]}
-    $.each(categorisedStops, function(i, c) {
+    var seriesArray = [];
+
+    $.each(categorisedStops, function (i, c) {
         var s = {};
         s.name = c.shift();
 
         //ensure x values are sorted in ascending order
-        var sortedXCategorisedData = groupBy(xMemberName, c).sort(predicateSort);
+        var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(predicateSort);
 
-        getXYpoints(yMemberName, chartType, labels, sortedXCategorisedData);
+        s.data = getLineXYpoints(yMemberName, sortedXCategorisedPoints);
+
+        seriesArray.push(s);
+    });
+
+    parameters.data = { series: seriesArray };
+
+    parameters.options = {
+        showPoint: true,
+        lineSmooth: Chartist.Interpolation.simple({
+            divisor: 2
+        }),
+        axisX: {
+            type: Chartist.FixedScaleAxis,
+            divisor: 10,
+            labelInterpolationFnc: interpolateLabelDate
+        }
+    };
+
+}
+
+function getLineXYpoints(yMember, sortedXCategorisedPoints) {
+    var xy = [];
+
+    $.each(sortedXCategorisedPoints, function (i, ps) {
+        var xValue = ps.shift();
+        var yValue = 0.0;
+
+        $.each(ps, function (j, p) {
+            yValue += p[yMember];
+        });
+
+        xy.push({ x: xValue, y: yValue });
+
+    });
+
+    return xy;
+
+}
+
+function getBarChartParamaters(parameters, labelBy, yMemberName, categorisedStops) {
         
-    });
-
-    console.log("\n\n");
 }
 
-function getXYpoints(yMember, chartType, labels, xCategorisedPoints) {
-    var xAliases = [];
-    var ys = [];
 
-    $.each(xCategorisedPoints, function (i, ps) {
-       xAliases.push(ps.shift());
-    });
-
-    console.log(xAliases);
-}
 
 function predicateSort(a, b) {
     if (a[0].valueOf() > b[0].valueOf()) {

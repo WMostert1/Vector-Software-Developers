@@ -19,7 +19,7 @@ VALUES	(1, 'Grower'),
 INSERT INTO [dbo].[User] (Email, Password)
 VALUES	('werner.mostert1@gmail.com', 'pass'),
 		('test@gmail.com', 'pass1'),
-		('abrie@gmail.com', 'pass2');
+		('linkin1903@gmail.com', 'pass2');
 
 INSERT INTO [dbo].[Farm] (UserID, FarmName)
 VALUES	(1, 'Werner Farm'),
