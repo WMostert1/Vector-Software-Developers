@@ -135,25 +135,36 @@ function generateFirstTimeScout() {
     var data = filterDataScout();
     var table = $(document.createElement("table"));
     table.attr("id", "scoutTable");
-    table.attr("class", "row-border");
+/*    table.attr("class", "row-border");*/
     table.attr("class", "display");
     table.attr("style", "border: 1px solid #D8D8D8");
     $("#scoutTableDiv").append(table);
     dataTablesForScout = $("#scoutTable").DataTable({
-        dom: 'Bfrtip',
+        searching: false,
+        lengthChange: true,
+        pageLength: 25,
+        data: data,
+        dom: "<'row'<'col-sm-10'l><'col-sm-2'B>>" + "<'row'<'col-sm-12't>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+
         buttons: [
             {
+                "text": "",
                 "extend": "excelHtml5",
-                "title": "ScoutData" + "_" + new XDate().toString("yyyy-MM-dd")
+                "title": "ScoutData" + "_" + new XDate().toString("yyyy-MM-dd"),
             },
             {
+                "text": "",
                 "extend": "pdfHtml5",
                 "title": "ScoutData" + "_" + new XDate().toString("yyyy-MM-dd")
+
             },
-            "print"
+            {
+                "extend": "print",
+                "text": "",
+                "title": "ScoutData" + "_" + new XDate().toString("yyyy-MM-dd")
+            }
         ],
-        pageLength: 50,
-        data: data,
+
         columns: [
             { "title": "Farm", data: "farmName", "width": "10%"},
             { "title": "Block", data: "blockName", "width": "10%"},
@@ -211,6 +222,5 @@ function resetScoutConstraints() {
     $("#speciesStageScout").val("all");
     setFromDate();
     setToDate();
-    $("#viewScout").val("default");
     $("#dateAnyScout").attr("checked", false);
 }

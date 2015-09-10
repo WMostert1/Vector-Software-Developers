@@ -36,67 +36,59 @@
     <div id="Scout_Data" class="tab-pane fade in active">
 
         <div id="constraintsDivScout" class="panel-group">
-            <div class="panel panel-default" style="padding: 0px">
+            <div class="panel panel-default  " style="padding: 0px">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <span id="collapseIconScout" data-toggle="collapse" data-target="#collapsibleTableScout" class="glyphicon glyphicon-collapse-down collapse"></span>
-                        <span id="resetIconScout" class="glyphicon glyphicon-refresh pull-right refresh"></span>
+                        <span id="collapseIconScout" data-toggle="collapse" data-target="#collapsibleTableScout" class="glyphicon glyphicon-collapse-down"></span>
+                        <span id="resetIconScout" class="glyphicon glyphicon-refresh pull-right"></span>
                         <strong> Constraints</strong>
                     </h1>
                 </div>
                 <div id="collapsibleTableScout" class="panel-collapse collapse in">
                     <table class="table">
                         <tbody>
-                        <tr>
-                            <th>Farm</th>
-                            <td>
-                                <select id="farmScout" class="form-control farms">
-                                    <option value="all">All Farms</option>
-                                </select>
-                            </td>
-                            <th>Date</th>
-                            <td rowspan="3">
-                                <label for="timeFromScout">From:</label>
-                                <input type="date" id="timeFromScout" class="form-control constraintScout dateFrom">
+                            <tr>
+                                <th>Farm</th>
+                                <td>
+                                    <select id="farmScout" class="form-control farms">
+                                        <option value="all">All Farms</option>
+                                    </select>
+                                </td>
+                                <th>Date</th>
+                                <td rowspan="3">
+                                    <label for="timeFromScout">From:</label>
+                                    <input type="date" id="timeFromScout" class="form-control constraintScout dateFrom">
 
-                                <label for="timeToScout">To:</label>
-                                <input type="date" id="timeToScout" class="form-control constraintScout dateTo"><br/>
-                                <input class="constraintScout" id="dateAnyScout" type="checkbox"> Any
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Blocks</th>
-                            <td>
-                                <select id="blocksScout" class="form-control constraintScout">
-                                    <option value="all">All Blocks</option>
-                                </select>
-                            </td>
+                                    <label for="timeToScout">To:</label>
+                                    <input type="date" id="timeToScout" class="form-control constraintScout dateTo"><br />
+                                    <input class="constraintScout" id="dateAnyScout" type="checkbox"> Any
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Blocks</th>
+                                <td>
+                                    <select id="blocksScout" class="form-control constraintScout">
+                                        <option value="all">All Blocks</option>
+                                    </select>
+                                </td>
 
-                        </tr>
-                        <tr>
-                            <th>Species</th>
-                            <td>
-                                <select id="speciesScout" class="form-control">
-                                    <option value="all">All Species</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Species instars</th>
-                            <td>
-                                <select id="speciesStageScout" class="form-control constraintScout">
-                                    <option value="all">All Instars</option>
-                                </select>
-                            </td>
-                            <th>View by</th>
-                            <td>
-                                <select id="viewScout" class="form-control constraintScout">
-                                    <option value="default">Default Table</option>
-                                    <option value="species">Species (Pests)</option>
-                                    <option value="blockName">Blocks</option>
-                                </select>
-                            </td>
-                        </tr>
+                            </tr>
+                            <tr>
+                                <th>Species</th>
+                                <td>
+                                    <select id="speciesScout" class="form-control">
+                                        <option value="all">All Species</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Species instars</th>
+                                <td>
+                                    <select id="speciesStageScout" class="form-control constraintScout">
+                                        <option value="all">All Instars</option>
+                                    </select>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -112,8 +104,8 @@
             <div class="panel panel-default" style="padding: 0px">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <span id="collapseIconTreatment" data-toggle="collapse" data-target="#collapsibleTableTreatment" class="glyphicon glyphicon-collapse-down collapse"></span>
-                        <span id="resetIconTreatment" class="glyphicon glyphicon-refresh pull-right refresh"></span>
+                        <span id="collapseIconTreatment" data-toggle="collapse" data-target="#collapsibleTableTreatment" class="glyphicon glyphicon-collapse-down"></span>
+                        <span id="resetIconTreatment" class="glyphicon glyphicon-refresh pull-right"></span>
                         <strong> Constraints</strong>
                     </h1>
                 </div>
@@ -145,15 +137,6 @@
                                 </select>
                             </td>
 
-                        </tr>
-                        <tr>
-                            <th>View by</th>
-                            <td>
-                                <select id="viewTreatment" class="form-control constraintTreatment">
-                                    <option value="default">Default Table</option>
-                                    <option value="blockName">Blocks</option>
-                                </select>
-                            </td>
                         </tr>
                         </tbody>
                     </table>

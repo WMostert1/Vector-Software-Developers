@@ -75,25 +75,35 @@ function generateFirstTimeTreatment() {
     var data = filterDataTreatment();
     var table = $(document.createElement("table"));
     table.attr("id", "treatmentTable");
-    table.attr("class", "row-border");
+/*    table.attr("class", "row-border");*/
     table.attr("class", "display");
     table.attr("style", "border: 1px solid #D8D8D8");
     $("#treatmentTableDiv").append(table);
     dataTablesForTreatment = $("#treatmentTable").DataTable({
-        dom: 'Bfrtip',
+        searching: false,
+        lengthChange: true,
+        pageLength: 25,
+        data: data,
+        dom: "<'row'<'col-sm-10'l><'col-sm-2'B>>" + "<'row'<'col-sm-12't>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+
         buttons: [
             {
+                "text": "",
                 "extend": "excelHtml5",
                 "title": "TreatmentData" + "_" + new XDate().toString("yyyy-MM-dd")
             },
             {
+                "text": "",
                 "extend": "pdfHtml5",
                 "title": "TreatmentData" + "_" + new XDate().toString("yyyy-MM-dd")
             },
-            "print"
+            {
+                "extend": "print",
+                "text": "",
+                "title": "TreatmentData" + "_" + new XDate().toString("yyyy-MM-dd")
+            }
         ],
-        pageLength: 50,
-        data: data,
+
         columns: [
             { "title": "Farm", data: "farmName", "width": "20%" },
             { "title": "Block", data: "blockName", "width": "20%" },
@@ -132,6 +142,5 @@ function resetTreatmentConstraints() {
     $("#blocksTreatment").val("all");
     setFromDate();
     setToDate();
-    $("#viewTreatment").val("default");
     $("#dateAnyTreatment").attr("checked", false);
 }

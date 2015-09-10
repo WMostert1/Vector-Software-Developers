@@ -1,9 +1,10 @@
-﻿//TODO: Do view by filter
-//TODO: Change starting date back
+﻿//TODO: Change starting date back
 //TODO: Validate input
 //TODO: Extract common between charts and tables and maps
 //TODO: Test that dates work (change them to XDATE for comparing)
-//TODO: change defualt number of entries
+//TODO: take stripes away for constraints
+//TODO: show abrie all plugins and look at changing the order stuff of columns
+//TODO: fix whirly thing
 
 //---------------------------Get data from server, the onchange events is also here---------------------------
 $(document).ready(function ()
