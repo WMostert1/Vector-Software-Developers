@@ -1,72 +1,74 @@
-﻿@{
+﻿@model BugWeb.Models.ReportingViewModel
+@{
     ViewBag.Title = "Tabular";
 }
 @section scripts
 {
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.8/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.8/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" charset="utf8" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3/datatables.min.css"/>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3/datatables.min.js"></script>
     <script src="~/Scripts/table.js"></script>
-
-    <script type="application/javascript">
-        var usr = (User) @Session["UserInfo"];
-      @foreach (var y in (Role) usr.Roles)
-      {
-          if (y.Type == = 0)
-      }
-        var url = "@Url.Content("~/api/records/" + @Session[])";
-
-
-    </script>
+    <script src="~/Scripts/tableScout.js"></script>
+    <script src="~/Scripts/tableTreatment.js"></script>
 }
-
 @section styles
 {
     @Styles.Render("~/Content/table.css");
 }
 
+<script type="application/javascript">
+        var recordsUrl = "@Url.Content("~/api/records/" + @Model.RecordsUrlSuffix)";
+        var speciesUrl = "@Url.Content("~/api/species")";
+</script>
 
-<div id="firstContentRow" class="row">
-    <div class="col-sm-12 constraints">
-        <div id="constraintsDiv" class="panel-group">
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#Scout_Data">Scouting Data</a>
+        </li>
+        <li>
+            <a href="#Treatment_Data">Treatment Data</a>
+        </li>
+    </ul>
+
+<div class="tab-content">
+    
+    <div id="Scout_Data" class="tab-pane fade in active">
+
+        <div id="constraintsDivScout" class="panel-group">
             <div class="panel panel-default" style="padding: 0px">
                 <div class="panel-heading">
                     <h1 class="panel-title">
-                        <span id="collapseIcon" data-toggle="collapse" data-target="#collapsibleTable" class="glyphicon glyphicon-collapse"></span>
-                        <span id="resetIcon" class="glyphicon glyphicon-refresh pull-right"></span>
+                        <span id="collapseIconScout" data-toggle="collapse" data-target="#collapsibleTableScout" class="glyphicon glyphicon-collapse-down collapse"></span>
+                        <span id="resetIconScout" class="glyphicon glyphicon-refresh pull-right refresh"></span>
                         <strong> Constraints</strong>
                     </h1>
                 </div>
-                <div id="collapsibleTable" class="panel-collapse collapse in">
+                <div id="collapsibleTableScout" class="panel-collapse collapse in">
                     <table class="table">
                         <tbody>
                         <tr>
                             <th>Farm</th>
                             <td>
-                                <select if="farm" class="form-control constraint">
-                                    <option value="all">All farms</option>
+                                <select id="farmScout" class="form-control farms">
+                                    <option value="all">All Farms</option>
                                 </select>
                             </td>
                             <th>Date</th>
                             <td rowspan="3">
-                                <label for="timeFrom">From:</label>
-                                <input type="date" id="timeFrom" class="form-control constraint">
+                                <label for="timeFromScout">From:</label>
+                                <input type="date" id="timeFromScout" class="form-control constraintScout dateFrom">
 
-                                <label for="timeTo">To:</label>
-                                <input type="date" id="timeTo" class="form-control constraint"><br />
-                                <input id="dateAny" type="checkbox"> Any
+                                <label for="timeToScout">To:</label>
+                                <input type="date" id="timeToScout" class="form-control constraintScout dateTo"><br/>
+                                <input class="constraintScout" id="dateAnyScout" type="checkbox"> Any
                             </td>
                         </tr>
                         <tr>
                             <th>Blocks</th>
                             <td>
-                                <select id="blocks" class="form-control constraint">
+                                <select id="blocksScout" class="form-control constraintScout">
                                     <option value="all">All Blocks</option>
-
-                                    @foreach (var y in @Model.Farm.Blocks)
-                                    {
-                                        <option svalue="@y.BlockName">@y.BlockName</option>
-                                    }
                                 </select>
                             </td>
 
@@ -74,7 +76,7 @@
                         <tr>
                             <th>Species</th>
                             <td>
-                                <select id="species" class="form-control constraint">
+                                <select id="speciesScout" class="form-control">
                                     <option value="all">All Species</option>
                                 </select>
                             </td>
@@ -82,15 +84,14 @@
                         <tr>
                             <th>Species instars</th>
                             <td>
-                                <select id="speciesStage" class="form-control constraint">
-                                    <option value="all">All instars</option>
+                                <select id="speciesStageScout" class="form-control constraintScout">
+                                    <option value="all">All Instars</option>
                                 </select>
                             </td>
                             <th>View by</th>
                             <td>
-                                <select id="view" class="form-control constraint">
+                                <select id="viewScout" class="form-control constraintScout">
                                     <option value="default">Default Table</option>
-                                    <option value="date">Date</option>
                                     <option value="species">Species (Pests)</option>
                                     <option value="blockName">Blocks</option>
                                 </select>
@@ -101,17 +102,71 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-sm-12 tableDiv" id="scoutTableDiv"></div>
+
     </div>
-    <div class="col-sm-12">
-        <div id="tableDiv">
-            <table id="table"></table>
+
+    <div id="Treatment_Data" class="tab-pane fade">
+        <div id="constraintsDivTreatment" class="panel-group">
+            <div class="panel panel-default" style="padding: 0px">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span id="collapseIconTreatment" data-toggle="collapse" data-target="#collapsibleTableTreatment" class="glyphicon glyphicon-collapse-down collapse"></span>
+                        <span id="resetIconTreatment" class="glyphicon glyphicon-refresh pull-right refresh"></span>
+                        <strong> Constraints</strong>
+                    </h1>
+                </div>
+                <div id="collapsibleTableTreatment" class="panel-collapse collapse in">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th>Farm</th>
+                            <td>
+                                <select id="farmTreatment" class="form-control farms">
+                                    <option value="all">All Farms</option>
+                                </select>
+                            </td>
+                            <th>Date</th>
+                            <td rowspan="3">
+                                <label for="timeFromTreatment">From:</label>
+                                <input type="date" id="timeFromTreatment" class="form-control constraintTreatment dateFrom">
+
+                                <label for="timeToTreatment">To:</label>
+                                <input type="date" id="timeToTreatment" class="form-control constraintTreatment dateTo"><br/>
+                                <input class="constraintTreatment" id="dateAnyTreatment" type="checkbox"> Any
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Blocks</th>
+                            <td>
+                                <select id="blocksTreatment" class="form-control constraintTreatment">
+                                    <option value="all">All Blocks</option>
+                                </select>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th>View by</th>
+                            <td>
+                                <select id="viewTreatment" class="form-control constraintTreatment">
+                                    <option value="default">Default Table</option>
+                                    <option value="blockName">Blocks</option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-12 tableDiv" id="treatmentTableDiv"></div>
         </div>
     </div>
-</div>
 
+    </div>
 
+</div> 
 
-<button style="margin-top: 15px" id="generateBut" data-url="@Url.Content("~/api/records/" + @Model.ActiveFarmId)" class="btn-default" onclick="generate()">Generate tables</button>
 
 
 

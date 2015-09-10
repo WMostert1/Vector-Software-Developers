@@ -20,7 +20,7 @@ namespace BugWeb.Controllers
         // GET: reporting/tabular
         public ActionResult Tabular()
         {
-            return View();
+            return View(new ReportingViewModel(Session));
         }
 
         // GET: reporting/charts

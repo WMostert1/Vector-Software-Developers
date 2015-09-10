@@ -1,6 +1,14 @@
 ﻿body {
 }
 
-#tableDiv {
+.tableDiv {
     margin-top: 30px;
+}
+
+.collapse:hover {
+    cursor: pointer;
+}
+
+.refresh:hover {
+    cursor: pointer;
 }

@@ -205,6 +205,8 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\tableScout.js" />
+    <Content Include="Scripts\tableTreatment.js" />
     <Content Include="Scripts\typeahead.bundle.js" />
     <Content Include="Scripts\table.js" />
     <Content Include="Scripts\xdate.js" />
