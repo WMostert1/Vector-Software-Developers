@@ -6,15 +6,15 @@
 
 @section styles
 {
-     @Styles.Render("~/Content/css/chartist")
-     @Styles.Render("~/Content/css/typeahead")
-     @Styles.Render("~/Content/css/bootstrap-tagsinput")
-     @Styles.Render("~/Content/css/reporting")
+    @Styles.Render("~/Content/css/chartist")
+    @Styles.Render("~/Content/css/typeahead")
+    @Styles.Render("~/Content/css/bootstrap-tagsinput")
+    @Styles.Render("~/Content/css/reporting")
 }
 
 
 <div id="firstContentRow" class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-4">
 
 
         <!--Y-axis options for chart-->
@@ -23,7 +23,7 @@
             <option value="Bugs Per Tree">Bugs per Tree</option>
             <option value="Number of Bugs">Number of Bugs</option>
             <option value="Number of Trees">Number of Trees</option>
-        </select><br/>
+        </select><br />
 
 
         <!--X-axis options for chart-->
@@ -33,7 +33,7 @@
             <option value="Block">Block</option>
             <option value="Species">Species</option>
             <option value="Species Life Stage">Species Life Stage</option>
-        </select><br/>
+        </select><br />
 
 
         <!--Grouping options to determine chart type and series-->
@@ -43,7 +43,7 @@
             <option value="Block">Block</option>
             <option value="Species">Species</option>
             <option value="Species Life Stage">Species Life Stage</option>
-        </select><br/>
+        </select><br />
 
 
         <!--table of constraints for chart data-->
@@ -59,67 +59,74 @@
                 <div id="collapsibleTable" class="panel-collapse collapse">
                     <table class="table table-striped">
                         <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Settings</th>
-                        </tr>
+                            <tr>
+                                <th>Type</th>
+                                <th>Settings</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <th>Date</th>
-                            <td>
-                                <label for="constraintDateFrom">From:</label>
-                                <input type="date" id="constraintDateFrom" class="form-control chartControl">
-                                <label for="constraintDateTo">To:</label>
-                                <input type="date" id="constraintDateTo" class="form-control chartControl"><br/>
-                                <input id="constraintDateAny" type="checkbox" class="chartControl" checked> Any
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Farms</th>
-                            <td>
-                                <input id="constraintFarms" class="form-control chartControl" type="text"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Blocks</th>
-                            <td>
-                                <input id="constraintBlocks" class="form-control chartControl" type="text"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Species</th>
-                            <td>
-                                <input id="constraintSpecies" class="form-control chartControl" type="text"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Species Life Stage</th>
-                            <td>
-                                <input id="constraintLifeStage" class="form-control chartControl" type="text"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Number of Trees</th>
-                            <td>
-                                <label for="constraintTreesLower">From:</label>
-                                <input id="constraintTreesLower" class="form-control chartControl" type="number" min="1" value="1"/>
-                                <label for="constraintTreesUpper">To:</label>
-                                <input id="constraintTreesUpper" class="form-control chartControl" type="number" min="1" value="10"/><br/>
-                                <input id="constraintTreesAny" type="checkbox" class="chartControl" checked> Any
-                            </td>
-                        </tr>
+                            <tr>
+                                <th>Date</th>
+                                <td>
+                                    <label for="constraintDateFrom">From:</label>
+                                    <input type="date" id="constraintDateFrom" class="form-control chartControl">
+                                    <label for="constraintDateTo">To:</label>
+                                    <input type="date" id="constraintDateTo" class="form-control chartControl"><br />
+                                    <input id="constraintDateAny" type="checkbox" class="chartControl"> Any
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Farms</th>
+                                <td>
+                                    <input id="constraintFarms" class="form-control chartControl" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Blocks</th>
+                                <td>
+                                    <input id="constraintBlocks" class="form-control chartControl" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Species</th>
+                                <td>
+                                    <input id="constraintSpecies" class="form-control chartControl" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Species Life Stage</th>
+                                <td>
+                                    <input id="constraintLifeStage" class="form-control chartControl" type="text" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Number of Trees</th>
+                                <td>
+                                    <label for="constraintTreesLower">From:</label>
+                                    <input id="constraintTreesLower" class="form-control chartControl" type="number" min="1" value="1" />
+                                    <label for="constraintTreesUpper">To:</label>
+                                    <input id="constraintTreesUpper" class="form-control chartControl" type="number" min="1" value="10" /><br />
+                                    <input id="constraintTreesAny" type="checkbox" class="chartControl" checked> Any
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Treatments</th>
+                                <td>
+                                    <input id="constraintShowTreatments" type="checkbox" class="chartControl"> Overlay
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-9 text-center">
+    <div class="col-sm-8 text-center">
+        <!--Container for chart and axes titles-->
         <div id="chartAndLabelContainer" class="chartAndLabelContainerOnLoad">
-            <aside id="yAxisTitle" class="chartLabel">
+            <div id="yAxisTitle" class="chartLabel">
                 <h4></h4>
-            </aside>
+            </div>
             <div id="chartContainer" class="whirly-loader">
                 <div id="chartTitle" class="chartLabel">
                     <h1></h1>
@@ -129,7 +136,6 @@
                     <h4></h4>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>

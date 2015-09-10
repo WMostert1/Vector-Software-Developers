@@ -1,24 +1,30 @@
 ﻿/*
     Chart settings and other globals
 */
-
-//TODO: remember to update chart settings before the first draw of the chart
 var chartSettings = {};
+
+var viewModelToMemberMap = {
+    None: "none",
+    Date: "date",
+    Block: "blockName",
+    Species: "speciesName",
+    "Bugs Per Tree": "bugsPerTree",
+    "Species Life Stage": "lifeStage"
+}
 
 var species;
 var scoutStops;
 var treatments;
 
 
-
 /*
     Bind event handlers that interchange "collapse and expand icons"
 */
-$("#collapsibleTable").on("show.bs.collapse", function () {
+$("#collapsibleTable").on("show.bs.collapse", function() {
     $("#collapseIcon").attr("class", "glyphicon glyphicon-collapse-down");
 });
 
-$("#collapsibleTable").on("hide.bs.collapse", function () {
+$("#collapsibleTable").on("hide.bs.collapse", function() {
     $("#collapseIcon").attr("class", "glyphicon glyphicon-expand");
 });
 
@@ -32,7 +38,8 @@ $("#resetIcon").on("click", resetConstraints);
 /*
     Bind event handlers that respond to changes made in chart controls/constraints
 */
-$(".chartControl").change(updateChart);
+$(".chartControl").change(updateChartSettings);
+
 $("#constraintTreesLower").change(verifyTreesUpper);
 $("#constraintTreesUpper").change(verifyTreesLower);
 $("#constraintDateFrom").change(verifyToDate);
@@ -40,13 +47,10 @@ $("#constraintDateTo").change(verifyFromDate);
 $("#constraintTreesUpper, #constraintTreesLower").keypress(verifyTreesInput);
 
 
-
 /*
     Bind event handler that centers Y-Axis Title on window resize
 */
 $(window).resize(centerYAxisTitle);
-
-
 
 
 /*
@@ -69,49 +73,64 @@ function loadPests() {
             return;
         }
 
-        species = data.Species;
+        species = $.map(data.Species, function(s) {
+            s.Lifestage = mapSpeciesLifeStage(s.Lifestage);
+            return s;
+        });
 
-        var speciesNames = flattenDataArray("SpeciesName", data.Species);
+        var speciesNames = getUniqueEntries("SpeciesName", data.Species);
         initSuggestions("constraintSpecies", speciesNames);
+
+        //initialise suggestions to be all available lifestages
+        updateSuggestions("constraintSpecies", "constraintLifeStage", species, "SpeciesName", "Lifestage");
 
         $("#constraintSpecies").change(function() {
             updateSuggestions("constraintSpecies", "constraintLifeStage", species, "SpeciesName", "Lifestage");
         });
 
-        //function updateSuggestions(determinantId, subjectId, candidates, candidateMemberName, subject)
-        
     }, "Json");
 }
 
 function loadDataRecords() {
-    $.get(recordsUrl, function (data, status) {
+    $.get(recordsUrl, function(data, status) {
 
         if (status === "error" || status === "timeout") {
             alert("Some information couldn't be retrieved from the server. Please check your connection and try again.");
             return;
         }
 
-        treatments = data.Treatments;
+        treatments = flattenTreatments(data.Treatments);
         scoutStops = flattenScoutStops(data.ScoutStops);
 
-        var farmNames = flattenDataArray("BlockFarmFarmName", scoutStops.concat(treatments));
+        var farmNames = getUniqueEntries("farmName", scoutStops.concat(treatments));
 
         initSuggestions("constraintFarms", farmNames);
 
-       $("#constraintFarms").change(function() {
-           updateSuggestions("constraintFarms", "constraintBlocks", scoutStops.concat(treatments), "BlockFarmFarmName", "BlockBlockName");
-       });
+        //initialise suggestions to be all available blocks
+        updateSuggestions("constraintFarms", "constraintBlocks", scoutStops.concat(treatments), "farmName", "blockName");
+        
+        $("#constraintFarms").change(function() {
+            updateSuggestions("constraintFarms", "constraintBlocks", scoutStops.concat(treatments), "farmName", "blockName");
+        });
 
-        //disable css spinner, force-update chart settings, finally plot 
+        //disable loader, update chart settings, finally plot 
         initChart();
 
     }, "Json");
 }
 
-function flattenDataArray(flattenTo, data) {
+function mapSpeciesLifeStage(code) {
+    if (code === "0") {
+        return "Adult";
+    } else {
+        return "Instar " + code;
+    }
+}
+
+function getUniqueEntries(flattenTo, data) {
     var result = [];
 
-    $.each(data, function (index, object) {
+    $.each(data, function(index, object) {
         if ($.inArray(object[flattenTo], result) === -1)
             result.push(object[flattenTo]);
     });
@@ -119,13 +138,77 @@ function flattenDataArray(flattenTo, data) {
     return result;
 }
 
+function flattenTreatments(data) {
+    return $.map(data, function(treatment) {
+        return {
+            farmName: treatment.BlockFarmFarmName,
+            blockName: treatment.BlockBlockName,
+            comments: treatment.Comments,
+            date: new Date(treatment.Date)
+        };
+    });
+}
+
 function flattenScoutStops(data) {
     var result = [];
 
-   /* $.each(data.ScoutStops, function (index, scoutStop) {
-        $.each(scoutStop.ScoutBugs);
-    });*/
-    return data;
+    $.each(data, function(index, scoutStop) {
+        result = result.concat($.map(scoutStop.ScoutBugs, function(b) {
+            return {
+                farmName: scoutStop.BlockFarmFarmName,
+                blockName: scoutStop.BlockBlockName,
+                date: new Date(scoutStop.Date),
+                numberOfTrees: scoutStop.NumberOfTrees,
+                speciesName: b.SpeciesSpeciesName,
+                lifeStage: mapSpeciesLifeStage(b.SpeciesLifestage),
+                bugsPerTree: b.NumberOfBugs / scoutStop.NumberOfTrees,
+                numberOfBugs: b.NumberOfBugs,
+                comments: b.Comments
+            };
+        }));
+    });
+
+    return result;
+}
+
+function filterScoutStops(stops, settings) {
+    var taggedFarmNames = settings.constraintFarms.split(",");
+    var taggedBlockNames = settings.constraintBlocks.split(",");
+    var taggedSpeciesNames = settings.constraintSpecies.split(",");
+    var taggedLifeStages = settings.constraintLifeStage.split(",");
+
+    return $.grep(stops, function (s) {
+       return (settings.constraintDateAny ||
+        (s.date.valueOf() >= settings.constraintDateFrom.valueOf() &&
+            s.date.valueOf() <= settings.constraintDateTo.valueOf())) &&
+        (taggedFarmNames[0] === "" || //if no farms are tagged, select all
+            $.inArray(s.farmName, taggedFarmNames) >= 0) &&
+        (taggedBlockNames[0] === "" || //ditto
+            $.inArray(s.blockName, taggedBlockNames) >= 0) &&
+        (taggedSpeciesNames[0] === "" ||
+            $.inArray(s.speciesName, taggedSpeciesNames) >= 0) &&
+        (taggedLifeStages[0] === "" ||
+            $.inArray(s.lifeStage, taggedLifeStages) >= 0) &&
+        (settings.constraintTreesAny ||
+        (s.numberOfTrees >= settings.constraintTreesLower &&
+            s.numberOfTrees <= settings.constraintTreesUpper));
+    });
+}
+
+function filterTreatments(tr, settings) {
+    var taggedFarmNames = settings.constraintFarms.split(",");
+    var taggedBlockNames = settings.constraintBlocks.split(",");
+
+    return $.grep(tr, function (t) {
+        return (settings.constraintDateAny ||
+        (t.date.valueOf() >= settings.constraintDateFrom.valueOf() &&
+            t.date.valueOf() <= settings.constraintDateTo.valueOf())) &&
+        (taggedFarmNames[0] === "" || //if no farms are tagged, select all
+            $.inArray(t.farmName, taggedFarmNames) >= 0) &&
+        (taggedBlockNames[0] === "" || //ditto
+            $.inArray(t.blockName, taggedBlockNames) >= 0);
+
+    });
 }
 
 function initSuggestions(id, data) {
@@ -149,7 +232,24 @@ function initChart() {
     $("#chartAndLabelContainer").toggleClass("chartAndLabelContainerOnLoad");
     $("#chartContainer").toggleClass("whirly-loader");
     $(".chartLabel").css("visibility", "visible");
-    $(".chartControl").change();
+
+
+    chartSettings.view = $("#view").val();
+    chartSettings.against = $("#against").val();
+    chartSettings.grouping = $("#grouping").val();
+    chartSettings.constraintShowTreatments = $("#constraintShowTreatments").prop("checked");
+    chartSettings.constraintDateFrom = new Date($("#constraintDateFrom").val());
+    chartSettings.constraintDateTo = new Date($("#constraintDateTo").val());
+    chartSettings.constraintDateAny = $("#constraintDateAny").prop("checked");
+    chartSettings.constraintFarms = $("#constraintFarms").val();
+    chartSettings.constraintBlocks = $("#constraintBlocks").val();
+    chartSettings.constraintSpecies = $("#constraintSpecies").val();
+    chartSettings.constraintLifeStage = $("#constraintLifeStage").val();
+    chartSettings.constraintTreesLower = parseInt($("#constraintTreesLower").val());
+    chartSettings.constraintTreesUpper = parseInt($("#constraintTreesUpper").val());
+    chartSettings.constraintTreesAny = $("#constraintTreesAny").prop("checked");
+
+    updateChart(chartSettings);
 }
 
 function updateTitles() {
@@ -168,14 +268,25 @@ function updateTitles() {
     centerYAxisTitle();
 }
 
-function updateChartSettings(element) {
-    if ($(element).attr("type") === "checkbox")
-        chartSettings[$(element).attr("id")] = $(element).prop("checked");
-    else {
-        chartSettings[$(element).attr("id")] = $(element).val();
+function updateChartSettings() {
+    
+    //save data in the correct format depending on the type of input
+    switch ($(this).attr("type")) {
+    case "checkbox":
+        chartSettings[$(this).attr("id")] = $(this).prop("checked");
+        break;
+    case "date":
+        chartSettings[$(this).attr("id")] = new Date($(this).val());
+        break;
+    case "number":
+        chartSettings[$(this).attr("id")] = parseInt($(this).val());
+        break;
+    default:
+        chartSettings[$(this).attr("id")] = $(this).val();
+        break;
     }
 
-    console.log($(element).attr("id") + " - " + chartSettings[$(element).attr("id")]);
+    updateChart(chartSettings);
 }
 
 function initFromDate() {
@@ -187,40 +298,125 @@ function initToDate() {
     $("#constraintDateTo").val(new XDate().toString("yyyy-MM-dd"));
 }
 
-function plot(points, labels) {
+function plot(filteredScoutStops, filteredTreatments, settings) {
+    //todo: must check how labels are going to work, do that here
+
+    var plotParameters = determinePlotParameters(settings, filteredScoutStops);
+
+    //get categorised data ( or unaltered data if no grouping is applied)
+    var categorisedStops = groupBy(settings.grouping, filteredScoutStops);
+
     var x = new Chartist.Line("#chart", {
+        //data  
         series: [
-            [
-                { x: 1, y: 100 },
-                { x: 2, y: 50 },
-                { x: 3, y: 25 },
-                { x: 5, y: 12.5 },
-                { x: 8, y: 6.25 }
-            ]
+            {
+                name: "FirstSeries",
+                data: [
+                    { x: 5},
+                    { x: 6}
+                ]
+            }
         ]
     }, {
+//options
+        //seriesBarDistance: 20,
         showPoint: false,
         axisX: {
-            type: Chartist.AutoScaleAxis,
-            onlyInteger: true
-            //labelInterpolationFnc: function(value) {}
+//X axis options
+            type: Chartist.FixedScaleAxis,
+            //type: Chartist.AutoScaleAxis,
+            onlyInteger: true,
+    //labelInterpolationFnc: interpolateLabelDate
+},
+        series: {
+//series options
+            FirstSeries: {
+                linesmooth: false
+            }
         }
     });
 }
 
+function getBugsPerTree(stop) {
+    return stop.numberOfBugs / stop.numberOfTrees;
+}
+
+function isCategorical(setting) {
+    return (setting !== "Date");
+}
+
+function groupBy(setting, stops) {
+    //define a mapping between the setting's name 
+    //  and the member name in stops
+    var memberName = viewModelToMemberMap[setting];
+
+    //note that the first element of each subarray is used to store the category name
+    var categorisedStops = [];
+
+    //don't categorise the stops
+    if (memberName === "none") {
+        stops.unshift(memberName);
+        categorisedStops.push(stops);
+        return categorisedStops;
+    }
+
+    //acquire unique entries to form categories
+    var categories = getUniqueEntries(memberName, stops);
+
+    $.each(categories, function (i, c) {
+        var category = $.grep(stops, function(s) {
+            return s[memberName] === c;
+        });
+
+        category.unshift(c);
+        categorisedStops.push(category);
+    });
+
+    return categorisedStops;
+}
+
+function determinePlotParameters(settings, categorisedStops) {
+    //mapping to x member
+    var xMemberName = viewModelToMemberMap[settings.against];
+    
+    //mapping to y member
+    var yMemberName = viewModelToMemberMap[settings.view];
+
+    //determine chartType
+    var chartType = isCategorical(settings.against) ? "Bar" : "Line";
+
+    var parameters = {};
+    var labels = [];
+    var series = [];
+
+    //for each array of stops in catStops
+    //  create a Series object that will be consumed by chartist
+    //  ie {name: ...., data: [{x:...,y:...},...]}
+    $.each(categorisedStops, function(i, c) {
+
+    });
+}
+
+function interpolateLabelDate(value) {
+    return new XDate(value).toString("dd MMM yy");
+}
 
 
 /*
     Event Handlers
 */
 function verifyTreesUpper() {
-    if (parseInt($("#constraintTreesUpper").val()) < parseInt($(this).val()))
+    if (parseInt($("#constraintTreesUpper").val()) < parseInt($(this).val())) {
         $("#constraintTreesUpper").val($(this).val());
+        $("#constraintTreesUpper").change();
+    }
 }
 
 function verifyTreesLower() {
-    if (parseInt($("#constraintTreesLower").val()) > parseInt($(this).val()))
+    if (parseInt($("#constraintTreesLower").val()) > parseInt($(this).val())) {
         $("#constraintTreesLower").val($(this).val());
+        $("#constraintTreesLower").change();
+    }
 }
 
 function verifyToDate() {
@@ -244,15 +440,23 @@ function verifyTreesInput(evt) {
     }
 }
 
-function updateChart() {
-    updateChartSettings(this);
-    plot();
+function updateChart(settings) {
+    console.log(filterScoutStops(scoutStops, settings));
+    var filteredScoutStops = filterScoutStops(scoutStops, settings);
+    var filteredTreatments = [];
+
+    if (settings.constraintShowTreatments)
+        filteredTreatments = filterTreatments(treatments, settings);
+
+    plot(filteredScoutStops, filteredTreatments, settings);
+
     updateTitles();
 }
 
 function resetConstraints() {
     initFromDate();
     initToDate();
+    $("#constraintShowTreatments").prop("checked", false);
     $("#constraintDateAny").prop("checked", false);
     $("#constraintDateAny").change();
     $("#constraintFarms").tagsinput("removeAll");
@@ -268,26 +472,31 @@ function resetConstraints() {
 }
 
 function centerYAxisTitle() {
-    $("#yAxisTitle").css("top", 0.5 * $("#chartContainer").height() + "px");
+    $("#yAxisTitle").css("top", 0.5 * $("#chartContainer").height() + $("#yAxisTitle").width() / 2 + "px");
 }
 
 function updateSuggestions(determinantId, subjectId, candidates, candidateMemberName, subject) {
     var taggedNames = $("#" + determinantId).val().split(",");
 
-    var newSuggestions = "";
+    var newSuggestions;
 
     if (taggedNames[0] !== "") {
-        var taggedObjects = $(candidates).filter(function (index, object) {
+        var taggedObjects = $(candidates).filter(function(index, object) {
             return $.inArray(object[candidateMemberName], taggedNames) >= 0;
         });
 
-        newSuggestions = flattenDataArray(subject, taggedObjects);
+        newSuggestions = getUniqueEntries(subject, taggedObjects);
+    } else {
+        newSuggestions = getUniqueEntries(subject, candidates);
     }
 
-    //remove any tags currently in subject
-    $("#" + subjectId).tagsinput("removeAll");
+    //remove any tags currently in subject, if any
+    if ($("#" + subjectId).val().split(",")[0] !== "")
+        $("#" + subjectId).tagsinput("removeAll");
+    
 
     //remove current tagsinput behaviour, if any
+    $("#" + subjectId).tagsinput();
     $("#" + subjectId).tagsinput("destroy");
 
     initSuggestions(subjectId, newSuggestions);
