@@ -136,7 +136,7 @@ function generateFirstTimeScout() {
     var table = $(document.createElement("table"));
     table.attr("id", "scoutTable");
     table.attr("class", "row-border");
-    table.attr("class", "fade in active");
+    table.attr("class", "display");
     table.attr("style", "border: 1px solid #D8D8D8");
     $("#scoutTableDiv").append(table);
     dataTablesForScout = $("#scoutTable").DataTable({

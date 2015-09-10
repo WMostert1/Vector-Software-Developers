@@ -76,6 +76,7 @@ function generateFirstTimeTreatment() {
     var table = $(document.createElement("table"));
     table.attr("id", "treatmentTable");
     table.attr("class", "row-border");
+    table.attr("class", "display");
     table.attr("style", "border: 1px solid #D8D8D8");
     $("#treatmentTableDiv").append(table);
     dataTablesForTreatment = $("#treatmentTable").DataTable({
