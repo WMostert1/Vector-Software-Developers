@@ -1,4 +1,6 @@
-﻿/*
+﻿//todo: check licence requirements of all borrowed code and assets
+
+/*
     Chart settings and other globals
 */
 var chartSettings = {};
@@ -281,11 +283,138 @@ function plot(filteredScoutStops, filteredTreatments, settings) {
 
     //console.log("Grouped by " + settings.grouping, categorisedStops);
 
-    var parameters = determinePlotParameters(settings, categorisedStops);
+    var parameters = determinePlotParameters(settings, categorisedStops, filteredTreatments);
 
-    //console.log("Plotting with this", JSON.stringify(parameters));
+    //console.log("Plotting with this", JSON.stringify(parameters, null, 2));
 
-    var x = new Chartist[parameters.chartType]("#chart", parameters.data, parameters.options);
+    var chart = new Chartist[parameters.chartType]("#chart", parameters.data, parameters.options);
+
+}
+
+function determinePlotParameters(settings, categorisedStops, filteredTreatments) {
+    //mapping to x member
+    var xMemberName = viewModelToMemberMap[settings.against];
+    
+    //mapping to y member
+    //note that this may map to the quasi-member: bugsPerTree
+    //  for which there is no corresponding member variable in scoutStops
+    var yMemberName = viewModelToMemberMap[settings.view];
+
+    //determine chartType
+    var chartType = isCategorical(settings.against) ? "Bar" : "Line";
+   
+    //Acquire various chart parameters
+    var parameters = {};
+    parameters.chartType = chartType;
+    parameters.options = {}
+    parameters.options.plugins = [];
+    
+    if (chartType === "Line") {
+        saveLineChartParameters(parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops, filteredTreatments);
+        if (settings.constraintShowTreatments) {
+            addTreatments(parameters, filteredTreatments);
+        }
+    } else if (chartType === "Bar") {
+        saveBarChartParamaters(parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops, filteredTreatments);
+    }
+
+    //Add options common to all charts
+
+    //always start y axis at 0
+    parameters.options.axisY.low = 0;
+
+    //For all y data except Bugs per Tree, use integers
+    if (yMemberName !== "bugsPerTree")
+        parameters.options.axisY.onlyInteger = true;
+
+    //Axis Title Plugin
+    setAxesTitles(parameters.options.plugins, settings);
+
+    //Tooltip Plugin
+    parameters.options.plugins.push(Chartist.plugins.tooltip(parameters.options));
+
+   return parameters;
+
+}
+
+function saveLineChartParameters(parameters, xMemberName, yMemberName, aggregateType, categorisedStops, filteredTreatments) {
+    var seriesArray = [];
+    
+    $.each(categorisedStops, function(i, c) {
+        var s = {};
+
+        //series name is the first element of c
+        s.name = c.shift();
+
+        //group each x value with its corresponding y values, sorting x in ascending order
+        var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(sortByFirstElement);
+
+       //console.log("Points for " + s.name, sortedXCategorisedPoints);
+
+        s.data = getLineSeriesData(yMemberName, aggregateType, filteredTreatments, sortedXCategorisedPoints);
+
+        seriesArray.push(s);
+    });
+    
+    parameters.data = { series: seriesArray };
+
+    parameters.options.showPoint = true;
+    parameters.options.axisY = {};
+    parameters.options.axisX = {
+        type: Chartist.FixedScaleAxis,
+        divisor: 10,
+        labelInterpolationFnc: millisToDateString
+    };
+
+    parameters.options.tooltipFnc = getTooltipText;
+
+    
+
+}
+
+function getLineSeriesData(yMember, aggregateType, filteredTreatments, sortedXCategorisedPoints) {
+    var xy = [];
+    
+    $.each(sortedXCategorisedPoints, function (i, points) {
+        var xValue = points.shift();
+        
+        //xAndYs from this point only includes ys
+        var yAggregate = reduceToSingleY(yMember, aggregateType, points);
+        
+        xy.push({ x: xValue, y: yAggregate });
+
+    });
+
+    return xy;
+
+}
+
+function addTreatments(parameters, treatments) {
+    var newSeries = {
+        name: "Treatments",
+        data: []
+    }
+
+    var vLinePositions = [];
+
+    $.each(treatments, function (i, treatment) {
+        newSeries.data.push({ x: treatment.date, y: -1 });
+        vLinePositions.push(treatment.date.valueOf());
+    });
+
+    parameters.data.series.push(newSeries);
+    
+    parameters.options.plugins.push(Chartist.plugins.verticalLines({
+        positions: vLinePositions
+    }));
+
+    parameters.options.series = {
+        "Treatments": {
+            showLine: false
+        }
+    };
+
+
 }
 
 function isCategorical(setting) {
@@ -307,7 +436,7 @@ function groupBy(memberName, stops) {
     var categories = getUniqueEntries(memberName, stops);
 
     $.each(categories, function (i, c) {
-        var category = $.grep(stops, function(s) {
+        var category = $.grep(stops, function (s) {
             return s[memberName].valueOf() === c.valueOf();
         });
 
@@ -316,129 +445,6 @@ function groupBy(memberName, stops) {
     });
 
     return categorisedStops;
-}
-
-function determinePlotParameters(settings, categorisedStops) {
-    //mapping to x member
-    var xMemberName = viewModelToMemberMap[settings.against];
-    
-    //mapping to y member
-    //note that this may map to the quasi-member: bugsPerTree
-    //  for which there is no corresponding member variable in scoutStops
-    var yMemberName = viewModelToMemberMap[settings.view];
-
-    //determine chartType
-    var chartType = isCategorical(settings.against) ? "Bar" : "Line";
-   
-    //Acquire various chart parameters
-    var parameters = {};
-    parameters.chartType = chartType;
-    parameters.options = {}
-    parameters.options.plugins = [];
-    
-    if (chartType === "Line") {
-        saveLineChartParameters(parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops);
-        if (settings.constraintShowTreatments) {
-            
-        }
-    } else if (chartType === "Bar") {
-        saveBarChartParamaters(parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops);
-    }
-
-    //Add options common to all charts
-
-    //always start y axis at 0
-    parameters.options.axisY.low = 0;
-
-    //For all y data except Bugs per Tree, use integers
-    if (yMemberName !== "bugsPerTree")
-        parameters.options.axisY.onlyInteger = true;
-
-    //Axis Title Plugin
-    setAxesTitles(parameters.options.plugins, settings);
-
-    //Tooltip Plugin
-    parameters.options.plugins.push(Chartist.plugins.tooltip(parameters.options));
-
-    
-
-    return parameters;
-
-}
-
-function saveLineChartParameters(parameters, xMemberName, yMemberName, aggregateType, categorisedStops) {
-    var seriesArray = [];
-
-    $.each(categorisedStops, function(i, c) {
-        var s = {};
-
-        //series name is the first element of c
-        s.name = c.shift();
-
-        //group each x value with its corresponding y values, sorting x in ascending order
-        var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(sortingPredicate);
-
-        //console.log("Points for " + s.name, sortedXCategorisedPoints);
-
-        s.data = getLineXYpoints(yMemberName, aggregateType, sortedXCategorisedPoints);
-
-        seriesArray.push(s);
-    });
-
-    parameters.data = { series: seriesArray };
-
-    parameters.options.showPoint = true;
-    parameters.options.axisY = {};
-    parameters.options.axisX = {
-        type: Chartist.FixedScaleAxis,
-        divisor: 10,
-        labelInterpolationFnc: millisToDateString
-    };
-
-    parameters.options.tooltipFnc = getTooltipText;
-
-}
-
-function setAxesTitles(plugins, settings) {
-    plugins.push(Chartist.plugins.ctAxisTitle({
-        axisX: {
-            axisTitle: settings.against,
-            axisClass: "ct-axis-title",
-            offset: {
-                x: 0,
-                y: 35
-            },
-            textAnchor: "middle"
-        },
-        axisY: {
-            axisTitle: settings.aggregateType + " " + settings.view,
-            axisClass: "ct-axis-title",
-            offset: {
-                x: 0,
-                y: 15
-            },
-            textAnchor: "middle",
-            flipTitle: true
-        }
-    }));
-}
-
-function getLineXYpoints(yMember, aggregateType, sortedXCategorisedPoints) {
-    var xy = [];
-    
-    $.each(sortedXCategorisedPoints, function (i, points) {
-        var xValue = points.shift();
-        
-        //xAndYs from this point only includes ys
-        var yAggregate = reduceToSingleY(yMember, aggregateType, points);
-        
-
-        xy.push({ x: xValue, y: yAggregate });
-
-    });
-
-    return xy;
-
 }
 
 function reduceToSingleY(yMember, aggregateType, yList) {
@@ -469,7 +475,7 @@ function saveBarChartParamaters(parameters, labelBy, yMemberName, aggregateType,
         
 }
 
-function sortingPredicate(a, b) {
+function sortByFirstElement(a, b) {
     if (a[0].valueOf() > b[0].valueOf()) {
         return 1;
     } else if (a[0].valueOf() < b[0].valueOf()) {
@@ -478,8 +484,41 @@ function sortingPredicate(a, b) {
     return 0;
 }
 
+function sortByPrimitiveValue(a, b) {
+    if (a.valueOf() > b.valueOf()) {
+        return 1;
+    } else if (a.valueOf() < b.valueOf()) {
+        return -1;
+    }
+    return 0;
+}
+
 function millisToDateString(value) {
     return new XDate(value).toString("dd MMM yy");
+}
+
+function setAxesTitles(plugins, settings) {
+    plugins.push(Chartist.plugins.ctAxisTitle({
+        axisX: {
+            axisTitle: settings.against,
+            axisClass: "ct-axis-title",
+            offset: {
+                x: 0,
+                y: 35
+            },
+            textAnchor: "middle"
+        },
+        axisY: {
+            axisTitle: settings.aggregateType + " " + settings.view,
+            axisClass: "ct-axis-title",
+            offset: {
+                x: 0,
+                y: 15
+            },
+            textAnchor: "middle",
+            flipTitle: true
+        }
+    }));
 }
 
 function getTooltipText(meta, values, seriesName, classes) {
@@ -491,6 +530,9 @@ function getTooltipText(meta, values, seriesName, classes) {
         return seriesName + "<br/>" + x + ", " + y;
     }
 }
+
+
+
 /*
     Event Handlers
 */

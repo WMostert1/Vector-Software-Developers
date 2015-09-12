@@ -20,9 +20,14 @@
 }
 
 .vertical-line {
-    stroke: orange;
-    stroke-width: 3px;
+    stroke: lightblue;
+    stroke-dasharray: 10px 10px;
+    stroke-width: 2px;
+    stroke-linecap: round;
  }
+
+.vertical-line-label {
+}
 
 .chartist-tooltip {
     border-radius: 15px;

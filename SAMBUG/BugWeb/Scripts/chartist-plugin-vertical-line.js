@@ -31,14 +31,13 @@
     var VerticalLine = function (chart, chartRect, options) {
 
       var labelClassName = options.className + '-label';
-      //var $label = $('.' + labelClassName);
-
-      //if (!$label.length) {
-        var $label = $('<span class="' + labelClassName + '" style="position: absolute"></span>')
-            .appendTo(chart.container)
-            .hide();
+      
+      var  $label = $('<span class="' + labelClassName + '" style="position: absolute"></span>')
+          .appendTo(chart.container)
+          .hide();
 
       this.show = function (x) {
+
         $label
           .html(options.label || '')
           .css({ left: x - $label.width() / 2 })
@@ -54,42 +53,39 @@
     };
 
     Chartist.plugins = Chartist.plugins || {};
-    Chartist.plugins.verticalLine = function (options) {
-
+    Chartist.plugins.verticalLines = function (options) {
+     
       options = Chartist.extend({}, defaultOptions, options);
 
+        
       return function (chart) {
 
         if (!(chart instanceof Chartist.Line)) {
           return;
         }
 
-        var position = {};
-
-        chart.on('data', function () {
-          position.index = chart.data.labels.indexOf(options.position);
-        });
+        var positions = [];
 
         chart.on('draw', function (data) {
-          if (position.index !== -1 && data.type === 'point' && data.index === position.index) {
-            position.x = data.x;
-          }
+            
+            if (data.type === 'point' && ($.inArray(data.value.x.valueOf(), options.positions)) >= 0 && data.value.y === -1) {
+                console.log(data.value.x, data.value.y);
+                positions.push(data.x);
+                data.element.remove();
+            }
         });
 
         chart.on('created', function (data) {
-
-          if (position.index === -1) {
-            return;
-          }
-
-          var verticalLine = new VerticalLine(chart, data.chartRect, options);
-          verticalLine.show(position.x);
+            $.each(positions, function(i, pos) {
+                var verticalLine = new VerticalLine(chart, data.chartRect, options);
+                verticalLine.show(pos);
+            });
         });
       };
     };
 
   }(window, document, Chartist));
 
-  return Chartist.plugins.verticalLine;
+  return Chartist.plugins.verticalLines;
 
 }));
