@@ -54,6 +54,12 @@ namespace BugWeb
             bundles
                 .Add(new ScriptBundle("~/bundles/chartist", cdnJsChartist)
                 .Include("~/Scripts/chartist.js"));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/chartist-plugins")
+                .Include("~/Scripts/chartist-plugin-vertical-line.js",
+                "~/Scripts/chartist-plugin-tooltip.js",
+                "~/Scripts/chartist-plugin-axistitle.js"));
                 
             bundles
                 .Add(new StyleBundle("~/Content/css")

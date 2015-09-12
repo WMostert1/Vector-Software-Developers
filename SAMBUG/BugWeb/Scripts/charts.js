@@ -4,11 +4,11 @@
 var chartSettings = {};
 
 var viewModelToMemberMap = {
-    None: "none",
+    None: "All Data",
     Date: "date",
     Block: "blockName",
     Species: "speciesName",
-    "Bugs per Tree": "bugsPerTree",
+    "Bugs per Tree": "bugsPerTree",//this is a quasi-member
     "Number of Bugs": "numberOfBugs",
     "Number of Trees": "numberOfTrees",
     "Species Life Stage": "lifeStage"
@@ -40,19 +40,13 @@ $("#resetIcon").on("click", resetConstraints);
 /*
     Bind event handlers that respond to changes made in chart controls/constraints
 */
-$(".chartControl").change(updateChartSettings);
-
+$("#view").change(saveAggregateType);
 $("#constraintTreesLower").change(verifyTreesUpper);
 $("#constraintTreesUpper").change(verifyTreesLower);
 $("#constraintDateFrom").change(verifyToDate);
 $("#constraintDateTo").change(verifyFromDate);
 $("#constraintTreesUpper, #constraintTreesLower").keypress(verifyTreesInput);
-
-
-/*
-    Bind event handler that centers Y-Axis Title on window resize
-*/
-$(window).resize(centerYAxisTitle);
+$(".chartControl").change(updateChartSettings);
 
 
 /*
@@ -103,6 +97,8 @@ function loadDataRecords() {
 
         treatments = flattenTreatments(data.Treatments);
         scoutStops = flattenScoutStops(data.ScoutStops);
+
+       // console.log("Initial Data",scoutStops);
         
         var farmNames = getUniqueEntries("farmName", scoutStops.concat(treatments));
 
@@ -129,14 +125,14 @@ function mapSpeciesLifeStage(code) {
     }
 }
 
-function getUniqueEntries(flattenTo, data) {
+function getUniqueEntries(uniqueFor, data) {
     var result = [];
 
     $.each(data, function(index, object) {
         if ($.grep(result, function(d) {
-            return object[flattenTo].valueOf() === d.valueOf();
+            return object[uniqueFor].valueOf() === d.valueOf();
         }).length === 0)
-            result.push(object[flattenTo]);
+            result.push(object[uniqueFor]);
     });
 
     return result;
@@ -165,7 +161,6 @@ function flattenScoutStops(data) {
                 numberOfTrees: parseInt(scoutStop.NumberOfTrees),
                 speciesName: b.SpeciesSpeciesName,
                 lifeStage: mapSpeciesLifeStage(b.SpeciesLifestage),
-                bugsPerTree: b.NumberOfBugs / scoutStop.NumberOfTrees,
                 numberOfBugs: parseInt(b.NumberOfBugs),
                 comments: b.Comments
             };
@@ -181,24 +176,20 @@ function filterScoutStops(stops, settings) {
     var taggedSpeciesNames = settings.constraintSpecies.split(",");
     var taggedLifeStages = settings.constraintLifeStage.split(",");
 
-    return $.grep(stops, function (s) {
-       return (settings.constraintDateAny ||
+    return $.grep(stops, function(s) {
+        return (settings.constraintDateAny ||
         (s.date.valueOf() >= settings.constraintDateFrom.valueOf() &&
             s.date.valueOf() <= settings.constraintDateTo.valueOf())) &&
-        (taggedFarmNames[0] === "" || //if no farms are tagged, select all
-            $.inArray(s.farmName, taggedFarmNames) >= 0) &&
-        (taggedBlockNames[0] === "" || //ditto
-            $.inArray(s.blockName, taggedBlockNames) >= 0) &&
-        (taggedSpeciesNames[0] === "" ||
-            $.inArray(s.speciesName, taggedSpeciesNames) >= 0) &&
-        (taggedLifeStages[0] === "" ||
-            $.inArray(s.lifeStage, taggedLifeStages) >= 0) &&
+        (taggedFarmNames[0] === "" || $.inArray(s.farmName, taggedFarmNames) >= 0) &&
+        (taggedBlockNames[0] === "" || $.inArray(s.blockName, taggedBlockNames) >= 0) &&
+        (taggedSpeciesNames[0] === "" || $.inArray(s.speciesName, taggedSpeciesNames) >= 0) &&
+        (taggedLifeStages[0] === "" || $.inArray(s.lifeStage, taggedLifeStages) >= 0) &&
         (settings.constraintTreesAny ||
         (s.numberOfTrees >= settings.constraintTreesLower &&
             s.numberOfTrees <= settings.constraintTreesUpper));
     });
 }
-
+                
 function filterTreatments(tr, settings) {
     var taggedFarmNames = settings.constraintFarms.split(",");
     var taggedBlockNames = settings.constraintBlocks.split(",");
@@ -207,11 +198,8 @@ function filterTreatments(tr, settings) {
         return (settings.constraintDateAny ||
         (t.date.valueOf() >= settings.constraintDateFrom.valueOf() &&
             t.date.valueOf() <= settings.constraintDateTo.valueOf())) &&
-        (taggedFarmNames[0] === "" || //if no farms are tagged, select all
-            $.inArray(t.farmName, taggedFarmNames) >= 0) &&
-        (taggedBlockNames[0] === "" || //ditto
-            $.inArray(t.blockName, taggedBlockNames) >= 0);
-
+        (taggedFarmNames[0] === "" || $.inArray(t.farmName, taggedFarmNames) >= 0) &&
+        (taggedBlockNames[0] === "" || $.inArray(t.blockName, taggedBlockNames) >= 0);
     });
 }
 
@@ -233,11 +221,11 @@ function initSuggestions(id, data) {
 
 
 function initChart() {
-    $("#chartAndLabelContainer").toggleClass("chartAndLabelContainerOnLoad");
+    $("#chartContainerOnLoad").toggleClass("chartContainerOnLoad");
     $("#chartContainer").toggleClass("whirly-loader");
     $(".chartLabel").css("visibility", "visible");
 
-
+    chartSettings.aggregateType = $("#view").find(":selected").parent().attr("label");
     chartSettings.view = $("#view").val();
     chartSettings.against = $("#against").val();
     chartSettings.grouping = $("#grouping").val();
@@ -256,20 +244,10 @@ function initChart() {
     updateChart(chartSettings);
 }
 
-function updateTitles() {
+function updateChartTitle() {
     $("#chartTitle h1").text(
-        $("#view").val() + " vs " + $("#against").val()
+        chartSettings.aggregateType + " " + chartSettings.view + " vs " + chartSettings.against
     );
-
-    $("#yAxisTitle h4").text(
-        $("#view").val()
-    );
-
-    $("#xAxisTitle h4").text(
-        $("#against").val()
-    );
-
-    centerYAxisTitle();
 }
 
 function initFromDate() {
@@ -283,29 +261,31 @@ function initToDate() {
 
 function updateChart(settings) {
     var filteredScoutStops = filterScoutStops(scoutStops, settings);
+
+    //console.log("Constrained Data", filteredScoutStops);
+
     var filteredTreatments = [];
 
     if (settings.constraintShowTreatments)
         filteredTreatments = filterTreatments(treatments, settings);
 
+    updateChartTitle();
     plot(filteredScoutStops, filteredTreatments, settings);
-
-    updateTitles();
 }
 
 function plot(filteredScoutStops, filteredTreatments, settings) {
     //todo: must check how labels are going to work, do that here
 
-    //get categorised data ( or unaltered data if no grouping is applied)
+    //get categorised data (or unaltered data if no grouping is applied)
     var categorisedStops = groupBy(viewModelToMemberMap[settings.grouping], filteredScoutStops);
+
+    //console.log("Grouped by " + settings.grouping, categorisedStops);
 
     var parameters = determinePlotParameters(settings, categorisedStops);
 
-    var x = new Chartist[parameters.chartType]("#chart", parameters.data, parameters.options);
-}
+    //console.log("Plotting with this", JSON.stringify(parameters));
 
-function getBugsPerTree(stop) {
-    return stop.numberOfBugs / stop.numberOfTrees;
+    var x = new Chartist[parameters.chartType]("#chart", parameters.data, parameters.options);
 }
 
 function isCategorical(setting) {
@@ -317,7 +297,7 @@ function groupBy(memberName, stops) {
     var categorisedStops = [];
 
     //don't categorise the stops
-    if (memberName === "none") {
+    if (memberName === "All Data") {
         stops.unshift(memberName);
         categorisedStops.push(stops);
         return categorisedStops;
@@ -343,71 +323,117 @@ function determinePlotParameters(settings, categorisedStops) {
     var xMemberName = viewModelToMemberMap[settings.against];
     
     //mapping to y member
+    //note that this may map to the quasi-member: bugsPerTree
+    //  for which there is no corresponding member variable in scoutStops
     var yMemberName = viewModelToMemberMap[settings.view];
 
     //determine chartType
     var chartType = isCategorical(settings.against) ? "Bar" : "Line";
-
+   
+    //Acquire various chart parameters
     var parameters = {};
-
     parameters.chartType = chartType;
-
+    parameters.options = {}
+    parameters.options.plugins = [];
+    
     if (chartType === "Line") {
-        getLineChartParameters(parameters, xMemberName, yMemberName, categorisedStops);
-    } else {
-        getBarChartParamaters(parameters, xMemberName, yMemberName, categorisedStops);
+        saveLineChartParameters(parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops);
+        if (settings.constraintShowTreatments) {
+            
+        }
+    } else if (chartType === "Bar") {
+        saveBarChartParamaters(parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops);
     }
+
+    //Add options common to all charts
+
+    //always start y axis at 0
+    parameters.options.axisY.low = 0;
+
+    //For all y data except Bugs per Tree, use integers
+    if (yMemberName !== "bugsPerTree")
+        parameters.options.axisY.onlyInteger = true;
+
+    //Axis Title Plugin
+    setAxesTitles(parameters.options.plugins, settings);
+
+    //Tooltip Plugin
+    parameters.options.plugins.push(Chartist.plugins.tooltip(parameters.options));
+
+    
 
     return parameters;
 
 }
 
-function getLineChartParameters(parameters, xMemberName, yMemberName, categorisedStops) {
-    //for each array of stops in catStops
-    //  create a Series object that will be consumed by chartist
-    //  ie {name: ...., data: [{x:...,y:...},...]}
+function saveLineChartParameters(parameters, xMemberName, yMemberName, aggregateType, categorisedStops) {
     var seriesArray = [];
 
-    $.each(categorisedStops, function (i, c) {
+    $.each(categorisedStops, function(i, c) {
         var s = {};
+
+        //series name is the first element of c
         s.name = c.shift();
 
-        //ensure x values are sorted in ascending order
-        var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(predicateSort);
+        //group each x value with its corresponding y values, sorting x in ascending order
+        var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(sortingPredicate);
 
-        s.data = getLineXYpoints(yMemberName, sortedXCategorisedPoints);
+        //console.log("Points for " + s.name, sortedXCategorisedPoints);
+
+        s.data = getLineXYpoints(yMemberName, aggregateType, sortedXCategorisedPoints);
 
         seriesArray.push(s);
     });
 
     parameters.data = { series: seriesArray };
 
-    parameters.options = {
-        showPoint: true,
-        lineSmooth: Chartist.Interpolation.simple({
-            divisor: 2
-        }),
-        axisX: {
-            type: Chartist.FixedScaleAxis,
-            divisor: 10,
-            labelInterpolationFnc: interpolateLabelDate
-        }
+    parameters.options.showPoint = true;
+    parameters.options.axisY = {};
+    parameters.options.axisX = {
+        type: Chartist.FixedScaleAxis,
+        divisor: 10,
+        labelInterpolationFnc: millisToDateString
     };
+
+    parameters.options.tooltipFnc = getTooltipText;
 
 }
 
-function getLineXYpoints(yMember, sortedXCategorisedPoints) {
+function setAxesTitles(plugins, settings) {
+    plugins.push(Chartist.plugins.ctAxisTitle({
+        axisX: {
+            axisTitle: settings.against,
+            axisClass: "ct-axis-title",
+            offset: {
+                x: 0,
+                y: 35
+            },
+            textAnchor: "middle"
+        },
+        axisY: {
+            axisTitle: settings.aggregateType + " " + settings.view,
+            axisClass: "ct-axis-title",
+            offset: {
+                x: 0,
+                y: 15
+            },
+            textAnchor: "middle",
+            flipTitle: true
+        }
+    }));
+}
+
+function getLineXYpoints(yMember, aggregateType, sortedXCategorisedPoints) {
     var xy = [];
+    
+    $.each(sortedXCategorisedPoints, function (i, points) {
+        var xValue = points.shift();
+        
+        //xAndYs from this point only includes ys
+        var yAggregate = reduceToSingleY(yMember, aggregateType, points);
+        
 
-    $.each(sortedXCategorisedPoints, function (i, ps) {
-        var xValue = ps.shift();
-        var yValue = 0.0;
-
-        $.each(ps, function (j, p) {
-            yValue += p[yMember];
-        });
-
-        xy.push({ x: xValue, y: yValue });
+        xy.push({ x: xValue, y: yAggregate });
 
     });
 
@@ -415,13 +441,35 @@ function getLineXYpoints(yMember, sortedXCategorisedPoints) {
 
 }
 
-function getBarChartParamaters(parameters, labelBy, yMemberName, categorisedStops) {
+function reduceToSingleY(yMember, aggregateType, yList) {
+    var bugs = 0, trees = 0;
+    var yAggregate = 0.0;
+
+    if (yMember === "bugsPerTree") {
+        //only averages seem to make sense for bugsPerTree
+        $.each(yList, function (j, y) {
+            bugs += y.numberOfBugs;
+            trees += y.numberOfTrees;
+        });
+
+        yAggregate = bugs / trees;
+    } else {
+        $.each(yList, function (j, y) {
+            yAggregate += y[yMember];
+        });
+
+        if (aggregateType === "Average")
+            yAggregate /= yList.length;
+    }
+
+    return yAggregate;
+}
+
+function saveBarChartParamaters(parameters, labelBy, yMemberName, aggregateType, categorisedStops) {
         
 }
 
-
-
-function predicateSort(a, b) {
+function sortingPredicate(a, b) {
     if (a[0].valueOf() > b[0].valueOf()) {
         return 1;
     } else if (a[0].valueOf() < b[0].valueOf()) {
@@ -430,14 +478,26 @@ function predicateSort(a, b) {
     return 0;
 }
 
-function interpolateLabelDate(value) {
+function millisToDateString(value) {
     return new XDate(value).toString("dd MMM yy");
 }
 
-
+function getTooltipText(meta, values, seriesName, classes) {
+    if (classes.indexOf("ct-line") >= 0) {
+        return seriesName;
+    } else {
+        var x = millisToDateString(parseInt(values.split(",")[0]));
+        var y = parseFloat(values.split(",")[1]).toFixed(2).toString();
+        return seriesName + "<br/>" + x + ", " + y;
+    }
+}
 /*
     Event Handlers
 */
+function saveAggregateType() {
+    chartSettings.aggregateType = $(this).find(":selected").parent().attr("label");
+}
+
 function verifyTreesUpper() {
     if (parseInt($("#constraintTreesUpper").val()) < parseInt($(this).val())) {
         $("#constraintTreesUpper").val($(this).val());
@@ -513,10 +573,6 @@ function resetConstraints() {
     $("#constraintTreesUpper").change();
     $("#constraintTreesAny").prop("checked", true);
     $("#constraintTreesAny").change();
-}
-
-function centerYAxisTitle() {
-    $("#yAxisTitle").css("top", 0.5 * $("#chartContainer").height() + $("#yAxisTitle").width() / 2 + "px");
 }
 
 function updateSuggestions(determinantId, subjectId, candidates, candidateMemberName, subject) {

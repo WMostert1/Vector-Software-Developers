@@ -195,6 +195,9 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\chartist-plugin-axistitle.js" />
+    <Content Include="Scripts\chartist-plugin-tooltip.js" />
+    <Content Include="Scripts\chartist-plugin-vertical-line.js" />
     <Content Include="Scripts\chartist.js" />
     <Content Include="Scripts\charts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

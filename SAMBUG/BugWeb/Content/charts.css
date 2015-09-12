@@ -6,27 +6,45 @@
     cursor: pointer;
 }
 
-#yAxisTitle {
-    position: relative;
-    float: left;
-    transform-origin: top left;
-    -ms-transform: rotate(-90deg); /* IE 9 !2!!1!*/
-    -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera !2!!1!*/
-    transform: rotate(-90deg);
-}
-
-#xAxisTitle {
-    clear: both;
-}
-
-.chartAndLabelContainerOnLoad {
+.chartContainerOnLoad {
     height: 60vh;
 }
 
 .whirly-loader {
     top: 50%;
+    left: 50%;
 }
 
 .chartLabel {
     visibility: hidden;
+}
+
+.vertical-line {
+    stroke: orange;
+    stroke-width: 3px;
+ }
+
+.chartist-tooltip {
+    border-radius: 15px;
+    position: absolute;
+    min-width: 5em;
+    padding: .5em;
+    background: #453D3F;
+    color: #E6E6E4;
+    font-weight: 700;
+    text-align: center;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.chartist-tooltip:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-top-color: #453D3F;
 }

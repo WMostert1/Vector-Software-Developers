@@ -20,9 +20,15 @@
         <!--Y-axis options for chart-->
         <label for="view">View</label>
         <select id="view" class="form-control chartControl">
-            <option value="Bugs per Tree">Bugs per Tree</option>
-            <option value="Number of Bugs">Number of Bugs</option>
-            <option value="Number of Trees">Number of Trees</option>
+            <optgroup label="Average">
+                <option value="Bugs per Tree">Bugs per Tree</option>
+                <option value="Number of Bugs">Number of Bugs</option>
+                <option value="Number of Trees">Number of Trees</option>
+            </optgroup>
+            <optgroup label="Total">
+                <option value="Number of Bugs">Number of Bugs</option>
+                <option value="Number of Trees">Number of Trees</option>
+            </optgroup>
         </select><br />
 
 
@@ -94,7 +100,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Species Life Stage</th>
+                                <th>Species Life Stages</th>
                                 <td>
                                     <input id="constraintLifeStage" class="form-control chartControl" type="text" />
                                 </td>
@@ -121,20 +127,14 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-8 text-center">
+    <div class="col-sm-8">
         <!--Container for chart and axes titles-->
-        <div id="chartAndLabelContainer" class="chartAndLabelContainerOnLoad">
-            <div id="yAxisTitle" class="chartLabel">
-                <h4></h4>
-            </div>
-            <div id="chartContainer" class="whirly-loader">
-                <div id="chartTitle" class="chartLabel">
+        <div id="chartContainerOnLoad" class="chartContainerOnLoad">
+           <div id="chartContainer" class="whirly-loader">
+                <div id="chartTitle" class="chartLabel text-center">
                     <h1></h1>
                 </div>
                 <div id="chart" class="ct-chart ct-golden-section"></div>
-                <div id="xAxisTitle" class="chartLabel">
-                    <h4></h4>
-                </div>
             </div>
         </div>
     </div>
@@ -143,12 +143,12 @@
 
 @section scripts
 {
-    @*add the proper url that directs to a userId endpoint i.e. Session["UserInfo"]*@
     <script type="application/javascript">
         var recordsUrl = "@Url.Content("~/api/records/")"; //@Model.RecordsUrlSuffix)";
         var pestsUrl = "@Url.Content("~/api/species")";
     </script>
     @Scripts.Render("~/bundles/chartist")
+    @Scripts.Render("~/bundles/chartist-plugins")
     @Scripts.Render("~/bundles/typeahead")
     @Scripts.Render("~/bundles/bootstrap-tagsinput")
     @Scripts.Render("~/bundles/reporting")
