@@ -69,7 +69,6 @@
         chart.on('draw', function (data) {
             
             if (data.type === 'point' && ($.inArray(data.value.x.valueOf(), options.positions)) >= 0 && data.value.y === -1) {
-                console.log(data.value.x, data.value.y);
                 positions.push(data.x);
                 data.element.remove();
             }

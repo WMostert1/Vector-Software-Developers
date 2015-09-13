@@ -3,7 +3,9 @@
 /*
     Chart settings and other globals
 */
+var chart;
 var chartSettings = {};
+var inErrorState = false;
 
 var viewModelToMemberMap = {
     None: "All Data",
@@ -19,6 +21,7 @@ var viewModelToMemberMap = {
 var species;
 var scoutStops;
 var treatments;
+
 
 
 /*
@@ -262,36 +265,70 @@ function initToDate() {
 }
 
 function updateChart(settings) {
+    updateChartTitle();
+
     var filteredScoutStops = filterScoutStops(scoutStops, settings);
 
-    //console.log("Constrained Data", filteredScoutStops);
+   // console.log("Constrained Data", filteredScoutStops);
 
     var filteredTreatments = [];
 
-    if (settings.constraintShowTreatments)
-        filteredTreatments = filterTreatments(treatments, settings);
+    //clear the div if an error message was shown previously 
+    if (inErrorState) {
+        $("#chart").empty();
+        inErrorState = false;
+    }
 
-    updateChartTitle();
-    plot(filteredScoutStops, filteredTreatments, settings);
+    var existsScoutStops = filteredScoutStops.length,
+        onlyTreatments = false,
+        onlyScoutStops = false,
+        existsTreatments;
+    
+
+    //only attempt to prepare and plot treatments if selected and correct chart
+    if (settings.constraintShowTreatments && !isCategorical(settings.against)) {
+        filteredTreatments = filterTreatments(treatments, settings);
+        
+        existsTreatments = filteredTreatments.length;
+
+        //console.log(filteredTreatments);
+
+        if (!existsScoutStops && !existsTreatments) {
+            inErrorState = true;
+            displayErrorMessage("We're afraid there is nothing to show for your current selection");
+            return;
+        } else if (!existsScoutStops) {
+            onlyTreatments = true;
+        } else if (!existsTreatments) {
+            onlyScoutStops = true;
+        }
+        plot(onlyScoutStops, onlyTreatments, filteredScoutStops, filteredTreatments, settings);
+    } else {
+        if (!existsScoutStops) {
+            inErrorState = true;
+            displayErrorMessage("We're afraid there is nothing to show for your current selection");
+            return;
+        }
+        plot(true, false,filteredScoutStops, filteredTreatments, settings);
+    }
+   
 }
 
-function plot(filteredScoutStops, filteredTreatments, settings) {
-    //todo: must check how labels are going to work, do that here
-
+function plot(onlyScoutStops, onlyTreatments, filteredScoutStops, filteredTreatments, settings) {
     //get categorised data (or unaltered data if no grouping is applied)
     var categorisedStops = groupBy(viewModelToMemberMap[settings.grouping], filteredScoutStops);
 
     //console.log("Grouped by " + settings.grouping, categorisedStops);
 
-    var parameters = determinePlotParameters(settings, categorisedStops, filteredTreatments);
+    var parameters = determinePlotParameters(onlyScoutStops, onlyTreatments, settings, categorisedStops, filteredTreatments);
 
     //console.log("Plotting with this", JSON.stringify(parameters, null, 2));
 
-    var chart = new Chartist[parameters.chartType]("#chart", parameters.data, parameters.options);
+    chart = new Chartist[parameters.chartType]("#chart", parameters.data, parameters.options);
 
 }
 
-function determinePlotParameters(settings, categorisedStops, filteredTreatments) {
+function determinePlotParameters(onlyScoutStops, onlyTreatments, settings, categorisedStops, filteredTreatments) {
     //mapping to x member
     var xMemberName = viewModelToMemberMap[settings.against];
     
@@ -305,17 +342,16 @@ function determinePlotParameters(settings, categorisedStops, filteredTreatments)
    
     //Acquire various chart parameters
     var parameters = {};
+    parameters.data = {};
+    parameters.data.series = [];
     parameters.chartType = chartType;
-    parameters.options = {}
+    parameters.options = {};
     parameters.options.plugins = [];
     
     if (chartType === "Line") {
-        saveLineChartParameters(parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops, filteredTreatments);
-        if (settings.constraintShowTreatments) {
-            addTreatments(parameters, filteredTreatments);
-        }
+        saveLineChartParameters(onlyScoutStops, settings.constraintShowTreatments, onlyTreatments, parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops, filteredTreatments);
     } else if (chartType === "Bar") {
-        saveBarChartParamaters(parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops, filteredTreatments);
+        saveBarChartParamaters(parameters, xMemberName, yMemberName, settings.aggregateType, categorisedStops);
     }
 
     //Add options common to all charts
@@ -337,26 +373,30 @@ function determinePlotParameters(settings, categorisedStops, filteredTreatments)
 
 }
 
-function saveLineChartParameters(parameters, xMemberName, yMemberName, aggregateType, categorisedStops, filteredTreatments) {
-    var seriesArray = [];
-    
-    $.each(categorisedStops, function(i, c) {
-        var s = {};
+function saveLineChartParameters(onlyScoutStops, showTreatments, onlyTreatments, parameters, xMemberName, yMemberName, aggregateType, categorisedStops, filteredTreatments) {
+    if (!onlyTreatments) {
 
-        //series name is the first element of c
-        s.name = c.shift();
+        $.each(categorisedStops, function(i, c) {
+            var s = {};
 
-        //group each x value with its corresponding y values, sorting x in ascending order
-        var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(sortByFirstElement);
+            //series name is the first element of c
+            s.name = c.shift();
 
-       //console.log("Points for " + s.name, sortedXCategorisedPoints);
+            //group each x value with its corresponding y values, sorting x in ascending order
+            var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(sortByFirstElement);
 
-        s.data = getLineSeriesData(yMemberName, aggregateType, filteredTreatments, sortedXCategorisedPoints);
+            //console.log("Points for " + s.name, sortedXCategorisedPoints);
 
-        seriesArray.push(s);
-    });
-    
-    parameters.data = { series: seriesArray };
+            s.data = getLineSeriesData(yMemberName, aggregateType, filteredTreatments, sortedXCategorisedPoints);
+
+            parameters.data.series.push(s);
+        });
+        
+    }
+
+    if (showTreatments && !onlyScoutStops) {
+        addTreatments(parameters, filteredTreatments);
+    }
 
     parameters.options.showPoint = true;
     parameters.options.axisY = {};
@@ -370,6 +410,44 @@ function saveLineChartParameters(parameters, xMemberName, yMemberName, aggregate
 
     
 
+}
+
+function saveBarChartParamaters(parameters, xMemberName, yMemberName, aggregateType, categorisedStops) {
+    var arrayOfXYs = [];
+
+    var potentialLabels = [];
+
+    $.each(categorisedStops, function (i, c) {
+        //group each x value with its corresponding y values, sorting x in ascending order
+        potentialLabels.push(addUnique(groupBy(xMemberName, c).sort(sortByFirstElement), potentialLabels));
+
+
+    });
+
+    console.log(potentialLabels);
+
+    /*$.each(categorisedStops, function (i, c) {
+        var s = {};
+
+        //series name is the first element of c
+        s.name = c.shift();
+
+        //group each x value with its corresponding y values, sorting x in ascending order
+        var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(sortByFirstElement);
+        
+        
+    });*/
+
+    parameters.options.tooltipFnc = getTooltipText;
+}
+
+function addUnique(series, labels) {
+    $.each(series, function (index, points) {
+        if ($.grep(labels, function (d) {
+            return points[0].valueOf() === d.valueOf();
+        }).length === 0)
+            labels.push(points[0]);
+    });
 }
 
 function getLineSeriesData(yMember, aggregateType, filteredTreatments, sortedXCategorisedPoints) {
@@ -403,7 +481,9 @@ function addTreatments(parameters, treatments) {
     });
 
     parameters.data.series.push(newSeries);
-    
+
+    //console.log(JSON.stringify(newSeries, null, 2));
+
     parameters.options.plugins.push(Chartist.plugins.verticalLines({
         positions: vLinePositions
     }));
@@ -413,8 +493,6 @@ function addTreatments(parameters, treatments) {
             showLine: false
         }
     };
-
-
 }
 
 function isCategorical(setting) {
@@ -469,10 +547,6 @@ function reduceToSingleY(yMember, aggregateType, yList) {
     }
 
     return yAggregate;
-}
-
-function saveBarChartParamaters(parameters, labelBy, yMemberName, aggregateType, categorisedStops) {
-        
 }
 
 function sortByFirstElement(a, b) {
@@ -531,7 +605,11 @@ function getTooltipText(meta, values, seriesName, classes) {
     }
 }
 
-
+function displayErrorMessage(message) {
+    $("#chart").empty();
+    $("#chart").append("<div class='errorMessage text-center text-info'>" + message + "</div>");
+    chart.detach();
+}
 
 /*
     Event Handlers
