@@ -155,6 +155,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ApiAuthenticationController.cs" />
     <Compile Include="Controllers\ApiReportingController.cs" />
+    <Compile Include="Controllers\ApiSpeciesClassificationController.cs" />
     <Compile Include="Controllers\ApiSynchronizationController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\FarmManagementController.cs" />

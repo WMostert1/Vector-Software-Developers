@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <NuGetPackageImportStamp>e4d20479</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,6 +43,33 @@
     <Reference Include="Autofac.Extras.Moq, Version=3.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.Extras.Moq.3.1.0\lib\net40\Autofac.Extras.Moq.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Emgu.CV">
+      <HintPath>..\packages\VDK.EmguCV.x86.2.4.10\lib\Emgu.CV.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.GPU">
+      <HintPath>..\packages\VDK.EmguCV.x86.2.4.10\lib\Emgu.CV.GPU.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.ML">
+      <HintPath>..\packages\VDK.EmguCV.x86.2.4.10\lib\Emgu.CV.ML.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.OCR">
+      <HintPath>..\packages\VDK.EmguCV.x86.2.4.10\lib\Emgu.CV.OCR.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.OpenCL">
+      <HintPath>..\packages\VDK.EmguCV.x86.2.4.10\lib\Emgu.CV.OpenCL.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.Stitching">
+      <HintPath>..\packages\VDK.EmguCV.x86.2.4.10\lib\Emgu.CV.Stitching.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.UI">
+      <HintPath>..\packages\VDK.EmguCV.x86.2.4.10\lib\Emgu.CV.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.VideoStab">
+      <HintPath>..\packages\VDK.EmguCV.x86.2.4.10\lib\Emgu.CV.VideoStab.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.Util">
+      <HintPath>..\packages\VDK.EmguCV.x86.2.4.10\lib\Emgu.Util.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.2.1312.1622, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.2.1312.1622\lib\net40\Moq.dll</HintPath>
@@ -88,6 +116,41 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="tessdata\eng.cube.bigrams" />
+    <None Include="tessdata\eng.cube.fold" />
+    <None Include="tessdata\eng.cube.lm" />
+    <None Include="tessdata\eng.cube.nn" />
+    <None Include="tessdata\eng.cube.params" />
+    <None Include="tessdata\eng.cube.size" />
+    <None Include="tessdata\eng.cube.word-freq" />
+    <None Include="tessdata\eng.tesseract_cube.nn" />
+    <None Include="tessdata\eng.traineddata" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x86\cudart32_65.dll" />
+    <Content Include="x86\cufft32_65.dll" />
+    <Content Include="x86\cvextern.dll" />
+    <Content Include="x86\nppc32_65.dll" />
+    <Content Include="x86\nppi32_65.dll" />
+    <Content Include="x86\npps32_65.dll" />
+    <Content Include="x86\OpenCL.dll" />
+    <Content Include="x86\opencv_calib3d2410.dll" />
+    <Content Include="x86\opencv_contrib2410.dll" />
+    <Content Include="x86\opencv_core2410.dll" />
+    <Content Include="x86\opencv_features2d2410.dll" />
+    <Content Include="x86\opencv_flann2410.dll" />
+    <Content Include="x86\opencv_gpu2410.dll" />
+    <Content Include="x86\opencv_highgui2410.dll" />
+    <Content Include="x86\opencv_imgproc2410.dll" />
+    <Content Include="x86\opencv_legacy2410.dll" />
+    <Content Include="x86\opencv_ml2410.dll" />
+    <Content Include="x86\opencv_nonfree2410.dll" />
+    <Content Include="x86\opencv_objdetect2410.dll" />
+    <Content Include="x86\opencv_photo2410.dll" />
+    <Content Include="x86\opencv_stitching2410.dll" />
+    <Content Include="x86\opencv_superres2410.dll" />
+    <Content Include="x86\opencv_video2410.dll" />
+    <Content Include="x86\opencv_videostab2410.dll" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
@@ -109,6 +172,13 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets'))" />
+  </Target>
+  <Import Project="..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('..\packages\Baseclass.Contrib.Nuget.Output.1.0.2\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

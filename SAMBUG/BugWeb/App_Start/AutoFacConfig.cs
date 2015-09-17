@@ -19,6 +19,8 @@ using System.Web.Http;
 using System.Reflection;
 using BugBusiness.BugScouting;
 using BugBusiness.Interface.BugScouting;
+using BugBusiness.BugIntelligence;
+using BugBusiness.Interface.BugIntelligence;
 
 namespace BugWeb
 {
@@ -43,6 +45,8 @@ namespace BugWeb
 
             builder.RegisterType<DbScouting>().As<IDbScouting>();
             builder.RegisterType<BugScouting>().As<IBugScouting>();
+
+            builder.RegisterType<BugIntelligence>().As<IBugIntelligence>();
             
             
 
