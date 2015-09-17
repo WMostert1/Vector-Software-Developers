@@ -1,6 +1,7 @@
 package vsd.co.za.sambugapp;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -98,7 +99,6 @@ public class IdentificationActivity extends AppCompatActivity {
                 dispatchTakePictureIntent();
             }
             if (createCounter == 0) createCounter++;
-
 
             setContentView(R.layout.activity_identification);
 
