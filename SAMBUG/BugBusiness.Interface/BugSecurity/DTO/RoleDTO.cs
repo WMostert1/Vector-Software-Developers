@@ -8,7 +8,6 @@ namespace BugBusiness.Interface.BugSecurity.DTO
 {
     public class RoleDTO
     {
-        public long RoleID { get; set; }
         public long RoleType { get; set; }
         public string RoleDescription { get; set; }
     }

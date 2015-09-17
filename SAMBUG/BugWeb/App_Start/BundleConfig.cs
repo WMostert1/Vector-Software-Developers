@@ -11,8 +11,10 @@ namespace BugWeb
         {
             bundles.UseCdn = true;
 
-            const string    cdnJsChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.js",
-                            cdnCssChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.css";
+            const string cdnJsChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.js",
+                cdnCssChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.css",
+                cdnJsTypeAhead = "https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.js",
+                cdnCssSpinner = "http://css-spinners.com/css/spinner/whirly.css";
 
             bundles
                 .Add(new ScriptBundle("~/bundles/jquery")
@@ -36,6 +38,14 @@ namespace BugWeb
                 .Add(new ScriptBundle("~/bundles/customJS")
                 .Include("~/Scripts/MapControls.js"));
 
+            bundles
+                .Add(new ScriptBundle("~/bundles/typeahead", cdnJsTypeAhead)
+                .Include("~/Scripts/typeahead.bundle.js"));
+
+            bundles
+               .Add(new ScriptBundle("~/bundles/bootstrap-tagsinput")
+               .Include("~/Scripts/bootstrap-tagsinput.js"));
+           
             //TODO: this script bundle must include all scripts needed by tables and charts, rename as needed
             bundles
                 .Add(new ScriptBundle("~/bundles/reporting")
@@ -44,10 +54,20 @@ namespace BugWeb
             bundles
                 .Add(new ScriptBundle("~/bundles/chartist", cdnJsChartist)
                 .Include("~/Scripts/chartist.js"));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/chartist-plugins")
+                .Include("~/Scripts/chartist-plugin-vertical-line.js",
+                "~/Scripts/chartist-plugin-tooltip.js",
+                "~/Scripts/chartist-plugin-axistitle.js"));
                 
             bundles
                 .Add(new StyleBundle("~/Content/css")
                 .Include("~/Content/bootstrap.css", "~/Content/site.css"));
+
+            bundles
+               .Add(new StyleBundle("~/Content/css/bootstrap-tagsinput")
+               .Include("~/Content/bootstrap-tagsinput.css"));
 
             //TODO: this style bundle must include all styles needed by tables and charts, rename as needed
             bundles
@@ -57,6 +77,13 @@ namespace BugWeb
             bundles
                 .Add(new StyleBundle("~/Content/css/chartist", cdnCssChartist)
                 .Include("~/Content/chartist.min.css"));
+
+            bundles
+                .Add(new StyleBundle("~/Content/css/typeahead")
+                .Include("~/Content/typeahead.css"));
+
+            bundles
+                .Add(new StyleBundle("~/Content/css/spinner", cdnCssSpinner));
 
         }
     }

@@ -31,14 +31,11 @@ namespace BugBusiness.BugSecurity
             if (user == null)
                 throw new NotRegisteredException();
 
-            UserDTO userDTO = AutoMapper.Mapper.Map<UserDTO>(user);
-
-            var loginResponse = new LoginResponse()
+            return new LoginResponse()
             {
-                User = userDTO
+                User = AutoMapper.Mapper.Map<UserDTO>(user)
             };
-        
-            return loginResponse;
+           
         }
 
         //TODO: Farmer allowed to have multiple accounts? Implemented now to not allow it 

@@ -8,6 +8,7 @@ namespace BugBusiness.Interface.BugReporting.DTO
 {
     public class ScoutStopDto
     {
+        public string BlockFarmFarmName { get; set; }
         public string BlockBlockName { get; set; }
         public int NumberOfTrees { get; set; }
         public DateTime Date { get; set; }

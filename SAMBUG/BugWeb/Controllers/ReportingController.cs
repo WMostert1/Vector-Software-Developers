@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using BugWeb.Models;
 using BugBusiness.Interface.BugSecurity.DTO;
+using BugWeb.Security;
 
 namespace BugWeb.Controllers
 {
@@ -19,28 +20,14 @@ namespace BugWeb.Controllers
         // GET: reporting/tabular
         public ActionResult Tabular()
         {
-            UserDTO usr = (UserDTO)Session["UserInfo"];
-            
-            var report = new ReportingViewModel();
-            report.ActiveFarmId = (long)Session["ActiveFarm"];
-            report.Farm = AutoMapper.Mapper.Map<ReportingViewModel.FarmViewModel>(
-                usr.Farms.Single(farm => farm.FarmID.Equals(report.ActiveFarmId)));
-
-            return View(report);
+            return View(new ReportingViewModel(Session));
         }
 
         // GET: reporting/charts
         public ActionResult Charts()
         {
-            UserDTO usr = (UserDTO)Session["UserInfo"];
-
-            var report = new ReportingViewModel();
-            report.ActiveFarmId = (long) Session["ActiveFarm"];
-            report.Farm = AutoMapper.Mapper.Map<ReportingViewModel.FarmViewModel>(
-               usr.Farms.Single(farm => farm.FarmID.Equals(report.ActiveFarmId)));
-            
-           return View(report);
-        }
+            return View(new ReportingViewModel(Session));
+		}
 
         public ActionResult Map()
         {

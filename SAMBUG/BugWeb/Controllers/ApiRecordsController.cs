@@ -10,12 +10,12 @@ using System.Web.Http;
 
 namespace BugWeb.Controllers
 {
-    [RoutePrefix("api/reporting")]
-    public class ApiReportingController : ApiController
+    [RoutePrefix("api/records")]
+    public class ApiRecordsController : ApiController
     {
         private readonly IBugReporting _bugReporting;
 
-        public ApiReportingController(IBugReporting bugReporting)
+        public ApiRecordsController(IBugReporting bugReporting)
         {
             _bugReporting = bugReporting;
         }
@@ -23,7 +23,18 @@ namespace BugWeb.Controllers
         [Route("{id}")]
         public GetCapturedDataResponse Get(long id)
         {
-            var response = _bugReporting.GetCapturedData(new GetCapturedDataRequest() { FarmId = id });
+            var response = _bugReporting.GetCapturedData(new GetCapturedDataRequest() { UserId = id });
+
+            if (response == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return response;
+        }
+
+        [Route("")]
+        public GetCapturedDataResponse GetAll()
+        {
+            var response = _bugReporting.GetAllCapturedData();
 
             if (response == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);

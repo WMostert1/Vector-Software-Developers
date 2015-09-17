@@ -8,7 +8,8 @@ namespace BugBusiness.Interface.BugReporting.DTO
 {
     public class TreatmentDto
     {
-        public string BlockName { get; set; }
+        public string BlockFarmFarmName { get; set; }
+        public string BlockBlockName { get; set; }
         public DateTime Date { get; set; }
         public string Comments { get; set; }
     }

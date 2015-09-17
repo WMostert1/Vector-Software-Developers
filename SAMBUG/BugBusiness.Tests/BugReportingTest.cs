@@ -33,18 +33,18 @@ namespace BugBusiness.Tests
             //Arrange
             _autoMock
                 .Mock<IDbBugReporting>()
-                .Setup(rpt => rpt.GetScoutStopsByFarmId(12345))
+                .Setup(rpt => rpt.GetScoutStopsByUserId(12345))
                 .Returns( new List<ScoutStop>());
 
             _autoMock
                .Mock<IDbBugReporting>()
-               .Setup(rpt => rpt.GetTreatmentsByFarmId(12345))
+               .Setup(rpt => rpt.GetTreatmentsByUserId(12345))
                .Returns( new List<Treatment>());
                 
             var bugReporting = _autoMock.Create<BugReporting.BugReporting>();
 
             //Act
-            var test = bugReporting.GetCapturedData(new GetCapturedDataRequest(){FarmId = 12345});
+            var test = bugReporting.GetCapturedData(new GetCapturedDataRequest(){UserId = 12345});
 
             //Assert
             test.ShouldBeNull();

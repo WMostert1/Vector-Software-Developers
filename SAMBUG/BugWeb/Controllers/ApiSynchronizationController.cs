@@ -30,6 +30,7 @@ namespace BugWeb.Controllers
         }
 
         [HttpPost]
+        [Route("")]
          public HttpResponseMessage PersistCachedData([FromBody] SyncRequest request)
         {
             try

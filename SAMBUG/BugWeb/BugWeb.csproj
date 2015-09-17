@@ -93,6 +93,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -120,10 +124,6 @@
     </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -154,7 +154,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ApiAuthenticationController.cs" />
-    <Compile Include="Controllers\ApiReportingController.cs" />
+    <Compile Include="Controllers\ApiRecordsController.cs" />
+    <Compile Include="Controllers\ApiSpeciesController.cs" />
     <Compile Include="Controllers\ApiSynchronizationController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\FarmManagementController.cs" />
@@ -175,19 +176,28 @@
     <Compile Include="Security\SecurityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-tagsinput.css" />
     <Content Include="Content\chartist.min.css" />
     <Content Include="Content\charts.css" />
     <Content Include="Content\EditBlocks.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\bug.jpg" />
+    <Content Include="Content\Images\excel.svg" />
+    <Content Include="Content\Images\pdf.svg" />
+    <Content Include="Content\Images\printer.svg" />
+    <Content Include="Content\table.css" />
+    <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-tagsinput.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\chartist-plugin-axistitle.js" />
+    <Content Include="Scripts\chartist-plugin-tooltip.js" />
+    <Content Include="Scripts\chartist-plugin-vertical-line.js" />
     <Content Include="Scripts\chartist.js" />
     <Content Include="Scripts\charts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -201,7 +211,10 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\Table.js" />
+    <Content Include="Scripts\tableScout.js" />
+    <Content Include="Scripts\tableTreatment.js" />
+    <Content Include="Scripts\typeahead.bundle.js" />
+    <Content Include="Scripts\table.js" />
     <Content Include="Scripts\xdate.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">

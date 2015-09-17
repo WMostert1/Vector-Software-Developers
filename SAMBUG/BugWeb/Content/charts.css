@@ -1,2 +1,76 @@
-﻿body {
+﻿#firstContentRow {
+    margin-top: 25px;
+}
+
+#resetIcon, #collapseIcon {
+    cursor: pointer;
+}
+
+.chartContainerOnLoad {
+    height: 60vh;
+}
+
+.whirly-loader {
+    top: 50%;
+    left: 50%;
+}
+
+.chartLabel {
+    visibility: hidden;
+}
+
+.vertical-line {
+    stroke: lightblue;
+    stroke-dasharray: 10px 10px;
+    stroke-width: 2px;
+    stroke-linecap: round;
+ }
+
+.vertical-line-label {
+}
+
+.chartist-tooltip {
+    border-radius: 15px;
+    position: absolute;
+    min-width: 5em;
+    padding: .5em;
+    background: #453D3F;
+    color: #E6E6E4;
+    font-weight: 700;
+    text-align: center;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.chartist-tooltip:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-top-color: #453D3F;
+}
+
+.ct-label {
+    color: black !important;
+}
+
+.ct-series-a .ct-line,
+.ct-series-a .ct-point,
+.ct-series-a .ct-bar{
+ /*
+  example styles  
+
+  stroke-width: 20px;
+  stroke-dasharray: 20px;
+  stroke-linecap: round;
+  fill: hsl(120, 40%, 60%);*/
+}
+
+.errorMessage {
+    position: relative;
+    top: 150px;
 }

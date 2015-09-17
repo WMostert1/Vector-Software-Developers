@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.BugReporting.DTO
 {
-    public class GetCapturedDataResponse
+    public class GetSpeciesRequest
     {
-        public ICollection<ScoutStopDto> ScoutStops { get; set; }
-        public ICollection<TreatmentDto> Treatments { get; set; } 
+        public long FarmId { get; set; }
     }
 }

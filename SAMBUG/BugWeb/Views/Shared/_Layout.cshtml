@@ -19,6 +19,7 @@
     </style>
 
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/css/spinner")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/Scripts/xdate.js")
     @Scripts.Render("~/bundles/customJS")
@@ -38,10 +39,14 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                   
-                    <li>@Html.ActionLink("Logout","logout","home")</li>
+                    <li>
+                        <a href="@Url.Action("index", "home")"><span class="glyphicon glyphicon-home"></span></a>
+                    </li> 
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="@Url.Action("logout", "home")"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>

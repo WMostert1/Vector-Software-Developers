@@ -44,8 +44,6 @@ namespace BugWeb
             builder.RegisterType<DbScouting>().As<IDbScouting>();
             builder.RegisterType<BugScouting>().As<IBugScouting>();
             
-            
-
             var container = builder.Build();
 
             // Set the dependency resolver for Web API.
