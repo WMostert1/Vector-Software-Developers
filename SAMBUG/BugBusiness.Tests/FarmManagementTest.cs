@@ -18,6 +18,8 @@ namespace BugBusiness.Tests
         [TestInitialize]
         public void Setup()
         {
+            
+            AutoMapper.Mapper.CreateMap<Block, BlockDTO>();
             _autoMock = AutoMock.GetStrict();
         }
 

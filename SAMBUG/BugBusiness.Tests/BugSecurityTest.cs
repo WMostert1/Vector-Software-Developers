@@ -17,6 +17,8 @@ namespace BugBusiness.Tests
         [TestInitialize]
         public void Setup()
         {
+            AutoMapper.Mapper.CreateMap<User, UserDTO>();
+            AutoMapper.Mapper.CreateMap<Role, RoleDTO>();
             _autoMock = AutoMock.GetLoose();
         }
 
