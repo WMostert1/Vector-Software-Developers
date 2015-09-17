@@ -177,14 +177,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-tagsinput.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\chartist.min.css" />
     <Content Include="Content\charts.css" />
     <Content Include="Content\EditBlocks.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\coconut_inst_4.jpg" />
     <Content Include="Content\Images\excel.svg" />
+    <Content Include="Content\Images\green_veg_inst_4.jpg" />
     <Content Include="Content\Images\pdf.svg" />
     <Content Include="Content\Images\printer.svg" />
+    <Content Include="Content\Images\two_spot_inst_4.jpg" />
+    <Content Include="Content\Images\yellow_edged_inst_4.jpg" />
+    <Content Include="Content\jasny-bootstrap.css" />
+    <Content Include="Content\jasny-bootstrap.min.css" />
     <Content Include="Content\table.css" />
     <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
@@ -194,12 +202,20 @@
     <Content Include="Scripts\bootstrap-tagsinput.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\jasny-bootstrap.css.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartist-plugin-axistitle.js" />
     <Content Include="Scripts\chartist-plugin-tooltip.js" />
     <Content Include="Scripts\chartist-plugin-vertical-line.js" />
     <Content Include="Scripts\chartist.js" />
     <Content Include="Scripts\charts.js" />
+    <Content Include="Scripts\jasny-bootstrap.js" />
+    <Content Include="Scripts\jasny-bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -250,9 +266,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>

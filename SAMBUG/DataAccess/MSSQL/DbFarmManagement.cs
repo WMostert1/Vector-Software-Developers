@@ -139,7 +139,9 @@ namespace DataAccess.MSSQL
 
             //TODO: maybe minclude months if weeks>4?
             //calculate last treatment in weeks
-            DateTime lastTreatment = block.Treatments.Max(trt => trt.Date);
+            //TODO: Giving: Exception Details: System.InvalidOperationException: Sequence contains no elements
+            //DateTime lastTreatment = block.Treatments.Max(trt => trt.Date);
+            DateTime lastTreatment = DateTime.Today;
             DateTime today=DateTime.Today;
             string difference = ((int)today.Subtract(lastTreatment).TotalDays / 7) + " weeks ago";
 

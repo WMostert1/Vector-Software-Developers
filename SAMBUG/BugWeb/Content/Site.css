@@ -1,6 +1,11 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿html, body{
+    height : 100%;
+}
+
+body {
+    padding : 50px 0 0 0;
+    background-color : #F9FFF9;
+    font-family: Calibri,Candara,Segoe,"Segoe UI",Optima,Arial,sans-serif
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -21,4 +26,38 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+/* This is for the heat map */
+    #panel {
+    background-color: #fff;
+    border: 1px solid #999;
+    left: 25%;
+    padding: 5px;
+ 
+    top: 10px;
+    z-index: 5;
+    }
+
+/* Jasny stles for navbar*/
+ .navbar-toggle {
+  float: left;
+  margin-left: 15px;
+}
+
+@media (min-width: 0) {
+  .navbar-toggle {
+    display: block; /* force showing the toggle */
+  }
+}
+
+@media (min-width: 992px) {
+  body {
+    padding: 0;
+  }
+  .navbar {
+    right: auto;
+    background: none;
+    border: none;
+  }
 }

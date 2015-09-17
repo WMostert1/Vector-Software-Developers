@@ -3,21 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>
+    <title>SAMBUG</title>
     <link rel="stylesheet" href="http://css-spinners.com/css/spinner/whirly.css" type="text/css">
-    <style>
-
-    #panel {
-    background-color: #fff;
-    border: 1px solid #999;
-    left: 25%;
-    padding: 5px;
- 
-    top: 10px;
-    z-index: 5;
-    }
-    </style>
-
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/css/spinner")
     @Scripts.Render("~/bundles/modernizr")
@@ -27,37 +14,48 @@
     @RenderSection("styles", required: false)
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("SAMBUG", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="@Url.Action("index", "home")"><span class="glyphicon glyphicon-home"></span></a>
-                    </li> 
+  
+    <div style="background-color:#A3DCA3" class="navmenu navmenu-default navmenu-fixed-left offcanvas">
+        <a style="background-color:#4DB870" class="navmenu-brand" href="#">SAMBUG</a>
+        <ul class="nav navmenu-nav">
+            <li><a href="#">Home</a></li>
+            <!--<li><a href="#">Login</a></li>-->
+            <!-- <li><a href="#">Register</a></li>-->
+           
+            <li class="dropdown">
+                <a href="~/Home/Index" class="dropdown-toggle" data-toggle="dropdown">Farm Management<b class="caret"></b></a>
+                <ul class="dropdown-menu navmenu-nav">
+                    <li><a href="~/FarmManagement/EditBlocks">Edit my Blocks</a></li>
+                    <li><a href="~/FarmManagement/Treatments">Enter Treatment Data</a></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="@Url.Action("logout", "home")"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
-                    </li>
+            </li>
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reporting<b class="caret"></b></a>
+                <ul class="dropdown-menu navmenu-nav">
+                    <li><a href="~/Reporting/Charts">View Chart</a></li>
+                    <li><a href="~/Reporting/Tabular">View Table</a></li>
+                    <li><a href="~/Reporting/Map">View Heat Map</a></li>
                 </ul>
-            </div>
-        </div>
+            </li>
+            <li><a href="~/Authentication/EditUserRoles">Manage Users</a></li>
+            <li><a href="~/Home/Logout">Logout</a></li>
+            <li><a href="#">About Us</a></li>
+        </ul>
     </div>
-    <div class="container body-content">
+
+    <div class="navbar navbar-default navbar-fixed-top">
+        <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+
+    <div class="container">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - SAMBUG</p>
-        </footer>
     </div>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

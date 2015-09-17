@@ -32,7 +32,7 @@ namespace BugWeb
 
             bundles
                 .Add(new ScriptBundle("~/bundles/bootstrap")
-                .Include("~/Scripts/bootstrap.js", "~/Scripts/respond.js"));
+                .Include("~/Scripts/bootstrap.js", "~/Scripts/respond.js", "~/Scripts/jasny-bootstrap.min.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/customJS")
@@ -63,7 +63,7 @@ namespace BugWeb
                 
             bundles
                 .Add(new StyleBundle("~/Content/css")
-                .Include("~/Content/bootstrap.css", "~/Content/site.css"));
+                .Include("~/Content/bootstrap.css", "~/Content/site.css","~/Content/jasny-bootstrap.min.css"));
 
             bundles
                .Add(new StyleBundle("~/Content/css/bootstrap-tagsinput")
@@ -84,6 +84,8 @@ namespace BugWeb
 
             bundles
                 .Add(new StyleBundle("~/Content/css/spinner", cdnCssSpinner));
+
+           
 
         }
     }

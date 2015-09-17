@@ -13,8 +13,9 @@ namespace BugWeb.Controllers
         //TODO: Still need to check if user is logged in before returning view. Redirects to login page if not
         public ActionResult Index()
         {
-          //  if (!SecurityProvider.isGrower(Session))
-           //     return RedirectToAction("login","home");
+           if (!SecurityProvider.isGrower(Session) && !SecurityProvider.isAdmin(Session))
+               return RedirectToAction("login","home");
+
                 return View();
         }
 
