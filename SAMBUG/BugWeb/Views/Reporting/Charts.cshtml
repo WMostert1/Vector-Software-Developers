@@ -134,7 +134,7 @@
                 <div id="chartTitle" class="chartLabel text-center">
                     <h1></h1>
                 </div>
-                <div id="chart" class="ct-chart ct-golden-section"></div>
+                <div id="chart" class="ct-chart ct-minor-seventh"></div>
             </div>
         </div>
     </div>
@@ -144,7 +144,7 @@
 @section scripts
 {
     <script type="application/javascript">
-        var recordsUrl = "@Url.Content("~/api/records/")"; //@Model.RecordsUrlSuffix)";
+        var recordsUrl = "@Url.Content("~/api/records/" + Model.RecordsUrlSuffix)";
         var pestsUrl = "@Url.Content("~/api/species")";
     </script>
     @Scripts.Render("~/bundles/chartist")

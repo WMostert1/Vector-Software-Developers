@@ -54,6 +54,22 @@
     border-top-color: #453D3F;
 }
 
+.ct-label {
+    color: black !important;
+}
+
+.ct-series-a .ct-line,
+.ct-series-a .ct-point,
+.ct-series-a .ct-bar{
+ /*
+  example styles  
+
+  stroke-width: 20px;
+  stroke-dasharray: 20px;
+  stroke-linecap: round;
+  fill: hsl(120, 40%, 60%);*/
+}
+
 .errorMessage {
     position: relative;
     top: 150px;

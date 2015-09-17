@@ -1,4 +1,4 @@
-﻿//todo: check licence requirements of all borrowed code and assets
+﻿//todo: check licence requirements (e.g. MIT) of all borrowed code and assets
 
 /*
     Chart settings and other globals
@@ -8,7 +8,7 @@ var chartSettings = {};
 var inErrorState = false;
 
 var viewModelToMemberMap = {
-    None: "All Data",
+    None: "All Data",//This is a quasi-member
     Date: "date",
     Block: "blockName",
     Species: "speciesName",
@@ -103,8 +103,6 @@ function loadDataRecords() {
         treatments = flattenTreatments(data.Treatments);
         scoutStops = flattenScoutStops(data.ScoutStops);
 
-       // console.log("Initial Data",scoutStops);
-        
         var farmNames = getUniqueEntries("farmName", scoutStops.concat(treatments));
 
         initSuggestions("constraintFarms", farmNames);
@@ -132,8 +130,7 @@ function mapSpeciesLifeStage(code) {
 
 function getUniqueEntries(uniqueFor, data) {
     var result = [];
-
-    $.each(data, function(index, object) {
+   $.each(data, function (index, object) {
         if ($.grep(result, function(d) {
             return object[uniqueFor].valueOf() === d.valueOf();
         }).length === 0)
@@ -269,8 +266,6 @@ function updateChart(settings) {
 
     var filteredScoutStops = filterScoutStops(scoutStops, settings);
 
-   // console.log("Constrained Data", filteredScoutStops);
-
     var filteredTreatments = [];
 
     //clear the div if an error message was shown previously 
@@ -290,8 +285,6 @@ function updateChart(settings) {
         filteredTreatments = filterTreatments(treatments, settings);
         
         existsTreatments = filteredTreatments.length;
-
-        //console.log(filteredTreatments);
 
         if (!existsScoutStops && !existsTreatments) {
             inErrorState = true;
@@ -318,11 +311,7 @@ function plot(onlyScoutStops, onlyTreatments, filteredScoutStops, filteredTreatm
     //get categorised data (or unaltered data if no grouping is applied)
     var categorisedStops = groupBy(viewModelToMemberMap[settings.grouping], filteredScoutStops);
 
-    //console.log("Grouped by " + settings.grouping, categorisedStops);
-
     var parameters = determinePlotParameters(onlyScoutStops, onlyTreatments, settings, categorisedStops, filteredTreatments);
-
-    //console.log("Plotting with this", JSON.stringify(parameters, null, 2));
 
     chart = new Chartist[parameters.chartType]("#chart", parameters.data, parameters.options);
 
@@ -359,8 +348,8 @@ function determinePlotParameters(onlyScoutStops, onlyTreatments, settings, categ
     //always start y axis at 0
     parameters.options.axisY.low = 0;
 
-    //For all y data except Bugs per Tree, use integers
-    if (yMemberName !== "bugsPerTree")
+    //For all average data, use real valued labels
+    if (settings.aggregateType === "Total")
         parameters.options.axisY.onlyInteger = true;
 
     //Axis Title Plugin
@@ -385,8 +374,6 @@ function saveLineChartParameters(onlyScoutStops, showTreatments, onlyTreatments,
             //group each x value with its corresponding y values, sorting x in ascending order
             var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(sortByFirstElement);
 
-            //console.log("Points for " + s.name, sortedXCategorisedPoints);
-
             s.data = getLineSeriesData(yMemberName, aggregateType, filteredTreatments, sortedXCategorisedPoints);
 
             parameters.data.series.push(s);
@@ -406,27 +393,28 @@ function saveLineChartParameters(onlyScoutStops, showTreatments, onlyTreatments,
         labelInterpolationFnc: millisToDateString
     };
 
-    parameters.options.tooltipFnc = getTooltipText;
+    parameters.options.tooltipFnc = getLineTooltipText;
 
     
 
 }
 
 function saveBarChartParamaters(parameters, xMemberName, yMemberName, aggregateType, categorisedStops) {
-    var arrayOfXYs = [];
-
-    var potentialLabels = [];
-
+    var xLabels = [];
+    
+    //first extract all x-labels (a particular series might not include a mapping for all x-values)
     $.each(categorisedStops, function (i, c) {
-        //group each x value with its corresponding y values, sorting x in ascending order
-        potentialLabels.push(addUnique(groupBy(xMemberName, c).sort(sortByFirstElement), potentialLabels));
 
+        //group each x value with its corresponding y values
+        //add unique x values to xLabels
+        //ignore the series name stored at position 0
+        addUniqueLabel(groupBy(xMemberName, c.slice(1)).sort(sortByFirstElement), xLabels);
 
     });
 
-    console.log(potentialLabels);
+    parameters.data.labels = xLabels;
 
-    /*$.each(categorisedStops, function (i, c) {
+    $.each(categorisedStops, function (i, c) {
         var s = {};
 
         //series name is the first element of c
@@ -435,28 +423,34 @@ function saveBarChartParamaters(parameters, xMemberName, yMemberName, aggregateT
         //group each x value with its corresponding y values, sorting x in ascending order
         var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(sortByFirstElement);
         
-        
-    });*/
+        s.data = getBarSeriesData(xLabels, yMemberName, aggregateType, sortedXCategorisedPoints);
 
-    parameters.options.tooltipFnc = getTooltipText;
+        parameters.data.series.push(s);
+        
+    });
+
+
+    parameters.options.axisY = {};
+    parameters.options.axisX = {};
+    parameters.options.tooltipFnc = getBarTooltipText;
 }
 
-function addUnique(series, labels) {
+function addUniqueLabel(series, labels) {
     $.each(series, function (index, points) {
-        if ($.grep(labels, function (d) {
+        if ($.grep(labels, function(d) {
             return points[0].valueOf() === d.valueOf();
-        }).length === 0)
+        }).length === 0) {
             labels.push(points[0]);
+        }
     });
 }
 
 function getLineSeriesData(yMember, aggregateType, filteredTreatments, sortedXCategorisedPoints) {
     var xy = [];
-    
+
     $.each(sortedXCategorisedPoints, function (i, points) {
         var xValue = points.shift();
         
-        //xAndYs from this point only includes ys
         var yAggregate = reduceToSingleY(yMember, aggregateType, points);
         
         xy.push({ x: xValue, y: yAggregate });
@@ -464,6 +458,34 @@ function getLineSeriesData(yMember, aggregateType, filteredTreatments, sortedXCa
     });
 
     return xy;
+
+}
+
+function getBarSeriesData(xLabels, yMember, aggregateType, points) {
+    var y = [];
+    var curMatchIndex = 0;
+
+    //A common labels array is used to store all mapped x values, "xLabels"
+    //If a particular series excludes information for a particular x
+    //the mapping for said x should be null
+    $.each(xLabels, function (i, label) {
+
+        if (points.length && curMatchIndex < points.length && points[curMatchIndex][0] === label) {
+            //remove the x value from the array
+            points[curMatchIndex].shift();
+
+            //reduce all the y values according to aggregateType and save into y
+            y.push(reduceToSingleY(yMember, aggregateType, points[curMatchIndex]));
+
+            ++curMatchIndex;
+
+        } else {
+            y.push(null);
+        }
+
+    });
+
+    return y;
 
 }
 
@@ -481,8 +503,6 @@ function addTreatments(parameters, treatments) {
     });
 
     parameters.data.series.push(newSeries);
-
-    //console.log(JSON.stringify(newSeries, null, 2));
 
     parameters.options.plugins.push(Chartist.plugins.verticalLines({
         positions: vLinePositions
@@ -578,7 +598,7 @@ function setAxesTitles(plugins, settings) {
             axisClass: "ct-axis-title",
             offset: {
                 x: 0,
-                y: 35
+                y: 30
             },
             textAnchor: "middle"
         },
@@ -595,7 +615,7 @@ function setAxesTitles(plugins, settings) {
     }));
 }
 
-function getTooltipText(meta, values, seriesName, classes) {
+function getLineTooltipText(meta, values, seriesName, classes) {
     if (classes.indexOf("ct-line") >= 0) {
         return seriesName;
     } else {
@@ -603,6 +623,11 @@ function getTooltipText(meta, values, seriesName, classes) {
         var y = parseFloat(values.split(",")[1]).toFixed(2).toString();
         return seriesName + "<br/>" + x + ", " + y;
     }
+}
+
+function getBarTooltipText(meta, values, seriesName, classes) {
+    var y = parseFloat(values.split(",")[0]).toFixed(2).toString();
+    return seriesName + "<br/>" + y;
 }
 
 function displayErrorMessage(message) {
