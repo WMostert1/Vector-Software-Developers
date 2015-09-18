@@ -58,7 +58,8 @@
                 blockNum += 1;
                 <div class="row">
                     <div class="col-sm-3">@Html.DisplayFor(modelItem => block.BlockName)</div>
-                    <div class="col-sm-3">@Html.DisplayFor(modelItem=>Model[farmNum][blockNum].PestsPerTree)</div>
+                    @{string ppt = Model[farmNum][blockNum].PestsPerTree > -1 ? Model[farmNum][blockNum].PestsPerTree.ToString() : "N/A";}
+                    <div class="col-sm-3">@ppt</div>
                     <div class="col-sm-2">@Html.DisplayFor(modelItem => Model[farmNum][blockNum].LastTreatment)</div>
                     <div class="col-sm-3">
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("add" + block.BlockID)">Add Treatment</button>
