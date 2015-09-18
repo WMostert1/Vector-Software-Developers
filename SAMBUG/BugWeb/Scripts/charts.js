@@ -141,25 +141,34 @@ function getUniqueEntries(uniqueFor, data) {
 }
 
 function flattenTreatments(data) {
-    return $.map(data, function(treatment) {
+    var timelessDate;
+
+    return $.map(data, function (treatment) {
+        timelessDate = new Date(treatment.Date);
+        timelessDate.setHours(0, 0, 0, 0);
+
         return {
             farmName: treatment.BlockFarmFarmName,
             blockName: treatment.BlockBlockName,
             comments: treatment.Comments,
-            date: new Date(treatment.Date)
+            date: timelessDate
         };
     });
 }
 
 function flattenScoutStops(data) {
     var result = [];
+    var timelessDate;
 
     $.each(data, function(index, scoutStop) {
         result = result.concat($.map(scoutStop.ScoutBugs, function(b) {
+            timelessDate = new Date(scoutStop.Date);
+            timelessDate.setHours(0, 0, 0, 0);
+
             return {
                 farmName: scoutStop.BlockFarmFarmName,
                 blockName: scoutStop.BlockBlockName,
-                date: new Date(scoutStop.Date),
+                date: timelessDate,
                 numberOfTrees: parseInt(scoutStop.NumberOfTrees),
                 speciesName: b.SpeciesSpeciesName,
                 lifeStage: mapSpeciesLifeStage(b.SpeciesLifestage),
