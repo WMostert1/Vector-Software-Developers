@@ -3,28 +3,37 @@
     Layout = "~/Views/Shared/Authentication.cshtml"; ;
 }
 
-<div class="row">
-    <div class="col-lg-6">
-        <h1 class="align-left">Welcome to SAMBUG</h1>
+<div class="row text-center">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <h1>Welcome to SAMBUG</h1>
+        <form class="form-horizontal " role="form" action="authentication/register" method="POST">
+            <fieldset>
+                <legend>Please sign up to continue</legend>
+
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <input type="email" class="form-control" name="Username" placeholder="Email" required>
+                        <br />
+                        <input type="email" class="form-control" name="UsernameConfirmation" placeholder="Confirm email" required>
+                        <br />
+                        <br />
+                        <input type="password" class="form-control" name="Password" placeholder="Password" required>
+                        <br />
+                        <input type="password" class="form-control" name="PasswordConfirmation" placeholder="Confirm password" required>
+                        <br />
+                        <input type="text" class="form-control" name="FarmName" placeholder="Farm Name" required>
+                        <br />
+                        <br />
+                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
     </div>
 </div>
 
 
-<form class="form-horizontal" role="form" action="authentication/register" method="POST">
-    <fieldset>
-        <legend>Please sign up to continue</legend>
-        <div class="input-group">
-            <input type="email" class="form-control form-group col-lg-10" name="Username" placeholder="Email" required>
 
-            <input type="email" class="form-control form-group col-lg-10" name="UsernameConfirmation" placeholder="Confirm email" required>
-
-            <input type="password" class="form-control col-lg-10" name="Password" placeholder="Password" required >
-
-            <input type="password" class="form-control col-lg-10" name="PasswordConfirmation" placeholder="Confirm password" required>
-
-            <input type="text" class="form-control col-lg-10" name="FarmName" placeholder="Farm Name" required>
-
-            <button type="submit" class="btn-default col-lg-1 col-lg-offset-3">Sign Up</button>
-        </div>
-    </fieldset>
-</form>
