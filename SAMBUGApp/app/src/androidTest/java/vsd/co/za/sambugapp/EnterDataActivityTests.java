@@ -80,7 +80,7 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
                 f.setBlocks(blocks);
                 b.putSerializable(ScoutTripActivity.USER_FARM, f);
                 I.putExtras(b);
-                doCallRealMethod().when(activity).setiReceive(I);
+                //doCallRealMethod().when(activity).setiReceive(I);
                 assertNotNull(when(activity.acceptBlocks()).thenCallRealMethod());
                 // verify(activity).getiReceive();
         }
@@ -94,7 +94,7 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
                 bundle.putSerializable(SCOUT_STOP, stop);
                 intent.putExtras(bundle);
 
-                doCallRealMethod().when(activity).setiReceive(intent);
+                //doCallRealMethod().when(activity).setiReceive(intent);
 
         }
 

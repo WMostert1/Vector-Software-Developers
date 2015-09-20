@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.afollestad.materialdialogs.GravityEnum;
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -44,12 +47,13 @@ public class IdentificationActivity extends AppCompatActivity {
     private ImageView mImageView = null;
     private Bitmap bitmap = null;
     private Species currentEntry = null;
-    private NumberPicker npBugCount;
     private int createCounter = 0;
 
 
     public void doAutomaticClassification(View view) {
-        Toast.makeText(getApplicationContext(), "This feature is currently in development", Toast.LENGTH_SHORT).show();
+        GridView gv = (GridView) findViewById(R.id.gvIdentification_gallery);
+        gv.setNumColumns(3);
+        //Toast.makeText(getApplicationContext(), "This feature is currently in development", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -101,12 +105,6 @@ public class IdentificationActivity extends AppCompatActivity {
             if (createCounter == 0) createCounter++;
 
             setContentView(R.layout.activity_identification);
-
-        //initalise Number of Bugs NumberPicker
-        npBugCount = (NumberPicker) findViewById(R.id.npNumBugs);
-        npBugCount.setMinValue(0);
-        npBugCount.setMaxValue(100);
-        npBugCount.setValue(0);
 
             GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
             gridview.setAdapter(new ImageAdapter(this));
@@ -219,13 +217,30 @@ public class IdentificationActivity extends AppCompatActivity {
 
     }
 
+    public void showDialogNumberOfBugs(View v) {
+        NumberPicker np;
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title("Number of Bugs")
+                .positiveText("Finish")
+                .titleGravity(GravityEnum.CENTER)
+                .customView(R.layout.dialog_number_picker, false)
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        NumberPicker np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+                        sendResultBack(np.getValue());
+                    }
+                })
+                .show();
+        np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+        np.setMaxValue(100);
+    }
 
     /**
      * This function puts the current Species entry as well as the field picture taken
      * into a bundle which is then returned to the enterDataActivity
-     * @param view THe button that was clicked
      */
-    public void sendResultBack(View view) {
+    public void sendResultBack(int numBugs) {
         Intent output = new Intent();
         Bundle bundle = new Bundle();
 
@@ -238,9 +253,10 @@ public class IdentificationActivity extends AppCompatActivity {
         Bitmap currentPicture = bitmap;
         currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
         bundle.putParcelable("Image", currentPicture);
-        bundle.putInt(BUG_COUNT, npBugCount.getValue());
+        bundle.putInt(BUG_COUNT, numBugs);
         output.putExtras(bundle);
         setResult(RESULT_OK, output);
+
         finish();
     }
 

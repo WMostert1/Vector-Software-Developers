@@ -1,52 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+                android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp">
 
-        <CheckedTextView
-            android:id="@+id/tvBlockName"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Block Name:"
-            android:layout_marginLeft="100dp"/>
+            android:orientation="horizontal">
 
-        <CheckedTextView
-            android:id="@+id/lblBlockName"
+            <CheckedTextView
+                android:id="@+id/tvBlockName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Block Name:"
+                android:layout_gravity="start"/>
+
+            <CheckedTextView
+                android:id="@+id/lblBlockName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Block #1"
+                android:layout_marginLeft="20dp"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Block #1"
-            android:layout_marginLeft="20dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <CheckedTextView
+                android:id="@+id/tvNumTrees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Trees:"
+                android:layout_gravity="start"/>
+
+            <CheckedTextView
+                android:id="@+id/lblNumTrees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:layout_marginLeft="20dp"/>
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
-
-        <CheckedTextView
-            android:id="@+id/tvNumTrees"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number of Trees:"
-            android:layout_marginLeft="70dp"/>
-
-        <CheckedTextView
-            android:id="@+id/lblNumTrees"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10"
-            android:layout_marginLeft="20dp"/>
-    </LinearLayout>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="Edit"/>
-</LinearLayout>
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="end"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:drawableTop="@drawable/ic_edit_black_24dp"
+        android:gravity="center"
+        android:onClick="expandScoutStopDetails"
+        />
+
+</RelativeLayout>

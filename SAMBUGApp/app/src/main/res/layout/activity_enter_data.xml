@@ -23,8 +23,15 @@
         android:id="@+id/scoutStopDetailsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/material_grey_600"
+        android:layout_marginTop="20dp"/>
 
     <ScrollView
         android:id="@+id/addedBugs"
