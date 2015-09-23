@@ -14,7 +14,6 @@ namespace BugWeb.Models
         public ReportingViewModel(HttpSessionStateBase session)
         {
             RecordsUrlSuffix = SecurityProvider.isAdmin(session) ? "" :  ((UserDTO)session["UserInfo"]).UserID.ToString();
-            RecordsUrlSuffix = "";
         }
 
         public string RecordsUrlSuffix { get; private set; }
