@@ -35,7 +35,7 @@ namespace BugWeb
                 .Include("~/Scripts/bootstrap.js", "~/Scripts/respond.js", "~/Scripts/jasny-bootstrap.min.js"));
 
             bundles
-                .Add(new ScriptBundle("~/bundles/customJS")
+                .Add(new ScriptBundle("~/bundles/mapReporting")
                 .Include("~/Scripts/MapControls.js"));
 
             bundles
@@ -68,6 +68,8 @@ namespace BugWeb
             bundles
                .Add(new StyleBundle("~/Content/css/bootstrap-tagsinput")
                .Include("~/Content/bootstrap-tagsinput.css"));
+
+   
 
             //TODO: this style bundle must include all styles needed by tables and charts, rename as needed
             bundles
