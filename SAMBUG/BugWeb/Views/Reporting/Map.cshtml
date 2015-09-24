@@ -1,15 +1,159 @@
-﻿    <div id="panel">
-        <button onclick="toggleHeatmap()">Toggle Heatmap</button>
-        <button onclick="changeGradient()">Change gradient</button>
-        <button onclick="changeRadius()">Change radius</button>
-        <button onclick="changeOpacity()">Change opacity</button>
-    </div>
-<div id="map" style="position: relative; height: 40em;width: 100%">
-    <div style="top:50%;left:50%;position:relative" class="whirly-loader">
-        Loading…
+﻿@model BugWeb.Models.ReportingViewModel
+
+@{
+    ViewBag.Title = "Map";
+}  
+
+<div class="container">
+    <div class="tab-content">
+        <div id="Scout_Data">
+
+            <div id="constraintsDivScout" class="panel-group">
+                <div class="panel panel-default  " style="padding: 0px">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">
+                            <span id="collapseIconScout" data-toggle="collapse" data-target="#collapsibleTableScout" class="glyphicon glyphicon-collapse-down"></span>
+                            <span id="resetIconScout" class="glyphicon glyphicon-refresh pull-right"></span>
+                            <strong> Constraints</strong>
+                        </h1>
+                    </div>
+                    <div id="collapsibleTableScout" class="panel-collapse collapse in">
+                        <table class="table myTable">
+                            <tbody>
+                                <tr>
+                                    <th class="myTable">Farm</th>
+                                    <td class="myTable">
+                                        <select id="farmScout" class="form-control farms">
+                                            <option value="all">All Farms</option>
+                                        </select>
+                                    </td>
+                                    <th class="myTable">Date</th>
+                                    <td class="myTable" rowspan="3">
+                                        <label for="timeFromScout">From:</label>
+                                        <input type="date" id="timeFromScout" class="form-control constraintScout dateFrom">
+
+                                        <label for="timeToScout">To:</label>
+                                        <input type="date" id="timeToScout" class="form-control constraintScout dateTo"><br />
+                                        <input class="constraintScout" id="dateAnyScout" type="checkbox" checked> Any
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="myTable">Blocks</th>
+                                    <td class="myTable">
+                                        <select id="blocksScout" class="form-control constraintScout">
+                                            <option value="all">All Blocks</option>
+                                        </select>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <th class="myTable">Species</th>
+                                    <td class="myTable">
+                                        <select id="speciesScout" class="form-control">
+                                            <option value="all">All Species</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="myTable">Species instars</th>
+                                    <td class="myTable">
+                                        <select id="speciesStageScout" class="form-control constraintScout">
+                                            <option value="all">All Instars</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            
+
+        </div>
     </div>
 </div>
 
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=visualization&callback=initMap">
-</script>
+    <div id="map" style="position: relative; height: 35em;width: 100%">
+        <div style="top:50%;left:50%;position:relative" class="whirly-loader">
+            Loading…
+        </div>
+    </div>
+
+<br />
+
+<div class="container">
+    <div id="Map_Options">
+
+        <div id="constraintsMapOptions" class="panel-group">
+            <div class="panel panel-default  " style="padding: 0px">
+                <div class="panel-heading">
+                    <h1 class="panel-title">
+                        <span id="collapseIconScout" data-toggle="collapse" data-target="#collapsibleMapOptions" class="glyphicon glyphicon-collapse-down"></span>
+                        <span id="resetIconScout" class="glyphicon glyphicon-refresh pull-right"></span>
+                        <strong> Map Options</strong>
+                    </h1>
+                </div>
+                <div id="collapsibleMapOptions" class="panel-collapse collapse in">
+                    <table class="table myTable">
+                        <tbody>
+                            <tr>
+                                <td class="myTable">          
+                                    <label >Default Colours</label>
+                                    
+                                    <br />
+                                        <button class="btn btn-default" onclick="changeGradient()">Toggle Blue</button> 
+                                        <button class="btn btn-default" onclick="changeGradient()">Toggle Green</button> 
+                                    <br />
+                                    <br />
+                                    <label>Custom Colours</label>
+                                    <br />
+                                    <label for="r1">Red</label>
+                                    <input id="r1" class="colour" type="range" min="0" max="255" step="1" value="0" />
+
+                                    <label for="r1">Green</label>
+                                    <input id="g1" class="colour" type="range" min="0" max="255" step="1" value="0" />
+
+                                    <label for="r1">Blue</label>
+                                    <input id="b1"class="colour" type="range" min="0" max="255" step="1" value="0" />
+                                                                         
+                                </td>
+                                <td class="myTable">
+                                    <label id="radius_label" for="radius_slider">Radius : 30</label>
+                                    <input id="radius_slider" type="range" min="10" max="150" step="1" value="30" />
+
+                                </td>
+                          
+           
+                             
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+    @section scripts
+{
+        <script type="application/javascript">
+        var recordsUrl = "@Url.Content("~/api/records/" + Model.RecordsUrlSuffix)";
+        var speciesUrl = "@Url.Content("~/api/species")";
+        </script>
+
+        @Scripts.Render("~/bundles/typeahead")
+        @Scripts.Render("~/bundles/bootstrap-tagsinput")
+        @Scripts.Render("~/bundles/mapReporting")
+    }
+
+
+
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=visualization&callback=initMap">
+    </script>
