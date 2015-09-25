@@ -1,35 +1,32 @@
 package vsd.co.za.sambugapp;
 
-import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
@@ -58,7 +55,8 @@ public class enterDataActivity extends AppCompatActivity {
     ScoutBug currBug;
     Farm farm;
     Bitmap imageTaken;
-    HashSet<ScoutBug> allBugs;
+    HashSet<ScoutBug> listAddedBugs;
+    RecyclerView rvAddedBugs;
 
     LocationManager mLocationManager;
     Location myLocation = null;
@@ -86,19 +84,24 @@ public class enterDataActivity extends AppCompatActivity {
         CheckedTextView txtFarmName = (CheckedTextView) toolbar.findViewById(R.id.txtFarmName);
         txtFarmName.setText(farm.getFarmName());
 
-        allBugs = new HashSet<>();
+        listAddedBugs = new HashSet<>();
         if (savedInstanceState != null) {
-            allBugs = (HashSet<ScoutBug>) savedInstanceState.get(BUG_LIST);
+            listAddedBugs = (HashSet<ScoutBug>) savedInstanceState.get(BUG_LIST);
             blockInfoCollapsed = savedInstanceState.getBoolean(BLOCK_INFO_COLLAPSED);
             updateAddedBugsView();
         }
         receiveGeoLocation();
 
+        rvAddedBugs = (RecyclerView) findViewById(R.id.rvAddedBugs);
+        rvAddedBugs.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        rvAddedBugs.setAdapter(new RVAddedBugsAdapter(listAddedBugs));
+        rvAddedBugs.setHasFixedSize(true);
+
         if (!blockInfoCollapsed) {
             expandScoutStopDetails(null);
             //RelativeLayout layout = (RelativeLayout) findViewById(R.id.bugDetailsLayout);
             //layout.setVisibility(View.INVISIBLE);
-            Button btn = (Button) findViewById(R.id.btnAddBug);
+            FloatingActionButton btn = (FloatingActionButton) findViewById(R.id.fabAddBug);
             btn.setVisibility(View.INVISIBLE);
         } else {
             collapseScoutStopDetails(null);
@@ -133,7 +136,7 @@ public class enterDataActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putSerializable(BUG_LIST, allBugs);
+        savedInstanceState.putSerializable(BUG_LIST, listAddedBugs);
         savedInstanceState.putSerializable(SCOUT_STOP, stop);
         savedInstanceState.putBoolean(BLOCK_INFO_COLLAPSED, blockInfoCollapsed);
     }
@@ -223,7 +226,7 @@ public class enterDataActivity extends AppCompatActivity {
 
         Intent output = new Intent();
         Bundle b = new Bundle();
-        stop.setScoutBugs(allBugs);
+        stop.setScoutBugs(listAddedBugs);
         b.putSerializable(ScoutTripActivity.SCOUT_STOP, stop);
         output.putExtras(b);
         setResult(RESULT_OK, output);
@@ -356,7 +359,7 @@ public class enterDataActivity extends AppCompatActivity {
         lblNumTrees.setText(stop.getNumberOfTrees() + "");
         //RelativeLayout openLayout = (RelativeLayout) findViewById(R.id.bugDetailsLayout);
         //openLayout.setVisibility(View.VISIBLE);
-        Button openButton = (Button) findViewById(R.id.btnAddBug);
+        FloatingActionButton openButton = (FloatingActionButton) findViewById(R.id.fabAddBug);
         openButton.setVisibility(View.VISIBLE);
     }
 
@@ -380,14 +383,16 @@ public class enterDataActivity extends AppCompatActivity {
     }
 
     public void updateAddedBugsView(){
-        LinearLayout info=(LinearLayout)findViewById(R.id.addedBugsContent);
+       /* RecyclerView info=(LinearLayout)findViewById(R.id.addedBugsContent);
         info.removeAllViews();
-        for (ScoutBug bug:allBugs) {
+        for (ScoutBug bug: listAddedBugs) {
             View bugInfo = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
             ((ImageView) bugInfo.findViewById(R.id.bugInfoImage)).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length),150,150,true));
             ((TextView) bugInfo.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs() + "");
             info.addView(bugInfo);
-        }
+        }*/
+        RecyclerView rv = (RecyclerView) findViewById(R.id.rvAddedBugs);
+        rv.getAdapter().notifyDataSetChanged();
     }
     /**
      * Stores the current Bugs
@@ -410,7 +415,58 @@ public class enterDataActivity extends AppCompatActivity {
         imageTaken.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         currBug.setFieldPicture(stream.toByteArray());
         stop.ScoutBugs.add(currBug);
-        allBugs.add(currBug);
+        listAddedBugs.add(currBug);
 
     }
+
+    public class RVAddedBugsAdapter extends RecyclerView.Adapter<RVAddedBugsAdapter.AddedBugViewHolder> {
+
+        HashSet<ScoutBug> bugs;
+
+        public RVAddedBugsAdapter(HashSet<ScoutBug> bugs) {
+            this.bugs = bugs;
+        }
+
+        public class AddedBugViewHolder extends RecyclerView.ViewHolder {
+            CardView cvAddedBug;
+            ImageView ivAddedBugPic;
+            CheckedTextView tvAddedBugSpecies;
+            CheckedTextView tvAddedBugCount;
+
+            AddedBugViewHolder(View itemView) {
+                super(itemView);
+                cvAddedBug = (CardView) itemView.findViewById(R.id.cvAddedBug);
+                tvAddedBugSpecies = (CheckedTextView) itemView.findViewById(R.id.tvAddedBugSpecies);
+                tvAddedBugCount = (CheckedTextView) itemView.findViewById(R.id.tvAddedBugCount);
+                ivAddedBugPic = (ImageView) itemView.findViewById(R.id.ivAddedBugPic);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return bugs.size();
+        }
+
+        @Override
+        public AddedBugViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_added_bug, viewGroup, false);
+            AddedBugViewHolder addedBugViewHolder = new AddedBugViewHolder(v);
+            return addedBugViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(AddedBugViewHolder addedBugViewHolder, int i) {
+            ScoutBug bug = null;
+            int pos = 0;
+            for (ScoutBug b : bugs) {
+                if (pos++ == i)
+                    bug = b;
+            }
+            Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length), 88, 88, true);
+            addedBugViewHolder.ivAddedBugPic.setImageBitmap(bm);
+            addedBugViewHolder.tvAddedBugSpecies.setText(bug.getSpecies().getSpeciesName() + " Instar " + bug.getSpecies().getLifestage());
+            addedBugViewHolder.tvAddedBugCount.setText(bug.getNumberOfBugs() + "");
+        }
+    }
+
 }

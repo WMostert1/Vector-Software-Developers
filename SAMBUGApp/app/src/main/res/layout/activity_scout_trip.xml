@@ -20,17 +20,13 @@
             android:id="@+id/spnFarms"/>
     </android.support.v7.widget.Toolbar>
 
-    <Button
-        android:id="@+id/btnAddStop"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddBug"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:layout_gravity="end"
-        android:layout_weight="5"
-        android:layout_marginBottom="10dp"
-        android:text="+"
+        android:src="@drawable/ic_add_black_24dp"
         android:onClick="addStopActivityStart"
-        />
+        android:layout_gravity="right"></android.support.design.widget.FloatingActionButton>
 
     <CheckedTextView
         android:layout_width="wrap_content"
@@ -62,9 +58,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:drawableStart="@drawable/ic_done_black_24dp"
+        android:drawableLeft="@drawable/ic_done_black_24dp"
         android:text="Finish"
-        android:layout_gravity="center"
-        android:layout_weight="5"
+        android:layout_gravity="bottom|center"
         android:layout_marginTop="15dp"
         android:onClick="finishTrip"/>
 

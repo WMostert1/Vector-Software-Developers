@@ -7,7 +7,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginLeft="20dp">
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -24,16 +25,14 @@
             <CheckedTextView
                 android:id="@+id/lblBlockName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Block #1"
-                android:layout_marginLeft="20dp"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="4dp">
 
             <CheckedTextView
                 android:id="@+id/tvNumTrees"
@@ -45,21 +44,19 @@
             <CheckedTextView
                 android:id="@+id/lblNumTrees"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10"
-                android:layout_marginLeft="20dp"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 
 
     <Button
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_gravity="end"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="16dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:drawableTop="@drawable/ic_edit_black_24dp"
+        android:drawableTop="@drawable/ic_edit_black_18dp"
         android:gravity="center"
         android:onClick="expandScoutStopDetails"
         />

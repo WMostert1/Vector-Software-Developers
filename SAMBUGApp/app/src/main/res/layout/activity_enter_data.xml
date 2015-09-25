@@ -24,40 +24,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="16dp"
+        android:animateLayoutChanges="true">
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/material_grey_600"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="8dp"/>
 
-    <ScrollView
-        android:id="@+id/addedBugs"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-
-        <LinearLayout
-            android:id="@+id/addedBugsContent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"/>
-    </ScrollView>
-
-    <Button
-        android:id="@+id/btnAddBug"
+    <CheckedTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/addBug"
-        android:layout_gravity="center_horizontal"
-        android:onClick="sendToIdentificationActivity"/>
+        android:text="Added Bug Summary"/>
 
-    <Button
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvAddedBugs"
+        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:background="#A5D6A7"></android.support.v7.widget.RecyclerView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddBug"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Done"
-        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_add_black_24dp"
+        android:onClick="sendToIdentificationActivity"
+        android:layout_gravity="center_horizontal"></android.support.design.widget.FloatingActionButton>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/material_grey_600"
+        android:layout_marginTop="8dp"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_done_black_24dp"
+        android:drawableLeft="@drawable/ic_done_black_24dp"
+        android:text="Finish"
+        android:layout_marginTop="8dp"
         android:layout_gravity="center_horizontal"
         android:onClick="sendToScoutTripActivity"/>
+
 </LinearLayout>
