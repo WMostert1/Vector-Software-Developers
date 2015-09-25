@@ -59,6 +59,8 @@
 
 \tableofcontents
 
+\pagebreak
+
 
 % Put all images in images folder - Please use PNG's not Jpegs
 % Preferably create separate file for your domain - just like with the use cases
@@ -72,7 +74,7 @@ a major shortfall, namely the accurate identification of pests, despite efforts 
 Area wide control of pests and diseases is a concept that has been considered, but with the lack of scout data from across and within growing regions it is impossible to make such recommendations. \\
 
 \section{Vision}
-An innovative approach to handling the management and acquisition of scout data is to develop a smartphone application that is able to identify specific hemipteran species by making use of the built-in camera of the smartphone. This application should ideally be able to make use of the smartphone’s built-in GPS to perform geotagging and uploading information to a central database.
+An innovative approach to handling the management and acquisition of scout data is to develop a smartphone application that is able to identify specific hemipteran species by making use of the built-in camera of the smartphone. This application makes use of the smartphone’s built-in GPS to perform geotagging and uploading information to a central database. In addition to the data management, one of the primary goals is to supply data mining methods on historical data as obtained via the smartphone application. A visual representation of said data is therefore made available in a dynamic and easy way for the every day farmer and researcher.
 
 \section{Scope}
 \includegraphics[width=\linewidth]{scope}
@@ -93,6 +95,8 @@ An innovative approach to handling the management and acquisition of scout data 
 			\item It provides the functionality for a user to be able to enter data related to a scouting trip - entering data such as the number of trees scouted, the average number of bugs per tree and the different kind of bugs specified. After which a summary should be displayed.
 			\item It provides the ability for a user to record the details related to spraying.
 		\end{enumerate}
+
+		In many ways this module may be regarded as the "core" functionality of the system. This encompasses the main purpose of the system.
 		\subsubsection{Module Scope}
 		The scope of the \textit{BugScouting} module is shown below:\\
 		\hfill\\
@@ -268,7 +272,7 @@ An innovative approach to handling the management and acquisition of scout data 
 		\subsubsection{Usability}
 			Usability is the main quality requirement for the system. In order for the system to have any actual business value it should be easy to use and effective. As far as possible, the user should be able to use the app without needing textual instructions.
 		\subsubsection{Deployability}
-			The system must be deployable to any cloud hosted virtual machine or locally hosted server.
+			The system must be deployable to any cloud hosted, Windows based, virtual machine or locally hosted server.
 	\subsection{Architecture responsibilities}
 	The architectural responsibilities of the system include providing infrastructure for the following:
 		\begin{itemize}
@@ -364,6 +368,8 @@ For more information regarding why SQLite is used in Android App Development, cl
 					\item The .NET framework provides seamless integration with the other technologies utilised
 					\item The .NET framework provides for quick and easy set-up for REST services and web front ends using MVC5		
 				\end{itemize}
+			\paragraph{AutoMapper}
+				AutoMapper is used to do automated maping from DTO's (Domain Transfer Objects) to Domain (or Data) objects, and vice versa. This is simply used to promote code reusability and readability.
 			\paragraph{.NET MVC 5}
 				For the same reasons mentioned for the choice of .NET WebAPI. MVC 5 was chosen as a pattern at a lower level of granularity due to the built in support for it in the .NET framework and it can be viewed in most cases as a industry standard for web applications.
 			\paragraph{MSSQL Express}
@@ -372,12 +378,12 @@ For more information regarding why SQLite is used in Android App Development, cl
 			\paragraph{AutoFac}
 					AutoFac is used as a mocking framework for unit testing as well as for dependency injection in order to fascilitate more effective unit testing and pluggability. Using this dependency injection framework code maintainability is also improved.
 		\subsubsection{Web Frontend}
-			\paragraph{Aurelia.io}
-				Aurelia is the next generation JavaScript client framework for mobile, desktop and web. It provides two-way databinding (as does AngularJS) and extensible HTML as well as other great features such as client side dependency injection
-				. Aurelia is the way forward for client side scripting frameworks. The other major competitor in this area is AngularJS. See \href{http://ilikekillnerds.com/2015/01/aurelia-vs-angularjs-round-one-fight/}{Aurelia vs AngularJS – Round One: FIGHT!}
-		\subsubsection{Builds}		
-			\paragraph{TeamCity}
-				TeamCity was chosen as a automated build and continious integration environment being run on a development server to fascilitate continious integration and better development as a team.
+			\paragraph{Angular JS}
+				Angular is the next generation JavaScript client framework for mobile, desktop and web. It provides two-way databinding (as does Aurelia.io) and extensible HTML as well as other great features such as client side dependency injection
+				. Angular is the way forward for client side scripting frameworks. The other major competitor in this area is AureliaIO. See \href{http://ilikekillnerds.com/2015/01/aurelia-vs-angularjs-round-one-fight/}{Aurelia vs AngularJS – Round One: FIGHT!}
+		\subsubsection{Builds and Deployment}		
+			\paragraph{AppHarbor}
+				AppHarbor is a Platform as a Service for .NET applications. AppHarbor supplies the functionality to attach to a GitHub repository and listen for new commits. When a new commit is detected, the project is automagically built and all related unit tests are run. If all tests passed the option is supplied to deploy the project.
 			\paragraph{Gradle}
 				This build system is the standard for Android Studios and therefore it allows us to easily get apps built and running. Testing and debugging apps is made really simple using Gradle. It also allows us to perform incremental building. 
 			\paragraph{MSBuild}
@@ -396,9 +402,18 @@ For more information on why JUnit was chosen compared to other Testing Framework
 
 			\paragraph{MSTest}
 				MSBuild is the standard testing pacakge for the .NET development environment. Since it functions seamlessly there is no need to change this technology.
-	
-	
+		
+	\subsubsection{Artifical Intelligence and Computer Vision}
+		\paragraph{OpenCV}
+			OpenCV is a open source library which focuses on computer vision applications and artifical intelligence. It is believed to be the most popular and reliable open source library in the field. The OpenCV library was used for preprocessing of images for the neural network which is also supplied via OpenCV. EmguCV was used as .NET bindings for the OpenCV library. 
 
+	\subsubsection{Additional Technologies}
+		\paragraph{Fiddler 4}
+			Fiddler is a .NET orientated debugging program similar to WireShark which is used to monitor HTTP requests and set up custom requests to any specified server in almost any specific form (GET, POST, PUT etc.)
+		\paragraph{Git and GitHub}
+			Git is the version control system of choice which is uituilised for the system. The public repository from whch the code base is hosted is named GitHub and may be accessed at \url{https://github.com/WMostert1/Vector-Software-Developers}.
+		\paragraph{Various Javascript Frameworks}
+			Various , mostly JavaScript, libraries were utilised for the reporting services and user interface.
 %\section{Open Issues}
 
 
