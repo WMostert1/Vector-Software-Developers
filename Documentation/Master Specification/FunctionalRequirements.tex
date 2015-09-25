@@ -23,7 +23,7 @@
     \centering
     \vfill
     {\bfseries\Huge
-         Functional Requirements for the SAMBUG Project\\
+        Master Specification for the SAMBUG Project\\
       \hfill\\
          \Large COS301
         \vskip2cm
@@ -86,7 +86,7 @@ An innovative approach to handling the management and acquisition of scout data 
 %	\subsection{Architecture constraints}
 \section{Functional Requirements and Application Design}
 	\subsection{Domain Model}
-	
+		\includegraphics[width=\linewidth]{DomainModel}
 %------------------------------------------------------------------------------------------%
 
 	\subsection{BugScouting}
@@ -210,11 +210,11 @@ An innovative approach to handling the management and acquisition of scout data 
 		\paragraph{authoriseUser \dotfill [Priority - Medium]}
 		This use case allows for an authorization restriction for a service to be added/\\\hfill\\
 		The Service Contract for the \textit{authoriseUser} use case is shown below:\\\hfill\\
-		%\includegraphics[width=\linewidth]{}
+		\includegraphics[width=\linewidth]{authorise}
 		\paragraph{deauthoriseUser \dotfill [Priority - Medium]}
 				This use case allows for an authorization restriction for a service to be removed/\\\hfill\\
 		The Service Contract for the \textit{deauthoriseUser} use case is shown below:\\\hfill\\
-		%\includegraphics[width=\linewidth]{}
+		\includegraphics[width=\linewidth]{deauthor}
 		
 		
 		
@@ -378,12 +378,16 @@ For more information regarding why SQLite is used in Android App Development, cl
 			\paragraph{AutoFac}
 					AutoFac is used as a mocking framework for unit testing as well as for dependency injection in order to fascilitate more effective unit testing and pluggability. Using this dependency injection framework code maintainability is also improved.
 		\subsubsection{Web Frontend}
-			\paragraph{Angular JS}
+			\paragraph{DataTablesJS}
+				DataTables is a plug-in for the popular jQuery Javascript library. It enables powerful DOM manipulation and data-binding specifically for data-driven web pages. Since the SAMBUG Website mainly features a dashboard that enables growers to peer into their bug collection and treatment history, tables and charts will be at the heart of the Web front-end. This library is specifically for dynamic table creation from multiple data sources.
+			\paragraph{ChartistJS}
+				Chartist is a JavaScript charting library providing flexible and responsive charts for our Reporting Module. Chartist prefers convention over configuration and although it's compact and focused at its core, its functionality may be extended via plug-ins. This libary draws its chart elements in the Scalable Vector Graphics format, allowing crisp images, independent of device specifications. 
+			\paragraph{AngularJS}
 				Angular is the next generation JavaScript client framework for mobile, desktop and web. It provides two-way databinding (as does Aurelia.io) and extensible HTML as well as other great features such as client side dependency injection
 				. Angular is the way forward for client side scripting frameworks. The other major competitor in this area is AureliaIO. See \href{http://ilikekillnerds.com/2015/01/aurelia-vs-angularjs-round-one-fight/}{Aurelia vs AngularJS – Round One: FIGHT!}
 		\subsubsection{Builds and Deployment}		
 			\paragraph{AppHarbor}
-				AppHarbor is a Platform as a Service for .NET applications. AppHarbor supplies the functionality to attach to a GitHub repository and listen for new commits. When a new commit is detected, the project is automagically built and all related unit tests are run. If all tests passed the option is supplied to deploy the project.
+				This is a hosted .NET Platform as a Service. AppHarbor attaches to our version control system (Git) and monitors commits to the master branch. It automatically builds the latest source, runs unit and integration tests and finally deploys when the tests have all succeeded. AppHarbor also hosts our MSSQL development database.
 			\paragraph{Gradle}
 				This build system is the standard for Android Studios and therefore it allows us to easily get apps built and running. Testing and debugging apps is made really simple using Gradle. It also allows us to perform incremental building. 
 			\paragraph{MSBuild}
