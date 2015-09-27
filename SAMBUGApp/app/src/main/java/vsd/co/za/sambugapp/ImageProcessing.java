@@ -1,16 +1,25 @@
 package vsd.co.za.sambugapp;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +31,9 @@ public class ImageProcessing extends AppCompatActivity {
     private ImageView mImageView = null;
     private Bitmap bitmap = null;
     public static final int REQUEST_TAKE_PHOTO = 89;
+    public static final int PIC_CROP = 2;
+    Uri picUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +74,7 @@ public class ImageProcessing extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         InputStream stream = null;
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
-
+        {
             try {
                 //Recycle unused bitmaps
                 if (bitmap != null) {
@@ -78,9 +90,10 @@ public class ImageProcessing extends AppCompatActivity {
 
                 // Decode bitmap with inSampleSize set
                 options.inJustDecodeBounds = false;
-                stream = getContentResolver().openInputStream(data.getData());
+                picUri = data.getData();
+                stream = getContentResolver().openInputStream(picUri);
                 bitmap = BitmapFactory.decodeStream(stream, null, options);
-
+                Rotate(this,picUri);
                 //TODO: Rotate the image
 
                 mImageView.setImageBitmap(bitmap);
@@ -96,7 +109,39 @@ public class ImageProcessing extends AppCompatActivity {
                     }
             }
     }
+        else if(requestCode == PIC_CROP){
+            //get the returned data
+            Bundle extras = data.getExtras();
+            //get the cropped bitmap
+            Bitmap theCroppedPic = extras.getParcelable("data");
+            //retrieve a reference to the ImageView
+            //display the returned cropped image
+            mImageView.setImageBitmap(theCroppedPic);
+        }
+    }
 
+    /**
+     * Rotates the image accordingly.
+     */
+    public void Rotate(Context context, Uri photoUri) {
+    /* it's on the external media. */
+        Cursor cursor = context.getContentResolver().query(photoUri,
+                new String[] { MediaStore.Images.ImageColumns.ORIENTATION }, null, null, null);
+
+        if (cursor.getCount() != 1) {
+            return ;
+        }
+
+        cursor.moveToFirst();
+        int orientation= cursor.getInt(0);
+        if(orientation > 0){
+            Matrix matrix = new Matrix();
+            matrix.postRotate(orientation);
+
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                    bitmap.getHeight(), matrix, true);
+        }
+    }
     /**
      * Starts a new intent to take a picture with the device's camera
      */
@@ -107,4 +152,42 @@ public class ImageProcessing extends AppCompatActivity {
         }
 
     }
+
+    /**
+     * Crops the image accordingly.
+     * @param v
+     */
+    public void performCrop(View v){
+        if(picUri == null){
+            String errorMessage = "Whoops - your dont have a picture to crop";
+            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+            return;
+        }
+
+        try {
+
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            //indicate image type and Uri
+            cropIntent.setDataAndType(picUri, "image/*");
+            //set crop properties
+            cropIntent.putExtra("crop", "true");
+            //indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            //indicate output X and Y
+            cropIntent.putExtra("outputX", 256);
+            cropIntent.putExtra("outputY", 256);
+            //retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            //start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, PIC_CROP);
+        }
+        catch(ActivityNotFoundException anfe){
+            //display an error message
+            String errorMessage = "Whoops - your device doesn't support the crop action!";
+            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
 }
