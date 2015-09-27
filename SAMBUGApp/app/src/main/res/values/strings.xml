@@ -29,4 +29,5 @@
     <string name="title_activity_test">test</string>
     <string name="numBugs">Number of Bugs</string>
     <string name="bugType">Bug Type</string>
+    <string name="title_activity_image_processing">ImageProcessing</string>
 </resources>

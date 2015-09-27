@@ -1,8 +1,6 @@
 package vsd.co.za.sambugapp;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,16 +9,13 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,15 +24,12 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DomainModels.Block;
@@ -47,7 +39,7 @@ import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 import vsd.co.za.sambugapp.DomainModels.Species;
 
 
-public class enterDataActivity extends ActionBarActivity {
+public class EnterDataActivity extends ActionBarActivity {
     private final String BUG_COUNT="za.co.vsd.bug_count";
     private final String BUG_LIST="za.co.vsd.bug_list";
     private final String SCOUT_STOP = "za.co.vsd.scout_stop";
@@ -259,7 +251,7 @@ public class enterDataActivity extends ActionBarActivity {
 
     public void sendToIdentificationActivity(View view) {
 
-        Intent intent = new Intent(enterDataActivity.this, IdentificationActivity.class);
+        Intent intent = new Intent(EnterDataActivity.this, ImageProcessing.class);
         startActivityForResult(intent, 0);
     }
 
@@ -326,7 +318,7 @@ public class enterDataActivity extends ActionBarActivity {
      * Error message if gps is off.
      */
     public void createErrorMessage() {
-        new AlertDialog.Builder(enterDataActivity.this)
+        new AlertDialog.Builder(EnterDataActivity.this)
                 .setTitle("Switch on gps")
                 .setMessage("Please ensure your gps is switched on.")
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

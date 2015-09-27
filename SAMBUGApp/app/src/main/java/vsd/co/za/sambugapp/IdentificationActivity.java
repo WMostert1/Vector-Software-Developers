@@ -213,7 +213,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     /**
      * This function puts the current Species entry as well as the field picture taken
-     * into a bundle which is then returned to the enterDataActivity
+     * into a bundle which is then returned to the EnterDataActivity
      * @param view THe button that was clicked
      */
     public void sendResultBack(View view) {

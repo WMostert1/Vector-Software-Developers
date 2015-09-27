@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -107,7 +106,7 @@ public class ScoutTripActivity extends ActionBarActivity {
      * @param v Button view that is clicked
      */
     public void addStopActivityStart(View v){
-        Intent intent=new Intent(this,enterDataActivity.class);
+        Intent intent=new Intent(this,EnterDataActivity.class);
         Bundle b = new Bundle();
         b.putSerializable(SCOUT_STOP,null);
         b.putSerializable(USER_FARM,farm);
@@ -130,7 +129,7 @@ public class ScoutTripActivity extends ActionBarActivity {
     public void updateStopActivityStart(int position){
         //Enter EnterDataActivity for editing the stop
         updateIndex=position;
-        Intent intent=new Intent(this,enterDataActivity.class);
+        Intent intent=new Intent(this,EnterDataActivity.class);
         Bundle bundle=new Bundle();
         bundle.putSerializable(SCOUT_STOP, scoutTrip.getStop(position));
         bundle.putSerializable(USER_FARM, farm);
