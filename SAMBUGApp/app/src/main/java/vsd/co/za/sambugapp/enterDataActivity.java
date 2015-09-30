@@ -428,14 +428,12 @@ public class enterDataActivity extends AppCompatActivity {
         }
 
         public class AddedBugViewHolder extends RecyclerView.ViewHolder {
-            CardView cvAddedBug;
             ImageView ivAddedBugPic;
             CheckedTextView tvAddedBugSpecies;
             CheckedTextView tvAddedBugCount;
 
             AddedBugViewHolder(View itemView) {
                 super(itemView);
-                cvAddedBug = (CardView) itemView.findViewById(R.id.cvAddedBug);
                 tvAddedBugSpecies = (CheckedTextView) itemView.findViewById(R.id.tvAddedBugSpecies);
                 tvAddedBugCount = (CheckedTextView) itemView.findViewById(R.id.tvAddedBugCount);
                 ivAddedBugPic = (ImageView) itemView.findViewById(R.id.ivAddedBugPic);

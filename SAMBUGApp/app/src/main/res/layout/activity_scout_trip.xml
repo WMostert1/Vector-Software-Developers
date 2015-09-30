@@ -3,7 +3,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:weightSum="90"
               tools:context="vsd.co.za.sambugapp.ScoutTripActivity">
 
     <android.support.v7.widget.Toolbar
@@ -17,7 +16,8 @@
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/spnFarms"/>
+            android:id="@+id/spnFarms"
+            />
     </android.support.v7.widget.Toolbar>
 
     <android.support.design.widget.FloatingActionButton
@@ -34,12 +34,11 @@
         android:text="Stops"
         android:textStyle="bold"/>
 
-    <ListView
-        android:id="@+id/lstStops"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvScoutStops"
         android:layout_width="match_parent"
-        android:layout_weight="50"
-        android:layout_height="0dp"
-        android:layout_marginBottom="15dp"></ListView>
+        android:layout_height="150dp"
+        android:layout_marginBottom="15dp"></android.support.v7.widget.RecyclerView>
 
     <CheckedTextView
         android:layout_width="wrap_content"
@@ -48,11 +47,10 @@
         android:layout_gravity="left"
         android:textStyle="bold"/>
 
-    <ListView
-        android:id="@+id/lstPestsPerTree"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPestsPerTree"
         android:layout_width="match_parent"
-        android:layout_weight="30"
-        android:layout_height="0dp"></ListView>
+        android:layout_height="70dp"></android.support.v7.widget.RecyclerView>
     <Button
         android:id="@+id/btnFinishTrip"
         android:layout_width="wrap_content"

@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -43,7 +43,7 @@
         android:id="@+id/rvAddedBugs"
         android:layout_height="200dp"
         android:layout_width="match_parent"
-        android:background="#A5D6A7"></android.support.v7.widget.RecyclerView>
+        ></android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAddBug"
@@ -66,7 +66,7 @@
         android:drawableLeft="@drawable/ic_done_black_24dp"
         android:text="Finish"
         android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_horizontal|bottom"
         android:onClick="sendToScoutTripActivity"/>
 
 </LinearLayout>

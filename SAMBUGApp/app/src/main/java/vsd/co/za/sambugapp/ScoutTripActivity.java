@@ -2,12 +2,13 @@ package vsd.co.za.sambugapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,14 +16,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,10 +49,8 @@ public class ScoutTripActivity extends AppCompatActivity {
     private boolean hasStops = false;
 
     public ScoutTrip scoutTrip;
-    private ListView lstStops;
-    private ListView lstPestsPerTree;
-    private ScoutStopAdapter lstStopsAdapter;
-    private PestsPerTreeAdapter lstPestsPerTreeAdapter;
+    private RecyclerView rvScoutStops;
+    private RecyclerView rvPestsPerTree;
     private Spinner spnFarms;
     private List<Farm> farms;
 
@@ -80,21 +77,23 @@ public class ScoutTripActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spnFarms);
 
+        rvScoutStops = (RecyclerView) findViewById(R.id.rvScoutStops);
+        rvScoutStops.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        rvScoutStops.setAdapter(new RVScoutStopAdapter(scoutTrip.getStopList()));
+        rvScoutStops.setHasFixedSize(true);
 
-        lstStops = (ListView) findViewById(R.id.lstStops);
-        lstStopsAdapter = new ScoutStopAdapter(scoutTrip.getStopList());
-        lstStops.setAdapter(lstStopsAdapter);
+        rvPestsPerTree = (RecyclerView) findViewById(R.id.rvPestsPerTree);
+        rvPestsPerTree.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        rvPestsPerTree.setAdapter(new RVPestsPerTreeAdapter(scoutTrip.getStopList()));
+        rvPestsPerTree.setHasFixedSize(true);
 
-        lstPestsPerTree = (ListView) findViewById(R.id.lstPestsPerTree);
-        lstPestsPerTreeAdapter = new PestsPerTreeAdapter(scoutTrip.getStopList());
-        lstPestsPerTree.setAdapter(lstPestsPerTreeAdapter);
         if (!hasStops) {
             ScoutStop tempStop = new ScoutStop();
             Block tempBlock = new Block();
             tempBlock.setBlockName("No stops added yet. Click '+'");
             tempStop.setBlock(tempBlock);
             scoutTrip.addStop(tempStop);
-            lstStopsAdapter.notifyDataSetChanged();
+            rvScoutStops.getAdapter().notifyDataSetChanged();
         }
 
         acceptFarms(getIntent());
@@ -193,12 +192,9 @@ public class ScoutTripActivity extends AppCompatActivity {
             if (requestCode == NEW_STOP) { //add new stop
                 addStop(stop);
                 Log.d(TAG, "Added");
-            } else if (requestCode == UPDATE_STOP) { //update selected stop
-                updateStop(stop);
-                Log.d(TAG, "Updated");
             }
-            lstStopsAdapter.notifyDataSetChanged();
-            lstPestsPerTreeAdapter.notifyDataSetChanged();
+            rvScoutStops.getAdapter().notifyDataSetChanged();
+            rvPestsPerTree.getAdapter().notifyDataSetChanged();
         }
     }
 
@@ -224,70 +220,103 @@ public class ScoutTripActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //special adapter to create custom list items for scout stops
-    private class ScoutStopAdapter extends ArrayAdapter<ScoutStop> {
-        public ScoutStopAdapter(ArrayList<ScoutStop> stops) {
-            super(getApplication().getApplicationContext(), 0, stops);
+    private class RVScoutStopAdapter extends RecyclerView.Adapter<RVScoutStopAdapter.ScoutStopViewHolder> {
+
+        List<ScoutStop> scoutStops;
+
+        public RVScoutStopAdapter(List<ScoutStop> scoutStops) {
+            this.scoutStops = scoutStops;
+        }
+
+        public class ScoutStopViewHolder extends RecyclerView.ViewHolder {
+            CardView cvScoutStop;
+            LinearLayout llBugInfo;
+            CheckedTextView tvBlockName;
+            CheckedTextView tvTreeCount;
+
+            ScoutStopViewHolder(View itemView) {
+                super(itemView);
+                cvScoutStop = (CardView) itemView.findViewById(R.id.cvScoutStop);
+                tvBlockName = (CheckedTextView) itemView.findViewById(R.id.tvBlockName);
+                tvTreeCount = (CheckedTextView) itemView.findViewById(R.id.tvTreeCount);
+                llBugInfo = (LinearLayout) itemView.findViewById(R.id.llBugInfo);
+            }
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ScoutStop stop = getItem(position);
-            if (hasStops) {
-                convertView = getLayoutInflater()
-                        .inflate(R.layout.list_scout_stop, null);
-                TextView lblBlockName =
-                        (TextView) convertView.findViewById(R.id.listscoutstop_lblBlockName);
-                lblBlockName.setText(stop.Block.getBlockName());
-                TextView lblTreeAmount =
-                        (TextView) convertView.findViewById(R.id.lblTreeAmount);
-                lblTreeAmount.setText(stop.getNumberOfTrees() + "");
-                LinearLayout hscrollBugInfo = (LinearLayout) convertView.findViewById(R.id.hscrollBugInfo);
-                hscrollBugInfo.removeAllViews();
+        public int getItemCount() {
+            return scoutStops.size();
+        }
+
+        @Override
+        public ScoutStopViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_scout_stop, viewGroup, false);
+            ScoutStopViewHolder scoutStopViewHolder = new ScoutStopViewHolder(v);
+            return scoutStopViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(ScoutStopViewHolder scoutStopViewHolder, int i) {
+            if (scoutStops.size() - 1 == i) {
+                ScoutStop stop = scoutStops.get(i);
+                scoutStopViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
                 for (ScoutBug bug : stop.getScoutBugs()) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, 150, 150, true);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 75, 75, true);
                     View view = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
                     ((ImageView) view.findViewById(R.id.bugInfoImage)).setImageBitmap(bitmap);
                     ((TextView) view.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs() + "");
-                    hscrollBugInfo.addView(view);
+                    scoutStopViewHolder.llBugInfo.addView(view);
                 }
-            } else {
-                if (convertView == null) {
-                    convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
+                if (hasStops) {
+                    scoutStopViewHolder.tvTreeCount.setText(stop.getNumberOfTrees() + "");
+                    scoutStopViewHolder.tvTreeCount.setTextSize(36);
+                } else {
+                    scoutStopViewHolder.tvTreeCount.setText("");
+                    scoutStopViewHolder.tvTreeCount.setTextSize(0);
                 }
-                TextView lblText = (TextView) convertView.findViewById(android.R.id.text1);
-                lblText.setText(stop.getBlock().getBlockName());
             }
-            return convertView;
         }
     }
 
-    //special adapter to create custom list item for pests per tree display
-    private class PestsPerTreeAdapter extends ArrayAdapter<ScoutStop> {
-        public PestsPerTreeAdapter(ArrayList<ScoutStop> stops){
-            super(getApplication().getApplicationContext(),0,stops);
+    private class RVPestsPerTreeAdapter extends RecyclerView.Adapter<RVPestsPerTreeAdapter.PestsPerTreeViewHolder> {
+
+        List<ScoutStop> scoutStops;
+
+        public RVPestsPerTreeAdapter(List<ScoutStop> scoutStops) {
+            this.scoutStops = scoutStops;
+        }
+
+        public class PestsPerTreeViewHolder extends RecyclerView.ViewHolder {
+            CheckedTextView tvBlockName;
+            CheckedTextView tvPestsPerTree;
+
+            PestsPerTreeViewHolder(View itemView) {
+                super(itemView);
+                tvBlockName = (CheckedTextView) itemView.findViewById(R.id.tvBlockName);
+                tvPestsPerTree = (CheckedTextView) itemView.findViewById(R.id.tvPestsPerTree);
+            }
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ScoutStop stop = getItem(position);
-            if (hasStops) {
-                    convertView = getLayoutInflater().inflate(R.layout.list_pests_per_tree, null);
-                TextView lblBlockName = (TextView) convertView.findViewById(R.id.lblBlockName);
-                lblBlockName.setText(stop.getBlock().getBlockName());
-                TextView lblPestsPerTree = (TextView) convertView.findViewById(R.id.lblPestsPerTree);
-                lblPestsPerTree.setText(String.format("%.2f", stop.getPestsPerTree()));
-                return convertView;
-            } else {
-                if (convertView == null) {
-                    convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
-                }
-                TextView lblBlockName = (TextView) convertView.findViewById(android.R.id.text1);
-                lblBlockName.setText(stop.getBlock().getBlockName());
+        public int getItemCount() {
+            return scoutStops.size();
+        }
+
+        @Override
+        public PestsPerTreeViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_pests_per_tree, viewGroup, false);
+            PestsPerTreeViewHolder pestsPerTreeViewHolder = new PestsPerTreeViewHolder(v);
+            return pestsPerTreeViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(PestsPerTreeViewHolder pestsPerTreeViewHolder, int i) {
+            if (scoutStops.size() - 1 == i) {
+                ScoutStop stop = scoutStops.get(i);
+                pestsPerTreeViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
+                pestsPerTreeViewHolder.tvPestsPerTree.setText(hasStops ? stop.getPestsPerTree() + "" : "");
             }
-            return convertView;
         }
     }
-
 }
