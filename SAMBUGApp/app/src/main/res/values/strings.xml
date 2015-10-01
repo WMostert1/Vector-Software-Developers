@@ -32,4 +32,6 @@
     <string name="title_activity_image_processing">ImageProcessing</string>
     <string name="btnCrop">Crop</string>
     <string name="btnDone" >Done</string>
+    <string name="title_activity_make_photo">MakePhoto</string>
+    <string name="title_activity_camera">Camera</string>
 </resources>

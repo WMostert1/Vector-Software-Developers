@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import vsd.co.za.sambugapp.CameraProcessing.Camera;
 import vsd.co.za.sambugapp.DomainModels.Block;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
@@ -251,7 +252,7 @@ public class EnterDataActivity extends ActionBarActivity {
 
     public void sendToIdentificationActivity(View view) {
 
-        Intent intent = new Intent(EnterDataActivity.this, ImageProcessing.class);
+        Intent intent = new Intent(EnterDataActivity.this, Camera.class);
         startActivityForResult(intent, 0);
     }
 
