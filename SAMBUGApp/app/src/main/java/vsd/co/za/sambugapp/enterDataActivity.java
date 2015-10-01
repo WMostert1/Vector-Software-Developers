@@ -336,6 +336,9 @@ public class enterDataActivity extends AppCompatActivity {
     }
 
     public void collapseScoutStopDetails(View v) {
+        //show added bugs
+        LinearLayout bugLayout = (LinearLayout) findViewById(R.id.layoutAddedBugs);
+        bugLayout.setVisibility(View.VISIBLE);
         LinearLayout layout = (LinearLayout) findViewById(R.id.scoutStopDetailsLayout);
         Block tempBlock = null;
         if (v != null) {
@@ -364,6 +367,10 @@ public class enterDataActivity extends AppCompatActivity {
     }
 
     public void expandScoutStopDetails(View v) {
+        //hide added bugs
+        LinearLayout bugLayout = (LinearLayout) findViewById(R.id.layoutAddedBugs);
+        bugLayout.setVisibility(View.GONE);
+
         LinearLayout layout = (LinearLayout) findViewById(R.id.scoutStopDetailsLayout);
         //remove layout children
         layout.removeAllViews();

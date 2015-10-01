@@ -86,7 +86,7 @@ public class ScoutTripActivity extends AppCompatActivity {
         rvPestsPerTree.setAdapter(new RVPestsPerTreeAdapter(scoutTrip.getStopList()));
         rvPestsPerTree.setHasFixedSize(true);
 
-        if (!hasStops) {
+        if (!hasStops && scoutTrip.getNumStops() == 0) {
             ScoutStop tempStop = new ScoutStop();
             Block tempBlock = new Block();
             tempBlock.setBlockName("No stops added yet. Click '+'");

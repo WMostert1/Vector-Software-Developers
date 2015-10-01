@@ -34,6 +34,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:cardview-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
     // the following is required to use Mockito and JUnit for your
     // instrumentation unit tests on the JVM
     androidTestCompile 'junit:junit:4.12'

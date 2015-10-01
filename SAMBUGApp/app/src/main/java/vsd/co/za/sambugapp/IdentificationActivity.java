@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -170,7 +171,7 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         InputStream stream = null;
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
 
             try {
                 //Recycle unused bitmaps
@@ -203,6 +204,10 @@ public class IdentificationActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+            }
+        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_CANCELED) {
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sambug_logo);
+            mImageView.setImageBitmap(bitmap);
         }
     }
 
