@@ -44,7 +44,6 @@ public class ScoutTripActivity extends AppCompatActivity {
     public final String SCOUT_STOP_LIST="za.co.vsd.scout_stop_list";
     public final String HAS_STOPS = "za.co.vsd.has_stops";
     private final int NEW_STOP=0;
-    private final int UPDATE_STOP=1;
     private final String TAG="ScoutTripActivity";
     private boolean hasStops = false;
 

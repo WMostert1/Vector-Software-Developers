@@ -117,7 +117,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         if(userWrapper.User != null) {
             //------------------------------------------------------------------------------------------
 
-            Intent intent = new Intent(getApplicationContext(), ScoutTripActivity.class);
+            Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle bundle = new Bundle();
             HashSet<Farm> activeFarms = userWrapper.User.getFarms();

@@ -32,4 +32,6 @@
     <string name="title_activity_test">test</string>
     <string name="numBugs">Number of Bugs</string>
     <string name="bugType">Bug Type</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_home_screen">HomeScreen</string>
 </resources>
