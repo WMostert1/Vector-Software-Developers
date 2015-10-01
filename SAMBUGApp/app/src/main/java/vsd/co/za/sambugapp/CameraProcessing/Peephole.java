@@ -114,8 +114,8 @@ public class Peephole extends View{
 //        canvas.drawLine(width*3/4, height/4, width*3/4, height*3/4, square);
 
         int minX,maxX,minY,maxY;
-        int padX = width/12;
-        int padY = height/12;
+        int padX = width/10;
+        int padY = height/10;
         minX = 0;
         maxX =  width;
         minY = 0;

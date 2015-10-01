@@ -3,10 +3,14 @@ package vsd.co.za.sambugapp.CameraProcessing;
 /**
  * Created by Kale-ab on 2015/09/30.
  */
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
+import android.view.Window;
+
+import vsd.co.za.sambugapp.R;
 
 
 public class ImageProcessor {
@@ -24,11 +28,13 @@ public class ImageProcessor {
         this.cellWidth = this.width/9;
         this.cellHeight = this.height/9;
         this.digits = new Bitmap[9][9];
-        for(int y=0; y<9; y++){
-            for(int x=0; x<9; x++){
-                this.digits[x][y] = Bitmap.createBitmap(cellWidth, cellHeight, Bitmap.Config.ARGB_8888);
-            }
-        }
+
+
+//        for(int y=0; y<9; y++){
+//            for(int x=0; x<9; x++){
+//                this.digits[x][y] = Bitmap.createBitmap(cellWidth, cellHeight, Bitmap.Config.ARGB_8888);
+//            }
+//        }
     }
 
     public Bitmap process(){

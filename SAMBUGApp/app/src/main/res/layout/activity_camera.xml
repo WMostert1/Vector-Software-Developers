@@ -19,22 +19,13 @@ tools:context=".Camera" >
     android:layout_alignParentLeft="true"
     android:layout_centerVertical="true" />
 
-<Button
-    android:id="@+id/buttonGo"
-    style="?android:attr/buttonStyleSmall"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:layout_alignParentTop="true"
-    android:text="Go!" />
-
-<Button
-    android:id="@+id/buttonClear"
-    style="?android:attr/buttonStyleSmall"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentRight="true"
-    android:text="Clear" />
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imgbCamera"
+        android:src="@mipmap/ic_camera"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@null"/>
 
 </RelativeLayout>

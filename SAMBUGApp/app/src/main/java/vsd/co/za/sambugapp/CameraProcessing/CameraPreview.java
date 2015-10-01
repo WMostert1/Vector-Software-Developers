@@ -79,6 +79,7 @@ public class CameraPreview extends SurfaceView implements
             if (!cameraConfigured) {
                 Parameters parameters = camera.getParameters();
                 previewSize = getBestPreviewSize(width, height, parameters);
+               // pre
                 if (previewSize != null) {
                     parameters.setPreviewSize(previewSize.width,
                             previewSize.height);
@@ -90,6 +91,10 @@ public class CameraPreview extends SurfaceView implements
             previewHeight = params.getPreviewSize().height;
             previewWidth = params.getPreviewSize().width;
             previewFormat = params.getPreviewFormat();
+
+
+            ///New
+            
         }
     }
 
@@ -109,6 +114,11 @@ public class CameraPreview extends SurfaceView implements
 
             }
         }
+//        Size s = new Size();
+//        s.width = 720;
+//        s.height = 1280;
+
+        //result = s;
         return result;
     }
 
@@ -158,8 +168,8 @@ public class CameraPreview extends SurfaceView implements
         YuvImage yuvImage = new YuvImage(
                 yuv, previewFormat, previewWidth, previewHeight, null);
        // r = new Rect(80, 20, previewWidth - 80, previewHeight - 20);
-        int padX = previewWidth/6;
-        int padY = previewHeight/6;
+        int padX = previewWidth/10;
+        int padY = previewHeight/10;
         r = new Rect(padX,padY,previewWidth-padX,previewHeight-padY);
        // r = new Rect(60,40,640-60,480-40);
         yuvImage.compressToJpeg(r, 100, outStream);

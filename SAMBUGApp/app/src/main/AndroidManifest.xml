@@ -57,8 +57,12 @@
         </activity>
         <activity
             android:name=".CameraProcessing.Camera"
-            android:label="@string/title_activity_camera"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/title_activity_camera" >
+        </activity>
+        <activity
+            android:name=".CameraProcessing.ImagePreview"
+            android:label="@string/title_activity_image_preview" >
         </activity>
     </application>
 

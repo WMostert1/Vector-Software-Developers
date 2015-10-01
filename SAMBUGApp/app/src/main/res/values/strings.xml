@@ -34,4 +34,7 @@
     <string name="btnDone" >Done</string>
     <string name="title_activity_make_photo">MakePhoto</string>
     <string name="title_activity_camera">Camera</string>
+    <string name="title_activity_image_preview">ImagePreview</string>
+    <string name="sCancel">Cancel</string>
+    <string name="sOk">Ok</string>
 </resources>
