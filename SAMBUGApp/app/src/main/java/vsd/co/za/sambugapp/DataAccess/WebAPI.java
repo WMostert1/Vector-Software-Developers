@@ -43,8 +43,8 @@ import vsd.co.za.sambugapp.ScoutTripActivity;
  */
 public class WebAPI {
     private static final String AUTHENTICATION_URL = "http://sambug.apphb.com/api/authentication/login";
-    private static final String SYNC_SERVICE_URL = "http://sambug.apphb.com/api/Synchronization/persistcacheddata";
-    private static final String CLASSIFICATION_URL= "http://sambug.apphb.com/api/classification";
+    private static final String SYNC_SERVICE_URL = "http://sambug.apphb.com/api/Synchronization";
+    private static final String CLASSIFICATION_URL= "http://sambug.apphb.com/api/apiSpeciesClassification";
     private static final int SOCKET_TIMEOUT_MS = 10000; //10 seconds
 
 
@@ -172,7 +172,7 @@ public class WebAPI {
 
             String jsonString = classificationRequest.toString();
             System.out.println(jsonString);
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,AUTHENTICATION_URL,classificationRequest,new Response.Listener<JSONObject>(){
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,CLASSIFICATION_URL,classificationRequest,new Response.Listener<JSONObject>(){
                 @Override
                 public void onResponse(JSONObject response) {
                     final Gson gson = new Gson();

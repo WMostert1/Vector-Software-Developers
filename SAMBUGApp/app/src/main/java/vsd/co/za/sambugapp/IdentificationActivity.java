@@ -67,8 +67,8 @@ public class IdentificationActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
-        WebAPI.attemptAPIClassification(byteArray, getApplicationContext());
-        Toast.makeText(getApplicationContext(), "Starting classification...", Toast.LENGTH_SHORT).show();
+        WebAPI.attemptAPIClassification(byteArray, this);
+        Toast.makeText(this, "Starting classification...", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -140,14 +140,14 @@ public class IdentificationActivity extends AppCompatActivity {
             mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
             if (bitmap != null){
                 mImageView.setImageBitmap(bitmap);
-                if(!isClassified)
-                doAutomaticClassification(null);
+
             }
     }
 
     public void changeEntrySelection(ClassificationResultDTO currentEntry){
         isClassified = true;
         //Possibly validate that ID's are correct in future
+        Toast.makeText(getApplicationContext(),"Species Identified!",Toast.LENGTH_SHORT).show();
         changeEntrySelection(currentEntry.SpeciesID);
     }
 
@@ -156,7 +156,7 @@ public class IdentificationActivity extends AppCompatActivity {
         try {
             speciesDAO.open();
             currentEntry = speciesDAO.getSpeciesByID(id);
-            Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
             ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompareImage);
             byte[] imgData = currentEntry.getIdealPicture();
             comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0, imgData.length));
@@ -233,6 +233,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 bitmap = rotateBitmap(bitmap,angle);
 
                 mImageView.setImageBitmap(bitmap);
+                if(!isClassified)
+                    doAutomaticClassification(null);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
