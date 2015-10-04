@@ -4,10 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -18,11 +20,16 @@ import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 
@@ -49,6 +56,7 @@ public class CameraPreview extends SurfaceView implements
         cameraPreviewHolder.addCallback(this);
         // we need this for compatibility
         cameraPreviewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
     }
 
     public void releaseCamera() {
@@ -64,6 +72,7 @@ public class CameraPreview extends SurfaceView implements
         if (!inPreview) {
             camera = Camera.open();
             camera.setDisplayOrientation(90);
+
         }
     }
 
@@ -138,9 +147,49 @@ public class CameraPreview extends SurfaceView implements
         }
     }
 
+    public void fixOrientation(){
+        Parameters parameters = camera.getParameters();
+        Display display = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE)).getDefaultDisplay();
+    }
+
+    public int getOrientation(){
+
+        Display display = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE)).getDefaultDisplay();
+        return display.getOrientation();
+    }
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height)
+    {
+
+
+//        Parameters parameters = camera.getParameters();
+//        Display display = ((WindowManager)context.getSystemService(context.WINDOW_SERVICE)).getDefaultDisplay();
+//
+//        if(display.getRotation() == Surface.ROTATION_0)
+//        {
+//            //parameters.setPreviewSize(height, width);
+//           // camera.setDisplayOrientation(90);
+//        }
+//
+//        if(display.getRotation() == Surface.ROTATION_90)
+//        {
+//            parameters.setPreviewSize(width, height);
+//        }
+//
+//        if(display.getRotation() == Surface.ROTATION_180)
+//        {
+//            parameters.setPreviewSize(height, width);
+//        }
+//
+//        if(display.getRotation() == Surface.ROTATION_270)
+//        {
+//            parameters.setPreviewSize(width, height);
+//           // camera.setDisplayOrientation(180);
+//        }
+//
+//        camera.setParameters(parameters);
+       // previewCamera();
+
         initPreview(width, height);
         startPreview();
     }
@@ -163,6 +212,11 @@ public class CameraPreview extends SurfaceView implements
 
     public Bitmap getBitmap(int left, int top, int right, int bottom)
             throws IOException {
+//
+
+
+        /////////////////////
+        //camera.setDisplayOrientation(90);
         Bitmap bitmap = null;
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         YuvImage yuvImage = new YuvImage(
@@ -174,7 +228,8 @@ public class CameraPreview extends SurfaceView implements
        // r = new Rect(60,40,640-60,480-40);
         yuvImage.compressToJpeg(r, 100, outStream);
         bitmap = BitmapFactory.decodeByteArray(outStream.toByteArray(), 0,
-                        outStream.size());
+                outStream.size());
+
         //Bitmap bitmap = null;
         //YuvImage yuvimage = new YuvImage(yuv, ImageFormat.NV21,720,
         //        1280, null);
@@ -219,6 +274,34 @@ public class CameraPreview extends SurfaceView implements
         //}
 
         return thumb;
+    }
+
+    public Bitmap Rotate(Context context, Uri photoUri) {
+    /* it's on the external media. */
+        Bitmap b = null;
+        Cursor cursor = context.getContentResolver().query(photoUri,
+                new String[] { MediaStore.Images.ImageColumns.ORIENTATION }, null, null, null);
+
+        if (cursor.getCount() != 1) {
+            return null;
+        }
+
+        cursor.moveToFirst();
+        int orientation= cursor.getInt(0);
+        if(orientation > 0){
+            Matrix matrix = new Matrix();
+            matrix.postRotate(orientation);
+
+            b = Bitmap.createBitmap(b, 0, 0, b.getWidth(),
+                    b.getHeight(), matrix, true);
+        }
+        return b;
+    }
+    public Uri getImageUri2(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
 }
