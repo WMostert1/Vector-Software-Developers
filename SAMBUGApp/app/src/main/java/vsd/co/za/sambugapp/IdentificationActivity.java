@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.os.Bundle;
@@ -24,12 +25,15 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 
+import vsd.co.za.sambugapp.DataAccess.DTO.ClassificationResultDTO;
 import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
+import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.Species;
 
 /**
@@ -45,16 +49,26 @@ public class IdentificationActivity extends AppCompatActivity {
     private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     public static final String BUG_COUNT = "za.co.vsd.bug_count";
+    public static final String CLASSIFICATION_RESULT = "za.co.vsd.classification_result";
     private ImageView mImageView = null;
     private Bitmap bitmap = null;
     private Species currentEntry = null;
     private int createCounter = 0;
+    private boolean isClassified = false;
 
 
     public void doAutomaticClassification(View view) {
-        GridView gv = (GridView) findViewById(R.id.gvIdentification_gallery);
-        gv.setNumColumns(3);
-        //Toast.makeText(getApplicationContext(), "This feature is currently in development", Toast.LENGTH_SHORT).show();
+        isClassified = false;
+        findViewById(R.id.ivCompareImage).setVisibility(View.GONE);
+        findViewById(R.id.pbClassifier).setVisibility(View.VISIBLE);
+
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        WebAPI.attemptAPIClassification(byteArray, getApplicationContext());
+        Toast.makeText(getApplicationContext(), "Starting classification...", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -67,6 +81,7 @@ public class IdentificationActivity extends AppCompatActivity {
         //createCounter is used to only start the camera once
         savedInstanceState.putInt(FIRST_TIME_INDEX, createCounter);
         savedInstanceState.putParcelable(FIELD_BITMAP, bitmap);
+        savedInstanceState.putBoolean(CLASSIFICATION_RESULT, isClassified);
     }
 
     /**
@@ -84,7 +99,10 @@ public class IdentificationActivity extends AppCompatActivity {
             if (savedInstanceState != null) {
                 bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
                 createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
+                isClassified = savedInstanceState.getBoolean(CLASSIFICATION_RESULT);
             }
+
+
 
         //Checks/loads species data into the Species table of the database
             if (createCounter == 0) {
@@ -107,35 +125,48 @@ public class IdentificationActivity extends AppCompatActivity {
 
             setContentView(R.layout.activity_identification);
 
+
+
             GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
             gridview.setAdapter(new ImageAdapter(this));
 
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
-                    SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
-                    try {
-                        speciesDAO.open();
-                        currentEntry = speciesDAO.getSpeciesByID(position + 1);
-                        Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
-                        //ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
-                        byte[] imgData = currentEntry.getIdealPicture();
-                        //comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
-                        //      imgData.length));
-                        speciesDAO.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
+                    changeEntrySelection(position+1);
                 }
             });
 
             mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
-            if (bitmap != null) mImageView.setImageBitmap(bitmap);
+            if (bitmap != null){
+                mImageView.setImageBitmap(bitmap);
+                if(!isClassified)
+                doAutomaticClassification(null);
+            }
     }
 
-    public Species getCurrentEntry() {
-        return currentEntry;
+    public void changeEntrySelection(ClassificationResultDTO currentEntry){
+        isClassified = true;
+        //Possibly validate that ID's are correct in future
+        changeEntrySelection(currentEntry.SpeciesID);
+    }
+
+    public void changeEntrySelection(int id){
+        SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+        try {
+            speciesDAO.open();
+            currentEntry = speciesDAO.getSpeciesByID(id);
+            Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+            ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompareImage);
+            byte[] imgData = currentEntry.getIdealPicture();
+            comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0, imgData.length));
+            speciesDAO.close();
+
+            comparisonImage.setVisibility(View.VISIBLE);
+            findViewById(R.id.pbClassifier).setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -160,6 +191,14 @@ public class IdentificationActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public Bitmap rotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
     /**
@@ -190,8 +229,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 options.inJustDecodeBounds = false;
                 stream = getContentResolver().openInputStream(data.getData());
                 bitmap = BitmapFactory.decodeStream(stream, null, options);
-
-                //TODO: Rotate the image
+                final float angle = (float)-90.0; //Turns it upright
+                bitmap = rotateBitmap(bitmap,angle);
 
                 mImageView.setImageBitmap(bitmap);
 

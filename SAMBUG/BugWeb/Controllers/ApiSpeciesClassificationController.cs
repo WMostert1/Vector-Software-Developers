@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using BugBusiness.Interface.BugIntelligence.DTO;
+using System.Diagnostics;
 
 namespace BugWeb.Controllers
 {
@@ -25,10 +26,17 @@ namespace BugWeb.Controllers
            
             try
             {
-                return _bugIntelligence.classify(BugBusiness.ExtensionMethods.DataConversion.sbyteToByteArray(request.FieldPicture));
+                Debug.WriteLine("Happens");
+                var result = new ClassifyResult();
+                result.SpeciesID = 1;
+                result.Lifestage = 1;
+                result.SpeciesName = "Coconut Bug";
+                return result;
+               // return _bugIntelligence.classify(BugBusiness.ExtensionMethods.DataConversion.sbyteToByteArray(request.FieldPicture));
             }
             catch (Exception e)
             {
+                Debug.WriteLine(e.Message);
                 return new ClassifyResult();
             }
 

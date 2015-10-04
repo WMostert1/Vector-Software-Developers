@@ -31,11 +31,33 @@
         android:id="@+id/ivFieldPicture"
         android:layout_below="@id/llButtonBar"
         android:layout_margin="5dp"
-        android:layout_centerHorizontal="true"
         android:contentDescription="@string/identification_activity_description_image_view"
         android:scaleType="centerCrop"
-
         />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llButtonBar"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:id="@+id/ivCompareImage"
+
+            android:layout_margin="5dp"
+            android:contentDescription="@string/identification_activity_description_image_view"
+            android:scaleType="centerCrop"
+            />
+
+        <ProgressBar
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:indeterminate="true"
+            android:id="@+id/pbClassifier"/>
+    </FrameLayout>
+
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gvIdentification_gallery"

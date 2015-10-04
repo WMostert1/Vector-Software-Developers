@@ -25,10 +25,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import vsd.co.za.sambugapp.DataAccess.DTO.CacheSyncDTO;
+import vsd.co.za.sambugapp.DataAccess.DTO.ClassificationRequestDTO;
+import vsd.co.za.sambugapp.DataAccess.DTO.ClassificationResultDTO;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
+import vsd.co.za.sambugapp.DomainModels.Species;
 import vsd.co.za.sambugapp.DomainModels.User;
+import vsd.co.za.sambugapp.IdentificationActivity;
 import vsd.co.za.sambugapp.LoginActivity;
 import vsd.co.za.sambugapp.R;
 import vsd.co.za.sambugapp.ScoutTripActivity;
@@ -40,10 +44,17 @@ import vsd.co.za.sambugapp.ScoutTripActivity;
 public class WebAPI {
     private static final String AUTHENTICATION_URL = "http://sambug.apphb.com/api/authentication/login";
     private static final String SYNC_SERVICE_URL = "http://sambug.apphb.com/api/Synchronization/persistcacheddata";
+    private static final String CLASSIFICATION_URL= "http://sambug.apphb.com/api/classification";
     private static final int SOCKET_TIMEOUT_MS = 10000; //10 seconds
 
 
     private WebAPI() {
+    }
+
+    public static void attemptAPIClassification(byte [] pictureData,Context context){
+        ClassificationRequestDTO request = new ClassificationRequestDTO();
+        request.FieldPicture = pictureData;
+        new ClassificationTask(context).execute(request);
     }
 
     public static void attemptSyncCachedScoutingData(Context context) {
@@ -140,6 +151,52 @@ public class WebAPI {
         }
     }
 
+    private static class ClassificationTask extends AsyncTask<ClassificationRequestDTO,Void,Void>{
+
+        private Context context;
+
+        public ClassificationTask(Context _context){
+            context = _context;
+        }
+
+        @Override
+        protected Void doInBackground(ClassificationRequestDTO... classificationRequestDTOs) {
+            JSONObject classificationRequest = new JSONObject();
+            try{
+                classificationRequest = new JSONObject(new Gson().toJson(classificationRequestDTOs[0]));
+
+            }catch (JSONException e){
+                Toast.makeText(context, "A JSON conversion error occurred.", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+
+            String jsonString = classificationRequest.toString();
+            System.out.println(jsonString);
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,AUTHENTICATION_URL,classificationRequest,new Response.Listener<JSONObject>(){
+                @Override
+                public void onResponse(JSONObject response) {
+                    final Gson gson = new Gson();
+                    ClassificationResultDTO result = gson.fromJson(response.toString(), ClassificationResultDTO.class);
+                    ((IdentificationActivity)context).changeEntrySelection(result);
+
+                }
+            },new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context,"Could not contact server to classify bug.",Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            VolleySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
+
+            return null;
+        }
+    }
 
     private static class AuthLoginTask extends AsyncTask<String,Void,User>{
 
@@ -156,7 +213,7 @@ public class WebAPI {
                 loginRequest.put("username", params[0]);
                 loginRequest.put("password",params[1]);
             }catch (JSONException e){
-                Toast.makeText(context, "A parsing error occurred.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "A JSON conversion error occurred.", Toast.LENGTH_SHORT).show();
                 return null;
             }
 
