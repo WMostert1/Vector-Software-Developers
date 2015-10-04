@@ -1,9 +1,11 @@
 package vsd.co.za.sambugapp;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.afollestad.materialdialogs.GravityEnum;
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 
@@ -38,6 +44,7 @@ public class IdentificationActivity extends AppCompatActivity {
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
     private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
+    public static final String BUG_COUNT = "za.co.vsd.bug_count";
     private ImageView mImageView = null;
     private Bitmap bitmap = null;
     private Species currentEntry = null;
@@ -45,7 +52,9 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
     public void doAutomaticClassification(View view) {
-        Toast.makeText(getApplicationContext(), "This feature is currently in development", Toast.LENGTH_SHORT).show();
+        GridView gv = (GridView) findViewById(R.id.gvIdentification_gallery);
+        gv.setNumColumns(3);
+        //Toast.makeText(getApplicationContext(), "This feature is currently in development", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -96,7 +105,6 @@ public class IdentificationActivity extends AppCompatActivity {
             }
             if (createCounter == 0) createCounter++;
 
-
             setContentView(R.layout.activity_identification);
 
             GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
@@ -110,10 +118,10 @@ public class IdentificationActivity extends AppCompatActivity {
                         speciesDAO.open();
                         currentEntry = speciesDAO.getSpeciesByID(position + 1);
                         Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
-                        ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
+                        //ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
                         byte[] imgData = currentEntry.getIdealPicture();
-                        comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
-                                imgData.length));
+                        //comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
+                        //      imgData.length));
                         speciesDAO.close();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -163,7 +171,7 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         InputStream stream = null;
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
 
             try {
                 //Recycle unused bitmaps
@@ -196,6 +204,10 @@ public class IdentificationActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+            }
+        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_CANCELED) {
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sambug_logo);
+            mImageView.setImageBitmap(bitmap);
         }
     }
 
@@ -210,13 +222,30 @@ public class IdentificationActivity extends AppCompatActivity {
 
     }
 
+    public void showDialogNumberOfBugs(View v) {
+        NumberPicker np;
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title("Number of Bugs")
+                .positiveText("Finish")
+                .titleGravity(GravityEnum.CENTER)
+                .customView(R.layout.dialog_number_picker, false)
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        NumberPicker np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+                        sendResultBack(np.getValue());
+                    }
+                })
+                .show();
+        np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+        np.setMaxValue(100);
+    }
 
     /**
      * This function puts the current Species entry as well as the field picture taken
      * into a bundle which is then returned to the enterDataActivity
-     * @param view THe button that was clicked
      */
-    public void sendResultBack(View view) {
+    public void sendResultBack(int numBugs) {
         Intent output = new Intent();
         Bundle bundle = new Bundle();
 
@@ -229,8 +258,10 @@ public class IdentificationActivity extends AppCompatActivity {
         Bitmap currentPicture = bitmap;
         currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
         bundle.putParcelable("Image", currentPicture);
+        bundle.putInt(BUG_COUNT, numBugs);
         output.putExtras(bundle);
         setResult(RESULT_OK, output);
+
         finish();
     }
 

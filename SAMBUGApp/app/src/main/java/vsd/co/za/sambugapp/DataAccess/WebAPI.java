@@ -2,6 +2,7 @@ package vsd.co.za.sambugapp.DataAccess;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import vsd.co.za.sambugapp.DataAccess.DTO.CacheSyncDTO;
 import vsd.co.za.sambugapp.DomainModels.Farm;
@@ -27,6 +30,7 @@ import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 import vsd.co.za.sambugapp.DomainModels.User;
 import vsd.co.za.sambugapp.LoginActivity;
+import vsd.co.za.sambugapp.R;
 import vsd.co.za.sambugapp.ScoutTripActivity;
 
 /**
@@ -34,8 +38,8 @@ import vsd.co.za.sambugapp.ScoutTripActivity;
  *
  */
 public class WebAPI {
-    private static final String AUTHENTICATION_URL = "http://www.sambug.co.za/api/apiauthentication/login";
-    private static final String SYNC_SERVICE_URL = "http://www.sambug.co.za/api/ApiSynchronization/persistCachedData";
+    private static final String AUTHENTICATION_URL = "http://sambug.apphb.com/api/authentication/login";
+    private static final String SYNC_SERVICE_URL = "http://sambug.apphb.com/api/Synchronization/persistcacheddata";
     private static final int SOCKET_TIMEOUT_MS = 10000; //10 seconds
 
 
@@ -79,10 +83,10 @@ public class WebAPI {
             JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, SYNC_SERVICE_URL, jsonDTO, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    try {
-                        Toast.makeText(context, "Server contacted.", Toast.LENGTH_SHORT).show();
-                        if (response.get("success").equals(true)) {
-                            Toast.makeText(context, "Scout data successfully pushed to server", Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(context, "Server contacted.", Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(context, "Scout data successfully pushed to server", Toast.LENGTH_SHORT).show();
                             ScoutBugDAO scoutBugDAO = new ScoutBugDAO(context);
                             ScoutStopDAO scoutStopDAO = new ScoutStopDAO(context);
                             try {
@@ -100,11 +104,7 @@ public class WebAPI {
                             } catch (SQLException e) {
                                 Log.e("Deletion", e.toString());
                             }
-                        } else
-                            Toast.makeText(context, "ERROR: Scout data unsuccessfully pushed to server", Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        Log.e("JSONError", e.toString());
-                    }
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -140,9 +140,6 @@ public class WebAPI {
         }
     }
 
-    private class UserWrapper{
-        public User User;
-    }
 
     private static class AuthLoginTask extends AsyncTask<String,Void,User>{
 
@@ -170,11 +167,18 @@ public class WebAPI {
                     UserWrapper userWrapper = gson.fromJson(response.toString(), UserWrapper.class);
                     User user = userWrapper.User;
 
+                    SharedPreferences sharedPref = context.getSharedPreferences(
+                            context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(context.getString(R.string.logged_in_user), response.toString());
+                    editor.commit();
+
                     Intent intent = new Intent(context,ScoutTripActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Bundle bundle=new Bundle();
-                    Farm activeFarm = user.getFarms().iterator().next();
-                    bundle.putSerializable(LoginActivity.USER_FARM,activeFarm);
+                    HashSet<Farm> activeFarms = user.getFarms();
+                    bundle.putSerializable(LoginActivity.USER_FARMS, activeFarms);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 }

@@ -10,18 +10,12 @@ import java.util.List;
  * Created by Aeolus on 2015-07-13.
  */
 public class Block implements Serializable{
-    public Block() {
-        this.ScoutStops = new HashSet<ScoutStop>();
-        this.Treatments = new HashSet<Treatment>();
-    }
 
     public int BlockID;
     public int FarmID;
     public String BlockName;
 
     public Farm Farm;
-    public HashSet<ScoutStop> ScoutStops;
-    public HashSet<Treatment> Treatments;
 
     public void setBlockID(int blockID) {
         BlockID = blockID;
@@ -39,14 +33,6 @@ public class Block implements Serializable{
         this.Farm = farm;
     }
 
-    public void setScoutStops(HashSet<ScoutStop> scoutStops) {
-        ScoutStops = scoutStops;
-    }
-
-    public void setTreatments(HashSet<Treatment> treatments) {
-        Treatments = treatments;
-    }
-
     public int getBlockID() {
         return BlockID;
     }
@@ -61,14 +47,6 @@ public class Block implements Serializable{
 
     public Farm getFarm() {
         return Farm;
-    }
-
-    public HashSet<ScoutStop> getScoutStops() {
-        return ScoutStops;
-    }
-
-    public HashSet<Treatment> getTreatments() {
-        return Treatments;
     }
 
     @Override
