@@ -2,60 +2,64 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
                 android:orientation="vertical"
-                android:weightSum="90"
-                tools:context="vsd.co.za.sambugapp.ScoutTripActivity"
-              android:background="#ff7f7d81">
+              tools:context="vsd.co.za.sambugapp.ScoutTripActivity">
 
-        <Button
-            android:id="@+id/btnAddStop"
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="6dp"
-            android:layout_gravity="right"
-            android:layout_weight="5"
-            android:layout_marginBottom="10dp"
-            android:text="+"
-            android:onClick="addStopActivityStart"/>
+            android:id="@+id/spnFarms"
+            />
+    </android.support.v7.widget.Toolbar>
 
-    <TextView
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddBug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_black_24dp"
+        android:onClick="addStopActivityStart"
+        android:layout_gravity="right"></android.support.design.widget.FloatingActionButton>
+
+    <CheckedTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stops"
-        android:layout_gravity="left"
         android:textStyle="bold"/>
 
-    <ListView
-        android:id="@+id/lstStops"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvScoutStops"
         android:layout_width="match_parent"
-        android:layout_weight="50"
-        android:layout_height="0dp"
-        android:layout_marginBottom="15dp"></ListView>
+        android:layout_height="200dp"
+        android:layout_marginBottom="15dp"></android.support.v7.widget.RecyclerView>
 
-    <TextView
+    <CheckedTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pests Per Tree"
         android:layout_gravity="left"
         android:textStyle="bold"/>
 
-    <ListView
-        android:id="@+id/lstPestsPerTree"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPestsPerTree"
         android:layout_width="match_parent"
-        android:layout_weight="30"
-        android:layout_height="0dp"></ListView>
+        android:layout_height="70dp"></android.support.v7.widget.RecyclerView>
     <Button
         android:id="@+id/btnFinishTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:drawableStart="@drawable/ic_done_black_24dp"
+        android:drawableLeft="@drawable/ic_done_black_24dp"
         android:text="Finish"
-        android:layout_gravity="center"
-        android:layout_weight="5"
+        android:layout_gravity="bottom|center"
         android:layout_marginTop="15dp"
         android:onClick="finishTrip"/>
 
