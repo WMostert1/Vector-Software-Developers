@@ -37,4 +37,5 @@
     <string name="title_activity_image_preview">ImagePreview</string>
     <string name="sCancel">Cancel</string>
     <string name="sOk">Ok</string>
+    <string name="title_activity_cam">cam</string>
 </resources>

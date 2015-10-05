@@ -64,6 +64,11 @@
             android:name=".CameraProcessing.ImagePreview"
             android:label="@string/title_activity_image_preview" >
         </activity>
+        <activity
+            android:name=".CameraProcessing.cam"
+            android:exported="true"
+            android:label="@string/title_activity_cam" >
+        </activity>
     </application>
 
 </manifest>

@@ -95,6 +95,7 @@ public class Camera extends Activity implements OnClickListener {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+               // cameraPreview.startPreview();
 
                 int k = cameraPreview.getOrientation();
                 if (takenImage != null) {
