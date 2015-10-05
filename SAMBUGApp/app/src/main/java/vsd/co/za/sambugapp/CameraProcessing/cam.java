@@ -37,11 +37,13 @@ import vsd.co.za.sambugapp.R;
 
 public class cam extends Activity implements SensorEventListener {
     private Camera mCamera;
+    public static final String CAMERA="za.co.vsd.camera";
     private CameraPreview2 mPreview;
     private SensorManager sensorManager = null;
     private int orientation;
     private ExifInterface exif;
     private int deviceHeight;
+    private int deviceWidth;
     private Button ibRetake;
     private Button ibUse;
     private Button ibCapture;
@@ -55,7 +57,8 @@ public class cam extends Activity implements SensorEventListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cam);
+       // setContentView(R.layout.activity_cam);
+        setContentView(R.layout.test);
 
         // Setting all the path for the image
         sdRoot = Environment.getExternalStorageDirectory();
@@ -75,6 +78,7 @@ public class cam extends Activity implements SensorEventListener {
         // proportional preview
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         deviceHeight = display.getHeight();
+        deviceWidth = display.getWidth();
 
         // Add a listener to the Capture button
         ibCapture.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +86,7 @@ public class cam extends Activity implements SensorEventListener {
                 mCamera.takePicture(null, null, mPicture);
             }
         });
-
+        //getRotateAnimation(-90);
         // Add a listener to the Retake button
         ibRetake.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -110,6 +114,7 @@ public class cam extends Activity implements SensorEventListener {
     }
 
     private void createCamera() {
+        /////////////////////////////////////////
         // Create an instance of Camera
         mCamera = getCameraInstance();
 
@@ -125,14 +130,14 @@ public class cam extends Activity implements SensorEventListener {
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 
         // Calculating the width of the preview so it is proportional.
-        float widthFloat = (float) (deviceHeight) * 4 / 3;
-        int width = Math.round(widthFloat);
+       // float widthFloat = (float) (deviceHeight) * 4 / 3;
+       // int width = Math.round(widthFloat);
 
         // Resizing the LinearLayout so we can make a proportional preview. This
         // approach is not 100% perfect because on devices with a really small
         // screen the the image will still be distorted - there is place for
         // improvment.
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, deviceHeight);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(deviceWidth, deviceHeight);
         preview.setLayoutParams(layoutParams);
 
         // Adding the camera preview after the FrameLayout and before the button
@@ -259,10 +264,18 @@ public class cam extends Activity implements SensorEventListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            sendToCameraPreview(data);
         }
     };
 
+    private void sendToCameraPreview(byte [] img){
+        Intent intent=new Intent(this,ImagePreview.class);
+        Bundle b = new Bundle();
+        b.putSerializable(CAMERA, img);
+        // b.putSerializable(USER_FARM,farm);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
     /**
      * Putting in place a listener so we can get the sensor data only when
      * something changes.

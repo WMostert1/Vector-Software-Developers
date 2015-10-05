@@ -38,4 +38,5 @@
     <string name="sCancel">Cancel</string>
     <string name="sOk">Ok</string>
     <string name="title_activity_cam">cam</string>
+    <string name="title_activity_camera3">Camera3</string>
 </resources>

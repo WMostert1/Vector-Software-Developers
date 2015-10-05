@@ -23,7 +23,7 @@ public class CameraPreview2 extends SurfaceView implements SurfaceHolder.Callbac
 		// deprecated setting, but required on Android versions prior to 3.0
 		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-		mHolder.setFixedSize(100, 100);
+		//mHolder.setFixedSize(100, 100);
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {

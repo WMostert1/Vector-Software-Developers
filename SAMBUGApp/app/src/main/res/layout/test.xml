@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Camera" >
+
+    <vsd.co.za.sambugapp.CameraProcessing.CameraPreview
+        android:id="@+id/cameraPreview1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        />
+
+    <vsd.co.za.sambugapp.CameraProcessing.Peephole
+        android:id="@+id/peephole1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+
+
+
+    <FrameLayout
+        android:layout_height="169dp"
+        android:id="@+id/flBtnContainer"
+        android:layout_width="106dp"
+        android:layout_weight="1"
+        android:layout_gravity="right|top"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="107dp"
+            android:id="@+id/imgbCamera"
+            android:src="@mipmap/ic_camera"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@null"
+            android:layout_gravity="right|bottom" />
+
+    </FrameLayout>
+
+</RelativeLayout>

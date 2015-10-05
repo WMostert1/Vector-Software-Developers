@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
+
+    <vsd.co.za.sambugapp.CameraProcessing.Peephole
+        android:id="@+id/peephole1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+ />
 
     <FrameLayout
         android:id="@+id/camera_preview"
-        android:layout_width="250dp"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        >
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Button"
             android:id="@+id/ibCapture2"
-            android:layout_gravity="center_horizontal|bottom" />
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:orientation="vertical" >
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_weight="1"/>
 
         <FrameLayout
-            android:layout_height="0dp"
+            android:layout_height="169dp"
             android:id="@+id/flBtnContainer"
-            android:layout_width="fill_parent"
+            android:layout_width="106dp"
             android:layout_weight="1"
-            >
-
-            <Button
-                android:id="@+id/ibCapture"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="1" />
+            android:layout_gravity="right|top">
 
             <ImageView
                 android:id="@+id/imageView1"
@@ -49,6 +45,16 @@
                 android:src="@drawable/ic_camera_icon" />
 
         </FrameLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <Button
             android:id="@+id/ibRetake"
@@ -68,4 +74,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
