@@ -10,6 +10,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +26,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -117,7 +123,6 @@ public class ScoutTripActivity extends AppCompatActivity {
     public void addStopActivityStart(View v){
         Intent intent=new Intent(this,enterDataActivity.class);
         Bundle b = new Bundle();
-        b.putSerializable(SCOUT_STOP,null);
         b.putSerializable(USER_FARM, (Farm) spnFarms.getSelectedItem());
         intent.putExtras(b);
         startActivityForResult(intent, NEW_STOP);

@@ -1,12 +1,9 @@
 package vsd.co.za.sambugapp;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.Spinner;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.HashSet;
 
@@ -14,18 +11,11 @@ import vsd.co.za.sambugapp.DomainModels.Block;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 
-import org.mockito.Mock;
-import org.mockito.Mockito;
-
 import static org.mockito.Matchers.notNull;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Matchers.argThat;
 
 
 /**
@@ -44,7 +34,7 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
 
         }
 
-        @Test
+       /* @Test
         public void testGeoLocation(){
                 enterDataActivity activity = mock(enterDataActivity.class);
                 //doReturn(false).when(activity).CheckIfGPSON();
@@ -56,7 +46,7 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
 
                 verify(activity).receiveGeoLocation();
                 // verify(activity).CheckIfGPSON();
-        }
+        }*/
 
         @Test
         public void testAcceptBlock() {
@@ -81,7 +71,7 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
                 b.putSerializable(ScoutTripActivity.USER_FARM, f);
                 I.putExtras(b);
                 //doCallRealMethod().when(activity).setiReceive(I);
-                assertNotNull(when(activity.acceptBlocks()).thenCallRealMethod());
+            assertNotNull(when(activity.getFarm()).thenCallRealMethod());
                 // verify(activity).getiReceive();
         }
 
@@ -165,9 +155,9 @@ public class EnterDataActivityTests extends ActivityInstrumentationTestCase2<ent
 ////                bundle.putSerializable(USER_FARM, fm);
 ////                iReceive.putExtras(bundle);
 ////
-////                when(activity.acceptBlocks(iReceive)).then();
+////                when(activity.getFarm(iReceive)).then();
 ////
-////                activity.acceptBlocks(iReceive);
+////                activity.getFarm(iReceive);
 ////                activity.populateSpinner();
 ////                //Spinner spnNumBlocks = (Spinner)activity.findViewById(R.id.spnBlocks);
 ////                /*

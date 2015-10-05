@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -42,7 +43,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     public static final int REQUEST_TAKE_PHOTO = 89;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
-    private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
+    public static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     public static final String BUG_COUNT = "za.co.vsd.bug_count";
     private ImageView mImageView = null;
@@ -53,7 +54,21 @@ public class IdentificationActivity extends AppCompatActivity {
 
     public void doAutomaticClassification(View view) {
         GridView gv = (GridView) findViewById(R.id.gvIdentification_gallery);
-        gv.setNumColumns(3);
+        gv.setOnGenericMotionListener(new View.OnGenericMotionListener() {
+            @Override
+            public boolean onGenericMotion(View v, MotionEvent event) {
+                Log.d("MOTION", event.toString());
+                return false;
+            }
+        });
+        gv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("TOUCH", event.toString());
+                return false;
+            }
+        });
+        //gv.setNumColumns(3);
         //Toast.makeText(getApplicationContext(), "This feature is currently in development", Toast.LENGTH_SHORT).show();
     }
 
@@ -257,7 +272,7 @@ public class IdentificationActivity extends AppCompatActivity {
         }
         Bitmap currentPicture = bitmap;
         currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
-        bundle.putParcelable("Image", currentPicture);
+        bundle.putParcelable(FIELD_BITMAP, currentPicture);
         bundle.putInt(BUG_COUNT, numBugs);
         output.putExtras(bundle);
         setResult(RESULT_OK, output);

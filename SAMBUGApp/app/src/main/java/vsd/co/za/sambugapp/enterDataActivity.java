@@ -10,11 +10,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,66 +41,67 @@ import vsd.co.za.sambugapp.DomainModels.Species;
 
 
 public class enterDataActivity extends AppCompatActivity {
+
+    //constants for saved variables
     private final String BUG_LIST = "za.co.vsd.bug_list";
     private final String SCOUT_STOP = "za.co.vsd.scout_stop";
     private final String BLOCK_INFO_COLLAPSED = "za.co.vsd.block_info_collapsed";
+    private final String HAS_BUGS = "za.co.vsd.has_bugs";
+
+    //UI variables
     private boolean blockInfoCollapsed = false;
-    private int bugCount = -1;
-    ScoutStop stop = null;
-    Species species;
+    private boolean hasBugs = false;
+
+    ScoutStop scoutStop;
     Spinner mySpin;
     NumberPicker npTrees;
-    ScoutBug currBug;
     Farm farm;
-    Bitmap imageTaken;
     HashSet<ScoutBug> listAddedBugs;
     RecyclerView rvAddedBugs;
-
-    LocationManager mLocationManager;
-    Location myLocation = null;
-
-    public synchronized Location getMyLocation() {
-        return myLocation;
-    }
-
-    public void setMyLocation(Location myLocation) {
-        this.myLocation = myLocation;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_data);
 
-        acceptBlocks();
-        acceptStop(savedInstanceState);
+        //Get user farm
+        farm = getFarm();
 
-        //set toolbar (ActionBar)
+        //Create base scout stop object
+        scoutStop = createScoutStop();
+
+        //Set toolbar (ActionBar)
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
         CheckedTextView txtFarmName = (CheckedTextView) toolbar.findViewById(R.id.txtFarmName);
         txtFarmName.setText(farm.getFarmName());
 
-        listAddedBugs = new HashSet<>();
+        //check for previous activity state
         if (savedInstanceState != null) {
             listAddedBugs = (HashSet<ScoutBug>) savedInstanceState.get(BUG_LIST);
             blockInfoCollapsed = savedInstanceState.getBoolean(BLOCK_INFO_COLLAPSED);
-            updateAddedBugsView();
+            hasBugs = savedInstanceState.getBoolean(HAS_BUGS);
+        } else {
+            listAddedBugs = new HashSet<>();
         }
-        receiveGeoLocation();
 
+        //set bug list adapter
         rvAddedBugs = (RecyclerView) findViewById(R.id.rvAddedBugs);
         rvAddedBugs.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         rvAddedBugs.setAdapter(new RVAddedBugsAdapter(listAddedBugs));
         rvAddedBugs.setHasFixedSize(true);
 
+        //add default instruction item if no bugs added
+        if (!hasBugs) {
+            listAddedBugs.add(null);
+        }
+
+        rvAddedBugs.getAdapter().notifyDataSetChanged();
+
         if (!blockInfoCollapsed) {
             expandScoutStopDetails(null);
-            //RelativeLayout layout = (RelativeLayout) findViewById(R.id.bugDetailsLayout);
-            //layout.setVisibility(View.INVISIBLE);
-            FloatingActionButton btn = (FloatingActionButton) findViewById(R.id.fabAddBug);
-            btn.setVisibility(View.INVISIBLE);
+
         } else {
             collapseScoutStopDetails(null);
         }
@@ -137,8 +136,9 @@ public class enterDataActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable(BUG_LIST, listAddedBugs);
-        savedInstanceState.putSerializable(SCOUT_STOP, stop);
+        savedInstanceState.putSerializable(SCOUT_STOP, scoutStop);
         savedInstanceState.putBoolean(BLOCK_INFO_COLLAPSED, blockInfoCollapsed);
+        savedInstanceState.putBoolean(HAS_BUGS, hasBugs);
     }
 
     @Override
@@ -156,36 +156,38 @@ public class enterDataActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
+            //remove default instruction item
+            if (!hasBugs) {
+                listAddedBugs.clear();
+                hasBugs = true;
+            }
+            //get activity variables for bug
             Bundle speciesReceived = data.getExtras();
-            species = (Species) speciesReceived.get(IdentificationActivity.IDENTIFICATION_SPECIES);
-            Bitmap imageTaken2 = (Bitmap) speciesReceived.getParcelable("Image");
-            imageTaken = imageTaken2;
-            bugCount = speciesReceived.getInt(IdentificationActivity.BUG_COUNT);
-            addBug();
+            Species species = (Species) speciesReceived.get(IdentificationActivity.IDENTIFICATION_SPECIES);
+            Bitmap imageTaken = speciesReceived.getParcelable(IdentificationActivity.FIELD_BITMAP);
+            int bugCount = speciesReceived.getInt(IdentificationActivity.BUG_COUNT);
+            //add bug to list
+            addBug(imageTaken, species, bugCount);
         }
     }
 
-    /**
-     * Accepts the Stop Object. If no object is found, it creates one.
-     */
-    public void acceptStop(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            stop = (ScoutStop) savedInstanceState.getSerializable(SCOUT_STOP);
-        } else {
-            createScoutStop();
-        }
+    private ScoutStop createScoutStop() {
+        Location location = getGeoLocation();
+        ScoutStop stop = new ScoutStop();
+        stop.setDate(new Date());
+        stop.setLatitude((float) location.getLatitude());
+        stop.setLongitude((float) location.getLongitude());
+        stop.setNumberOfTrees(0);
+        return stop;
     }
 
     /**
      * Gets the blocks from the farm object passed.
      */
-    public Farm acceptBlocks() {
-        Bundle scoutStop = getIntent().getExtras();
-        Farm frm = (Farm) scoutStop.get(ScoutTripActivity.USER_FARM);
-        if (frm != null) {
-            setFarm(frm);
-        } else Log.e("Error", "No block exists!");
-        return frm;
+    public Farm getFarm() {
+        Bundle bundle = getIntent().getExtras();
+        Farm farm = (Farm) bundle.get(ScoutTripActivity.USER_FARM);
+        return farm;
     }
 
     /**
@@ -203,9 +205,9 @@ public class enterDataActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mySpin.setAdapter(adapter);
         int pos = 0;
-        if (stop.getBlock() != null) {
+        if (scoutStop.getBlock() != null) {
             for (int i = 0; i < mySpin.getCount(); i++) {
-                if (((Block) (mySpin.getItemAtPosition(i))).getBlockName().equals(stop.getBlock().getBlockName())) {
+                if (((Block) (mySpin.getItemAtPosition(i))).getBlockName().equals(scoutStop.getBlock().getBlockName())) {
                     pos = i;
                     break;
                 }
@@ -219,22 +221,20 @@ public class enterDataActivity extends AppCompatActivity {
         npTrees.setMinValue(1);
         npTrees.setMaxValue(100);
         npTrees.setWrapSelectorWheel(false);
-        npTrees.setValue(stop.getNumberOfTrees());
+        npTrees.setValue(scoutStop.getNumberOfTrees());
     }
 
     public void sendToScoutTripActivity(View view) {
-
         Intent output = new Intent();
         Bundle b = new Bundle();
-        stop.setScoutBugs(listAddedBugs);
-        b.putSerializable(ScoutTripActivity.SCOUT_STOP, stop);
+        scoutStop.setScoutBugs(listAddedBugs);
+        b.putSerializable(ScoutTripActivity.SCOUT_STOP, scoutStop);
         output.putExtras(b);
         setResult(RESULT_OK, output);
         finish();
     }
 
-    public void sendToIdentificationActivity(View view) {
-
+    public void startIdentificationActivity(View view) {
         Intent intent = new Intent(enterDataActivity.this, IdentificationActivity.class);
         startActivityForResult(intent, 0);
     }
@@ -242,31 +242,21 @@ public class enterDataActivity extends AppCompatActivity {
     /**
      * Receives the Location Data from the device.
      */
-    public Location receiveGeoLocation() {
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    public Location getGeoLocation() {
+        LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new MyLocationListener();
-        if (!CheckIfGPSON()) {
-            Intent gpsOptionsIntent = new Intent(
-                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(gpsOptionsIntent);
-        } else {
-            try {
-                mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
-                myLocation = getLastKnownLocation(); //mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            } catch (SecurityException ex) {
-                ex.printStackTrace();
-            }
         }
-        return myLocation;
-    }
-
-
-    /**
-     * Checks if GPS is on.
-     * @return
-     */
-    public boolean CheckIfGPSON(){
-        return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        try {
+            mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+            Location location = getLastKnownLocation(mLocationManager); //mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            return location;
+        } catch (SecurityException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
 
@@ -274,22 +264,18 @@ public class enterDataActivity extends AppCompatActivity {
      * Gets the last known location if GPS is on. Else it goes to an error screen.
      * @return Location object.
      */
-    private synchronized Location getLastKnownLocation() {
+    private synchronized Location getLastKnownLocation(LocationManager mLocationManager) {
         mLocationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
         List<String> providers = mLocationManager.getProviders(true);
         Location bestLocation = null;
         try {
-            if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                for (String provider : providers) {
-                    Location l = mLocationManager.getLastKnownLocation(provider);
-                    if (l == null) {
-                        continue;
-                    } else {
-                        bestLocation = l;
-                    }
+            for (String provider : providers) {
+                Location l = mLocationManager.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
+                } else {
+                    bestLocation = l;
                 }
-            } else {
-                //createErrorMessage();
             }
         } catch (SecurityException ex) {
             ex.printStackTrace();
@@ -298,41 +284,24 @@ public class enterDataActivity extends AppCompatActivity {
         return bestLocation;
     }
 
-    public void setFarm(Farm farm) {
-        this.farm = farm;
-    }
-
-    /**
-     * Moves to the GPS screen.
-     */
-    public synchronized void moveGPSScreen() {
-        Intent gpsOptionsIntent = new Intent(
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(gpsOptionsIntent);
-    }
-
-    /**
-     * Creates a ScoutStop object.
-     */
-    public synchronized void createScoutStop() {
-        stop = new ScoutStop();
-        stop.setDate(new Date());
-        if(myLocation != null){
-            stop.setLatitude((float) myLocation.getLatitude());
-            stop.setLongitude((float) myLocation.getLongitude());
-        }
-        stop.setNumberOfTrees(0);
-    }
-
 
     /**
      * Adds a bug
      *
      */
-    public void addBug() {
-        storeCurrentBug();
-        updateAddedBugsView();
-
+    public void addBug(Bitmap fieldPic, Species idSpecies, int bugCount) {
+        ScoutBug temp = new ScoutBug();
+        if (idSpecies != null) {
+            temp.setSpecies(idSpecies);
+        }
+        if (fieldPic != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            fieldPic.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            temp.setFieldPicture(stream.toByteArray());
+        }
+        temp.setNumberOfBugs(bugCount);
+        listAddedBugs.add(temp);
+        rvAddedBugs.getAdapter().notifyDataSetChanged();
     }
 
     public void collapseScoutStopDetails(View v) {
@@ -350,18 +319,16 @@ public class enterDataActivity extends AppCompatActivity {
                     break;
                 }
             }
-            stop.setBlockID(tempBlock.getBlockID());
-            stop.setBlock(tempBlock);
-            stop.setNumberOfTrees(npTrees.getValue());
+            scoutStop.setBlockID(tempBlock.getBlockID());
+            scoutStop.setBlock(tempBlock);
+            scoutStop.setNumberOfTrees(npTrees.getValue());
         }
         layout.removeAllViews();
-        layout.inflate(enterDataActivity.this, R.layout.collapsed_scout_stop_details, layout);
+        View.inflate(enterDataActivity.this, R.layout.collapsed_scout_stop_details, layout);
         TextView lblBlockName = (TextView) layout.findViewById(R.id.lblBlockName);
-        lblBlockName.setText(stop.getBlock().getBlockName());
+        lblBlockName.setText(scoutStop.getBlock().getBlockName());
         TextView lblNumTrees = (TextView) layout.findViewById(R.id.lblNumTrees);
-        lblNumTrees.setText(stop.getNumberOfTrees() + "");
-        //RelativeLayout openLayout = (RelativeLayout) findViewById(R.id.bugDetailsLayout);
-        //openLayout.setVisibility(View.VISIBLE);
+        lblNumTrees.setText(scoutStop.getNumberOfTrees() + "");
         FloatingActionButton openButton = (FloatingActionButton) findViewById(R.id.fabAddBug);
         openButton.setVisibility(View.VISIBLE);
     }
@@ -371,11 +338,15 @@ public class enterDataActivity extends AppCompatActivity {
         LinearLayout bugLayout = (LinearLayout) findViewById(R.id.layoutAddedBugs);
         bugLayout.setVisibility(View.GONE);
 
+        //hide FAB
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddBug);
+        fab.setVisibility(View.INVISIBLE);
+
         LinearLayout layout = (LinearLayout) findViewById(R.id.scoutStopDetailsLayout);
         //remove layout children
         layout.removeAllViews();
         //set new layout to expanded version
-        layout.inflate(enterDataActivity.this, R.layout.expanded_scout_stop_details, layout);
+        View.inflate(enterDataActivity.this, R.layout.expanded_scout_stop_details, layout);
         //initialise pickers and stuff
         populateSpinner();
         initialiseTreeNumberPicker();
@@ -387,43 +358,6 @@ public class enterDataActivity extends AppCompatActivity {
                 collapseScoutStopDetails(v);
             }
         });
-    }
-
-    public void updateAddedBugsView(){
-       /* RecyclerView info=(LinearLayout)findViewById(R.id.addedBugsContent);
-        info.removeAllViews();
-        for (ScoutBug bug: listAddedBugs) {
-            View bugInfo = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.bug_info, null);
-            ((ImageView) bugInfo.findViewById(R.id.bugInfoImage)).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length),150,150,true));
-            ((TextView) bugInfo.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs() + "");
-            info.addView(bugInfo);
-        }*/
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rvAddedBugs);
-        rv.getAdapter().notifyDataSetChanged();
-    }
-    /**
-     * Stores the current Bugs
-     */
-    public void storeCurrentBug(){
-        currBug = new ScoutBug();
-        if(species != null){
-            currBug.setSpecies(species);
-        }
-
-        if(imageTaken != null){
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            imageTaken.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            currBug.setFieldPicture(stream.toByteArray());
-        }
-        currBug.setNumberOfBugs(bugCount);
-        currBug.setSpecies(species);
-        currBug.setSpeciesID(species.getSpeciesID());
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        imageTaken.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        currBug.setFieldPicture(stream.toByteArray());
-        stop.ScoutBugs.add(currBug);
-        listAddedBugs.add(currBug);
-
     }
 
     public class RVAddedBugsAdapter extends RecyclerView.Adapter<RVAddedBugsAdapter.AddedBugViewHolder> {
@@ -461,16 +395,22 @@ public class enterDataActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(AddedBugViewHolder addedBugViewHolder, int i) {
-            ScoutBug bug = null;
-            int pos = 0;
-            for (ScoutBug b : bugs) {
-                if (pos++ == i)
-                    bug = b;
+            if (hasBugs) {
+                ScoutBug bug = null;
+                int pos = 0;
+                for (ScoutBug b : bugs) {
+                    if (pos++ == i)
+                        bug = b;
+                }
+                Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length), 88, 88, true);
+                addedBugViewHolder.ivAddedBugPic.setImageBitmap(bm);
+                addedBugViewHolder.tvAddedBugSpecies.setText(bug.getSpecies().getSpeciesName() + " Instar " + bug.getSpecies().getLifestage());
+                addedBugViewHolder.tvAddedBugCount.setText(bug.getNumberOfBugs() + "");
+            } else {
+                addedBugViewHolder.ivAddedBugPic.setMaxWidth(0);
+                addedBugViewHolder.tvAddedBugSpecies.setText("No bugs added yet. Click '+' to add.");
+                addedBugViewHolder.tvAddedBugCount.setText("");
             }
-            Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length), 88, 88, true);
-            addedBugViewHolder.ivAddedBugPic.setImageBitmap(bm);
-            addedBugViewHolder.tvAddedBugSpecies.setText(bug.getSpecies().getSpeciesName() + " Instar " + bug.getSpecies().getLifestage());
-            addedBugViewHolder.tvAddedBugCount.setText(bug.getNumberOfBugs() + "");
         }
     }
 
