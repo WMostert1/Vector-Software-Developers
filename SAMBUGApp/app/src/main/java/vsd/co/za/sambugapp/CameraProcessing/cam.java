@@ -40,12 +40,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import vsd.co.za.sambugapp.R;
 
 public class cam extends Activity implements SensorEventListener {
     private Camera mCamera;
     public static final String CAMERA="za.co.vsd.camera";
+    public static final String ORIENTATION="za.co.vsd.orientation";
     private CameraPreview2 mPreview;
     private SensorManager sensorManager = null;
     private int orientation;
@@ -56,8 +58,6 @@ public class cam extends Activity implements SensorEventListener {
     private Button ibUse;
     private Button ibCapture;
     private FrameLayout flBtnContainer;
-    private File sdRoot;
-    private String dir;
     private String fileName;
     private ImageButton rotatingImage;
     private int degrees = -1;
@@ -67,18 +67,11 @@ public class cam extends Activity implements SensorEventListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.activity_cam);
         setContentView(R.layout.test);
 
-        // Setting all the path for the image
-        sdRoot = Environment.getExternalStorageDirectory();
-        dir = "/DCIM/Camera/";
 
         // Getting all the needed elements from the layout
         rotatingImage = (ImageButton) findViewById(R.id.imgbCamera);
-        //ibRetake = (Button) findViewById(R.id.ibRetake);
-        //ibUse = (Button) findViewById(R.id.ibUse);
-       // ibCapture = (Button) findViewById(R.id.ibCapture2);
         flBtnContainer = (FrameLayout) findViewById(R.id.flBtnContainer);
 
         // Getting the sensor service.
@@ -124,16 +117,15 @@ public class cam extends Activity implements SensorEventListener {
 //        });
     }
 
-
+    /**
+     * Creates the camera and adjusts paramets.
+     */
     private void createCamera() {
-        /////////////////////////////////////////
         // Create an instance of Camera
         mCamera = getCameraInstance();
 
         // Setting the right parameters in the camera
-
         Camera.Parameters params = mCamera.getParameters();
-     //   params.setPictureSize(360, 600);
         params.setPictureFormat(PixelFormat.JPEG);
         params.setJpegQuality(100);
         mCamera.setParameters(params);
@@ -142,14 +134,7 @@ public class cam extends Activity implements SensorEventListener {
         mPreview = new CameraPreview2(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 
-        // Calculating the width of the preview so it is proportional.
-       // float widthFloat = (float) (deviceHeight) * 4 / 3;
-       // int width = Math.round(widthFloat);
-
-        // Resizing the LinearLayout so we can make a proportional preview. This
-        // approach is not 100% perfect because on devices with a really small
-        // screen the the image will still be distorted - there is place for
-        // improvment.
+        //Creating the view param to display the preview
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(deviceWidth, deviceHeight);
         preview.setLayoutParams(layoutParams);
 
@@ -161,20 +146,6 @@ public class cam extends Activity implements SensorEventListener {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Test if there is a camera on the device and if the SD card is
-        // mounted.
-//        if (!checkCameraHardware(this)) {
-//            Intent i = new Intent(this, NoCamera.class);
-//            startActivity(i);
-//            finish();
-//        } else if (!checkSDCard()) {
-//            Intent i = new Intent(this, NoSDCard.class);
-//            startActivity(i);
-//            finish();
-//        }
-
-        // Creating the camera
         createCamera();
 
         // Register this class as a listener for the accelerometer sensor
@@ -200,7 +171,11 @@ public class cam extends Activity implements SensorEventListener {
         }
     }
 
-    /** Check if this device has a camera */
+    /**
+     * Check if User has a camera
+     * @param context
+     * @return
+     */
     private boolean checkCameraHardware(Context context) {
         if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             // this device has a camera
@@ -211,6 +186,10 @@ public class cam extends Activity implements SensorEventListener {
         }
     }
 
+    /**
+     * Check if User has SD card
+     * @return
+     */
     private boolean checkSDCard() {
         boolean state = false;
 
@@ -238,35 +217,43 @@ public class cam extends Activity implements SensorEventListener {
         return c;
     }
 
+    /**
+     * When we have taken an image.
+     */
     private PictureCallback mPicture = new PictureCallback() {
 
         public void onPictureTaken(byte[] data, Camera camera) {
 
-            // Replacing the button after a photho was taken.
-          //  flBtnContainer.setVisibility(View.GONE);
-            //ibRetake.setVisibility(View.VISIBLE);
-            //ibUse.setVisibility(View.VISIBLE);
             byte[] croppedData = null;
             try {
-                croppedData = getBitmap(data);
+                data = getBitmap(data);
             }
             catch(IOException e){
 
             }
-            // File name of the image that we just took.
-            fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).toString() + ".jpg";
 
-            // Creating the directory where to save the image. Sadly in older
-            // version of Android we can not get the Media catalog name
-            File mkDir = new File(sdRoot, dir);
-            mkDir.mkdirs();
+            //Saving the image in a Folder called Sambug - specified in getDir()
+            File pictureFileDir = getDir();
+            if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
 
-            // Main file where to save the data that we recive from the camera
-            File pictureFile = new File(sdRoot, dir + fileName);
+                Log.e("Here", "Can't create directory to save image.");
+                Toast.makeText(getApplicationContext(), "Can't create directory to save image.",
+                        Toast.LENGTH_LONG).show();
+                return;
+
+            }
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmddhhmmss");
+            String date = dateFormat.format(new Date());
+            String photoFile = "Picture_" + date + ".jpg";
+            String filename = pictureFileDir.getPath() + File.separator + photoFile;
+
+            File pictureFile = new File(filename);
+
 
             try {
                 FileOutputStream purge = new FileOutputStream(pictureFile);
-                purge.write(croppedData);
+                purge.write(data);
                 purge.close();
             } catch (FileNotFoundException e) {
                 Log.d("DG_DEBUG", "File not found: " + e.getMessage());
@@ -274,25 +261,36 @@ public class cam extends Activity implements SensorEventListener {
                 Log.d("DG_DEBUG", "Error accessing file: " + e.getMessage());
             }
 
-            // Adding Exif data for the orientation. For some strange reason the
-            // ExifInterface class takes a string instead of a file.
-            //Fixining weird orientation bug
-//            if(orientation == 6) {
-//                orientation = 1;
-//            }
-            fullPathName = "/sdcard/" + dir + fileName;
+            // Adding Exif data for the orientation.
+            fullPathName = pictureFile.getAbsolutePath();
             try {
-               // exif = new ExifInterface("/sdcard/" + dir + fileName);
-                exif = new ExifInterface(fullPathName);
+                exif = new ExifInterface(pictureFile.getAbsolutePath());
                 exif.setAttribute(ExifInterface.TAG_ORIENTATION, "" + orientation);
                 exif.saveAttributes();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            //Sending fileName to ImagePreview Class
             sendToCameraPreview(fullPathName);
         }
     };
 
+    /**
+     * Getting the directory where we can store the image.
+     * @return
+     */
+    private File getDir() {
+        File sdDir = Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return new File(sdDir, "Sambug");
+    }
+
+    /**
+     * Cropping the image accordingly
+     * @param data - byte[] containing the image.
+     * @return
+     * @throws IOException
+     */
     public byte[] getBitmap(byte[] data)
             throws IOException {
 //
@@ -300,60 +298,24 @@ public class cam extends Activity implements SensorEventListener {
         int width = params.getPictureSize().width;
         int height = params.getPictureSize().height;
 
-
-        Matrix matrix = new Matrix();
-        matrix.postScale(1f, 1f);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, width*1/8,  height*1/8,width*7/8-width*1/8, height*7/8-height*1/8, matrix, true);
-
-        bitmap.recycle();
-        //Bitmap bitmap = BitmapFactory.decodeFile("/path/images/image.jpg");
-        ByteArrayOutputStream blob = new ByteArrayOutputStream();
-
-        resizedBitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, blob);
-        resizedBitmap.recycle();
-        byte[] bitmapdata = blob.toByteArray();
-        return bitmapdata;
-//        int previewHeight,previewWidth,previewFormat;
-//
-//        Camera.Parameters params = mCamera.getParameters();
-//        previewHeight = 640;//200;//params.getPreviewSize().height;
-//        previewWidth = 480;//200;//params.getPreviewSize().width;
-//        previewFormat = params.getPreviewFormat();
-//        /////////////////////
-//        //camera.setDisplayOrientation(90);
-//        Bitmap bitmap = null;
-//        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-//        YuvImage yuvImage = new YuvImage(
-//                data, previewFormat, previewWidth, previewHeight, null);
-//        // r = new Rect(80, 20, previewWidth - 80, previewHeight - 20);
-//        int padX = previewWidth/10;
-//        int padY = previewHeight/10;
-//        Rect r = new Rect(padX,padY,previewWidth-padX,previewHeight-padY);
-//        // r = new Rect(60,40,640-60,480-40);
-//        yuvImage.compressToJpeg(r, 100, outStream);
-//        bitmap = BitmapFactory.decodeByteArray(outStream.toByteArray(), 0,
-//                outStream.size());
-//        byte[] bitmapdata = outStream.toByteArray();
-//        //Bitmap bitmap = null;
-//        //YuvImage yuvimage = new YuvImage(yuv, ImageFormat.NV21,720,
-//        //        1280, null);
-////        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-//        // yuvimage.compressToJpeg(new Rect(left+10, top+10, right+10, bottom+10), 100, outStream);
-//        // yuvimage.compressToJpeg(new Rect(180, 100, 540, 400), 100, outStream);
-//        // bitmap = BitmapFactory.decodeByteArray(outStream.toByteArray(), 0,
-//        //         outStream.size());
-//        // yuvimage = null;
-//        outStream = null;
-//        return bitmapdata;
+        int[] pixels = new int[width*height];//the size of the array is the dimensions of the sub-photo
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data , 0, data.length);
+        bitmap.getPixels(pixels, 0, width,width*1/8,  height*1/8,width*7/8-width*1/8, height*7/8-height*1/8);
+        bitmap = Bitmap.createBitmap(pixels, 0, width, width*7/8-width*1/8, height*7/8-height*1/8, Bitmap.Config.ARGB_8888);//ARGB_8888 is a good quality configuration
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);//100 is the best quality possible
+        byte[] square = bos.toByteArray();
+        return square;
     }
 
+    /**
+     * Sending the image file name to ImagePreview
+     * @param p
+     */
     private void sendToCameraPreview(String p){
         Intent intent=new Intent(this,ImagePreview.class);
         Bundle b = new Bundle();
         b.putSerializable(CAMERA, p);
-        // b.putSerializable(USER_FARM,farm);
         intent.putExtras(b);
         startActivity(intent);
     }

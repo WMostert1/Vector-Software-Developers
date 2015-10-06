@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -32,6 +33,7 @@ public class ImagePreview extends AppCompatActivity {
     ImageView imageView;
     ExifInterface exif;
     String fullPathName;
+    int orientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,18 +69,11 @@ public class ImagePreview extends AppCompatActivity {
     private void acceptImage(Intent intent){
         Bundle b=intent.getExtras();
 
-        fullPathName= (String)b.get(Camera.CAMERA);
-//        try {
-//            exif = new ExifInterface(fullPathName);
-//        }
-//        catch (IOException e){
-//
-//        }
-        //Bitmap bmp = BitmapFactory.decodeByteArray(image, 0, image.length);
-        //imageView = (ImageView)findViewById(R.id.ivImage);
-       // imageView.setImageBitmap(bmp);
+        fullPathName= (String)b.get(cam.CAMERA);
+
 
         File imgFile = new File(fullPathName);
+
 
         if(imgFile.exists()){
 
@@ -92,6 +87,14 @@ public class ImagePreview extends AppCompatActivity {
 
     }
 
+    public void acceptImage(View v){
+
+    }
+
+    public void deletePhoto(View v){
+        File discardedPhoto = new File(fullPathName);
+        discardedPhoto.delete();
+    }
 
 
 

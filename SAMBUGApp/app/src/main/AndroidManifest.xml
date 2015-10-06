@@ -69,11 +69,6 @@
             android:exported="true"
             android:label="@string/title_activity_cam">
         </activity>
-        <activity
-            android:name=".CameraProcessing.Camera3"
-            android:label="@string/title_activity_camera3"
-            android:exported="true">
-        </activity>
     </application>
 
 </manifest>
