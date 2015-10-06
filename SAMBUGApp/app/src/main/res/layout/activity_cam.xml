@@ -4,13 +4,13 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <vsd.co.za.sambugapp.CameraProcessing.Peephole
+        <vsd.co.za.sambugapp.CameraProcessing.Peephole
         android:id="@+id/peephole1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
- />
+        />
 
     <FrameLayout
         android:id="@+id/camera_preview"

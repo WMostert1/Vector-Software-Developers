@@ -113,18 +113,31 @@ public class Peephole extends View{
 //        canvas.drawLine(width/4, height/4, width/4, height*3/4, square);
 //        canvas.drawLine(width*3/4, height/4, width*3/4, height*3/4, square);
 
-        int minX,maxX,minY,maxY;
-        int padX = width/10;
-        int padY = height/10;
-        minX = 0;
-        maxX =  width;
-        minY = 0;
-        maxY = height;
+//        int minX,maxX,minY,maxY;
+//        int padX = width/10;
+//        int padY = height/10;
+//        minX = 0;
+//        maxX =  width;
+//        minY = 0;
+//        maxY = height;
 
-        canvas.drawLine(padX,padY, maxX-padX,padY, square);
-        canvas.drawLine(padX,maxY-padY,  maxX-padX,maxY-padY, square);
-        canvas.drawLine(padX, padY, padX, maxY-padY, square);
-        canvas.drawLine(maxX-padX, padY, maxX-padX, maxY-padY, square);
+//        canvas.drawLine(padX,padY, maxX-padX,padY, square);
+//        canvas.drawLine(padX,maxY-padY,  maxX-padX,maxY-padY, square);
+//        canvas.drawLine(padX, padY, padX, maxY-padY, square);
+//        canvas.drawLine(maxX-padX, padY, maxX-padX, maxY-padY, square);
+
+        int minX,maxX,minY,maxY;
+        int padX = width*1/8;
+        int padY = height*1/8;
+        minX = 0;
+        maxX =  width*7/8;
+        minY = 0;
+        maxY = height*7/8;
+
+        canvas.drawLine(padX,padY, maxX,padY, square);
+        canvas.drawLine(padX,maxY,  maxX,maxY, square);
+        canvas.drawLine(padX, padY, padX, maxY, square);
+        canvas.drawLine(maxX, padY, maxX, maxY, square);
 
         setBoxX1(width/4);
         setBoxX2(width*3/4);

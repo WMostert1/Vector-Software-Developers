@@ -1,5 +1,6 @@
 package vsd.co.za.sambugapp.CameraProcessing;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,7 +12,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Sensor;
@@ -29,6 +36,7 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -51,8 +59,10 @@ public class cam extends Activity implements SensorEventListener {
     private File sdRoot;
     private String dir;
     private String fileName;
-    private ImageView rotatingImage;
+    private ImageButton rotatingImage;
     private int degrees = -1;
+    private String fullPathName;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,10 +75,10 @@ public class cam extends Activity implements SensorEventListener {
         dir = "/DCIM/Camera/";
 
         // Getting all the needed elements from the layout
-        rotatingImage = (ImageView) findViewById(R.id.imageView1);
-        ibRetake = (Button) findViewById(R.id.ibRetake);
-        ibUse = (Button) findViewById(R.id.ibUse);
-        ibCapture = (Button) findViewById(R.id.ibCapture2);
+        rotatingImage = (ImageButton) findViewById(R.id.imgbCamera);
+        //ibRetake = (Button) findViewById(R.id.ibRetake);
+        //ibUse = (Button) findViewById(R.id.ibUse);
+       // ibCapture = (Button) findViewById(R.id.ibCapture2);
         flBtnContainer = (FrameLayout) findViewById(R.id.flBtnContainer);
 
         // Getting the sensor service.
@@ -81,37 +91,39 @@ public class cam extends Activity implements SensorEventListener {
         deviceWidth = display.getWidth();
 
         // Add a listener to the Capture button
-        ibCapture.setOnClickListener(new View.OnClickListener() {
+        rotatingImage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mCamera.takePicture(null, null, mPicture);
             }
         });
+ //       cameraConfigured = false;
         //getRotateAnimation(-90);
         // Add a listener to the Retake button
-        ibRetake.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Deleting the image from the SD card/
-                File discardedPhoto = new File(sdRoot, dir + fileName);
-                discardedPhoto.delete();
-
-                // Restart the camera preview.
-                mCamera.startPreview();
-
-                // Reorganize the buttons on the screen
-                flBtnContainer.setVisibility(LinearLayout.VISIBLE);
-                ibRetake.setVisibility(LinearLayout.GONE);
-                ibUse.setVisibility(LinearLayout.GONE);
-            }
-        });
+//        ibRetake.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                // Deleting the image from the SD card/
+//                File discardedPhoto = new File(sdRoot, dir + fileName);
+//                discardedPhoto.delete();
+//
+//                // Restart the camera preview.
+//                mCamera.startPreview();
+//
+//                // Reorganize the buttons on the screen
+//                flBtnContainer.setVisibility(LinearLayout.VISIBLE);
+//                ibRetake.setVisibility(LinearLayout.GONE);
+//                ibUse.setVisibility(LinearLayout.GONE);
+//            }
+//        });
 
         // Add a listener to the Use button
-        ibUse.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Everything is saved so we can quit the app.
-                finish();
-            }
-        });
+//        ibUse.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                // Everything is saved so we can quit the app.
+//                finish();
+//            }
+//        });
     }
+
 
     private void createCamera() {
         /////////////////////////////////////////
@@ -119,6 +131,7 @@ public class cam extends Activity implements SensorEventListener {
         mCamera = getCameraInstance();
 
         // Setting the right parameters in the camera
+
         Camera.Parameters params = mCamera.getParameters();
      //   params.setPictureSize(360, 600);
         params.setPictureFormat(PixelFormat.JPEG);
@@ -230,10 +243,16 @@ public class cam extends Activity implements SensorEventListener {
         public void onPictureTaken(byte[] data, Camera camera) {
 
             // Replacing the button after a photho was taken.
-            flBtnContainer.setVisibility(View.GONE);
-            ibRetake.setVisibility(View.VISIBLE);
-            ibUse.setVisibility(View.VISIBLE);
+          //  flBtnContainer.setVisibility(View.GONE);
+            //ibRetake.setVisibility(View.VISIBLE);
+            //ibUse.setVisibility(View.VISIBLE);
+            byte[] croppedData = null;
+            try {
+                croppedData = getBitmap(data);
+            }
+            catch(IOException e){
 
+            }
             // File name of the image that we just took.
             fileName = "IMG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()).toString() + ".jpg";
 
@@ -247,7 +266,7 @@ public class cam extends Activity implements SensorEventListener {
 
             try {
                 FileOutputStream purge = new FileOutputStream(pictureFile);
-                purge.write(data);
+                purge.write(croppedData);
                 purge.close();
             } catch (FileNotFoundException e) {
                 Log.d("DG_DEBUG", "File not found: " + e.getMessage());
@@ -257,21 +276,83 @@ public class cam extends Activity implements SensorEventListener {
 
             // Adding Exif data for the orientation. For some strange reason the
             // ExifInterface class takes a string instead of a file.
+            //Fixining weird orientation bug
+//            if(orientation == 6) {
+//                orientation = 1;
+//            }
+            fullPathName = "/sdcard/" + dir + fileName;
             try {
-                exif = new ExifInterface("/sdcard/" + dir + fileName);
+               // exif = new ExifInterface("/sdcard/" + dir + fileName);
+                exif = new ExifInterface(fullPathName);
                 exif.setAttribute(ExifInterface.TAG_ORIENTATION, "" + orientation);
                 exif.saveAttributes();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            sendToCameraPreview(data);
+            sendToCameraPreview(fullPathName);
         }
     };
 
-    private void sendToCameraPreview(byte [] img){
+    public byte[] getBitmap(byte[] data)
+            throws IOException {
+//
+        Camera.Parameters params = mCamera.getParameters();
+        int width = params.getPictureSize().width;
+        int height = params.getPictureSize().height;
+
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(1f, 1f);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, width*1/8,  height*1/8,width*7/8-width*1/8, height*7/8-height*1/8, matrix, true);
+
+        bitmap.recycle();
+        //Bitmap bitmap = BitmapFactory.decodeFile("/path/images/image.jpg");
+        ByteArrayOutputStream blob = new ByteArrayOutputStream();
+
+        resizedBitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, blob);
+        resizedBitmap.recycle();
+        byte[] bitmapdata = blob.toByteArray();
+        return bitmapdata;
+//        int previewHeight,previewWidth,previewFormat;
+//
+//        Camera.Parameters params = mCamera.getParameters();
+//        previewHeight = 640;//200;//params.getPreviewSize().height;
+//        previewWidth = 480;//200;//params.getPreviewSize().width;
+//        previewFormat = params.getPreviewFormat();
+//        /////////////////////
+//        //camera.setDisplayOrientation(90);
+//        Bitmap bitmap = null;
+//        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+//        YuvImage yuvImage = new YuvImage(
+//                data, previewFormat, previewWidth, previewHeight, null);
+//        // r = new Rect(80, 20, previewWidth - 80, previewHeight - 20);
+//        int padX = previewWidth/10;
+//        int padY = previewHeight/10;
+//        Rect r = new Rect(padX,padY,previewWidth-padX,previewHeight-padY);
+//        // r = new Rect(60,40,640-60,480-40);
+//        yuvImage.compressToJpeg(r, 100, outStream);
+//        bitmap = BitmapFactory.decodeByteArray(outStream.toByteArray(), 0,
+//                outStream.size());
+//        byte[] bitmapdata = outStream.toByteArray();
+//        //Bitmap bitmap = null;
+//        //YuvImage yuvimage = new YuvImage(yuv, ImageFormat.NV21,720,
+//        //        1280, null);
+////        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+//        // yuvimage.compressToJpeg(new Rect(left+10, top+10, right+10, bottom+10), 100, outStream);
+//        // yuvimage.compressToJpeg(new Rect(180, 100, 540, 400), 100, outStream);
+//        // bitmap = BitmapFactory.decodeByteArray(outStream.toByteArray(), 0,
+//        //         outStream.size());
+//        // yuvimage = null;
+//        outStream = null;
+//        return bitmapdata;
+    }
+
+    private void sendToCameraPreview(String p){
         Intent intent=new Intent(this,ImagePreview.class);
         Bundle b = new Bundle();
-        b.putSerializable(CAMERA, img);
+        b.putSerializable(CAMERA, p);
         // b.putSerializable(USER_FARM,farm);
         intent.putExtras(b);
         startActivity(intent);
@@ -281,6 +362,7 @@ public class cam extends Activity implements SensorEventListener {
      * something changes.
      */
     public void onSensorChanged(SensorEvent event) {
+        int oofset = 90;
         synchronized (this) {
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 RotateAnimation animation = null;
@@ -288,25 +370,25 @@ public class cam extends Activity implements SensorEventListener {
                     if (event.values[1] > 0 && orientation != ExifInterface.ORIENTATION_ROTATE_90) {
                         // UP
                         orientation = ExifInterface.ORIENTATION_ROTATE_90;
-                        animation = getRotateAnimation(270);
-                        degrees = 270;
+                        animation = getRotateAnimation(270+oofset);
+                        degrees = 270+oofset;
                     } else if (event.values[1] < 0 && orientation != ExifInterface.ORIENTATION_ROTATE_270) {
                         // UP SIDE DOWN
                         orientation = ExifInterface.ORIENTATION_ROTATE_270;
-                        animation = getRotateAnimation(90);
-                        degrees = 90;
+                        animation = getRotateAnimation(90+oofset);
+                        degrees = 90+oofset;
                     }
                 } else if (event.values[1] < 4 && event.values[1] > -4) {
                     if (event.values[0] > 0 && orientation != ExifInterface.ORIENTATION_NORMAL) {
                         // LEFT
                         orientation = ExifInterface.ORIENTATION_NORMAL;
-                        animation = getRotateAnimation(0);
-                        degrees = 0;
+                        animation = getRotateAnimation(0+oofset);
+                        degrees = 0+oofset;
                     } else if (event.values[0] < 0 && orientation != ExifInterface.ORIENTATION_ROTATE_180) {
                         // RIGHT
                         orientation = ExifInterface.ORIENTATION_ROTATE_180;
-                        animation = getRotateAnimation(180);
-                        degrees = 180;
+                        animation = getRotateAnimation(180+oofset);
+                        degrees = 180+oofset;
                     }
                 }
                 if (animation != null) {
