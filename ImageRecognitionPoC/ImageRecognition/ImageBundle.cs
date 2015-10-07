@@ -16,7 +16,7 @@ namespace ImageRecognition
         public ImageBundle(Image<Gray,byte> img){
             Classifier classifier = new Classifier();
             image = img;
-            features = classifier.getFeatureMatrix(img);
+            features = classifier.getSURFFeatureDescriptorMatrix(img,300,true);
         }
     }
 }

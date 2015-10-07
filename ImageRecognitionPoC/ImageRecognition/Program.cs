@@ -26,16 +26,10 @@ namespace ImageRecognition
             //Bitmap b_image = new Bitmap(ms);
             //Bitmap gray;
 
-
-            
-            ImageMagic imageProcessor = new ImageMagic();
-            imageProcessor.runANN();
-            imageProcessor.runANNDerivitive();
-
-            //return;
-
             Classifier classifier = new Classifier();
+            classifier.runMatchCollectionOfImages();
 
+            return;
             string[] CfileNames = Directory.GetFiles("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\C\\Adult");
             string[] YfileNames = Directory.GetFiles("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\Y\\Adult");
             string[] TfileNames = Directory.GetFiles("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\T\\Adult");
@@ -50,50 +44,55 @@ namespace ImageRecognition
             foreach (var file in YfileNames)
                 Y.Add(new Bitmap(file));
 
-            foreach (var file in TfileNames)
-                T.Add(new Bitmap(file));
+            //foreach (var file in TfileNames)
+            //    T.Add(new Bitmap(file));
 
             List<ImageBundle> C_Bundle = new List<ImageBundle>();
             List<ImageBundle> Y_Bundle = new List<ImageBundle>();
-            List<ImageBundle> T_Bundle = new List<ImageBundle>();
-            int smallestRows = 999999;
+            //List<ImageBundle> T_Bundle = new List<ImageBundle>();
+            //int smallestRows = 999999;
+
+
+            Matrix<byte> ORBfeatures = classifier.getORBDescriptors(new Image<Gray, byte>(C[0]));
+
 
             foreach (var b in C)
             {
-                Bitmap gray;
-                Bitmap b_temp = b;
-                imageProcessor.IdentifyContours(b, 110, true, out gray, out b_temp);
+               // Bitmap gray;
+                //Bitmap b_temp = b;
+                //imageProcessor.IdentifyContours(b, 110, true, out gray, out b_temp);
 
-                Image<Gray, byte> temp = new Image<Gray, byte>(b_temp);
-                temp = temp.Resize(475, 550, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
+                Image<Gray, byte> temp = new Image<Gray, byte>(b);
+                //temp = temp.Resize(475, 550, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
                 
-                Emgu.CV.UI.ImageViewer.Show(temp);
+                //Emgu.CV.UI.ImageViewer.Show(temp);
                 
                 ImageBundle bundle = new ImageBundle(temp);
                 C_Bundle.Add(bundle);
-                if (bundle.features.Rows < smallestRows)
+               /* if (bundle.features.Rows < smallestRows)
                 {
                     smallestRows = bundle.features.Rows;
                 }
+                */
             }
 
             foreach (var b in Y)
             {
-                Bitmap gray;
-                Bitmap b_temp = b;
-                imageProcessor.IdentifyContours(b, 110, true, out gray, out b_temp);
+                //Bitmap gray;
+               // Bitmap b_temp = b;
+               // imageProcessor.IdentifyContours(b, 110, true, out gray, out b_temp);
 
-                Image<Gray, byte> temp = new Image<Gray, byte>(b_temp);
-                temp = temp.Resize(475, 550, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
+                Image<Gray, byte> temp = new Image<Gray, byte>(b);
+                //temp = temp.Resize(475, 550, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
 
-                Emgu.CV.UI.ImageViewer.Show(temp);
+                //Emgu.CV.UI.ImageViewer.Show(temp);
 
                 ImageBundle bundle = new ImageBundle(temp);
                 Y_Bundle.Add(bundle);
-                if (bundle.features.Rows < smallestRows)
-                {
-                    smallestRows = bundle.features.Rows;
-                }
+                //if (bundle.features.Rows < smallestRows)
+                //{
+                //    smallestRows = bundle.features.Rows;
+                //}
             }
 
            /* foreach (var b in T)
@@ -115,9 +114,20 @@ namespace ImageRecognition
                 }
             }
             * */
-            Debug.WriteLine(smallestRows);
-
-
+            Emgu.CV.ML.ANN_MLP network = classifier.getImageANN(C_Bundle,Y_Bundle);
+            if (network == null) return;
+            List<ImageBundle> CB = new List<ImageBundle>();
+            List<ImageBundle> YB = new List<ImageBundle>();
+            Matrix<int> confusion = classifier.getConfusionMatrix(network, C_Bundle, Y_Bundle);
+            for (int r = 0; r < confusion.Rows; r++)
+            {
+                for (int c = 0; c < confusion.Cols; c++)
+                {
+                    Debug.Write(confusion.Data[r, c] + " ");
+                }
+                Debug.WriteLine("");
+            }
+            Debug.WriteLine("Done");
         }
     }
 }

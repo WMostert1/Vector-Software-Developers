@@ -75,6 +75,7 @@
     <Compile Include="Classifier.cs" />
     <Compile Include="FindContours.cs" />
     <Compile Include="ImageBundle.cs" />
+    <Compile Include="IndecesMapping.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -13,6 +13,8 @@ using Emgu.CV.Features2D;
 using Emgu.CV.GPU;
 using System.Diagnostics;
 using Emgu.CV.Util;
+using Emgu.CV.Flann;
+using System.IO;
 
 namespace ImageRecognition
 {
@@ -20,14 +22,159 @@ namespace ImageRecognition
     {
 
 
-        public Matrix<float> getFeatureMatrix(Image<Gray, Byte> modelImage)
+        public void runMatchCollectionOfImages()
         {
-           
+            
+            string[] dbImages = Directory.GetFiles("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\BF");
+            string queryImage = "C:\\Users\\Aeolus\\Pictures\\SAMBUG\\Samples\\C1.JPG";
+
+            IList<IndecesMapping> imap;
+
+            // compute descriptors for each image
+            var dbDescsList = ComputeMultipleDescriptors(dbImages, out imap);
+
+            // concatenate all DB images descriptors into single Matrix
+            Matrix<float> dbDescs = ConcatDescriptors(dbDescsList);
+
+            // compute descriptors for the query image
+            Matrix<float> queryDescriptors = ComputeSingleDescriptors(queryImage);
+
             
 
-            SURFDetector surfCPU = new SURFDetector(500, false);
+            FindMatches(dbDescs, queryDescriptors, ref imap);
+            int Y = 0;
+            int C = 0;
+            
+            int highest = 0;
+            IndecesMapping high = null;
+            foreach (var img in imap)
+            {
+                if (img.fileName.Contains("coconut"))
+                {
+                    C += img.Similarity;
+                }
+                else
+                {
+                    Y += img.Similarity;
+                }
+
+                if (img.Similarity > highest)
+                {
+                    highest = img.Similarity;
+                    high = img;
+                }
+            }
+
+            Debug.WriteLine("C: " + C);
+            Debug.WriteLine("Y: " + Y);
+            Emgu.CV.UI.ImageViewer.Show(new Image<Bgr,byte>(high.fileName));
+
+            
+        }
+
+        private Matrix<float> ConcatDescriptors(IList<Matrix<float>> descriptors)
+        {
+            int cols = descriptors[0].Cols;
+            int rows = descriptors.Sum(a => a.Rows);
+
+            float[,] concatedDescs = new float[rows, cols];
+
+            int offset = 0;
+
+            foreach (var descriptor in descriptors)
+            {
+                // append new descriptors
+                Buffer.BlockCopy(descriptor.ManagedArray, 0, concatedDescs, offset, sizeof(float) * descriptor.ManagedArray.Length);
+                offset += sizeof(float) * descriptor.ManagedArray.Length;
+            }
+
+            return new Matrix<float>(concatedDescs);
+        }
+
+        private void FindMatches(Matrix<float> dbDescriptors, Matrix<float> queryDescriptors, ref IList<IndecesMapping> imap)
+        {
+            var indices = new Matrix<int>(queryDescriptors.Rows, 2); // matrix that will contain indices of the 2-nearest neighbors found
+            var dists = new Matrix<float>(queryDescriptors.Rows, 2); // matrix that will contain distances to the 2-nearest neighbors found
+
+            // create FLANN index with 4 kd-trees and perform KNN search over it look for 2 nearest neighbours
+            var flannIndex = new Index(dbDescriptors, 4);
+            flannIndex.KnnSearch(queryDescriptors, indices, dists, 2, 24);
+
+            for (int i = 0; i < indices.Rows; i++)
+            {
+                // filter out all inadequate pairs based on distance between pairs
+                if (dists.Data[i, 0] < (0.5 * dists.Data[i, 1]))
+                {
+                    // find image from the db to which current descriptor range belongs and increment similarity value.
+                    // in the actual implementation this should be done differently as it's not very efficient for large image collections.
+                    foreach (var img in imap)
+                    {
+                        if (img.IndexStart <= i && img.IndexEnd >= i)
+                        {
+                            img.Similarity++;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private IList<Matrix<float>> ComputeMultipleDescriptors(string[] fileNames, out IList<IndecesMapping> imap)
+        {
+            imap = new List<IndecesMapping>();
+
+            IList<Matrix<float>> descs = new List<Matrix<float>>();
+
+            int r = 0;
+
+            for (int i = 0; i < fileNames.Length; i++)
+            {
+                var desc = ComputeSingleDescriptors(fileNames[i]);
+                descs.Add(desc);
+
+                imap.Add(new IndecesMapping()
+                {
+                    fileName = fileNames[i],
+                    IndexStart = r,
+                    IndexEnd = r + desc.Rows - 1
+                });
+
+                r += desc.Rows;
+            }
+
+            return descs;
+        }
+
+        private Matrix<float> ComputeSingleDescriptors(string fileName)
+        {
+            Matrix<float> descs;
+
+            using (Image<Gray, Byte> img = new Image<Gray, byte>(fileName))
+            {
+               
+                descs = getSURFFeatureDescriptorMatrix(img,300,true);
+            }
+
+            return descs;
+        } 
+
+        public Matrix<byte> getORBDescriptors(Image<Gray, byte> image)
+        {
+            const int NumberOfFeatures = 256; 
+            ORBDetector orbCPU = new ORBDetector(NumberOfFeatures);
             VectorOfKeyPoint modelKeyPoints;
-           
+
+            modelKeyPoints = orbCPU.DetectKeyPointsRaw(image, null);
+            //var features = orbCPU.DetectFeatures(image, null);
+            return orbCPU.ComputeDescriptorsRaw(image, null, modelKeyPoints);
+        }
+
+
+        public Matrix<float> getSURFFeatureDescriptorMatrix(Image<Gray, Byte> modelImage,int hessian, bool extended)
+        {
+            SURFDetector surfCPU = new SURFDetector(hessian, extended);
+            VectorOfKeyPoint modelKeyPoints;
+
             if (GpuInvoke.HasCuda)
             {
                 GpuSURFDetector surfGPU = new GpuSURFDetector(surfCPU.SURFParams, 0.01f);
@@ -50,57 +197,104 @@ namespace ImageRecognition
             return modelDescriptors;
         }
 
-        public void runANNDerivitive(int numberOfFeatures,List<ImageBundle> CB,List<ImageBundle> YB)
+        // ---------------------------------------------------------------------------------------------------------------------
+                                //                    ANN Attempt
+        //----------------------------------------------------------------------------------------------------------------------
+
+        private float predict(Emgu.CV.ML.ANN_MLP network, ImageBundle sampleImg, int resultClass)
         {
+            Matrix<float> sample = sampleImg.features;
+            Matrix<float> prediction = new Matrix<float>(sampleImg.features.Rows, 1);
+
+            network.Predict(sample, prediction);
+            float average = (float)0.0;
+            for (int i = 0; i < sampleImg.features.Rows; i++)
+            {
+                average += prediction.Data[i, 0];
+            }
+            average /= sampleImg.features.Rows;
+            return average ;
+        }
+
+        public Matrix<int> getConfusionMatrix(Emgu.CV.ML.ANN_MLP network, List<ImageBundle> CB, List<ImageBundle> YB)
+        {
+            Matrix<int> confusionMat = new Matrix<int>(2, 2);
+            confusionMat.SetValue(0);
+            foreach(ImageBundle bundle in CB)
+            {
+                float result = predict(network, bundle, 1);
+                int classification = result < 1.5 ? 0 : 1;
+                confusionMat[0, classification] = confusionMat[0, classification] + 1;
+            }
+
+            foreach (ImageBundle bundle in YB)
+            {
+                float result = predict(network, bundle, 2);
+                int classification = result < 1.5 ? 0 : 1;
+                confusionMat[1, classification] = confusionMat[0, classification] + 1;
+            }
+
+            return confusionMat;
+        }
+
+        public Emgu.CV.ML.ANN_MLP getImageANN(List<ImageBundle> CB, List<ImageBundle> YB)
+        {
+            const int COCONUT_BUG = 1;
+            const int YELLOW_EDGED_BUG = 2;
+            if (CB.Count == 0 || YB.Count == 0) throw new Exception("Taining data can not be empty");
             try
             {
+                int CBsize = 0;
+                foreach (var b in CB)
+                    CBsize += b.features.Rows;
 
-                int trainSampleCount = CB.ToArray().Length  + YB.ToArray().Length;
+                int YBsize = 0;
+                foreach (var b in YB)
+                    YBsize += b.features.Rows;
 
-                #region Generate the traning data and classes
-                Matrix<float> trainData = new Matrix<float>(trainSampleCount, numberOfFeatures);
-                Matrix<float> trainClasses = new Matrix<float>(trainSampleCount, 2);
-                //1 : C , 2: Y
+                //int numberOfClasses = 2;
+                int inputLayerSize = CB[0].features.Cols;
 
-                //This is the output image (showing visually the result of the neural network computation)
-                Image<Bgr, Byte> img = new Image<Bgr, byte>(500, 500);
+                int trainSampleCount = CBsize + YBsize;
+                Matrix<float> trainData = new Matrix<float>(trainSampleCount, inputLayerSize);
+                Matrix<float> trainClasses = new Matrix<float>(trainSampleCount, 1);
 
-                Matrix<float> sample = new Matrix<float>(1, numberOfFeatures);
-                Matrix<float> prediction = new Matrix<float>(1, 1);
+                #region Generate the training data and classes
 
-                //Training data1 is half of training set
-                Matrix<float> trainData1 = trainData.GetRows(0, trainSampleCount / 2, 1);  //trainSampleCount >> 1 = trainSampleCount/2
+                Matrix<float> trainDataCB = trainData.GetRows(0, CBsize, 1);
+                foreach (var bundle in CB)
+                {
+                    for (int col = 0; col < inputLayerSize; col++)
+                    {
+                        int currRow = 0;
+                        for (int row = 0; row < bundle.features.Rows; row++)
+                        {
+                            trainDataCB.Data[currRow++, col] = bundle.features.Data[row, col];
+                        }
+                    }
+                }
 
-                //Inplace fills Array with normally distributed random numbers
-                trainData1.SetRandNormal(new MCvScalar(200), new MCvScalar(50));
+                Matrix<float> trainDataYB = trainData.GetRows(CBsize, trainSampleCount, 1);
+                foreach (var bundle in YB)
+                {
+                    for (int col = 0; col < inputLayerSize; col++)
+                    {
+                        int currRow = 0;
+                        for (int row = 0; row < bundle.features.Rows; row++)
+                        {
+                            trainDataYB.Data[currRow++, col] = bundle.features.Data[row, col];
+                        }
+                    }
+                }
 
-                //Return the matrix corresponding to a specified row span of the input array
-                Matrix<float> trainData2 = trainData.GetRows(trainSampleCount / 3, trainSampleCount * 2 / 3, 1);
-
-                //Inplace fills Array with normally distributed random numbers
-                trainData2.SetRandNormal(new MCvScalar(300), new MCvScalar(50));
-
-                Matrix<float> trainData3 = trainData.GetRows(trainSampleCount * 2 / 3, trainSampleCount, 1);
-
-                trainData3.SetRandNormal(new MCvScalar(400), new MCvScalar(100));
-
-
-                Matrix<float> trainClasses1 = trainClasses.GetRows(0, trainSampleCount / 3, 1); //as above
-                //Set the element of the Array to value
-                trainClasses1.SetValue(1); //1 : The value to be set for each element of the Array
-
-                Matrix<float> trainClasses2 = trainClasses.GetRows(trainSampleCount / 3, trainSampleCount * 2 / 3, 1);
-
-                trainClasses2.SetValue(2);
-
-                Matrix<float> trainClasses3 = trainClasses.GetRows(trainSampleCount * 2 / 3, trainSampleCount, 1);
-
-                trainClasses3.SetValue(3);
-
+                Matrix<float> trainClassesCB = new Matrix<float>(CBsize, 1);
+                trainClassesCB.SetValue(COCONUT_BUG);
+                Matrix<float> trainClassesYB = new Matrix<float>(YBsize, 1);
+                trainClassesYB.SetValue(YELLOW_EDGED_BUG);
 
                 #endregion
 
-                Matrix<int> layerSize = new Matrix<int>(new int[] { 3, 5, 1 }); //Number of hidden nodez
+                Matrix<int> layerSize = new Matrix<int>(new int[] { inputLayerSize, 5, 1 }); //Number of hidden nodez
 
                 MCvANN_MLP_TrainParams parameters = new MCvANN_MLP_TrainParams(); //Parameters for Artificla Neural Network - MultiLayer Perceptron
                 //The termination criteria
@@ -109,68 +303,27 @@ namespace ImageRecognition
                 parameters.bp_dw_scale = 0.1; //Not sure what dw is
                 parameters.bp_moment_scale = 0.1; //momentum?
                 //Free parameters of the activation function, alpha and beta
-                using (Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, 1.0, 1.0)) //use normal sigmoid
-                {
-                    //trainData : The training data. A 32-bit floating-point, single-channel matrix, one vector per row
-                    //responses (trainClasses) : A floating-point matrix of the corresponding output vectors, one vector per row.
-                    //sampleWeights(null): It is not null only for RPROP. The optional floating-point vector of weights for each sample. Some samples
-                    //may be more important than others for training, e.g. user may want to gain the weight of certain classes to find 
-                    //the right balance between hit-rate and false-alarm rate etc
-                    //paramaters: The parameters for ANN_MLP
-                    //flag: The flags for the neural network training function,DEFAULT	0	
-                    //UPDATE_WEIGHTS	1	
-                    //NO_INPUT_SCALE	2	
-                    //NO_OUTPUT_SCALE	4
+                Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, 1.0, 1.0); //use normal sigmoid
 
-                    network.Train(trainData, trainClasses, null, parameters, Emgu.CV.ML.MlEnum.ANN_MLP_TRAINING_FLAG.DEFAULT);
+                //trainData : The training data. A 32-bit floating-point, single-channel matrix, one vector per row
+                //responses (trainClasses) : A floating-point matrix of the corresponding output vectors, one vector per row.
+                //sampleWeights(null): It is not null only for RPROP. The optional floating-point vector of weights for each sample. Some samples
+                //may be more important than others for training, e.g. user may want to gain the weight of certain classes to find 
+                //the right balance between hit-rate and false-alarm rate etc
+                //paramaters: The parameters for ANN_MLP
+                //flag: The flags for the neural network training function,DEFAULT	0	
+                //UPDATE_WEIGHTS	1	
+                //NO_INPUT_SCALE	2	
+                //NO_OUTPUT_SCALE	4
 
-                    for (int i = 0; i < img.Height; i++)
-                    {
-                        for (int j = 0; j < img.Width; j++)
-                        {
-                            //each pixel in the image (The one being shown as output)
-                            sample.Data[0, 0] = j; //Set the sample
-                            sample.Data[0, 1] = i; //Basically, having it run and do a prediction
-                            sample.Data[0, 2] = i < j ? i : j;
-                            //The prediction results, should have the same # of rows as the samples
-                            network.Predict(sample, prediction); //Saves the prediction to (prediction)
+                network.Train(trainData, trainClasses, null, parameters, Emgu.CV.ML.MlEnum.ANN_MLP_TRAINING_FLAG.DEFAULT);
+                return network;
 
-                            // estimates the response and get the neighbors' labels
-                            //In case of classification the method returns (response) the class label, in case of regression - the output function value
-                            float response = prediction.Data[0, 0];
-
-                            // highlight the pixel depending on the accuracy (or confidence)
-
-                            //Debug.WriteLine(response);
-                            if (response < 1.5)
-                                img[i, j] = new Bgr(90, 0, 0);
-                            else if (response < 2.5)
-                                img[i, j] = new Bgr(0, 90, 0);
-                            else
-                                img[i, j] = new Bgr(0, 0, 90);
-                            //img[i, j] = response < 1.5 ? new Bgr(90, 0, 0) : new Bgr(0, 90, 0);
-                        }
-                    }
-                }
-
-                // display the original training samples
-                for (int i = 0; i < (trainSampleCount / 3); i++)
-                {
-                    //Class 2
-                    PointF p1 = new PointF(trainData1[i, 0], trainData1[i, 1]);
-                    img.Draw(new CircleF(p1, 2), new Bgr(255, 100, 100), -1);
-                    //Class 2
-                    PointF p2 = new PointF((int)trainData2[i, 0], (int)trainData2[i, 1]);
-                    img.Draw(new CircleF(p2, 2), new Bgr(100, 255, 100), -1);
-
-                    PointF p3 = new PointF((int)trainData3[i, 0], (int)trainData3[i, 1]);
-                    img.Draw(new CircleF(p3, 2), new Bgr(100, 100, 255), -1);
-                }
-                Emgu.CV.UI.ImageViewer.Show(img);
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
+                return null;
             }
         }
     }

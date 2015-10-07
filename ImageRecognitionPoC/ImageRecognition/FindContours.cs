@@ -25,7 +25,7 @@ namespace ImageRecognition
         /// <param name="observedImage">The observed image</param>
         /// <param name="matchTime">The output total time for computing the homography matrix.</param>
         /// <returns>The model image and observed image, the matched features and homography projection.</returns>
-        public Image<Bgr, Byte> Draw(Image<Gray, Byte> modelImage, Image<Gray, byte> observedImage, out long matchTime)
+        public Image<Bgr, Byte> DrawSURFMatches(Image<Gray, Byte> modelImage, Image<Gray, byte> observedImage, out long matchTime)
         {
             Stopwatch watch;
             HomographyMatrix homography = null;
@@ -152,6 +152,8 @@ namespace ImageRecognition
             return result;
         }
 
+
+        //With three classes
         public void runANNDerivitive()
         {
             try
@@ -274,6 +276,8 @@ namespace ImageRecognition
                             }
         }
 
+
+        //With two classes
         public void runANN()
         {
             int trainSampleCount = 100;
