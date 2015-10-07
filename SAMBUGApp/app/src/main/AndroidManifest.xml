@@ -56,16 +56,11 @@
                 android:value=".EnterDataActivity" />
         </activity>
         <activity
-            android:name=".CameraProcessing.Camera"
-            android:exported="true"
-            android:label="@string/title_activity_camera" >
-        </activity>
-        <activity
             android:name=".CameraProcessing.ImagePreview"
             android:label="@string/title_activity_image_preview" >
         </activity>
         <activity
-            android:name=".CameraProcessing.cam"
+            android:name=".CameraProcessing.CustomCamera"
             android:exported="true"
             android:label="@string/title_activity_cam">
         </activity>

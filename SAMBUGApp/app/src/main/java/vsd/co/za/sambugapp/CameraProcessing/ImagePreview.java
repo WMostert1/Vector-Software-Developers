@@ -10,21 +10,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import java.io.File;
 import java.io.IOException;
 
-import vsd.co.za.sambugapp.DomainModels.Farm;
-import vsd.co.za.sambugapp.LoginActivity;
 import vsd.co.za.sambugapp.R;
-import java.io.IOException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Build;
 
@@ -69,7 +65,7 @@ public class ImagePreview extends AppCompatActivity {
     private void acceptImage(Intent intent){
         Bundle b=intent.getExtras();
 
-        fullPathName= (String)b.get(cam.CAMERA);
+        fullPathName= (String)b.get(CustomCamera.CAMERA);
 
 
         File imgFile = new File(fullPathName);

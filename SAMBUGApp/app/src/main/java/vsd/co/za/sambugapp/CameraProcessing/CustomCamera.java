@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,12 +16,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.YuvImage;
-import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -37,31 +34,26 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import vsd.co.za.sambugapp.R;
 
-public class cam extends Activity implements SensorEventListener {
-    private Camera mCamera;
+public class CustomCamera extends Activity implements SensorEventListener {
+    private android.hardware.Camera mCamera;
     public static final String CAMERA="za.co.vsd.camera";
-    public static final String ORIENTATION="za.co.vsd.orientation";
-    private CameraPreview2 mPreview;
+    private CameraPreview mPreview;
     private SensorManager sensorManager = null;
     private int orientation;
     private ExifInterface exif;
     private int deviceHeight;
     private int deviceWidth;
-    private Button ibRetake;
-    private Button ibUse;
-    private Button ibCapture;
     private FrameLayout flBtnContainer;
     private String fileName;
     private ImageButton rotatingImage;
     private int degrees = -1;
     private String fullPathName;
+    int width,height;
 
 
     @Override
@@ -121,17 +113,19 @@ public class cam extends Activity implements SensorEventListener {
      * Creates the camera and adjusts paramets.
      */
     private void createCamera() {
-        // Create an instance of Camera
+        // Create an instance of CustomCamera
         mCamera = getCameraInstance();
 
         // Setting the right parameters in the camera
-        Camera.Parameters params = mCamera.getParameters();
+        android.hardware.Camera.Parameters params = mCamera.getParameters();
+        width = params.getPictureSize().width;
+        height = params.getPictureSize().height;
         params.setPictureFormat(PixelFormat.JPEG);
         params.setJpegQuality(100);
         mCamera.setParameters(params);
 
         // Create our Preview view and set it as the content of our activity.
-        mPreview = new CameraPreview2(this, mCamera);
+        mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
 
         //Creating the view param to display the preview
@@ -202,15 +196,15 @@ public class cam extends Activity implements SensorEventListener {
     }
 
     /**
-     * A safe way to get an instance of the Camera object.
+     * A safe way to get an instance of the CustomCamera object.
      */
-    public static Camera getCameraInstance() {
-        Camera c = null;
+    public static android.hardware.Camera getCameraInstance() {
+        android.hardware.Camera c = null;
         try {
-            // attempt to get a Camera instance
-            c = Camera.open();
+            // attempt to get a CustomCamera instance
+            c = android.hardware.Camera.open();
         } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
+            // CustomCamera is not available (in use or does not exist)
         }
 
         // returns null if camera is unavailable
@@ -222,7 +216,7 @@ public class cam extends Activity implements SensorEventListener {
      */
     private PictureCallback mPicture = new PictureCallback() {
 
-        public void onPictureTaken(byte[] data, Camera camera) {
+        public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
 
             byte[] croppedData = null;
             try {
@@ -294,20 +288,27 @@ public class cam extends Activity implements SensorEventListener {
     public byte[] getBitmap(byte[] data)
             throws IOException {
 //
-        Camera.Parameters params = mCamera.getParameters();
-        int width = params.getPictureSize().width;
-        int height = params.getPictureSize().height;
 
-        int[] pixels = new int[width*height];//the size of the array is the dimensions of the sub-photo
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+       // int[] pixels = new int[(width*7/8-width*1/8)*(height*7/8-height*1/8)];//the size of the array is the dimensions of the sub-photo
+
+        int[] pixels = new int[width*height];
         Bitmap bitmap = BitmapFactory.decodeByteArray(data , 0, data.length);
+
         bitmap.getPixels(pixels, 0, width,width*1/8,  height*1/8,width*7/8-width*1/8, height*7/8-height*1/8);
         bitmap = Bitmap.createBitmap(pixels, 0, width, width*7/8-width*1/8, height*7/8-height*1/8, Bitmap.Config.ARGB_8888);//ARGB_8888 is a good quality configuration
+
+
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);//100 is the best quality possible
+        bitmap.recycle();
         byte[] square = bos.toByteArray();
         return square;
     }
 
+//    public byte[] getBytes2(byte[] data){
+//
+//    }
     /**
      * Sending the image file name to ImagePreview
      * @param p
