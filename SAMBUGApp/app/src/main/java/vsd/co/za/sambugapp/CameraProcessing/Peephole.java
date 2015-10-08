@@ -25,40 +25,9 @@ public class Peephole extends View{
     private Paint grayArea;
     private Paint square;
     private Bitmap bitmap;
+    private int minX,maxX,minY,maxY;
 
-    public int getBoxX1() {
-        return boxX1;
-    }
 
-    public void setBoxX1(int boxX1) {
-        this.boxX1 = boxX1;
-    }
-
-    public int getBoxX2() {
-        return boxX2;
-    }
-
-    public void setBoxX2(int boxX2) {
-        this.boxX2 = boxX2;
-    }
-
-    public int getBoxY1() {
-        return boxY1;
-    }
-
-    public void setBoxY1(int boxY1) {
-        this.boxY1 = boxY1;
-    }
-
-    public int getBoxY2() {
-        return boxY2;
-    }
-
-    public void setBoxY2(int boxY2) {
-        this.boxY2 = boxY2;
-    }
-
-    private int boxX1,boxX2,boxY1,boxY2;
 
     public Peephole(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -101,53 +70,25 @@ public class Peephole extends View{
 
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
-      //  canvas.drawText("Sudoku", width/2, text.getTextSize(), text);
-       // canvas.drawRect(0, 0, width/2-peepSide/2, height, grayArea);
-      //  canvas.drawRect(width/2+peepSide/2, 0, width, height, grayArea);
-       // canvas.drawRect(width/2-peepSide/2,0,width/2+peepSide/2,height/2-peepSide/2, grayArea);
-       // canvas.drawRect(width/2-peepSide/2,height/2+peepSide/2,width/2+peepSide/2,height, grayArea);
+        int Xcentre = (int)(width /2);
+        int Ycentre = (int)(height /2);
 
+        //Setting the side length of the square
+        int padding = (int)(0.75 * Xcentre);
+        if(padding > Ycentre){
+            padding = (int)(0.75 * Ycentre);
+        }
+        //Beginning of Square
+        minX = Xcentre - padding;
+        minY = Ycentre - padding;
 
-//        canvas.drawLine(width/4,height/4, width*3/4, height/4, square);
-//        canvas.drawLine(width/4,height*3/4, width*3/4,height*3/4, square);
-//        canvas.drawLine(width/4, height/4, width/4, height*3/4, square);
-//        canvas.drawLine(width*3/4, height/4, width*3/4, height*3/4, square);
+        maxX =  Xcentre + padding;
+        maxY = Ycentre + padding;
 
-//        int minX,maxX,minY,maxY;
-//        int padX = width/10;
-//        int padY = height/10;
-//        minX = 0;
-//        maxX =  width;
-//        minY = 0;
-//        maxY = height;
-
-//        canvas.drawLine(padX,padY, maxX-padX,padY, square);
-//        canvas.drawLine(padX,maxY-padY,  maxX-padX,maxY-padY, square);
-//        canvas.drawLine(padX, padY, padX, maxY-padY, square);
-//        canvas.drawLine(maxX-padX, padY, maxX-padX, maxY-padY, square);
-
-        int minX,maxX,minY,maxY;
-        int padX = width*1/8;
-        int padY = height*1/8;
-        minX = 0;
-        maxX =  width*7/8;
-        minY = 0;
-        maxY = height*7/8;
-
-        canvas.drawLine(padX,padY, maxX,padY, square);
-        canvas.drawLine(padX,maxY,  maxX,maxY, square);
-        canvas.drawLine(padX, padY, padX, maxY, square);
-        canvas.drawLine(maxX, padY, maxX, maxY, square);
-
-        setBoxX1(width/4);
-        setBoxX2(width*3/4);
-        setBoxY1(height/4);
-        setBoxY2(height*3/4);
-
-//        canvas.drawLine(0,0, width, 0, square);
-//        canvas.drawLine(0,height, width,height, square);
-//        canvas.drawLine(0, 0, 0, height, square);
-//        canvas.drawLine(width, 0, width, height, square);
+        canvas.drawLine(minX,minY, maxX,minY, square);
+        canvas.drawLine(minX,maxY,  maxX,maxY, square);
+        canvas.drawLine(minX, minY, minX, maxY, square);
+        canvas.drawLine(maxX, minY, maxX, maxY, square);
 
         if(bitmap!=null){
            canvas.drawBitmap(bitmap, peepSideX, peepSideY, new Paint());

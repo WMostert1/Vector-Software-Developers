@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import java.io.File;
 import java.io.IOException;
 
+import vsd.co.za.sambugapp.IdentificationActivity;
 import vsd.co.za.sambugapp.R;
 
 import java.lang.reflect.Constructor;
@@ -185,4 +186,11 @@ public class ImagePreview extends AppCompatActivity {
 
             return orientation;
         }
+
+        public void SendToIdentificationActivity(View v){
+            Intent intent = new Intent(this, IdentificationActivity.class);
+            startActivityForResult(intent, 0);
+        }
     }
+
+

@@ -9,14 +9,18 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
+import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -54,6 +58,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
     private int degrees = -1;
     private String fullPathName;
     int width,height;
+    boolean cameraConfigured;
 
 
     @Override
@@ -81,6 +86,8 @@ public class CustomCamera extends Activity implements SensorEventListener {
                 mCamera.takePicture(null, null, mPicture);
             }
         });
+        cameraConfigured = false;
+
  //       cameraConfigured = false;
         //getRotateAnimation(-90);
         // Add a listener to the Retake button
@@ -114,15 +121,39 @@ public class CustomCamera extends Activity implements SensorEventListener {
      */
     private void createCamera() {
         // Create an instance of CustomCamera
+       // mCamera = getCameraInstance();
+
         mCamera = getCameraInstance();
+        if (!cameraConfigured) {
+            Camera.Parameters parameters=mCamera.getParameters();
+            Camera.Size size=getBestPreviewSize(deviceWidth, deviceHeight, parameters);
+            Camera.Size pictureSize=getBestPictureSize(parameters);
+
+
+            if (size != null && pictureSize != null) {
+                width = pictureSize.width;
+                height = pictureSize.height;
+                Camera.Size size2 = getOptimalSize(parameters.getSupportedPreviewSizes(),deviceWidth,deviceHeight);
+                parameters.setPreviewSize(size2.width, size2.height);
+                //parameters.setPreviewSize(deviceWidth, deviceHeight);
+                parameters.setPictureSize(pictureSize.width,
+                        pictureSize.height);
+                parameters.setPictureFormat(ImageFormat.JPEG);
+                parameters.setPictureFormat(PixelFormat.JPEG);
+                parameters.setJpegQuality(100);
+                mCamera.setParameters(parameters);
+
+                cameraConfigured=true;
+            }
+        }
 
         // Setting the right parameters in the camera
-        android.hardware.Camera.Parameters params = mCamera.getParameters();
-        width = params.getPictureSize().width;
-        height = params.getPictureSize().height;
-        params.setPictureFormat(PixelFormat.JPEG);
-        params.setJpegQuality(100);
-        mCamera.setParameters(params);
+
+//        android.hardware.Camera.Parameters params = mCamera.getParameters();
+//        width = params.getPictureSize().width;
+//        height = params.getPictureSize().height;
+
+//        mCamera.setParameters(params);
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
@@ -135,6 +166,53 @@ public class CustomCamera extends Activity implements SensorEventListener {
         // Adding the camera preview after the FrameLayout and before the button
         // as a separated element.
         preview.addView(mPreview, 0);
+    }
+
+    private Camera.Size getBestPreviewSize(int width, int height,
+                                           Camera.Parameters parameters) {
+        Camera.Size result=null;
+
+
+        for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+            if (size.width <= width && size.height <= height) {
+                if (result == null) {
+                    result=size;
+                }
+                else {
+                    int resultArea=result.width * result.height;
+                    int newArea=size.width * size.height;
+
+                    if ((newArea > resultArea) ) {
+                        result=size;
+                    }
+                }
+            }
+        }
+
+        return(result);
+    }
+
+    private Camera.Size getBestPictureSize(Camera.Parameters parameters) {
+        Camera.Size result=null;
+        int maxWidth = 1000;
+        int maxHeight = 1000;
+        int maxArea = maxHeight * maxWidth;
+
+        for (Camera.Size size : parameters.getSupportedPictureSizes()) {
+            if (result == null) {
+                result=size;
+            }
+            else {
+                int resultArea=result.width * result.height;
+                int newArea=size.width * size.height;
+
+                if ((newArea > resultArea) && (newArea <= maxArea)) {
+                    result=size;
+                }
+            }
+        }
+
+        return(result);
     }
 
     @Override
@@ -290,12 +368,43 @@ public class CustomCamera extends Activity implements SensorEventListener {
 //
 
        // int[] pixels = new int[(width*7/8-width*1/8)*(height*7/8-height*1/8)];//the size of the array is the dimensions of the sub-photo
+        ////////////////////////////
+        int minX,maxX,minY,maxY;
+        int padding;
+        int Xcentre = (int)(width /2);
+        int Ycentre = (int)(height /2);
+        if(width > height){
+            padding = (int)(0.75 * Ycentre);
+        }
+        else padding = (int)(0.75 * Xcentre);
+//        padding = 300(int)(0.6 * Xcentre);
+//        if(padding > Ycentre){
+//            padding = (int)(0.6 * Ycentre);
+//        }
 
+        int padX = Xcentre - padding;//600;//width*1/8;
+        int padY = Ycentre - padding;//100;//height*1/8;
+        minX = 0;
+        maxX =  Xcentre + padding;//width*7/8;
+        minY = 0;
+        maxY = Ycentre + padding;
+        ////////////////////////
+        width = 2*padding;
+        height = 2 * padding;
         int[] pixels = new int[width*height];
         Bitmap bitmap = BitmapFactory.decodeByteArray(data , 0, data.length);
+///
+//        public void getPixels(int[] pixels, int offset, int stride,
+//        int x, int y, int width, int height)
+        /////
 
-        bitmap.getPixels(pixels, 0, width,width*1/8,  height*1/8,width*7/8-width*1/8, height*7/8-height*1/8);
-        bitmap = Bitmap.createBitmap(pixels, 0, width, width*7/8-width*1/8, height*7/8-height*1/8, Bitmap.Config.ARGB_8888);//ARGB_8888 is a good quality configuration
+
+        bitmap.getPixels(pixels, 0, width,padX,  padY,maxX-padX, maxY-padY);
+        //bitmap = Bitmap.createBitmap(pixels, 0, width, width*7/8-width*1/8, height*7/8-height*1/8, Bitmap.Config.ARGB_8888);
+
+        //bitmap = Bitmap.createBitmap(pixels, 0, width, width*7/8-width*1/8, height*7/8-height*1/8, Bitmap.Config.ARGB_8888);
+       // bitmap.getPixels(pixels, 0, width,padX,  padY,maxX-padX, maxY-padY);
+        bitmap = Bitmap.createBitmap(pixels, 0, width,2*padding, 2*padding, Bitmap.Config.ARGB_8888);//ARGB_8888 is a good quality configuration
 
 
 
@@ -318,7 +427,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
         Bundle b = new Bundle();
         b.putSerializable(CAMERA, p);
         intent.putExtras(b);
-        startActivity(intent);
+        startActivityForResult(intent,0);
     }
     /**
      * Putting in place a listener so we can get the sensor data only when
@@ -400,5 +509,59 @@ public class CustomCamera extends Activity implements SensorEventListener {
      * STUFF THAT WE DON'T NEED BUT MUST BE HEAR FOR THE COMPILER TO BE HAPPY.
      */
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+
+    private Camera.Size getOptimalSize(List<Camera.Size> sizes, int w, int h) {
+
+        final double ASPECT_TOLERANCE = 0.2;
+        double targetRatio = (double) w / h;
+        if (sizes == null)
+            return null;
+        Camera.Size optimalSize = null;
+        double minDiff = Double.MAX_VALUE;
+        int targetHeight = h;
+        // Try to find an size match aspect ratio and size
+        for (Camera.Size size : sizes)
+        {
+//          Log.d("CameraActivity", "Checking size " + size.width + "w " + size.height + "h");
+            double ratio = (double) size.width / size.height;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE)
+                continue;
+            if (Math.abs(size.height - targetHeight) < minDiff)
+            {
+                optimalSize = size;
+                minDiff = Math.abs(size.height - targetHeight);
+            }
+        }
+        // Cannot find the one match the aspect ratio, ignore the requirement
+
+        if (optimalSize == null)
+        {
+            minDiff = Double.MAX_VALUE;
+            for (Camera.Size size : sizes) {
+                if (Math.abs(size.height - targetHeight) < minDiff)
+                {
+                    optimalSize = size;
+                    minDiff = Math.abs(size.height - targetHeight);
+                }
+            }
+        }
+
+//        SharedPreferences previewSizePref;
+//        if (cameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+//            previewSizePref = getSharedPreferences("PREVIEW_PREF",MODE_PRIVATE);
+//        } else {
+//            previewSizePref = getSharedPreferences("FRONT_PREVIEW_PREF",MODE_PRIVATE);
+//        }
+
+//        SharedPreferences.Editor prefEditor = previewSizePref.edit();
+//        prefEditor.putInt("width", optimalSize.width);
+//        prefEditor.putInt("height", optimalSize.height);
+//
+//        prefEditor.commit();
+
+//      Log.d("CameraActivity", "Using size: " + optimalSize.width + "w " + optimalSize.height + "h");
+        return optimalSize;
     }
 }
