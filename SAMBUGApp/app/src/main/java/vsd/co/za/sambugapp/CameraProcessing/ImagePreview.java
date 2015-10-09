@@ -75,7 +75,7 @@ public class ImagePreview extends AppCompatActivity {
         if(imgFile.exists()){
 
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            Bitmap rBitmap = rotateBitmap(fullPathName,myBitmap);
+            Bitmap rBitmap = rotateBitmap(fullPathName, myBitmap);
             ImageView myImage = (ImageView) findViewById(R.id.ivImage);
 
             myImage.setImageBitmap(rBitmap);
@@ -84,13 +84,12 @@ public class ImagePreview extends AppCompatActivity {
 
     }
 
-    public void acceptImage(View v){
-
-    }
-
     public void deletePhoto(View v){
         File discardedPhoto = new File(fullPathName);
         discardedPhoto.delete();
+        Intent intent = new Intent(this,CustomCamera.class);
+        startActivity(intent);
+
     }
 
 
@@ -189,7 +188,11 @@ public class ImagePreview extends AppCompatActivity {
 
         public void SendToIdentificationActivity(View v){
             Intent intent = new Intent(this, IdentificationActivity.class);
-            startActivityForResult(intent, 0);
+            Bundle b = new Bundle();
+            b.putSerializable(CustomCamera.CAMERA, fullPathName);
+            intent.putExtras(b);
+            startActivityForResult(intent,0);
+
         }
     }
 

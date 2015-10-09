@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +20,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
+import vsd.co.za.sambugapp.CameraProcessing.CustomCamera;
 import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
 import vsd.co.za.sambugapp.DomainModels.Species;
 
@@ -42,6 +50,7 @@ public class IdentificationActivity extends AppCompatActivity {
     private Bitmap bitmap = null;
     private Species currentEntry = null;
     private int createCounter = 0;
+    private String fullPathName;
 
 
     public void doAutomaticClassification(View view) {
@@ -55,9 +64,11 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
+
         //createCounter is used to only start the camera once
         savedInstanceState.putInt(FIRST_TIME_INDEX, createCounter);
         savedInstanceState.putParcelable(FIELD_BITMAP, bitmap);
+
     }
 
     /**
@@ -123,7 +134,9 @@ public class IdentificationActivity extends AppCompatActivity {
             });
 
             mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+
             if (bitmap != null) mImageView.setImageBitmap(bitmap);
+            getPicture(getIntent());
     }
 
     public Species getCurrentEntry() {
@@ -162,51 +175,51 @@ public class IdentificationActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        InputStream stream = null;
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
-
-            try {
-                //Recycle unused bitmaps
-                if (bitmap != null) {
-                    bitmap.recycle();
-                }
-                stream = getContentResolver().openInputStream(data.getData());
-                final BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeStream(stream, null, options);
-
-                // Calculate inSampleSize
-                options.inSampleSize = ImageAdapter.calculateInSampleSize(options, 150, 150);
-
-                // Decode bitmap with inSampleSize set
-                options.inJustDecodeBounds = false;
-                stream = getContentResolver().openInputStream(data.getData());
-                bitmap = BitmapFactory.decodeStream(stream, null, options);
-
-                //TODO: Rotate the image
-
-                mImageView.setImageBitmap(bitmap);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } finally {
-                if (stream != null)
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-        }
+//        InputStream stream = null;
+//        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
+//
+////            try {
+////                //Recycle unused bitmaps
+////                if (bitmap != null) {
+////                    bitmap.recycle();
+////                }
+////                stream = getContentResolver().openInputStream(data.getData());
+////                final BitmapFactory.Options options = new BitmapFactory.Options();
+////                options.inJustDecodeBounds = true;
+////                BitmapFactory.decodeStream(stream, null, options);
+////
+////                // Calculate inSampleSize
+////                options.inSampleSize = ImageAdapter.calculateInSampleSize(options, 150, 150);
+////
+////                // Decode bitmap with inSampleSize set
+////                options.inJustDecodeBounds = false;
+////                stream = getContentResolver().openInputStream(data.getData());
+////                bitmap = BitmapFactory.decodeStream(stream, null, options);
+////
+////                //TODO: Rotate the image
+////
+////                mImageView.setImageBitmap(bitmap);
+//
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } finally {
+//                if (stream != null)
+//                    try {
+//                        stream.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//        }
     }
 
     /**
      * Starts a new intent to take a picture with the device's camera
      */
     private void dispatchTakePictureIntent(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-        }
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//        }
 
     }
 
@@ -234,6 +247,118 @@ public class IdentificationActivity extends AppCompatActivity {
         finish();
     }
 
+    public void getPicture(Intent intent){
+        Bundle b=intent.getExtras();
+
+        fullPathName= (String)b.get(CustomCamera.CAMERA);
+
+
+        File imgFile = new File(fullPathName);
+
+
+        if(imgFile.exists()){
+
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            Bitmap rBitmap = rotateBitmap(fullPathName,myBitmap);
+            //ImageView myImage = (ImageView) findViewById(R.id.ivImage);
+
+            mImageView.setImageBitmap(rBitmap);
+
+        }
+    }
+
+    public static Bitmap rotateBitmap(String src, Bitmap bitmap) {
+        try {
+            int orientation = getExifOrientation(src);
+
+            if (orientation == 1) {
+                return bitmap;
+            }
+
+            Matrix matrix = new Matrix();
+            switch (orientation) {
+                case 2:
+                    matrix.setScale(-1, 1);
+                    break;
+                case 3:
+                    matrix.setRotate(180);
+                    break;
+                case 4:
+                    matrix.setRotate(180);
+                    matrix.postScale(-1, 1);
+                    break;
+                case 5:
+                    matrix.setRotate(90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case 6:
+                    matrix.setRotate(90);
+                    break;
+                case 7:
+                    matrix.setRotate(-90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case 8:
+                    matrix.setRotate(-90);
+                    break;
+                default:
+                    return bitmap;
+            }
+
+            try {
+                Bitmap oriented = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                bitmap.recycle();
+                return oriented;
+            } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+                return bitmap;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+    }
+
+
+    private static int getExifOrientation(String src) throws IOException {
+        int orientation = 1;
+
+        try {
+            /**
+             * if your are targeting only api level >= 5
+             * ExifInterface exif = new ExifInterface(src);
+             * orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+             */
+            if (Build.VERSION.SDK_INT >= 5) {
+                Class<?> exifClass = Class.forName("android.media.ExifInterface");
+                Constructor<?> exifConstructor = exifClass.getConstructor(new Class[] { String.class });
+                Object exifInstance = exifConstructor.newInstance(new Object[] { src });
+                Method getAttributeInt = exifClass.getMethod("getAttributeInt", new Class[] { String.class, int.class });
+                Field tagOrientationField = exifClass.getField("TAG_ORIENTATION");
+                String tagOrientation = (String) tagOrientationField.get(null);
+                orientation = (Integer) getAttributeInt.invoke(exifInstance, new Object[] { tagOrientation, 1});
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        return orientation;
+    }
 
 
 }

@@ -88,32 +88,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
         });
         cameraConfigured = false;
 
- //       cameraConfigured = false;
-        //getRotateAnimation(-90);
-        // Add a listener to the Retake button
-//        ibRetake.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Deleting the image from the SD card/
-//                File discardedPhoto = new File(sdRoot, dir + fileName);
-//                discardedPhoto.delete();
-//
-//                // Restart the camera preview.
-//                mCamera.startPreview();
-//
-//                // Reorganize the buttons on the screen
-//                flBtnContainer.setVisibility(LinearLayout.VISIBLE);
-//                ibRetake.setVisibility(LinearLayout.GONE);
-//                ibUse.setVisibility(LinearLayout.GONE);
-//            }
-//        });
-
-        // Add a listener to the Use button
-//        ibUse.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Everything is saved so we can quit the app.
-//                finish();
-//            }
-//        });
     }
 
     /**
@@ -147,13 +121,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
             }
         }
 
-        // Setting the right parameters in the camera
 
-//        android.hardware.Camera.Parameters params = mCamera.getParameters();
-//        width = params.getPictureSize().width;
-//        height = params.getPictureSize().height;
-
-//        mCamera.setParameters(params);
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
@@ -377,15 +345,12 @@ public class CustomCamera extends Activity implements SensorEventListener {
             padding = (int)(0.75 * Ycentre);
         }
         else padding = (int)(0.75 * Xcentre);
-//        padding = 300(int)(0.6 * Xcentre);
-//        if(padding > Ycentre){
-//            padding = (int)(0.6 * Ycentre);
-//        }
 
-        int padX = Xcentre - padding;//600;//width*1/8;
-        int padY = Ycentre - padding;//100;//height*1/8;
+
+        int padX = Xcentre - padding;
+        int padY = Ycentre - padding;
         minX = 0;
-        maxX =  Xcentre + padding;//width*7/8;
+        maxX =  Xcentre + padding;
         minY = 0;
         maxY = Ycentre + padding;
         ////////////////////////
@@ -393,17 +358,10 @@ public class CustomCamera extends Activity implements SensorEventListener {
         height = 2 * padding;
         int[] pixels = new int[width*height];
         Bitmap bitmap = BitmapFactory.decodeByteArray(data , 0, data.length);
-///
-//        public void getPixels(int[] pixels, int offset, int stride,
-//        int x, int y, int width, int height)
-        /////
+
 
 
         bitmap.getPixels(pixels, 0, width,padX,  padY,maxX-padX, maxY-padY);
-        //bitmap = Bitmap.createBitmap(pixels, 0, width, width*7/8-width*1/8, height*7/8-height*1/8, Bitmap.Config.ARGB_8888);
-
-        //bitmap = Bitmap.createBitmap(pixels, 0, width, width*7/8-width*1/8, height*7/8-height*1/8, Bitmap.Config.ARGB_8888);
-       // bitmap.getPixels(pixels, 0, width,padX,  padY,maxX-padX, maxY-padY);
         bitmap = Bitmap.createBitmap(pixels, 0, width,2*padding, 2*padding, Bitmap.Config.ARGB_8888);//ARGB_8888 is a good quality configuration
 
 
