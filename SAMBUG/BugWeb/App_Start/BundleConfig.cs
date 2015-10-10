@@ -14,8 +14,20 @@ namespace BugWeb
             const string cdnJsChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.js",
                 cdnCssChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.css",
                 cdnJsTypeAhead = "https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.js",
-                cdnCssSpinner = "http://css-spinners.com/css/spinner/whirly.css";
+                cdnCssSpinner = "http://css-spinners.com/css/spinner/whirly.css",
+                cdnJsAngularIcons = "http://cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.6.0/angular-material-icons.min.js";
 
+            bundles
+                .Add(new ScriptBundle("~/bundles/angular")
+                .Include("~/Scripts/angular.js",
+                "~/Scripts/angular-resource.js",
+                "~/Scripts/angular-aria.js",
+                "~/Scripts/angular-animate.js",
+                "~/Scripts/angular-material.js"));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/angular-icons", cdnJsAngularIcons));
+                
             bundles
                 .Add(new ScriptBundle("~/bundles/jquery")
                 .Include("~/Scripts/jquery-{version}.js"));
@@ -33,6 +45,10 @@ namespace BugWeb
             bundles
                 .Add(new ScriptBundle("~/bundles/bootstrap")
                 .Include("~/Scripts/bootstrap.js", "~/Scripts/respond.js", "~/Scripts/jasny-bootstrap.min.js"));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/app")
+                .Include("~/Scripts/app.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/mapReporting")
@@ -60,10 +76,17 @@ namespace BugWeb
                 .Include("~/Scripts/chartist-plugin-vertical-line.js",
                 "~/Scripts/chartist-plugin-tooltip.js",
                 "~/Scripts/chartist-plugin-axistitle.js"));
-                
+            
+             bundles
+               .Add(new StyleBundle("~/Content/css/angular")
+               .Include("~/Content/angular-material.css"));
+    
+
             bundles
                 .Add(new StyleBundle("~/Content/css")
-                .Include("~/Content/bootstrap.css", "~/Content/site.css","~/Content/jasny-bootstrap.min.css"));
+                .Include("~/Content/bootstrap.css", 
+                "~/Content/site.css",
+                "~/Content/jasny-bootstrap.min.css"));
 
             bundles
                .Add(new StyleBundle("~/Content/css/bootstrap-tagsinput")

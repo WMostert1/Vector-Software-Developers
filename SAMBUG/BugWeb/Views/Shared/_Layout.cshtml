@@ -4,17 +4,52 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAMBUG</title>
-    <link rel="stylesheet" href="http://css-spinners.com/css/spinner/whirly.css" type="text/css">
+
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/css/angular")
     @Styles.Render("~/Content/css/spinner")
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/Scripts/xdate.js")
     @RenderSection("JavaScript", required: false)
     @RenderSection("styles", required: false)
 </head>
-<body>
-  
-    <div style="background-color:#A3DCA3" class="navmenu navmenu-default navmenu-fixed-left offcanvas">
+<body data-ng-app="appMain">
+
+    <div ng-cloak>
+        <md-content>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <md-button class="md-icon-button" aria-label="Settings">
+                        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+                    </md-button>
+                    <h2>
+                        <span>Toolbar with Icon Buttons</span>
+                    </h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" aria-label="Favorite">
+                        <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+                    </md-button>
+                    <md-button class="md-icon-button" aria-label="More">
+                        <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <br>
+            <md-toolbar class="md-tall md-accent">
+                <h2 class="md-toolbar-tools">
+                    <span>Toolbar: tall (md-accent)</span>
+                </h2>
+            </md-toolbar>
+            <br>
+            <md-toolbar class="md-tall md-warn md-hue-3">
+                <span flex></span>
+                <h2 class="md-toolbar-tools md-toolbar-tools-bottom">
+                    <span class="md-flex">Toolbar: tall with actions pin to the bottom (md-warn md-hue-3)</span>
+                </h2>
+            </md-toolbar>
+        </md-content>
+    </div>
+
+    @*<div style="background-color:#A3DCA3" class="navmenu navmenu-default navmenu-fixed-left offcanvas">
         <a style="background-color:#4DB870" class="navmenu-brand" href="~/Home/Index">SAMBUG</a>
         <ul class="nav navmenu-nav">
             <li><a href="~/Home/Index">Home</a></li>
@@ -49,15 +84,18 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-    </div>
+    </div>*@
 
-    <div class="container">
-        @RenderBody()
-    </div>
+<div class="container">
+    @RenderBody()
+</div>
 
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+@Scripts.Render("~/bundles/angular")
+@Scripts.Render("~/bundles/angular-icons")
+@Scripts.Render("~/bundles/app")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/Scripts/xdate.js")
+@RenderSection("scripts", required: false)
 </body>
 </html>
