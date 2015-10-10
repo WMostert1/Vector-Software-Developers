@@ -1,4 +1,9 @@
-﻿html, body{
+﻿body {
+    color: 
+}
+
+/*todo: the below code was meant for bootstrap it seems, just make sure before completely removing*/
+/*html, body{
     height : 100%;
 }
 
@@ -8,7 +13,7 @@ body {
     font-family: Calibri,Candara,Segoe,"Segoe UI",Optima,Arial,sans-serif
 }
 
-/* Set padding to keep content from hitting the edges */
+/* Set padding to keep content from hitting the edges !1!
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
@@ -16,19 +21,19 @@ body {
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
-*/
+!1!
 .dl-horizontal dt {
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
+/* Set width on the form input elements since they're 100% wide by default !1!
 input,
 select,
 textarea {
     max-width: 280px;
 }
 
-/* This is for the heat map */
+/* This is for the heat map !1!
     #panel {
     background-color: #fff;
     border: 1px solid #999;
@@ -39,7 +44,7 @@ textarea {
     z-index: 5;
     }
 
-/* Jasny stles for navbar*/
+/* Jasny stles for navbar!1!
  .navbar-toggle {
   float: left;
   margin-left: 15px;
@@ -47,7 +52,7 @@ textarea {
 
 @media (min-width: 0) {
   .navbar-toggle {
-    display: block; /* force showing the toggle */
+    display: block; /* force showing the toggle !1!
   }
 }
 
@@ -64,4 +69,4 @@ textarea {
 
 #radiusSlider .slider-selection {
 	background: #BABABA;
-}
+}*/
