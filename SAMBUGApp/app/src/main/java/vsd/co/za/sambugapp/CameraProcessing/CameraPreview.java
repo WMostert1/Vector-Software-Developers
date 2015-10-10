@@ -1,9 +1,7 @@
 package vsd.co.za.sambugapp.CameraProcessing;
 
 import java.io.IOException;
-
 import android.content.Context;
-import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -41,9 +39,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		// If your preview can change or rotate, take care of those events here.
-		// Make sure to stop the preview before resizing or reformatting it.
-
 		if (mHolder.getSurface() == null) {
 			// preview surface does not exist
 			return;
@@ -56,9 +51,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 			// ignore: tried to stop a non-existent preview
 		}
 
-		// make any resize, rotate or reformatting changes here
-
-		// start preview with new settings
 		try {
 			mCamera.setPreviewDisplay(mHolder);
 			mCamera.startPreview();
@@ -70,7 +62,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		// empty. Take care of releasing the CustomCamera preview in your activity.
+		// empty. Compiler complains if not here.
 	}
 
 }

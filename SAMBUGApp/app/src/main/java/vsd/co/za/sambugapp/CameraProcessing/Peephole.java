@@ -68,15 +68,19 @@ public class Peephole extends View{
         this.bitmap = bitmap;
     }
 
+    /**
+     * Draws the square on the camera preview
+     * @param canvas
+     */
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
         int Xcentre = (int)(width /2);
         int Ycentre = (int)(height /2);
 
         //Setting the side length of the square
-        int padding = (int)(0.75 * Xcentre);
+        int padding = (int)(CustomCamera.SQUARERATIO * Xcentre);
         if(padding > Ycentre){
-            padding = (int)(0.75 * Ycentre);
+            padding = (int)(CustomCamera.SQUARERATIO * Ycentre);
         }
         //Beginning of Square
         minX = Xcentre - padding;

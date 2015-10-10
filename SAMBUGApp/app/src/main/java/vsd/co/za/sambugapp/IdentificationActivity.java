@@ -86,7 +86,6 @@ public class IdentificationActivity extends AppCompatActivity {
             if (savedInstanceState != null) {
                 bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
                 createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
-              //  getPicture(getIntent());
             }
         else {
                 dispatchTakePictureIntent();
@@ -171,6 +170,11 @@ public class IdentificationActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Called when a new intent is received from the ImagePreview Class
+     * @param intent
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -178,64 +182,13 @@ public class IdentificationActivity extends AppCompatActivity {
         getPicture(getIntent());
 
     }
-    /**
-     * The case where the photo is returned from the external camera app is handled here
-     * @param requestCode The identification code of a specific
-     * @param resultCode The code indicating the outcome of the request
-     * @param data Data received from another activity
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-     //   getPicture(getIntent());
-//       InputStream stream = null;
-//        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
-//
-////            try {
-////                //Recycle unused bitmaps
-////                if (bitmap != null) {
-////                    bitmap.recycle();
-////                }
-////                stream = getContentResolver().openInputStream(data.getData());
-////                final BitmapFactory.Options options = new BitmapFactory.Options();
-////                options.inJustDecodeBounds = true;
-////                BitmapFactory.decodeStream(stream, null, options);
-////
-////                // Calculate inSampleSize
-////                options.inSampleSize = ImageAdapter.calculateInSampleSize(options, 150, 150);
-////
-////                // Decode bitmap with inSampleSize set
-////                options.inJustDecodeBounds = false;
-////                stream = getContentResolver().openInputStream(data.getData());
-////                bitmap = BitmapFactory.decodeStream(stream, null, options);
-////
-////                //TODO: Rotate the image
-////
-////                mImageView.setImageBitmap(bitmap);
-//
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            } finally {
-//                if (stream != null)
-//                    try {
-//                        stream.close();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//        }
-    }
 
     /**
-     * Starts a new intent to take a picture with the device's camera
+     * Starts a new intent to take a picture with the Custom Camera
      */
     private void dispatchTakePictureIntent(){
         Intent takePictureIntent = new Intent(this,CustomCamera.class);
-        //takePictureIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivityForResult(takePictureIntent, 0);
-
-        //MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-//        }
 
     }
 
@@ -263,26 +216,28 @@ public class IdentificationActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Getting the image and displaying it.
+     * @param intent
+     */
     public void getPicture(Intent intent){
         Bundle b=intent.getExtras();
-
         fullPathName= (String)b.get(CustomCamera.CAMERA);
-
-
         File imgFile = new File(fullPathName);
 
-
         if(imgFile.exists()){
-
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             Bitmap rBitmap = rotateBitmap(fullPathName,myBitmap);
-            //ImageView myImage = (ImageView) findViewById(R.id.ivImage);
-
             mImageView.setImageBitmap(rBitmap);
-
         }
     }
 
+    /**
+     * Rotates the image accordingly.
+     * @param src
+     * @param bitmap
+     * @return
+     */
     public static Bitmap rotateBitmap(String src, Bitmap bitmap) {
         try {
             int orientation = getExifOrientation(src);
@@ -336,7 +291,12 @@ public class IdentificationActivity extends AppCompatActivity {
         return bitmap;
     }
 
-
+    /**
+     * Read images orientation.
+     * @param src
+     * @return
+     * @throws IOException
+     */
     private static int getExifOrientation(String src) throws IOException {
         int orientation = 1;
 

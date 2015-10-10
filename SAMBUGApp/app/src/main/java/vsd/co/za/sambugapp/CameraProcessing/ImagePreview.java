@@ -63,27 +63,28 @@ public class ImagePreview extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Accepts the image from Camera Preview.
+     * @param intent
+     */
     private void acceptImage(Intent intent){
         Bundle b=intent.getExtras();
-
         fullPathName= (String)b.get(CustomCamera.CAMERA);
-
-
         File imgFile = new File(fullPathName);
 
-
         if(imgFile.exists()){
-
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             Bitmap rBitmap = rotateBitmap(fullPathName, myBitmap);
             ImageView myImage = (ImageView) findViewById(R.id.ivImage);
-
             myImage.setImageBitmap(rBitmap);
-
         }
 
     }
 
+    /**
+     * Deletes photo if cancel is selected.
+     * @param v
+     */
     public void deletePhoto(View v){
         File discardedPhoto = new File(fullPathName);
         discardedPhoto.delete();
@@ -92,9 +93,14 @@ public class ImagePreview extends AppCompatActivity {
 
     }
 
+    /**
+     * Rotates the image to display it in the correct orientation
+     * @param src
+     * @param bitmap
+     * @return
+     */
 
-
-        public static Bitmap rotateBitmap(String src, Bitmap bitmap) {
+    public static Bitmap rotateBitmap(String src, Bitmap bitmap) {
             try {
                 int orientation = getExifOrientation(src);
 
@@ -186,7 +192,11 @@ public class ImagePreview extends AppCompatActivity {
             return orientation;
         }
 
-        public void SendToIdentificationActivity(View v){
+    /**
+     * Sends it back to Identification Activity
+     * @param v
+     */
+    public void SendToIdentificationActivity(View v){
             Intent intent = new Intent(this, IdentificationActivity.class);
             Bundle b = new Bundle();
             b.putSerializable(CustomCamera.CAMERA, fullPathName);
