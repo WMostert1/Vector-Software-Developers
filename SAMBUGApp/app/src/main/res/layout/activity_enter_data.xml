@@ -1,129 +1,35 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-              android:orientation="vertical"
-              tools:context="vsd.co.za.sambugapp.enterDataActivity"
-              android:background="#ff7f7d81">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/blockEditingLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txtBlock"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:paddingRight="10dp"
-                        android:textSize="24sp"
-                        android:text="Block"/>
-
-                    <Spinner
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/spnBlocks"
-                        android:layout_gravity="right"/>
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Number of Trees"
-                        android:id="@+id/tvNumberOfTrees"
-                        android:textSize="24sp"
-                        android:layout_centerVertical="true"/>
-
-                    <NumberPicker
-                        android:layout_height="wrap_content"
-                        android:id="@+id/npNumTrees"
-                        android:layout_width="100dp"
-                        android:layout_alignParentRight="true"/>
-                </RelativeLayout>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Add Bugs"
-                    android:onClick="collapseBlockEditing"/>
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/numberOfTreesLayout"
-                android:layout_marginTop="15dp"
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <CheckedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/numBugs"
-            android:id="@+id/tvNumberOfBugs"
-            android:textSize="24sp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            />
+            android:id="@+id/txtFarmName"/>
+    </android.support.v7.widget.Toolbar>
 
-        <NumberPicker
-            android:layout_alignParentRight="true"
-            android:id="@+id/npNumBugs"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"></NumberPicker>
-            </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/scoutStopDetailsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:animateLayoutChanges="true">
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/btnAddBug"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/addBug"
-                android:layout_gravity="center_horizontal"
-                android:onClick="sendToIdentificationActivity"/>
+    <include
+        android:id="@+id/layoutAddedBugs"
+        layout="@layout/scout_stop_added_bugs"/>
 
-            <ScrollView
-                android:id="@+id/addedBugs"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/addedBugsContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"></LinearLayout>
-            </ScrollView>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Done"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
-                android:onClick="sendToScoutTripActivity"/>
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>

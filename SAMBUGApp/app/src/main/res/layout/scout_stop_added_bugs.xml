@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/material_grey_600"
+        android:layout_marginTop="8dp"/>
+
+    <CheckedTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Added Bug Summary"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvAddedBugs"
+        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        ></android.support.v7.widget.RecyclerView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddBug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add_black_24dp"
+        android:onClick="sendToIdentificationActivity"
+        android:layout_gravity="center_horizontal"></android.support.design.widget.FloatingActionButton>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/material_grey_600"
+        android:layout_marginTop="8dp"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_done_black_24dp"
+        android:drawableLeft="@drawable/ic_done_black_24dp"
+        android:elevation="5dp"
+        android:text="Finish"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:onClick="sendToScoutTripActivity"/>
+
+</LinearLayout>

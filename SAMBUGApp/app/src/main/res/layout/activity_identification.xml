@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="vsd.co.za.sambugapp.IdentificationActivity"
-    android:background="#ff373a39">
+                tools:context="vsd.co.za.sambugapp.IdentificationActivity"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,32 +22,42 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/identification_activity_doneButtonText"
-            android:onClick="sendResultBack" />
+            android:onClick="showDialogNumberOfBugs"/>
     </LinearLayout>
 
     <ImageView
         android:layout_width="160dp"
         android:layout_height="160dp"
-            android:id="@+id/ivFieldPicture"
+        android:id="@+id/ivFieldPicture"
         android:layout_below="@id/llButtonBar"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
         android:contentDescription="@string/identification_activity_description_image_view"
         android:scaleType="centerCrop"
-
         />
 
-    <ImageView
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:id="@+id/ivCompare"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/llButtonBar"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="5dp"
-        android:contentDescription="@string/identification_activity_description_image_view"
-        android:scaleType="centerCrop" />
+        android:layout_alignParentEnd="true">
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:id="@+id/ivCompareImage"
+
+            android:layout_margin="5dp"
+            android:contentDescription="@string/identification_activity_description_image_view"
+            android:scaleType="centerCrop"
+            />
+
+        <ProgressBar
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:indeterminate="true"
+            android:id="@+id/pbClassifier"/>
+    </FrameLayout>
+
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gvIdentification_gallery"
@@ -59,7 +69,7 @@
         android:verticalSpacing="0dp"
         android:horizontalSpacing="0dp"
         android:stretchMode="columnWidth"
-        android:gravity="center" />
+              android:gravity="center"/>
 
 
 

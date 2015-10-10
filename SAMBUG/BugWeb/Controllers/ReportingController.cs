@@ -31,7 +31,7 @@ namespace BugWeb.Controllers
 
         public ActionResult Map()
         {
-            return View();
+            return View(new ReportingViewModel(Session));
         }
     }
 }

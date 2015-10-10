@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 /**
  * Created by Aeolus on 2015-07-13.
+ *
  */
 public class Farm implements Serializable {
     public int FarmID;
@@ -57,6 +58,10 @@ public class Farm implements Serializable {
 
     public void setUser(vsd.co.za.sambugapp.DomainModels.User user) {
         User = user;
+    }
+
+    public String toString() {
+        return getFarmName();
     }
 
 }

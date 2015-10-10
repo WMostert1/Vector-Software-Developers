@@ -33,9 +33,7 @@ public class SpeciesDAO extends DataSourceAdapter {
                 DBHelper.COLUMN_SPECIES_NAME,
                 DBHelper.COLUMN_LIFESTAGE,
                 DBHelper.COLUMN_IDEAL_PICTURE,
-                DBHelper.COLUMN_IS_PEST,
-                DBHelper.COLUMN_LAST_MODIFIED_ID,
-                DBHelper.COLUMN_TIMESTAMP
+                DBHelper.COLUMN_IS_PEST
         };
     }
 

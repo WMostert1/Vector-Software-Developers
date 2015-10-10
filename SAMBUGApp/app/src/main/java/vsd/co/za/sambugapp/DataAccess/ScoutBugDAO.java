@@ -15,6 +15,7 @@ import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 
 /**
  * Created by keaganthompson on 7/14/15.
+ *
  */
 public class ScoutBugDAO extends DataSourceAdapter {
 
@@ -26,9 +27,7 @@ public class ScoutBugDAO extends DataSourceAdapter {
                 DBHelper.COLUMN_SPECIES_ID,
                 DBHelper.COLUMN_NUMBER_OF_BUGS,
                 DBHelper.COLUMN_FIELD_PICTURE,
-                DBHelper.COLUMN_COMMENTS,
-                DBHelper.COLUMN_LAST_MODIFIED_ID,
-                DBHelper.COLUMN_TIMESTAMP
+                DBHelper.COLUMN_COMMENTS
         };
     }
 
@@ -108,7 +107,7 @@ public class ScoutBugDAO extends DataSourceAdapter {
         scoutBug.setNumberOfBugs(cursor.getInt(3));
         scoutBug.setFieldPicture(cursor.getBlob(4));
         scoutBug.setComments(cursor.getString(5));
-        String date = cursor.getString(7);
+      //  String date = cursor.getString(6);
 
 //        try {
 //            //TODO: Get this bloody thing to parse the date correctly

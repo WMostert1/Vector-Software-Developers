@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckedTextView
+                android:id="@+id/tvBlockName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Block Name:"
+                android:layout_gravity="start"/>
+
+            <CheckedTextView
+                android:id="@+id/lblBlockName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <CheckedTextView
+                android:id="@+id/tvNumTrees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of Trees:"
+                android:layout_gravity="start"/>
+
+            <CheckedTextView
+                android:id="@+id/lblNumTrees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="end"
+        android:layout_marginRight="16dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:drawableTop="@drawable/ic_edit_black_18dp"
+        android:gravity="center"
+        android:onClick="expandScoutStopDetails"
+        />
+
+</RelativeLayout>
