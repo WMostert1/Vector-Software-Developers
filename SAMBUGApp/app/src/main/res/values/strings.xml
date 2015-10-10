@@ -19,6 +19,9 @@
     <string name="btnSelectBug">Select Bug</string>
     <string name="btnDoneStop">Done</string>
     <string name="addBug">Add Bug</string>
+    <string name="logged_in_user">logged_in_user</string>
+    <string name="logged_in_user_default">{"User":null}</string>
+    <string name="preference_file_key">za.co.sambugapp.PREFERENCE_FILE_KEY</string>
 
     <string-array name="arrBlocks">
         <item>Piesang</item>
@@ -39,4 +42,6 @@
     <string name="sOk">Ok</string>
     <string name="title_activity_cam">cam</string>
     <string name="title_activity_camera3">Camera3</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_home_screen">HomeScreen</string>
 </resources>
