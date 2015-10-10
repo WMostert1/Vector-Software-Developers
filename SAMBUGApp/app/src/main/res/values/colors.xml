@@ -1,5 +1,11 @@
 <resources>
 
     <color name="black_overlay">#66000000</color>
-
+    <color name="colorPrimary">#558B2F</color>
+    <color name="colorAccent">#8BC34A</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColor">#212121</color>
+    <color name="textColorSecondary">#727272</color>
+    <color name="windowBackground">#b3b3b3</color>
+    <color name="background_material_dark">#303030</color>
 </resources>

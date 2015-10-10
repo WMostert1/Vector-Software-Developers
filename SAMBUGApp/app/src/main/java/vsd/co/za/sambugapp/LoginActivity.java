@@ -10,6 +10,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import org.json.*;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -32,11 +33,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DataAccess.DBHelper;
+import vsd.co.za.sambugapp.DataAccess.UserWrapper;
 import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.Block;
 import vsd.co.za.sambugapp.DomainModels.Farm;
@@ -57,7 +61,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private View mProgressView;
     private View mLoginFormView;
 
-    public static final String USER_FARM = "za.co.vsd.user_farm";
+    public static final String USER_FARMS = "za.co.vsd.user_farms";
 
 
     @Override
@@ -95,6 +99,32 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         //Initialise the database if it's not been created yet
         DBHelper dbHelper = new DBHelper(this);
         dbHelper.getWritableDatabase();
+
+        //------------------------------------------------------------------------------------------
+        //See if already logged in
+        Context context = getApplicationContext();
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+
+        final Gson gson = new Gson();
+        //read
+        String defaultUserValue = getResources().getString(R.string.logged_in_user_default);
+        String loggedInUserJson = sharedPref.getString(getString(R.string.logged_in_user), defaultUserValue);
+
+        UserWrapper userWrapper = gson.fromJson(loggedInUserJson,UserWrapper.class);
+
+        if(userWrapper.User != null) {
+            //------------------------------------------------------------------------------------------
+
+            Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle bundle = new Bundle();
+            HashSet<Farm> activeFarms = userWrapper.User.getFarms();
+            bundle.putSerializable(USER_FARMS, activeFarms);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
 
     }
 
@@ -262,63 +292,5 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mEmailView.setAdapter(adapter);
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    /*
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params){
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            /*for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }
-     */
 }
 

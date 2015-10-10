@@ -36,15 +36,14 @@ public class ImagePreview extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
+        acceptImage(getIntent());
+        imageView = (ImageView)findViewById(R.id.ivImage);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_image_preview, menu);
-        acceptImage(getIntent());
-        imageView = (ImageView)findViewById(R.id.ivImage);
-       // setContentView(R.layout.);
         return true;
     }
 
