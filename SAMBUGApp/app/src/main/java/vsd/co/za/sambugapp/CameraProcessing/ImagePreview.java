@@ -190,8 +190,10 @@ public class ImagePreview extends AppCompatActivity {
             Intent intent = new Intent(this, IdentificationActivity.class);
             Bundle b = new Bundle();
             b.putSerializable(CustomCamera.CAMERA, fullPathName);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtras(b);
-            startActivityForResult(intent,0);
+            startActivity(intent);
 
         }
     }

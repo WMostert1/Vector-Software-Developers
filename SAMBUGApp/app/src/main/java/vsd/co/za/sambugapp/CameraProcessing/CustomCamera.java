@@ -98,7 +98,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
        // mCamera = getCameraInstance();
 
         mCamera = getCameraInstance();
-        if (!cameraConfigured) {
+       // if (!cameraConfigured) {
             Camera.Parameters parameters=mCamera.getParameters();
             Camera.Size size=getBestPreviewSize(deviceWidth, deviceHeight, parameters);
             Camera.Size pictureSize=getBestPictureSize(parameters);
@@ -119,7 +119,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
 
                 cameraConfigured=true;
             }
-        }
+       // }
 
 
 

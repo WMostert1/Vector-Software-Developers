@@ -86,6 +86,11 @@ public class IdentificationActivity extends AppCompatActivity {
             if (savedInstanceState != null) {
                 bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
                 createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
+              //  getPicture(getIntent());
+            }
+        else {
+                dispatchTakePictureIntent();
+
             }
 
         //Checks/loads species data into the Species table of the database
@@ -103,7 +108,7 @@ public class IdentificationActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                dispatchTakePictureIntent();
+                //dispatchTakePictureIntent();
             }
             if (createCounter == 0) createCounter++;
 
@@ -136,7 +141,7 @@ public class IdentificationActivity extends AppCompatActivity {
             mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
 
             if (bitmap != null) mImageView.setImageBitmap(bitmap);
-            getPicture(getIntent());
+          //
     }
 
     public Species getCurrentEntry() {
@@ -166,7 +171,13 @@ public class IdentificationActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);//must store the new intent unless getIntent() will return the old one
+        getPicture(getIntent());
 
+    }
     /**
      * The case where the photo is returned from the external camera app is handled here
      * @param requestCode The identification code of a specific
@@ -175,7 +186,8 @@ public class IdentificationActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        InputStream stream = null;
+     //   getPicture(getIntent());
+//       InputStream stream = null;
 //        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
 //
 ////            try {
@@ -216,7 +228,11 @@ public class IdentificationActivity extends AppCompatActivity {
      * Starts a new intent to take a picture with the device's camera
      */
     private void dispatchTakePictureIntent(){
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent takePictureIntent = new Intent(this,CustomCamera.class);
+        //takePictureIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivityForResult(takePictureIntent, 0);
+
+        //MediaStore.ACTION_IMAGE_CAPTURE);
 //        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
 //            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
 //        }

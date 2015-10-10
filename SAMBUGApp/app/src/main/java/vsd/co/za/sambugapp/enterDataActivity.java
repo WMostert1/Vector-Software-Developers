@@ -252,8 +252,11 @@ public class EnterDataActivity extends ActionBarActivity {
 
     public void sendToIdentificationActivity(View view) {
 
-        Intent intent = new Intent(EnterDataActivity.this, CustomCamera.class);
-        startActivityForResult(intent, 0);
+//        Intent intent = new Intent(EnterDataActivity.this, IdenficationActivity.class);
+//        startActivityForResult(intent, 0);
+        Intent intent = new Intent(this, IdentificationActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     /**
