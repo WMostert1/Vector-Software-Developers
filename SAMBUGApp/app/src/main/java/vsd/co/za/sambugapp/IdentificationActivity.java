@@ -1,11 +1,9 @@
 package vsd.co.za.sambugapp;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -41,16 +39,93 @@ import vsd.co.za.sambugapp.DomainModels.Species;
  */
 public class IdentificationActivity extends AppCompatActivity {
 
-    public static final int REQUEST_TAKE_PHOTO = 89;
-    private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
+    public static final int REQUEST_TAKE_PHOTO = 1;
+    private static final String ACTIVITY_STARTED = "za.co.vsd.firs_activity";
     public static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     public static final String BUG_COUNT = "za.co.vsd.bug_count";
+    private static final String CURRENT_SPECIES = "za.co.vsd.current_entry";
     private ImageView mImageView = null;
     private Bitmap bitmap = null;
     private Species currentEntry = null;
-    private int createCounter = 0;
+    private boolean activityStarted;
 
+    /**
+     * Main responsibilities:
+     * ------------------------------------------
+     * Handles the saved state bundle
+     * Loads the gallery by initialising the grid and loading compressed images
+     * Checks on first startup if the database Species
+     * @param savedInstanceState State of the previous running version of the activity
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+            if (savedInstanceState != null) {
+                bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
+                activityStarted = savedInstanceState.getBoolean(ACTIVITY_STARTED);
+                currentEntry = (Species) savedInstanceState.getSerializable(CURRENT_SPECIES);
+            } else {
+                activityStarted = false;
+            }
+
+        //Checks/loads species data into the Species table of the database
+        if (!activityStarted) {
+                SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+                try {
+                    speciesDAO.open();
+                    if (speciesDAO.isEmpty()) {
+                        speciesDAO.loadPresets();
+                    }
+
+                    speciesDAO.close();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                dispatchTakePictureIntent();
+            activityStarted = true;
+            }
+
+            setContentView(R.layout.activity_identification);
+
+            GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
+            gridview.setAdapter(new ImageAdapter(this));
+
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
+                    try {
+                        speciesDAO.open();
+                        currentEntry = speciesDAO.getSpeciesByID(position + 1);
+                        Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+                        speciesDAO.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
+            if (bitmap != null) mImageView.setImageBitmap(bitmap);
+    }
+
+    /**
+     * Saves the current state of the activity for future activities being restarted
+     *
+     * @param savedInstanceState The saved activity state of the currently running activity
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        //activityStarted is used to only start the camera once
+        savedInstanceState.putBoolean(ACTIVITY_STARTED, activityStarted);
+        savedInstanceState.putParcelable(FIELD_BITMAP, bitmap);
+        savedInstanceState.putSerializable(CURRENT_SPECIES, currentEntry);
+    }
 
     public void doAutomaticClassification(View view) {
         GridView gv = (GridView) findViewById(R.id.gvIdentification_gallery);
@@ -71,89 +146,6 @@ public class IdentificationActivity extends AppCompatActivity {
         //gv.setNumColumns(3);
         //Toast.makeText(getApplicationContext(), "This feature is currently in development", Toast.LENGTH_SHORT).show();
     }
-
-    /**
-     * Saves the current state of the activity for future activities being restarted
-     * @param savedInstanceState The saved activity state of the currently running activity
-     */
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        //createCounter is used to only start the camera once
-        savedInstanceState.putInt(FIRST_TIME_INDEX, createCounter);
-        savedInstanceState.putParcelable(FIELD_BITMAP, bitmap);
-    }
-
-    /**
-     * Main responsibilities:
-     * ------------------------------------------
-     * Handles the saved state bundle
-     * Loads the gallery by initialising the grid and loading compressed images
-     * Checks on first startup if the database Species
-     * @param savedInstanceState State of the previous running version of the activity
-     */
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-            if (savedInstanceState != null) {
-                bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
-                createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
-            }
-
-        //Checks/loads species data into the Species table of the database
-            if (createCounter == 0) {
-                SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
-                try {
-                    speciesDAO.open();
-                    if (speciesDAO.isEmpty()) {
-                        speciesDAO.loadPresets();
-                    }
-
-                    speciesDAO.close();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                dispatchTakePictureIntent();
-            }
-            if (createCounter == 0) createCounter++;
-
-            setContentView(R.layout.activity_identification);
-
-            GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
-            gridview.setAdapter(new ImageAdapter(this));
-
-            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
-                    try {
-                        speciesDAO.open();
-                        currentEntry = speciesDAO.getSpeciesByID(position + 1);
-                        Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
-                        //ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompare);
-                        byte[] imgData = currentEntry.getIdealPicture();
-                        //comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0,
-                        //      imgData.length));
-                        speciesDAO.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
-
-            mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
-            if (bitmap != null) mImageView.setImageBitmap(bitmap);
-    }
-
-    public Species getCurrentEntry() {
-        return currentEntry;
-    }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -238,22 +230,33 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     public void showDialogNumberOfBugs(View v) {
-        NumberPicker np;
-        MaterialDialog dialog = new MaterialDialog.Builder(this)
-                .title("Number of Bugs")
-                .positiveText("Finish")
-                .titleGravity(GravityEnum.CENTER)
-                .customView(R.layout.dialog_number_picker, false)
-                .callback(new MaterialDialog.ButtonCallback() {
-                    @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        NumberPicker np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
-                        sendResultBack(np.getValue());
-                    }
-                })
-                .show();
-        np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
-        np.setMaxValue(100);
+        if (currentEntry != null) {
+            NumberPicker np;
+            MaterialDialog dialog = new MaterialDialog.Builder(this)
+                    .title("Number of Bugs")
+                    .positiveText("Finish")
+                    .titleGravity(GravityEnum.CENTER)
+                    .customView(R.layout.dialog_number_picker, false)
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            NumberPicker np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+                            sendResultBack(np.getValue());
+                        }
+                    })
+                    .show();
+            np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+            np.setMinValue(0);
+            np.setMaxValue(100);
+            np.setWrapSelectorWheel(false);
+        } else {
+            MaterialDialog dialog = new MaterialDialog.Builder(this)
+                    .title("Error")
+                    .content("You need to select a species or perform automatic classification.")
+                    .positiveText("OK")
+                    .titleGravity(GravityEnum.CENTER)
+                    .show();
+        }
     }
 
     /**

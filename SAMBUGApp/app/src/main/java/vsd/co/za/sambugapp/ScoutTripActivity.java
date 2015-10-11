@@ -10,6 +10,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,10 +83,26 @@ public class ScoutTripActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spnFarms);
 
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int pos = viewHolder.getAdapterPosition();
+                scoutTrip.getStopList().remove(pos);
+                rvScoutStops.getAdapter().notifyItemRemoved(pos);
+            }
+        };
+        ItemTouchHelper swipeHelper = new ItemTouchHelper(callback);
+
         rvScoutStops = (RecyclerView) findViewById(R.id.rvScoutStops);
         rvScoutStops.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         rvScoutStops.setAdapter(new RVScoutStopAdapter(scoutTrip.getStopList()));
         rvScoutStops.setHasFixedSize(true);
+        swipeHelper.attachToRecyclerView(rvScoutStops);
 
         rvPestsPerTree = (RecyclerView) findViewById(R.id.rvPestsPerTree);
         rvPestsPerTree.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
