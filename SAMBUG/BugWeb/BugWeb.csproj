@@ -167,6 +167,7 @@
     </Compile>
     <Compile Include="Models\BlockViewModel.cs" />
     <Compile Include="Models\ChangePasswordModel.cs" />
+    <Compile Include="Models\FarmViewModel.cs" />
     <Compile Include="Models\RecoverAccountModel.cs" />
     <Compile Include="Models\EditUserRoleViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
@@ -262,6 +263,7 @@
     <Content Include="Views\Authentication\CheckEmail.cshtml" />
     <Content Include="Views\Authentication\ChangePassword.cshtml" />
     <Content Include="Views\FarmManagement\Treatments.cshtml" />
+    <Content Include="Views\FarmManagement\EditFarms.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -9,11 +9,13 @@ namespace BugBusiness.Interface.FarmManagement
 {
     public interface IFarmManagement
     {
+        AddFarmResult AddFarm(AddFarmRequest addfarmRequest);
         AddBlockResult AddBlock(AddBlockRequest addblockRequest);
         GetBlocksByFarmResult GetBlocksByFarm(GetBlocksByFarmRequest getblocksbyfarmRequest);
         GetBlockByIDResult GetBlockByID(GetBlockByIDRequest getblockybyidRequest);
         GetFarmByIDResult GetFarmByID(GetFarmByIDRequest getfarmbyidRequest);
         UpdateBlockByIDResult UpdateBlockByID(UpdateBlockByIDRequest updateblockbyidRequest);
+        DeleteFarmByIDResult DeleteFarmByID(DeleteFarmByIDRequest deletefarmbyidRequest);
         DeleteBlockByIDResult DeleteBlockByID(DeleteBlockByIDRequest deleteblockbyidRequest);
         GetPestsPerTreeByBlockResult GetPestsPerTreeByBlock(GetPestsPerTreeByBlockRequest getpestspertreebyblockRequest);
         AddTreatmentResult AddTreatment(AddTreatmentRequest addtreatmentRequest);

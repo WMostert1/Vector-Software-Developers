@@ -20,6 +20,28 @@ namespace BugBusiness.FarmManagement
             _dbFarmManagement = dbFarmManagement;
         }
 
+        public AddFarmResult AddFarm(AddFarmRequest addfarmRequest)
+        {
+            if (addfarmRequest.FarmName.Equals(""))
+            {
+                throw new InvalidInputException();
+            }
+
+            long queryResult = _dbFarmManagement.InsertNewFarm(addfarmRequest.UserID, addfarmRequest.FarmName);
+
+            if (queryResult==-1)
+            {
+                throw new FarmExistsException();
+            }
+
+            AddFarmResult addfarmResult = new AddFarmResult()
+            {
+                FarmID = queryResult
+            };
+
+            return addfarmResult;
+        }
+
         public AddBlockResult AddBlock(AddBlockRequest addblockRequest)
         {
             if (addblockRequest.BlockName.Equals(""))
@@ -125,6 +147,23 @@ namespace BugBusiness.FarmManagement
 
             return new UpdateBlockByIDResult() { FarmID = queryResult };
 
+        }
+
+        public DeleteFarmByIDResult DeleteFarmByID(DeleteFarmByIDRequest deletefarmbyidRequest)
+        {
+            if (deletefarmbyidRequest.FarmID<=0)
+            {
+                throw new InvalidInputException();
+            }
+
+            bool queryResult = _dbFarmManagement.DeleteFarm(deletefarmbyidRequest.FarmID);
+
+            if (!queryResult)
+            {
+                throw new CouldNotDeleteFarmException();
+            }
+
+            return new DeleteFarmByIDResult();
         }
 
         public DeleteBlockByIDResult DeleteBlockByID(DeleteBlockByIDRequest deleteblockbyidRequest)
