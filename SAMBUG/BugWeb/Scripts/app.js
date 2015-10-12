@@ -4,10 +4,11 @@
 */
     .config(function($mdThemingProvider) {
         //configure site theme
+
         //todo consider customizing the theme
         $mdThemingProvider.theme("default")
             .backgroundPalette("grey", {
-                "default": "800"
+               "default": "800"
             })
             .warnPalette("red")
             .primaryPalette("light-green")

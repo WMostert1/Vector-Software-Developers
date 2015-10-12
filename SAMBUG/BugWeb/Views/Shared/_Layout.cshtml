@@ -1,4 +1,5 @@
-﻿﻿<!DOCTYPE html>
+﻿@using BugWeb.Security
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -19,24 +20,126 @@
     <md-toolbar layout="column" layout-align="center center" class="md-primary md-hue-1 md-whiteframe-z1 md-tall">
         <img style="height: 95%" src="@Url.Content("~/Content/Images/logo.png")" alt="sambug logo"/>
     </md-toolbar>
-    <md-content flex class="md-hue-1">
-        <md-list layout="row">
-            <md-item flex ng-repeat="item in menu">
-                <a>
-                    <md-item-content md-ink-ripple layout="row" layout-align="start center">
+    <md-content layout="row" flex class="md-hue-1">
+        <md-list layout-fill flex>
+            <md-list-item class="md-clickable" md-ink-ripple>
+                <a flex href="@Url.Content("~/")">
+                    <md-item-content layout="row" layout-align="start center">
                         <div class="inset">
-                            <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+                            <ng-md-icon icon="home"></ng-md-icon>
                         </div>
-                        <h4 class="md-title inset">
-                            {{item.title}}
-                        </h4>
+                        <div class="md-title inset">
+                            Home
+                        </div>
                     </md-item-content>
                 </a>
-            </md-item>
-            <md-subheader flex="100">Management</md-subheader>
+            </md-list-item>
+
+
+            @{
+                /*
+                 * list only items applicable to the current HTTP context
+                 * e.g. a user's role will determine what functions he can perform
+                 */
+                if (SecurityProvider.isLoggedIn(Session))
+                {
+                    <md-list-item class="md-clickable" md-ink-ripple>
+                        <a flex href="@Url.Content("~/home/logout")">
+                            <md-item-content layout="row" layout-align="start center">
+                                <div class="inset">
+                                    <ng-md-icon icon="logout"></ng-md-icon>
+                                </div>
+                                <div class="md-title inset">
+                                    Logout
+                                </div>
+                            </md-item-content>
+                        </a>
+                    </md-list-item>
+                }
+                else
+                {
+                    <md-list-item class="md-clickable" md-ink-ripple>
+                        <md-item-content layout="row" layout-align="start center">
+                            <div class="inset">
+                                <ng-md-icon icon="login"></ng-md-icon>
+                            </div>
+                            <div class="md-title inset">
+                                Sign In
+                            </div>
+                        </md-item-content>
+                    </md-list-item>
+
+                    <md-list-item class="md-clickable" md-ink-ripple>
+                        <md-item-content layout="row" layout-align="start center">
+                            <div class="inset">
+                                <ng-md-icon icon="person"></ng-md-icon>
+                            </div>
+                            <div class="md-title inset">
+                                Sign Up
+                            </div>
+                        </md-item-content>
+                    </md-list-item>
+                }
+            }
+
+            <md-divider></md-divider>
+
+            @{
+                if (SecurityProvider.isLoggedIn(Session))
+                {
+                    <md-list-item class="md-clickable" md-ink-ripple>
+                        <md-item-content layout="row" layout-align="start center">
+                            <div class="inset">
+                                <ng-md-icon icon="equalizer"></ng-md-icon>
+                            </div>
+                            <div class="md-title inset">
+                                Reporting
+                            </div>
+                        </md-item-content>
+                    </md-list-item>
+
+                    /*
+                     * Admin and Grower roles are the only roles at this stage which will affect
+                     * functionality on the entire web page
+                     *
+                     * Currently all roles can make use of reporting features, but only growers
+                     * can manager their farms, and only admins can manage users
+                     */
+                    if (SecurityProvider.isGrower(Session))
+                    {
+                        <md-list-item class="md-clickable" md-ink-ripple>
+                            <md-item-content layout="row" layout-align="start center">
+                                <div class="inset">
+                                    <ng-md-icon icon="nature"></ng-md-icon>
+                                </div>
+                                <div class="md-title inset">
+                                    Farm Management
+                                </div>
+                            </md-item-content>
+                        </md-list-item>
+                    }
+
+                    if (SecurityProvider.isAdmin(Session))
+                    {
+                        <md-list-item class="md-clickable" md-ink-ripple>
+                            <md-item-content layout="row" layout-align="start center">
+                                <div class="inset">
+                                    <ng-md-icon icon="people"></ng-md-icon>
+                                </div>
+                                <div class="md-title inset">
+                                    User Management
+                                </div>
+                            </md-item-content>
+                        </md-list-item>
+                    }
+                }
+}
+
         </md-list>
+
+
     </md-content>
-    
+
 </md-sidenav>
 
 <div layout="column" ng-cloak>

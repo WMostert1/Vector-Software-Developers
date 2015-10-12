@@ -1,7 +1,7 @@
-﻿body {
-    color: 
+﻿md-list-item a{
+ text-decoration: none !important; 
+ color: inherit !important;   
 }
-
 /*todo: the below code was meant for bootstrap it seems, just make sure before completely removing*/
 /*html, body{
     height : 100%;

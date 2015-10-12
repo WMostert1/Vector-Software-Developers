@@ -10,7 +10,6 @@ namespace BugWeb.Controllers
     public class HomeController : Controller
     {
         
-        //TODO: remove the security provider
         public ActionResult Index()
         {
           /* if (!SecurityProvider.isGrower(Session) && !SecurityProvider.isAdmin(Session))
@@ -38,7 +37,7 @@ namespace BugWeb.Controllers
         public ActionResult Logout()
         {
             Session.Abandon();
-            return RedirectToAction("login", "home");
+            return RedirectToAction("index", "home");
         }
 
         public ActionResult RecoverAccount()

@@ -12,6 +12,8 @@ namespace BugWeb.Security
     public class AuthenticateAttribute : FilterAttribute, IAuthenticationFilter
     {
         public string Roles { get; set; }
+        public bool Alternate { get; set; }
+
 
         public void OnAuthentication(AuthenticationContext context)
         {
@@ -22,12 +24,31 @@ namespace BugWeb.Security
                 UserDTO user = (UserDTO) context.HttpContext.Session["UserInfo"]; 
 
                 //authorise the user
-                foreach (var role in Roles.Split(','))
+                if (Alternate) //if any of the roles suffice
                 {
-                    //if one of the required roles is not found in the user's roles, the user is not
-                    //authorised
-                    if (!user.Roles.Select(rle => rle).Where(rle => rle.RoleType == long.Parse(role)).ToList().Any())
+                   bool atLeastOneRole = false;
+                   
+                    foreach (var role in Roles.Split(','))
+                    {
+                        if (user.Roles.Select(rle => rle).Where(rle => rle.RoleType == long.Parse(role)).ToList().Any())
+                        {
+                            atLeastOneRole = true;
+                            break;
+                        }
+                    } 
+
+                    if (!atLeastOneRole)
                         context.Result = new HttpUnauthorizedResult(); //mark unauthorised
+                }
+                else
+                {
+                    foreach (var role in Roles.Split(','))
+                    {
+                        //if one of the required roles is not found in the user's roles, the user is not
+                        //authorised
+                        if (!user.Roles.Select(rle => rle).Where(rle => rle.RoleType == long.Parse(role)).ToList().Any())
+                            context.Result = new HttpUnauthorizedResult(); //mark unauthorised
+                    }
                 }
             }
             else
