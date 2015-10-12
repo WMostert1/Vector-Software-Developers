@@ -24,6 +24,8 @@ namespace BugWeb.Controllers
         }
 
         // GET: reporting/charts
+        //todo this is just a demo of the new authentication functionality
+        [Authenticate(Roles = "1, 2")]
         public ActionResult Charts()
         {
             return View(new ReportingViewModel(Session));

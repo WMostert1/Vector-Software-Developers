@@ -12,7 +12,7 @@ namespace BugWeb.Security
         private const int GROWER_ROLE = 1;
         private const int ADMIN_ROLE = 2;
 
-        private static bool isLoggedIn(HttpSessionStateBase session)
+        public static bool isLoggedIn(HttpSessionStateBase session)
         {
             return (session.Count != 0);
         }

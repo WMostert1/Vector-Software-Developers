@@ -10,13 +10,12 @@ namespace BugWeb.Controllers
     public class HomeController : Controller
     {
         
-        //TODO: Still need to check if user is logged in before returning view. Redirects to login page if not
+        //TODO: remove the security provider
         public ActionResult Index()
         {
           /* if (!SecurityProvider.isGrower(Session) && !SecurityProvider.isAdmin(Session))
                return RedirectToAction("login","home");*/
-
-                return View();
+            return View();
         }
 
         public ActionResult Login()
