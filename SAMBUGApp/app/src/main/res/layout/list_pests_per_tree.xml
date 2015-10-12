@@ -21,7 +21,8 @@
                 android:id="@+id/tvBlockName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Block Name"/>
+                android:text="Block Name"
+                android:layout_marginLeft="32dp"/>
 
             <CheckedTextView
                 android:id="@+id/tvPestsPerTree"
@@ -29,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="Pests Per Tree"
                 android:textAlignment="center"
+                android:layout_marginRight="32dp"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>

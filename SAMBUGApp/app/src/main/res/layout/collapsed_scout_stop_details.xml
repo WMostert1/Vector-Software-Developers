@@ -20,12 +20,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Block Name:"
-                android:layout_gravity="start"/>
+                android:layout_gravity="start"
+                android:textStyle="bold"/>
 
             <CheckedTextView
                 android:id="@+id/lblBlockName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -39,12 +41,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Number of Trees:"
-                android:layout_gravity="start"/>
+                android:layout_gravity="start"
+                android:textStyle="bold"/>
 
             <CheckedTextView
                 android:id="@+id/lblNumTrees"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -52,12 +56,11 @@
     <Button
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_gravity="end"
         android:layout_marginRight="16dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:drawableTop="@drawable/ic_edit_black_18dp"
-        android:gravity="center"
+        android:layout_gravity="center_vertical|end"
         android:onClick="expandScoutStopDetails"
         />
 

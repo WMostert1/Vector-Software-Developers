@@ -17,8 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:paddingRight="10dp"
-            android:textSize="24sp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:textSize="20sp"
             android:text="Block"/>
 
         <Spinner
@@ -28,7 +29,7 @@
             android:layout_gravity="right"/>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -38,15 +39,16 @@
             android:layout_height="wrap_content"
             android:text="Number of Trees"
             android:id="@+id/tvNumberOfTrees"
-            android:textSize="24sp"
-            android:layout_centerVertical="true"/>
+            android:textSize="20sp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="center_vertical"/>
 
         <NumberPicker
             android:layout_height="wrap_content"
             android:id="@+id/npNumTrees"
-            android:layout_width="100dp"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
+            android:layout_width="100dp"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnCollapse"

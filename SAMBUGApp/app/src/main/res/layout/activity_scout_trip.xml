@@ -32,6 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stops"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20sp"
         android:textStyle="bold"/>
 
     <android.support.v7.widget.RecyclerView
@@ -44,7 +46,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pests Per Tree"
-        android:layout_gravity="left"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20sp"
         android:textStyle="bold"/>
 
     <android.support.v7.widget.RecyclerView

@@ -227,6 +227,8 @@ public class enterDataActivity extends AppCompatActivity {
     public void sendToScoutTripActivity(View view) {
         Intent output = new Intent();
         Bundle b = new Bundle();
+        if (!hasBugs)
+            listAddedBugs.clear();
         scoutStop.setScoutBugs(listAddedBugs);
         b.putSerializable(ScoutTripActivity.SCOUT_STOP, scoutStop);
         output.putExtras(b);

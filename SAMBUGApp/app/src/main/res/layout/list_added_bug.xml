@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <CheckedTextView
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="right|center_vertical"
                 android:layout_marginLeft="32dp"
                 android:id="@+id/tvAddedBugCount"
                 android:layout_width="wrap_content"
