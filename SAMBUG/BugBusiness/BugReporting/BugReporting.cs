@@ -19,6 +19,11 @@ namespace BugBusiness.BugReporting
             _dbBugReporting = dbBugReporting;
         }
 
+        public List<Species> getAllSpecies()
+        {
+            return _dbBugReporting.getAllSpecies();
+        }
+
         public GetCapturedDataResponse GetCapturedData(GetCapturedDataRequest getCapturedDataRequest)
         {
             List<ScoutStop> scoutStops = _dbBugReporting.GetScoutStopsByFarmId(getCapturedDataRequest.FarmId);

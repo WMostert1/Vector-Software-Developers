@@ -1,5 +1,7 @@
 ﻿using BugBusiness.Interface.BugIntelligence;
 using BugBusiness.Interface.BugIntelligence.DTO;
+using DataAccess.Interface;
+using DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,38 +14,29 @@ namespace BugBusiness.BugIntelligence
 {
     public class BugIntelligence : IBugIntelligence
     {
+        private readonly IDbBugReporting _dbBugReporting;
+
+        public BugIntelligence(IDbBugReporting dbBugReporting)
+        {
+           
+            _dbBugReporting = dbBugReporting;
+        }
+
+        public List<Species> getAllSpecies()
+        {
+            return _dbBugReporting.getAllSpecies();
+        }
+
         public ClassifyResult classify(byte[] image)
         {
-            string workingPath = Directory.GetCurrentDirectory();
-            string path = workingPath+"\\ProcessedImages";
-            Directory.CreateDirectory(path);
-            var ms = new MemoryStream(image);
-            Bitmap colourImage = new Bitmap(ms);
-            Bitmap grayImage;
+            if (ANNClassifier.getInstance.isCurrentlyTraining())
+                throw new Exception("The nerual network is busy training. Please try again.");
 
-            Bitmap[] colourPyramid;
-            Bitmap[] grayPyramid;
-            var processor = new ImageProcessing();
+            int speciesID = ANNClassifier.getInstance.classify(image);
 
-                processor.IdentifyContours(colourImage, 100, true, out grayImage, out colourImage);
-                colourPyramid = processor.getImagePyramid(colourImage, 1);
-                grayPyramid = processor.getImagePyramid(grayImage, 1);
-            
+            var species = _dbBugReporting.getSpeciesByID(speciesID);
 
-            int count = 0;
-            foreach (var img in colourPyramid)
-            {
-                img.Save(count+"colour"+(count++)+".jpg");
-            }
-
-            count = 0;
-
-            foreach (var img in grayPyramid)
-            {
-                img.Save(count + "gray"+(count++)+".jpg");
-            }
-
-            return new ClassifyResult { SpeciesName = "Coconut Bug", Lifestage = 1, SpeciesID = 1 };
+            return new ClassifyResult { SpeciesName = species.SpeciesName, Lifestage = (int)species.SpeciesID, SpeciesID = (int)species.SpeciesID };
         }
     }
 }

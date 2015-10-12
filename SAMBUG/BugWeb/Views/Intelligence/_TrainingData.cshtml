@@ -1,0 +1,32 @@
+﻿@model BugWeb.Models.IntelligenceTrainingViewModel
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Training Examples</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        @if (Model.fileNames.Length == 0)
+                        {
+                            <div class="alert alert-warning" role="alert">No training examples. Please upload a picture.</div>
+                        }
+                        @foreach (var image in Model.images)
+                        {
+                            <img width="150" height="150" src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(image))" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("addSpeciesTrainingData", "Intelligence", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="file" name="file" />
+            <input type="number" name="SpeciesID" value="@Model.SpeciesID" hidden/>
+            <input type="submit" value="Upload File" />
+        }
+    </div>
+</div>

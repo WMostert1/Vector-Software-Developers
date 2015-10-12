@@ -16,6 +16,7 @@ using BugBusiness.FarmManagement;
 using BugBusiness.Interface.FarmManagement;
 using DataAccess.Interface;
 using DataAccess.MSSQL;
+using BugBusiness.BugIntelligence;
 
 namespace BugWeb
 {
@@ -32,6 +33,7 @@ namespace BugWeb
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            var net = ANNClassifier.getInstance;
             
         }
     }

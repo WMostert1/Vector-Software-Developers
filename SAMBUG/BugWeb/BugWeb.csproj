@@ -160,12 +160,15 @@
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\FarmManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IntelligenceController.cs" />
     <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BlockViewModel.cs" />
     <Compile Include="Models\ChangePasswordModel.cs" />
+    <Compile Include="Models\IntelligenceTrainingViewModel.cs" />
+    <Compile Include="Models\IntelligenceViewModel.cs" />
     <Compile Include="Models\RecoverAccountModel.cs" />
     <Compile Include="Models\EditUserRoleViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
@@ -233,6 +236,8 @@
     <Content Include="Views\Authentication\CheckEmail.cshtml" />
     <Content Include="Views\Authentication\ChangePassword.cshtml" />
     <Content Include="Views\FarmManagement\Treatments.cshtml" />
+    <Content Include="Views\Intelligence\Index.cshtml" />
+    <Content Include="Views\Intelligence\_TrainingData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

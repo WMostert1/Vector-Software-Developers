@@ -20,189 +20,281 @@ namespace ImageRecognition
 {
     class Classifier
     {
+        public float Classify(Image<Bgr, Byte> testImg, string folder)
+        {
+            int class_num = 3;  //number of clusters/classes
+            int input_num = 0;  //number of train images
+            int j = 0;
 
-        //------------------------------------------------------
+            using (SURFDetector detector = new SURFDetector(500, false))
+            using (BruteForceMatcher<float> matcher = new BruteForceMatcher<float>(DistanceType.L2))
+            {
+                BOWKMeansTrainer bowTrainer = new BOWKMeansTrainer(class_num, new MCvTermCriteria(10, 0.01), 3, Emgu.CV.CvEnum.KMeansInitType.PPCenters);
+                BOWImgDescriptorExtractor<float> bowDE = new BOWImgDescriptorExtractor<float>(detector, matcher);
+
+                FileInfo[] files = new DirectoryInfo(folder).GetFiles();
+                foreach (FileInfo file in files)
+                {
+                    if (file.Extension.Equals(".db")) continue;
+                    using (Image<Bgr, Byte> model = new Image<Bgr, byte>(file.FullName))
+                    using (Image<Gray, Byte> modelGray = model.Convert<Gray, Byte>())
+                    //Detect SURF key points from images
+                    using (VectorOfKeyPoint modelKeyPoints = detector.DetectKeyPointsRaw(modelGray, null))
+                    //Compute detected SURF key points & extract modelDescriptors
+                    using (Matrix<float> modelDescriptors = detector.ComputeDescriptorsRaw(modelGray, null, modelKeyPoints))
+                    {
+                        //Add the extracted BoW modelDescriptors into BOW trainer
+                        bowTrainer.Add(modelDescriptors);
+                    }
+                    input_num++;
+                }
+
+                //Cluster the feature vectors
+                Matrix<float> dictionary = bowTrainer.Cluster();
+                //Store the vocabulary
+                bowDE.SetVocabulary(dictionary);
+                //To store all modelBOWDescriptor in a single trainingDescriptors
+                Matrix<float> trainingDescriptors = new Matrix<float>(input_num, class_num);
+                //To label each modelBOWDescriptor, in this case all train images are labelled with different integer 
+                //hence all images are considered as a unique class, i.e class_num = input_num
+                Matrix<float> labels = new Matrix<float>(input_num, 1);
+                //Use labels of type <int> instead of <float> for NormalBayesClassifier
+                //Matrix<int> labels = new Matrix<int>(input_num, 1);
+
+                foreach (FileInfo file in files)
+                {
+                    if (file.Extension.Equals(".db")) continue;
+                    using (Image<Bgr, Byte> model = new Image<Bgr, byte>(file.FullName))
+                    using (Image<Gray, Byte> modelGray = model.Convert<Gray, Byte>())
+                    using (VectorOfKeyPoint modelKeyPoints = detector.DetectKeyPointsRaw(modelGray, null))
+                    using (Matrix<float> modelBOWDescriptor = bowDE.Compute(modelGray, modelKeyPoints))
+                    {
+                        //To merge all modelBOWDescriptor into single trainingDescriptors
+                        for (int i = 0; i < trainingDescriptors.Cols; i++)
+                        {
+                            trainingDescriptors.Data[j, i] = modelBOWDescriptor.Data[0, i];
+                        }
+                        labels.Data[j, 0] = (j + 1);
+                        j++;
+                    }
+                }
+
+                //Declaration for Support Vector Machine & parameters
+                SVM my_SVM = new SVM();
+                SVMParams p = new SVMParams();
+                p.KernelType = Emgu.CV.ML.MlEnum.SVM_KERNEL_TYPE.LINEAR;
+                p.SVMType = Emgu.CV.ML.MlEnum.SVM_TYPE.C_SVC;
+                p.C = 1;
+                p.TermCrit = new MCvTermCriteria(100, 0.00001);
+                bool trained = my_SVM.Train(trainingDescriptors, labels, null, null, p);
+
+                //NormalBayesClassifier classifier = new NormalBayesClassifier();
+                //classifier.Train(trainingDescriptors, labels, null, null, false);
+
+                using (Image<Gray, Byte> testImgGray = testImg.Convert<Gray, Byte>())
+                using (VectorOfKeyPoint testKeyPoints = detector.DetectKeyPointsRaw(testImgGray, null))
+                using (Matrix<float> testBOWDescriptor = bowDE.Compute(testImgGray, testKeyPoints))
+                {
+                   
+                    float result = my_SVM.Predict(testBOWDescriptor);
+                    //float result = classifier.Predict(testBOWDescriptor, null);
+                    //result will indicate whether test image belongs to trainDescriptor label 1, 2 or 3  
+                    return result;
+                }
+            }
+        }
+
+        public void runBoW()
+        {
+            try
+            {
+                float result = ClassifyUsingBoW(new Image<Bgr, Byte>("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\coconut25.jpg"), "C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training");
+                Debug.WriteLine("");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
+
+        public int restructureTrainingData(string root_folder)
+        {
+            if (Directory.Exists(root_folder + "\\Training_Data"))
+                Directory.Delete(root_folder + "\\Training_Data", true);
+
+            DirectoryInfo root = new DirectoryInfo(root_folder);
+            DirectoryInfo[] directories_of_classes = root.GetDirectories();
+           
+            DirectoryInfo output_folder = root.CreateSubdirectory("Training_Data");
+            foreach (var directory in directories_of_classes)
+            {
+                int number = 0;
+                foreach (var file in directory.GetFiles())
+                {
+                    string path = output_folder.FullName + "\\" + Path.GetFileName(directory.FullName) + "--" + (number++) + file.Extension;
+                    if(!File.Exists(path))
+                        file.CopyTo(path);
+                }
+            }
+            return directories_of_classes.Length;
+        }
+
+        public float ClassifyUsingBoW(Image<Bgr, Byte> testImg, string folder)
+        {
+            
+
+            int class_num = restructureTrainingData(folder);  //number of clusters/classes
+            int input_num = 0;  //number of train images
+            int j = 0;
+
+            List<string> class_labels = new List<string>();
+
+
+            using (SURFDetector detector = new SURFDetector(500, false))
+            using (BruteForceMatcher<float> matcher = new BruteForceMatcher<float>(DistanceType.L2))
+            {
+                BOWKMeansTrainer bowTrainer = new BOWKMeansTrainer(class_num, new MCvTermCriteria(10, 0.01), 3, Emgu.CV.CvEnum.KMeansInitType.PPCenters);
+                BOWImgDescriptorExtractor<float> bowDE = new BOWImgDescriptorExtractor<float>(detector, matcher);
+
+                FileInfo[] files = new DirectoryInfo(folder+"\\Training_Data").GetFiles();
+                foreach (FileInfo file in files)
+                {
+                    if (file.Extension.Equals(".db")) continue;
+        
+                    using (Image<Bgr, Byte> model = new Image<Bgr, byte>(file.FullName))
+                    using (Image<Gray, Byte> modelGray = model.Convert<Gray, Byte>())
+                    //Detect SURF key points from images
+                    using (VectorOfKeyPoint modelKeyPoints = detector.DetectKeyPointsRaw(modelGray, null))
+                    //Compute detected SURF key points & extract modelDescriptors
+                    using (Matrix<float> modelDescriptors = detector.ComputeDescriptorsRaw(modelGray, null, modelKeyPoints))
+                    {
+                        //Add the extracted BoW modelDescriptors into BOW trainer
+                        bowTrainer.Add(modelDescriptors);
+                    }
+                    
+                    string fileName = Path.GetFileName(file.FullName);
+                    string class_category = fileName.Substring(0,fileName.IndexOf("--"));
+                    if (!class_labels.Contains(class_category))
+                    {
+                        class_labels.Add(class_category);
+                    }
+                    input_num++;
+                }
+
+                //Cluster the feature vectors
+                Matrix<float> dictionary = bowTrainer.Cluster();
+                //Store the vocabulary
+                bowDE.SetVocabulary(dictionary);
+                //To store all modelBOWDescriptor in a single trainingDescriptors
+                Matrix<float> trainingDescriptors = new Matrix<float>(input_num, class_num);
+                //To label each modelBOWDescriptor, in this case all train images are labelled with different integer 
+                //hence all images are considered as a unique class, i.e class_num = input_num
+                Matrix<float> labels = new Matrix<float>(input_num, 1);
+                //Use labels of type <int> instead of <float> for NormalBayesClassifier
+                //Matrix<int> labels = new Matrix<int>(input_num, 1);
+
+                foreach (FileInfo file in files)
+                {
+                    if (file.Extension.Equals(".db")) continue;
+
+                    using (Image<Bgr, Byte> model = new Image<Bgr, byte>(file.FullName))
+                    using (Image<Gray, Byte> modelGray = model.Convert<Gray, Byte>())
+                    using (VectorOfKeyPoint modelKeyPoints = detector.DetectKeyPointsRaw(modelGray, null))
+                    using (Matrix<float> modelBOWDescriptor = bowDE.Compute(modelGray, modelKeyPoints))
+                    {
+                        //To merge all modelBOWDescriptor into single trainingDescriptors
+                        for (int i = 0; i < trainingDescriptors.Cols; i++)
+                        {
+                            trainingDescriptors.Data[j, i] = modelBOWDescriptor.Data[0, i];
+                        }
+                        string fileName = Path.GetFileName(file.FullName);
+                        string class_category = fileName.Substring(0, fileName.IndexOf("--"));
+
+                        labels.Data[j, 0] = class_labels.IndexOf(class_category)+1;
+                        j++;
+                    }
+                }
+
+                //Declaration for Support Vector Machine & parameters
+                SVM my_SVM = new SVM();
+                SVMParams p = new SVMParams();
+                p.KernelType = Emgu.CV.ML.MlEnum.SVM_KERNEL_TYPE.LINEAR;
+                p.SVMType = Emgu.CV.ML.MlEnum.SVM_TYPE.C_SVC;
+                p.C = 1;
+                p.TermCrit = new MCvTermCriteria(100, 0.00001);
+                bool trained = my_SVM.Train(trainingDescriptors, labels, null, null, p);
+
+                //NormalBayesClassifier classifier = new NormalBayesClassifier();
+                //classifier.Train(trainingDescriptors, labels, null, null, false);
+
+                using (Image<Gray, Byte> testImgGray = testImg.Convert<Gray, Byte>())
+                using (VectorOfKeyPoint testKeyPoints = detector.DetectKeyPointsRaw(testImgGray, null))
+                using (Matrix<float> testBOWDescriptor = bowDE.Compute(testImgGray, testKeyPoints))
+                {
+                    float result = my_SVM.Predict(testBOWDescriptor);
+                    //float result = classifier.Predict(testBOWDescriptor, null);
+                    //result will indicate whether test image belongs to trainDescriptor label 1, 2 or 3  
+                    return result;
+                }
+            }
+        }
+
+        //------------------------------------------------------   <wifi_BEGIN>
         //              Black and White neural network
         //------------------------------------------------------
-        public void runBWANN()
+
+        public float runBWANNTesting(int[] layers_d, float dw_scale, float moment_scale, float alpha, float beta, Matrix<float> training_data, Matrix<float> training_classifications, Matrix<float> testing_data, Matrix<float> testing_classifications, int number_of_testing_samples, int number_of_classes)
         {
-            Console.WriteLine("Running Black and White neural network...");
-
-            //Set up matrices
-            
-
-            String path = "C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\";
-            String[] trainingDirectories = Directory.GetDirectories(path + "Training");
-            List<string[]> trainingPaths = new List<string[]>();
-
-            foreach (String p in trainingDirectories)
-            { 
-                trainingPaths.Add(Directory.GetFiles(p));
-            }
-
-            String[] testingDirectories = Directory.GetDirectories(path + "Testing");
-            List<string[]> testingPaths = new List<string[]>();
-
-            foreach (String p in testingDirectories)
-            {
-                testingPaths.Add(Directory.GetFiles(p));
-            }
-            
-
-            //String[] C_fileNames = Directory.GetFiles(path + "C");
-            //String[] T_fileNames = Directory.GetFiles(path + "T");
-
-            //String[] Test_C_fileNames = Directory.GetFiles(path + "Test_C");
-            //String[] Test_T_fileNames = Directory.GetFiles(path + "Test_T");
-
-            int number_of_training_samples = 0;
-            foreach (var set in trainingPaths)
-                number_of_training_samples += set.Length;
-
-            const int DIMENSIONS = 64;
-
-            int attributes_per_sample = DIMENSIONS * DIMENSIONS; //Dimensions of the picture
-
-            int number_of_testing_samples = 0;
-            foreach (var set in testingPaths)
-                number_of_testing_samples += set.Length;
-
-            int number_of_classes = trainingDirectories.Length;
-
-            Matrix<float> training_data = new Matrix<float>(number_of_training_samples, attributes_per_sample);
-            Matrix<float> training_classifications = new Matrix<float>(number_of_training_samples, number_of_classes);
-            training_classifications.SetZero();
-
-            Matrix<float> testing_data = new Matrix<float>(number_of_testing_samples, attributes_per_sample);
-            Matrix<float> testing_classifications = new Matrix<float>(number_of_testing_samples, number_of_classes);
-            testing_classifications.SetZero();
-
-            Matrix<float> classification_result = new Matrix<float>(1, number_of_classes);
-            Point max_loc = new Point(0, 0);
-
-            //Populate training and testing data
-
-            List<List<Image<Gray, byte>>> training_images = new List<List<Image<Gray, byte>>>();
-            for(int i =0; i < number_of_classes;i++){
-                training_images.Add(new List<Image<Gray,byte>>());
-                foreach (var c in trainingPaths[i])
-                    training_images[i].Add((new Image<Gray, byte>(c)).Resize(DIMENSIONS, DIMENSIONS, INTER.CV_INTER_CUBIC));
-            }
-
-            List<List<Image<Gray, byte>>> testing_images = new List<List<Image<Gray, byte>>>();
-            for (int i = 0; i < number_of_classes; i++)
-            {
-                testing_images.Add(new List<Image<Gray, byte>>());
-                foreach (var c in testingPaths[i])
-                    testing_images[i].Add((new Image<Gray, byte>(c)).Resize(DIMENSIONS, DIMENSIONS, INTER.CV_INTER_CUBIC));
-            }
-
-
-            //Set classification matrix values
-
-            int offset = 0;
-            for (int directory = 0; directory < trainingDirectories.Length; directory++)
-            {
-                for (int samples = 0; samples < trainingPaths[directory].Length; samples++)
-                {
-                    training_classifications.Data[offset+samples, directory] = 1;
-                }
-                offset += trainingPaths[directory].Length-1; 
-            }
-
-            offset = 0;
-
-            for (int directory = 0; directory < testingDirectories.Length; directory++)
-            {
-                for (int samples = 0; samples < testingPaths[directory].Length; samples++)
-                {
-                    testing_classifications.Data[offset+samples, directory] = 1;
-                }
-                offset += testingPaths[directory].Length;
-            }
-
-
-           
-            //Set training and testing data
-            List<Matrix<float>> flattenedImages = new List<Matrix<float>>();
-            foreach (var imageList in training_images)
-            {
-                foreach (var img in imageList)
-                {
-                    //Emgu.CV.UI.ImageViewer.Show(img);
-                    Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
-                    int c = 0;
-                    for (int i = 0; i < DIMENSIONS; i++)
-                        for (int j = 0; j < DIMENSIONS; j++)
-                            flattened.Data[0, c++] = img.Data[i, j, 0];
-                    flattenedImages.Add(flattened);
-                }
-            }
-
-         
-            training_data = ConcatDescriptors(flattenedImages);
-
-            //Testing data
-            List<Matrix<float>> flattenedTestImages = new List<Matrix<float>>();
-            foreach (var imageList in testing_images)
-            {
-                foreach (var img in imageList)
-                {
-                    //Emgu.CV.UI.ImageViewer.Show(img);
-                    Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
-                    int c = 0;
-                    for (int i = 0; i < DIMENSIONS; i++)
-                        for (int j = 0; j < DIMENSIONS; j++)
-                            flattened.Data[0, c++] = img.Data[i, j, 0];
-                    flattenedTestImages.Add(flattened);
-                }
-            }
-            
-        
-            testing_data = ConcatDescriptors(flattenedTestImages);
-
-            //Start up the Neural net
-            int [] layers_d = { attributes_per_sample, DIMENSIONS/2, DIMENSIONS/4 ,  number_of_classes};
-
             Matrix<int> layerSize = new Matrix<int>(layers_d);
-
+            Matrix<float> classification_result = new Matrix<float>(1, number_of_classes);
             MCvANN_MLP_TrainParams parameters = new MCvANN_MLP_TrainParams(); //Parameters for Artificla Neural Network - MultiLayer Perceptron
             //The termination criteria
-            parameters.term_crit = new MCvTermCriteria(1000, 1.0e-8); //Create the termination criteria using the constrain of maximum iteration as well as epsilon (learning rate)
+            parameters.term_crit = new MCvTermCriteria(100, 1.0e-8); //Create the termination criteria using the constrain of maximum iteration as well as epsilon (learning rate)
             parameters.train_method = Emgu.CV.ML.MlEnum.ANN_MLP_TRAIN_METHOD.BACKPROP; //Sets the training method to backpropogation
-            parameters.bp_dw_scale = 0.1; 
-            parameters.bp_moment_scale = 0.1; 
+            parameters.bp_dw_scale = dw_scale;
+            parameters.bp_moment_scale = moment_scale;
 
-            Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, 0.6, 1.0); //use normal sigmoid
+            //Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, 0.4, 1.0); //use normal sigmoid
+            Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, alpha, beta);
+            //Console.WriteLine("Training the neural network...");
 
             int iterations = network.Train(training_data, training_classifications, null, parameters, Emgu.CV.ML.MlEnum.ANN_MLP_TRAINING_FLAG.DEFAULT);
+           // Console.WriteLine("Iterations: " + iterations);
+            //    <wifi_BEGIN>
 
             Matrix<float> test_sample;
 
             int correct_class = 0;
             int wrong_class = 0;
-            int [] false_positive = {0,0};
-          
-           
+            int[] false_positive = new int[number_of_classes];
+            for (int i = 0; i < false_positive.Length; i++)
+                false_positive[i] = 0;
+
+
             for (int tsample = 0; tsample < number_of_testing_samples; tsample++)
             {
                 test_sample = testing_data.GetRow(tsample);
                 network.Predict(test_sample, classification_result);
 
-                float highest = classification_result[0,0];
+                float highest = classification_result[0, 0];
                 int index = 0;
                 for (int i = 1; i < number_of_classes; i++)
                 {
-                    if(classification_result[0,i] > highest){
+                    if (classification_result[0, i] > highest)
+                    {
                         highest = classification_result[0, i];
                         index = i;
                     }
                 }
-                Console.WriteLine("{" + testing_classifications.Data[tsample, 0] + "," + testing_classifications.Data[tsample, 1] + "} was classified as {" + classification_result.Data[0, 0] + "," + classification_result.Data[0, 1] + "}");
-           
-              
+                //  Console.Write("{" + testing_classifications.Data[tsample, 0]);
+                //      for(int i = 1 ; i < number_of_classes; i++)
+                //         Console.Write("," + testing_classifications.Data[tsample, i]);
+                // Console.Write("} was classified as {" + classification_result.Data[0, 0]);
+                //    for(int i = 1 ; i < number_of_classes; i++)
+                //         Console.Write("," + classification_result.Data[0, i]);
+
                 int _class;
-                for (_class = 0; _class < number_of_classes && testing_classifications[tsample,_class] != 1  ; _class++);
+                for (_class = 0; _class < number_of_classes && testing_classifications[tsample, _class] != 1; _class++) ;
 
                 if (_class == index)
                     correct_class++;
@@ -213,33 +305,460 @@ namespace ImageRecognition
                 }
             }
 
-			Console.WriteLine(correct_class +" classes correctly classified.");
-            Console.WriteLine(wrong_class + " classes wrongly classified.");
-            Console.WriteLine("False Positives:");
-                for(int i = 0; i < false_positive.Length; i++)
-            Console.WriteLine("Class "+i+" = "+false_positive[i]);
-            Console.WriteLine("");
-            Console.WriteLine((correct_class/(double)number_of_testing_samples)*100.0 + "% classification accuracy");
-            Console.ReadLine();
-                
+            //Console.WriteLine(correct_class +" classes correctly classified.");
+            // Console.WriteLine(wrong_class + " classes wrongly classified.");
+            // Console.WriteLine("False Positives:");
+            //   for(int i = 0; i < false_positive.Length; i++)
+            //Console.WriteLine("Class "+i+" = "+false_positive[i]);
+            //Console.WriteLine("");
+            //Console.WriteLine((correct_class/(double)number_of_testing_samples)*100.0 + "% classification accuracy");
+            //Console.ReadLine();
+            return correct_class / (float)number_of_testing_samples * (float)100.0;
         }
 
-        
-
-        // -----------------------------------------------------
-        //              Bag of Features
-        //-----------------------------------------------------
-        public void runBoF()
+        public int getMatrices(out Matrix<float> training_data,out Matrix<float> training_classifications,out Matrix<float> testing_data,out Matrix<float> testing_classifications)
         {
+            //Set up matrices
+
+                String path = "C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\";
+                String[] trainingDirectories = Directory.GetDirectories(path + "Training");
+                List<string[]> trainingPaths = new List<string[]>();
+
+                foreach (String p in trainingDirectories)
+                {
+                    trainingPaths.Add(Directory.GetFiles(p));
+                }
+
+                String[] testingDirectories = Directory.GetDirectories(path + "Testing");
+                List<string[]> testingPaths = new List<string[]>();
+
+                foreach (String p in testingDirectories)
+                {
+                    testingPaths.Add(Directory.GetFiles(p));
+                }
+
+                int number_of_training_samples = 0;
+                foreach (var set in trainingPaths)
+                    number_of_training_samples += set.Length;
+
+                const int DIMENSIONS = 64;
+
+                int attributes_per_sample = DIMENSIONS * DIMENSIONS; //Dimensions of the picture
+
+                int number_of_testing_samples = 0;
+                foreach (var set in testingPaths)
+                    number_of_testing_samples += set.Length;
+
+                int number_of_classes = trainingDirectories.Length;
+
+                 training_data = new Matrix<float>(number_of_training_samples, attributes_per_sample);
+                 training_classifications = new Matrix<float>(number_of_training_samples, number_of_classes);
+                training_classifications.SetZero();
+
+                 testing_data = new Matrix<float>(number_of_testing_samples, attributes_per_sample);
+                testing_classifications = new Matrix<float>(number_of_testing_samples, number_of_classes);
+                testing_classifications.SetZero();
+
+                Matrix<float> classification_result = new Matrix<float>(1, number_of_classes);
+                Point max_loc = new Point(0, 0);
+
+                //Populate training and testing data
+                Console.WriteLine("Loading images from disk...");
+                List<List<Image<Gray, byte>>> training_images = new List<List<Image<Gray, byte>>>();
+                for (int i = 0; i < number_of_classes; i++)
+                {
+                    training_images.Add(new List<Image<Gray, byte>>());
+                    foreach (var c in trainingPaths[i])
+                    {
+                        if (c.Contains("Thumbs.db"))
+                        {
+                            training_images[i].Add((new Image<Gray, byte>(trainingPaths[i][2])).Resize(DIMENSIONS, DIMENSIONS, INTER.CV_INTER_CUBIC));
+                        }
+                        else
+                            training_images[i].Add((new Image<Gray, byte>(c)).Resize(DIMENSIONS, DIMENSIONS, INTER.CV_INTER_CUBIC));
+                    }
+                }
+
+                List<List<Image<Gray, byte>>> testing_images = new List<List<Image<Gray, byte>>>();
+                for (int i = 0; i < number_of_classes; i++)
+                {
+                    testing_images.Add(new List<Image<Gray, byte>>());
+                    foreach (var c in testingPaths[i])
+                        testing_images[i].Add((new Image<Gray, byte>(c)).Resize(DIMENSIONS, DIMENSIONS, INTER.CV_INTER_CUBIC));
+                }
+
+
+                //Set classification matrix values
+                Console.WriteLine("Converting images to numerical format...");
+                int offset = 0;
+                for (int directory = 0; directory < trainingDirectories.Length; directory++)
+                {
+                    for (int samples = 0; samples < trainingPaths[directory].Length; samples++)
+                    {
+                        training_classifications.Data[offset + samples, directory] = 1;
+                    }
+                    offset += trainingPaths[directory].Length - 1;
+                }
+
+                offset = 0;
+
+                for (int directory = 0; directory < testingDirectories.Length; directory++)
+                {
+                    for (int samples = 0; samples < testingPaths[directory].Length; samples++)
+                    {
+                        testing_classifications.Data[offset + samples, directory] = 1;
+                    }
+                    offset += testingPaths[directory].Length;
+                }
+
+
+
+                //Set training and testing data
+                List<Matrix<float>> flattenedImages = new List<Matrix<float>>();
+                foreach (var imageList in training_images)
+                {
+                    foreach (var img in imageList)
+                    {
+                        //Emgu.CV.UI.ImageViewer.Show(img);
+                        Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
+                        int c = 0;
+                        for (int i = 0; i < DIMENSIONS; i++)
+                            for (int j = 0; j < DIMENSIONS; j++)
+                                flattened.Data[0, c++] = img.Data[i, j, 0];
+                        flattenedImages.Add(flattened);
+                    }
+                }
+
+
+                training_data = ConcatDescriptors(flattenedImages);
+
+                //Testing data
+                List<Matrix<float>> flattenedTestImages = new List<Matrix<float>>();
+                foreach (var imageList in testing_images)
+                {
+                    foreach (var img in imageList)
+                    {
+                        //Emgu.CV.UI.ImageViewer.Show(img);
+                        Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
+                        int c = 0;
+                        for (int i = 0; i < DIMENSIONS; i++)
+                            for (int j = 0; j < DIMENSIONS; j++)
+                                flattened.Data[0, c++] = img.Data[i, j, 0];
+                        flattenedTestImages.Add(flattened);
+                    }
+                }
+
+
+                testing_data = ConcatDescriptors(flattenedTestImages);
+                return number_of_testing_samples;
             
-
-
-
-
-
-
-           
         }
+
+        public Image<Bgr, byte> doGrabCut(Image<Bgr, byte> image)
+        {
+
+            //1. Convert the image to grayscale.
+
+            int numberOfIterations = 15;
+            Image<Gray, byte> grayImage = image.Convert<Gray, Byte>();
+
+            //2. Threshold it using otsu.
+
+
+            grayImage = getOtsuThresholdedImage(grayImage);
+           // Emgu.CV.UI.ImageViewer.Show(grayImage);
+            grayImage._Not();
+
+            //3. Extract the contours.
+            Rectangle ROI = new Rectangle(0,0,0,0);
+            #region Extracting the Contours
+            using (MemStorage storage = new MemStorage())
+            {
+                for (Contour<Point> contours = grayImage.FindContours(Emgu.CV.CvEnum.CHAIN_APPROX_METHOD.CV_CHAIN_APPROX_SIMPLE, Emgu.CV.CvEnum.RETR_TYPE.CV_RETR_TREE, storage); contours != null; contours = contours.HNext)
+                {
+
+                    Contour<Point> currentContour = contours.ApproxPoly(contours.Perimeter * 0.015, storage);
+                    if (currentContour.BoundingRectangle.Width > ROI.Width)
+                    {
+                        //CvInvoke.cvDrawContours(color, contours, new MCvScalar(255), new MCvScalar(255), -1, 2, Emgu.CV.CvEnum.LINE_TYPE.EIGHT_CONNECTED, new Point(0, 0));
+                        //color.Draw(currentContour.BoundingRectangle, new Bgr(0, 255, 0), 1);
+                        //To crop the image around the Region of Interest
+                        ROI = currentContour.BoundingRectangle;
+                        
+                    }
+
+                }
+
+            }
+            #endregion
+            //Emgu.CV.UI.ImageViewer.Show(image);
+            //4. Setting the results to the output variables.
+
+            #region Asigning output
+           
+            Image<Gray, byte> mask = image.GrabCut(ROI, numberOfIterations);
+            
+            
+            mask = mask.ThresholdBinary(new Gray(2), new Gray(255));
+        
+            Image<Bgr, byte> result = image.Copy(mask);
+
+            if (ROI.Width < ROI.Height)
+                ROI.Width = ROI.Height;
+            else if (ROI.Height < ROI.Width)
+                ROI.Height = ROI.Width;
+
+            result.ROI = ROI;
+            result = result.Resize(256, 256, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
+            for (int x = 0; x < result.Width; x++)
+                for (int y = 0; y < result.Height; y++)
+                    if (result.Data[x, y, 0] == 0 && result.Data[x, y, 1] == 0 && result.Data[x, y, 2] == 0){
+                        result.Data[x, y, 0] = 255;
+                        result.Data[x, y, 1] = 255;
+                        result.Data[x, y, 2] = 255;
+                    }
+
+
+
+            #endregion
+                    return result;
+        }
+
+        public Image<Gray, byte> getOtsuThresholdedImage(Image<Gray, byte> Img_Org_Gray)
+        {
+            Image<Gray, byte> Img_Source_Gray = Img_Org_Gray.Copy();
+            Image<Gray, byte> Img_Otsu_Gray = Img_Org_Gray.CopyBlank();
+
+            CvInvoke.cvThreshold(Img_Source_Gray.Ptr, Img_Otsu_Gray.Ptr, 0, 255, Emgu.CV.CvEnum.THRESH.CV_THRESH_OTSU | Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY);
+
+            return Img_Otsu_Gray;
+        }
+
+
+        public Image<Gray, byte> doPreProcessing(Image<Gray, byte> image)
+        {
+            return null;
+        }
+
+        public float runBWANN(int [] layers_d, float dw_scale, float moment_scale, float alpha, float beta)
+        {
+            try
+            {
+                Console.WriteLine("Running Black and White neural network...");
+
+                //Set up matrices
+
+                String path = "C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\";
+                String[] trainingDirectories = Directory.GetDirectories(path + "Training");
+                List<string[]> trainingPaths = new List<string[]>();
+
+                foreach (String p in trainingDirectories)
+                {
+                    trainingPaths.Add(Directory.GetFiles(p));
+                }
+
+                String[] testingDirectories = Directory.GetDirectories(path + "Testing");
+                List<string[]> testingPaths = new List<string[]>();
+
+                foreach (String p in testingDirectories)
+                {
+                    testingPaths.Add(Directory.GetFiles(p));
+                }
+
+                int number_of_training_samples = 0;
+                foreach (var set in trainingPaths)
+                    number_of_training_samples += set.Length;
+
+                const int DIMENSIONS = 64;
+
+                int attributes_per_sample = DIMENSIONS * DIMENSIONS; //Dimensions of the picture
+
+                int number_of_testing_samples = 0;
+                foreach (var set in testingPaths)
+                    number_of_testing_samples += set.Length;
+
+                int number_of_classes = trainingDirectories.Length;
+
+                Matrix<float> training_data = new Matrix<float>(number_of_training_samples, attributes_per_sample);
+                Matrix<float> training_classifications = new Matrix<float>(number_of_training_samples, number_of_classes);
+                training_classifications.SetZero();
+
+                Matrix<float> testing_data = new Matrix<float>(number_of_testing_samples, attributes_per_sample);
+                Matrix<float> testing_classifications = new Matrix<float>(number_of_testing_samples, number_of_classes);
+                testing_classifications.SetZero();
+
+                Matrix<float> classification_result = new Matrix<float>(1, number_of_classes);
+                Point max_loc = new Point(0, 0);
+
+                //Populate training and testing data
+                Console.WriteLine("Loading images from disk...");
+                List<List<Image<Gray, byte>>> training_images = new List<List<Image<Gray, byte>>>();
+                for (int i = 0; i < number_of_classes; i++)
+                {
+                    training_images.Add(new List<Image<Gray, byte>>());
+                    foreach (var c in trainingPaths[i])
+                    {
+                        if (c.Contains("Thumbs.db"))
+                        {
+                            training_images[i].Add((new Image<Gray, byte>(trainingPaths[i][2])).Resize(DIMENSIONS, DIMENSIONS, INTER.CV_INTER_CUBIC));
+                        }
+                        else
+                            training_images[i].Add((new Image<Gray, byte>(c)).Resize(DIMENSIONS, DIMENSIONS, INTER.CV_INTER_CUBIC));
+                    }
+                }
+
+                List<List<Image<Gray, byte>>> testing_images = new List<List<Image<Gray, byte>>>();
+                for (int i = 0; i < number_of_classes; i++)
+                {
+                    testing_images.Add(new List<Image<Gray, byte>>());
+                    foreach (var c in testingPaths[i])
+                        testing_images[i].Add((new Image<Gray, byte>(c)).Resize(DIMENSIONS, DIMENSIONS, INTER.CV_INTER_CUBIC));
+                }
+
+
+                //Set classification matrix values
+                Console.WriteLine("Converting images to numerical format...");
+                int offset = 0;
+                for (int directory = 0; directory < trainingDirectories.Length; directory++)
+                {
+                    for (int samples = 0; samples < trainingPaths[directory].Length; samples++)
+                    {
+                        training_classifications.Data[offset + samples, directory] = 1;
+                    }
+                    offset += trainingPaths[directory].Length - 1;
+                }
+
+                offset = 0;
+
+                for (int directory = 0; directory < testingDirectories.Length; directory++)
+                {
+                    for (int samples = 0; samples < testingPaths[directory].Length; samples++)
+                    {
+                        testing_classifications.Data[offset + samples, directory] = 1;
+                    }
+                    offset += testingPaths[directory].Length;
+                }
+
+
+
+                //Set training and testing data
+                List<Matrix<float>> flattenedImages = new List<Matrix<float>>();
+                foreach (var imageList in training_images)
+                {
+                    foreach (var img in imageList)
+                    {
+                        //Emgu.CV.UI.ImageViewer.Show(img);
+                        Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
+                        int c = 0;
+                        for (int i = 0; i < DIMENSIONS; i++)
+                            for (int j = 0; j < DIMENSIONS; j++)
+                                flattened.Data[0, c++] = img.Data[i, j, 0];
+                        flattenedImages.Add(flattened);
+                    }
+                }
+
+
+                training_data = ConcatDescriptors(flattenedImages);
+
+                //Testing data
+                List<Matrix<float>> flattenedTestImages = new List<Matrix<float>>();
+                foreach (var imageList in testing_images)
+                {
+                    foreach (var img in imageList)
+                    {
+                        //Emgu.CV.UI.ImageViewer.Show(img);
+                        Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
+                        int c = 0;
+                        for (int i = 0; i < DIMENSIONS; i++)
+                            for (int j = 0; j < DIMENSIONS; j++)
+                                flattened.Data[0, c++] = img.Data[i, j, 0];
+                        flattenedTestImages.Add(flattened);
+                    }
+                }
+
+
+                testing_data = ConcatDescriptors(flattenedTestImages);
+
+                //Start up the Neural net
+                //int [] layers_d = { attributes_per_sample,  ,  number_of_classes};
+
+                Matrix<int> layerSize = new Matrix<int>(layers_d);
+
+                MCvANN_MLP_TrainParams parameters = new MCvANN_MLP_TrainParams(); //Parameters for Artificla Neural Network - MultiLayer Perceptron
+                //The termination criteria
+                parameters.term_crit = new MCvTermCriteria(100, 1.0e-8); //Create the termination criteria using the constrain of maximum iteration as well as epsilon (learning rate)
+                parameters.train_method = Emgu.CV.ML.MlEnum.ANN_MLP_TRAIN_METHOD.BACKPROP; //Sets the training method to backpropogation
+                parameters.bp_dw_scale = dw_scale;
+                parameters.bp_moment_scale = moment_scale;
+
+                //Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, 0.4, 1.0); //use normal sigmoid
+                Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, alpha, beta);
+                Console.WriteLine("Training the neural network...");
+
+                int iterations = network.Train(training_data, training_classifications, null, parameters, Emgu.CV.ML.MlEnum.ANN_MLP_TRAINING_FLAG.DEFAULT);
+                Console.WriteLine("Iterations: " + iterations);
+                //    <wifi_BEGIN>
+
+                Matrix<float> test_sample;
+
+                int correct_class = 0;
+                int wrong_class = 0;
+                int[] false_positive = new int[number_of_classes];
+                for (int i = 0; i < false_positive.Length; i++)
+                    false_positive[i] = 0;
+
+
+                for (int tsample = 0; tsample < number_of_testing_samples; tsample++)
+                {
+                    test_sample = testing_data.GetRow(tsample);
+                    network.Predict(test_sample, classification_result);
+
+                    float highest = classification_result[0, 0];
+                    int index = 0;
+                    for (int i = 1; i < number_of_classes; i++)
+                    {
+                        if (classification_result[0, i] > highest)
+                        {
+                            highest = classification_result[0, i];
+                            index = i;
+                        }
+                    }
+                    //  Console.Write("{" + testing_classifications.Data[tsample, 0]);
+                    //      for(int i = 1 ; i < number_of_classes; i++)
+                    //         Console.Write("," + testing_classifications.Data[tsample, i]);
+                    // Console.Write("} was classified as {" + classification_result.Data[0, 0]);
+                    //    for(int i = 1 ; i < number_of_classes; i++)
+                    //         Console.Write("," + classification_result.Data[0, i]);
+
+                    int _class;
+                    for (_class = 0; _class < number_of_classes && testing_classifications[tsample, _class] != 1; _class++) ;
+
+                    if (_class == index)
+                        correct_class++;
+                    else
+                    {
+                        wrong_class++;
+                        false_positive[index]++;
+                    }
+                }
+
+                //Console.WriteLine(correct_class +" classes correctly classified.");
+                // Console.WriteLine(wrong_class + " classes wrongly classified.");
+                // Console.WriteLine("False Positives:");
+                //   for(int i = 0; i < false_positive.Length; i++)
+                //Console.WriteLine("Class "+i+" = "+false_positive[i]);
+                //Console.WriteLine("");
+                //Console.WriteLine((correct_class/(double)number_of_testing_samples)*100.0 + "% classification accuracy");
+                //Console.ReadLine();
+                return correct_class / (float)number_of_testing_samples * (float)100.0;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            return 0.0F;
+        }
+
 
         public Matrix<float> convertBinaryDescriptorsToBase10Float(Matrix<byte> desc)
         {
