@@ -1,4 +1,4 @@
-﻿angular.module("appMain", ["ngMaterial", "ngMdIcons", "ngResource"])
+﻿var app = angular.module("appMain", ["ngMaterial", "ngMdIcons", "ngResource", "ngMessages"])
 /*
     Angular App configuration
 */
@@ -7,10 +7,9 @@
 
         //todo consider customizing the theme
         $mdThemingProvider.theme("default")
-            .backgroundPalette("grey", {
-               "default": "800"
-            })
+            .backgroundPalette("grey")
             .warnPalette("red")
             .primaryPalette("light-green")
             .accentPalette("amber").dark();
+
     });

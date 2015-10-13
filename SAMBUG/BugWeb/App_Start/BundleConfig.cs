@@ -21,6 +21,7 @@ namespace BugWeb
                 .Add(new ScriptBundle("~/bundles/angular")
                     .Include("~/Scripts/angular.js",
                         "~/Scripts/angular-resource.js",
+                        "~/Scripts/angular-messages.js",
                         "~/Scripts/angular-aria.js",
                         "~/Scripts/angular-animate.js",
                         "~/Scripts/angular-material.js",
@@ -28,7 +29,7 @@ namespace BugWeb
 
             bundles
                 .Add(new ScriptBundle("~/bundles/angular-icons", cdnJsAngularIcons)
-                    .Include("~/Scripts/angular-material-icons.js"));
+                    .Include("~/Scripts/angular-material-icons.js", "~/Scripts/svg-morpheus.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/jquery")
@@ -50,7 +51,7 @@ namespace BugWeb
 
             bundles
                 .Add(new ScriptBundle("~/bundles/app")
-                    .Include("~/Scripts/app.js", "~/Scripts/Controllers/appCtrl.js"));
+                    .Include("~/App/app.js", "~/App/Controllers/appCtrl.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/mapReporting")

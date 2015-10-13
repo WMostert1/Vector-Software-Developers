@@ -1,0 +1,60 @@
+﻿<md-dialog layout="column" class="custom-dialog" aria-label="Register" ng-cloak>
+    <form flex layout="column" name="registerForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="md-title">Register</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <ng-md-icon icon="close" aria-label="Close Dialog"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content flex layout="column">
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Email</label>
+                    <input required type="email" ng-model="user.email" name="email" minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-autofocus/>
+                    <div ng-messages="registerForm.email.$error" role="alert">
+                        <div ng-message="required">Please enter an email address</div>
+                        <div ng-message="minlength, maxlength">Your email must be between 10 and 100 characters long</div>
+                        <div ng-message="pattern">You must enter a valid email address</div>
+                    </div>
+                </md-input-container>
+                <span flex="15"></span>
+                <md-input-container flex>
+                    <label>Confirm Email</label>
+                    <input required type="email" ng-model="user.emailConfirmation" name="usernameConfirmation" minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/"/>
+                    <div ng-messages="registerForm.usernameConfirmation.$error" role="alert">
+                        <div ng-message="required">Please reenter your email address</div>
+                        <div ng-message="minlength, maxlength">Your email must be between 10 and 100 characters long</div>
+                        <div ng-message="pattern">You must enter a valid email address</div>
+                    </div>
+                </md-input-container>
+            </div>
+            <div layout="row">
+                <md-input-container flex>
+                    <label>Password</label>
+                    <input required type="password" ng-model="user.password" name="password"/>
+                    <div ng-messages="registerForm.password.$error" role="alert">
+                        <div ng-message="required">Please enter your password</div>
+                    </div>
+                </md-input-container>
+                <span flex="15"></span>
+                <md-input-container flex>
+                    <label>Confirm Password</label>
+                    <input required type="password" ng-model="user.passwordConfirmation" name="passwordConfirmation" />
+                    <div ng-messages="registerForm.password.$error" role="alert">
+                        <div ng-message="required">Please reenter your password</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+            <span flex></span>
+            <md-button class="md-primary" ng-click="">
+                Register
+            </md-button>
+        </div>
+    </form>
+</md-dialog>
+

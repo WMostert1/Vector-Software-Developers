@@ -1,7 +1,34 @@
-﻿md-list-item a{
+﻿/*todo remove overflow: hidden when Angular extra scrollbar bug is fixed*/
+html {
+    overflow: hidden;
+}
+
+body {
+    overflow: hidden;
+}
+
+#logo {
+    height: 95%;
+}
+
+.custom-dialog {
+    max-height: 400px;
+    max-width: 650px;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+*:focus {
+     outline: none;
+}
+
+md-list-item a{
  text-decoration: none !important; 
  color: inherit !important;   
 }
+
 /*todo: the below code was meant for bootstrap it seems, just make sure before completely removing*/
 /*html, body{
     height : 100%;

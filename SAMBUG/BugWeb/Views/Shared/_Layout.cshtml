@@ -14,23 +14,22 @@
     @RenderSection("JavaScript", required: false)
     @RenderSection("styles", required: false)
 </head>
-<body style="overflow: hidden" layout="row" ng-app="appMain" ng-controller="AppCtrl">
+<body layout="row" ng-app="appMain" ng-controller="AppCtrl">
 
 <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" ng-cloak>
     <md-toolbar layout="column" layout-align="center center" class="md-primary md-hue-1 md-whiteframe-z1 md-tall">
-        <img style="height: 95%" src="@Url.Content("~/Content/Images/logo.png")" alt="sambug logo"/>
+        <img id="logo" src="@Url.Content("~/Content/Images/logo.png")" alt="sambug logo"/>
     </md-toolbar>
     <md-content layout="row" flex class="md-hue-1">
-        <md-list layout-fill flex>
-            <md-list-item class="md-clickable" md-ink-ripple>
+        <md-list layout-fill flex ng-cloak>
+            
+            <md-list-item class="md-primary md-clickable" md-ink-ripple>
                 <a flex href="@Url.Content("~/")">
-                    <md-item-content layout="row" layout-align="start center">
+                    <md-item-content layout="row">
                         <div class="inset">
                             <ng-md-icon icon="home"></ng-md-icon>
                         </div>
-                        <div class="md-title inset">
-                            Home
-                        </div>
+                        <h1 class="md-title">Home</h1>
                     </md-item-content>
                 </a>
             </md-list-item>
@@ -39,107 +38,128 @@
             @{
                 /*
                  * list only items applicable to the current HTTP context
-                 * e.g. a user's role will determine what functions he can perform
+                 * e.g. a user's role and whether they are logged in or not
+                 * will determine what functions they can perform
                  */
                 if (SecurityProvider.isLoggedIn(Session))
                 {
                     <md-list-item class="md-clickable" md-ink-ripple>
                         <a flex href="@Url.Content("~/home/logout")">
-                            <md-item-content layout="row" layout-align="start center">
+                            <md-item-content layout="row">
                                 <div class="inset">
                                     <ng-md-icon icon="logout"></ng-md-icon>
                                 </div>
-                                <div class="md-title inset">
-                                    Logout
-                                </div>
+                                <h1 class="md-title">Logout</h1>
                             </md-item-content>
                         </a>
                     </md-list-item>
                 }
                 else
                 {
-                    <md-list-item class="md-clickable" md-ink-ripple>
-                        <md-item-content layout="row" layout-align="start center">
+                    <md-list-item ng-click="showDialog('login', $event)">
+                        <md-item-content layout="row">
                             <div class="inset">
                                 <ng-md-icon icon="login"></ng-md-icon>
                             </div>
-                            <div class="md-title inset">
-                                Sign In
-                            </div>
+                            <h1 class="md-title">Sign In</h1>
                         </md-item-content>
                     </md-list-item>
 
-                    <md-list-item class="md-clickable" md-ink-ripple>
-                        <md-item-content layout="row" layout-align="start center">
-                            <div class="inset">
-                                <ng-md-icon icon="person"></ng-md-icon>
-                            </div>
-                            <div class="md-title inset">
-                                Sign Up
-                            </div>
-                        </md-item-content>
-                    </md-list-item>
+    <md-list-item ng-click="showDialog('register', $event)">
+        <md-item-content layout="row">
+            <div class="inset">
+                <ng-md-icon icon="person"></ng-md-icon>
+            </div>
+            <h1 class="md-title">Sign Up</h1>
+        </md-item-content>
+    </md-list-item>
                 }
-            }
-
-            <md-divider></md-divider>
+}
 
             @{
                 if (SecurityProvider.isLoggedIn(Session))
                 {
-                    <md-list-item class="md-clickable" md-ink-ripple>
-                        <md-item-content layout="row" layout-align="start center">
+                    <md-divider></md-divider>
+
+                    <md-list-item ng-click="toggleChevron('reportingChevron')"  data-toggle="collapse" data-target="#reportingSubMenu">
+                        <md-item-content flex layout="row">
                             <div class="inset">
                                 <ng-md-icon icon="equalizer"></ng-md-icon>
                             </div>
-                            <div class="md-title inset">
-                                Reporting
-                            </div>
+                            <h1 class="md-title">Reporting</h1>
+                            <span flex></span>
+                            <ng-md-icon icon="{{reportingChevron}}"></ng-md-icon>
                         </md-item-content>
                     </md-list-item>
 
+                    <div id="reportingSubMenu" class="collapse">
+                        <md-list id="reportingSubMenu" flex layout-fill>
+                            <md-list-item ng-repeat="item in farmManagementMenuItems" class="md-clickable" md-ink-ripple>
+                                <md-item-content offset="15">
+                                    <div>
+                                        <h2 class="md-subhead">{{item.title}}</h2>
+                                    </div>
+                                </md-item-content>
+                            </md-list-item>
+                        </md-list>
+                    </div>
+
                     /*
                      * Admin and Grower roles are the only roles at this stage which will affect
-                     * functionality on the entire web page
+                     * functionality on the entire web site
                      *
                      * Currently all roles can make use of reporting features, but only growers
-                     * can manager their farms, and only admins can manage users
+                     * can manage their farms, and only admins can manage users
                      */
                     if (SecurityProvider.isGrower(Session))
                     {
-                        <md-list-item class="md-clickable" md-ink-ripple>
-                            <md-item-content layout="row" layout-align="start center">
+                        <md-list-item ng-click="toggleChevron('farmManagementChevron')" data-toggle="collapse" data-target="#farmManagementSubMenu">
+                            <md-item-content flex layout="row">
                                 <div class="inset">
                                     <ng-md-icon icon="nature"></ng-md-icon>
                                 </div>
-                                <div class="md-title inset">
-                                    Farm Management
-                                </div>
+                                <h1 class="md-title">Farm Management</h1>
+                                <span flex></span>
+                                <ng-md-icon icon="{{farmManagementChevron}}"></ng-md-icon>
                             </md-item-content>
                         </md-list-item>
+
+                        <div id="farmManagementSubMenu" class="collapse">
+                            <md-list flex layout-fill>
+                                <md-list-item ng-repeat="item in reportingMenuItems" class="md-clickable" md-ink-ripple>
+                                    <md-item-content offset="15">
+                                        <div><h2 class="md-subhead">{{item.title}}</h2></div>
+                                    </md-item-content>
+                                </md-list-item>
+                            </md-list>
+                        </div>
                     }
 
                     if (SecurityProvider.isAdmin(Session))
                     {
                         <md-list-item class="md-clickable" md-ink-ripple>
-                            <md-item-content layout="row" layout-align="start center">
+                            <md-item-content layout="row">
                                 <div class="inset">
                                     <ng-md-icon icon="people"></ng-md-icon>
                                 </div>
-                                <div class="md-title inset">
-                                    User Management
-                                </div>
+                                <h1 class="md-title">User Management</h1>
                             </md-item-content>
                         </md-list-item>
                     }
                 }
-}
+            }
+            <md-divider></md-divider>
+            <md-list-item class="md-clickable" md-ink-ripple>
+                <md-item-content layout="row">
+                    <div class="inset">
+                        <ng-md-icon icon="info_outline"></ng-md-icon>
+                    </div>
+                    <h1 class="md-title">About Us</h1>
+                </md-item-content>
+            </md-list-item>
 
         </md-list>
-
-
     </md-content>
-
 </md-sidenav>
 
 <div layout="column" ng-cloak>
@@ -148,9 +168,9 @@
             <md-button ng-click="toggleSideNav('left')" class="md-icon-button" hide-gt-md aria-label="Settings">
                 <ng-md-icon icon="menu"></ng-md-icon>
             </md-button>
-            <h6 class="md-title">
+            <h2 class="md-title">
                 @ViewBag.Title
-            </h6>
+            </h2>
         </div>
     </md-toolbar>
 
@@ -160,50 +180,27 @@
     
 </div>
 
-@*<div style="background-color:#A3DCA3" class="navmenu navmenu-default navmenu-fixed-left offcanvas">
-        <a style="background-color:#4DB870" class="navmenu-brand" href="~/Home/Index">SAMBUG</a>
-        <ul class="nav navmenu-nav">
-            <li><a href="~/Home/Index">Home</a></li>
-            <!--<li><a href="#">Login</a></li>-->
-            <!-- <li><a href="#">Register</a></li>-->
-
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Farm Management<b class="caret"></b></a>
-                <ul class="dropdown-menu navmenu-nav">
-                    <li><a href="~/FarmManagement/EditBlocks">Edit my Blocks</a></li>
-                    <li><a href="~/FarmManagement/Treatments">Enter Treatment Data</a></li>
-                </ul>
-            </li>
-
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reporting<b class="caret"></b></a>
-                <ul class="dropdown-menu navmenu-nav">
-                    <li><a href="~/Reporting/Charts">View Chart</a></li>
-                    <li><a href="~/Reporting/Tabular">View Table</a></li>
-                    <li><a href="~/Reporting/Map">View Heat Map</a></li>
-                </ul>
-            </li>
-            <li><a href="~/Authentication/EditUserRoles">Manage Users</a></li>
-            <li><a href="~/Home/Logout">Logout</a></li>
-            <li><a href="#">About Us</a></li>
-        </ul>
-    </div>
-
-    <div class="navbar navbar-default navbar-fixed-top">
-        <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-</div>*@
-
-
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
 @Scripts.Render("~/bundles/angular")
 @Scripts.Render("~/bundles/angular-icons")
-@Scripts.Render("~/bundles/app")
 @Scripts.Render("~/Scripts/xdate.js")
+@Scripts.Render("~/bundles/app")
+
+<script type="text/javascript">
+    /*Set globally accessible rootPath of the main Angular App*/
+    app.rootPath = "@Url.Content("~")";
+
+    /*todo remove the patch below when Angular Material prevents browser default invalid messages*/
+    document.addEventListener("invalid", (function () {
+        return function (e) {
+            e.preventDefault();
+        };
+    })(), true);
+
+</script>
+
+@*todo remember to bootstrap Angular SPA silos in this section*@
 @RenderSection("scripts", required: false)
 
 </body>
