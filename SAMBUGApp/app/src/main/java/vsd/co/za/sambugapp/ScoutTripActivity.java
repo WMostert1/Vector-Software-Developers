@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.internal.view.menu.MenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -156,22 +157,9 @@ public class ScoutTripActivity extends AppCompatActivity {
     }
 
     public void addDefaultStop(){
-        ScoutStop tempStop = new ScoutStop();
-        Block tempBlock = new Block();
-        tempBlock.setBlockName("No stops added yet. Click '+'");
-        tempStop.setBlock(tempBlock);
-        scoutTrip.addStop(tempStop);
-        int pos=rvScoutStops.getChildCount() - 1;
-        rvScoutStops.getAdapter().notifyItemInserted(pos);
-        rvPestsPerTree.getAdapter().notifyItemInserted(pos);
-    }
-
-    /**
-     * Update ScoutStop object.
-     * @param scoutStop ScoutStop object to update list.
-     */
-    public void updateStop(ScoutStop scoutStop) {
-        scoutTrip.getStopList().set(updateIndex, scoutStop);
+        scoutTrip.getStopList().add(0, null);
+        rvScoutStops.getAdapter().notifyItemInserted(0);
+        rvPestsPerTree.getAdapter().notifyItemInserted(0);
     }
 
     /**
@@ -267,6 +255,7 @@ public class ScoutTripActivity extends AppCompatActivity {
             LinearLayout llBugInfo;
             CheckedTextView tvBlockName;
             CheckedTextView tvTreeCount;
+            ImageView ivSwipeIcon;
 
             ScoutStopViewHolder(View itemView) {
                 super(itemView);
@@ -275,6 +264,7 @@ public class ScoutTripActivity extends AppCompatActivity {
                 tvBlockName = (CheckedTextView) itemView.findViewById(R.id.tvBlockName);
                 tvTreeCount = (CheckedTextView) itemView.findViewById(R.id.tvTreeCount);
                 llBugInfo = (LinearLayout) itemView.findViewById(R.id.llBugInfo);
+                ivSwipeIcon = (ImageView) itemView.findViewById(R.id.swipeIcon);
             }
         }
 
@@ -286,16 +276,14 @@ public class ScoutTripActivity extends AppCompatActivity {
         @Override
         public ScoutStopViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_scout_stop, viewGroup, false);
-            ScoutStopViewHolder scoutStopViewHolder = new ScoutStopViewHolder(v);
-            return scoutStopViewHolder;
+            return new ScoutStopViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(final ScoutStopViewHolder scoutStopViewHolder, int i) {
-            if (i==scoutStopViewHolder.getAdapterPosition()) {
-                ScoutStop stop = scoutStops.get(i);
-                scoutStopViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
                 if (hasStops) {
+                    ScoutStop stop = scoutStops.get(scoutStopViewHolder.getAdapterPosition());
+                    scoutStopViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
                     for (ScoutBug bug : stop.getScoutBugs()) {
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length);
                         bitmap = Bitmap.createScaledBitmap(bitmap, 75, 75, true);
@@ -307,7 +295,11 @@ public class ScoutTripActivity extends AppCompatActivity {
                     scoutStopViewHolder.tvTreeCount.setText(stop.getNumberOfTrees() + "");
                     scoutStopViewHolder.tvTreeCount.setTextSize(36);
                 } else {
+                    scoutStopViewHolder.tvBlockName.setText("No stops added yet. Click '+'");
                     scoutStopViewHolder.tvTreeCount.setText("");
+                    scoutStopViewHolder.llBugInfo.removeAllViews();
+                    scoutStopViewHolder.llDraggedMenu.removeAllViews();
+                    scoutStopViewHolder.ivSwipeIcon.setVisibility(View.INVISIBLE);
                     scoutStopViewHolder.tvTreeCount.setTextSize(0);
                 }
 
@@ -358,7 +350,6 @@ public class ScoutTripActivity extends AppCompatActivity {
                         //when user's hand released.
                     }
                 });
-            }
         }
     }
 
@@ -389,15 +380,19 @@ public class ScoutTripActivity extends AppCompatActivity {
         @Override
         public PestsPerTreeViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_pests_per_tree, viewGroup, false);
-            PestsPerTreeViewHolder pestsPerTreeViewHolder = new PestsPerTreeViewHolder(v);
-            return pestsPerTreeViewHolder;
+            return new PestsPerTreeViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(PestsPerTreeViewHolder pestsPerTreeViewHolder, int i) {
-            ScoutStop stop = scoutStops.get(i);
-            pestsPerTreeViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
-            pestsPerTreeViewHolder.tvPestsPerTree.setText(hasStops ? String.format("%.2f", stop.getPestsPerTree()) : "");
+            if (hasStops) {
+                ScoutStop stop = scoutStops.get(i);
+                pestsPerTreeViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
+                pestsPerTreeViewHolder.tvPestsPerTree.setText(hasStops ? String.format("%.2f", stop.getPestsPerTree()) : "");
+            } else {
+                pestsPerTreeViewHolder.tvBlockName.setText("No stops added yet. Click '+'");
+                pestsPerTreeViewHolder.tvPestsPerTree.setText("");
+            }
         }
     }
 }
