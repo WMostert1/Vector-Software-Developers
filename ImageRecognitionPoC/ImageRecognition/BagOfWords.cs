@@ -24,7 +24,7 @@ namespace ImageRecognition
         {
             try
             {
-                analyseConfusionMatrix(classifyORB_ANN("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training", false));
+                //analyseConfusionMatrix(classifyORB_ANN("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training", false));
 
                 //Console.WriteLine("Running SURF with SVM BoW");
                 //for (int i = 0; i < 3; i++ )
@@ -85,8 +85,6 @@ namespace ImageRecognition
 
                 foreach (FileInfo file in training_files)
                 {
-
-
                     Image<Bgr, Byte> model = new Image<Bgr, byte>(file.FullName);
                     Image<Gray, Byte> modelGray = model.Convert<Gray, Byte>();
                     //Detect SURF key points from images

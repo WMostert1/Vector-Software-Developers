@@ -75,6 +75,119 @@ namespace ImageRecognition
             Console.ReadLine();
         }
 
+        protected int computeTrainingAndTestingMatrices(String path, out Matrix<float> training_data, out Matrix<float> training_classifications, out Matrix<float> testing_data, out Matrix<float> testing_classifications)
+        {
+            //Set up matrices
+            float training_percentage = 0.2F;
+
+            FileInfo[] files = new DirectoryInfo(path).GetFiles();
+
+
+
+            const int DIMENSIONS = 64;
+
+            int attributes_per_sample = DIMENSIONS * DIMENSIONS; //Dimensions of the picture
+
+
+
+            //Populate training data
+            Console.WriteLine("Loading images from disk...");
+            List<Image<Gray, byte>> training_images = new List<Image<Gray, byte>>();
+            List<Image<Gray, byte>> testing_images = new List<Image<Gray, byte>>();
+            List<String> class_labels_unique = new List<String>();
+            List<String> class_labels_training = new List<String>();
+            List<String> class_labels_testing = new List<String>();
+
+            Random r = new Random();
+
+            foreach (var file in files)
+            {
+                if (file.Extension.Equals(".db")) continue;  //random db file for windows sytems
+
+                string fileName = Path.GetFileName(file.FullName);
+                string class_label = fileName.Substring(0, fileName.IndexOf("--"));
+                if (!class_labels_unique.Contains(class_label))
+                    class_labels_unique.Add(class_label);
+
+
+                if ((float)r.NextDouble() > training_percentage)
+                {
+                    training_images.Add(new Image<Gray, byte>(file.FullName));
+                    class_labels_training.Add(class_label);
+                }
+                else
+                {
+                    testing_images.Add(new Image<Gray, byte>(file.FullName));
+                    class_labels_testing.Add(class_label);
+                }
+            }
+
+            int number_of_classes = class_labels_unique.Count;
+            int number_of_training_samples = class_labels_training.Count;
+            int number_of_testing_samples = class_labels_testing.Count;
+
+            training_data = new Matrix<float>(number_of_training_samples, attributes_per_sample);
+            training_classifications = new Matrix<float>(number_of_training_samples, number_of_classes);
+            training_classifications.SetZero();
+
+            testing_data = new Matrix<float>(number_of_testing_samples, attributes_per_sample);
+            testing_classifications = new Matrix<float>(number_of_testing_samples, number_of_classes);
+            testing_classifications.SetZero();
+
+            Matrix<float> classification_result = new Matrix<float>(1, number_of_classes);
+
+            //Set classification matrix values
+            Console.WriteLine("Converting images to numerical format...");
+            int count = 0;
+            foreach (var class_label in class_labels_training)
+                training_classifications.Data[count++, class_labels_unique.IndexOf(class_label)] = 1;
+
+            count = 0;
+            foreach (var class_label in class_labels_testing)
+                testing_classifications.Data[count++, class_labels_unique.IndexOf(class_label)] = 1;
+
+
+
+
+
+            //Set training and testing data
+            List<Matrix<float>> flattenedImages = new List<Matrix<float>>();
+            foreach (var img in training_images)
+            {
+
+                //Emgu.CV.UI.ImageViewer.Show(img);
+                Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
+                int c = 0;
+                for (int i = 0; i < DIMENSIONS; i++)
+                    for (int j = 0; j < DIMENSIONS; j++)
+                        flattened.Data[0, c++] = img.Data[i, j, 0] / 255F;
+                flattenedImages.Add(flattened);
+
+            }
+
+
+            training_data = ConcatDescriptors(flattenedImages);
+
+            //Testing data
+            List<Matrix<float>> flattenedTestImages = new List<Matrix<float>>();
+            foreach (var img in testing_images)
+            {
+                //Emgu.CV.UI.ImageViewer.Show(img);
+                Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
+                int c = 0;
+                for (int i = 0; i < DIMENSIONS; i++)
+                    for (int j = 0; j < DIMENSIONS; j++)
+                        flattened.Data[0, c++] = img.Data[i, j, 0];
+                flattenedTestImages.Add(flattened);
+
+            }
+
+
+            testing_data = ConcatDescriptors(flattenedTestImages);
+            return class_labels_unique.Count;
+
+        }
+
         private float runANN(int[] layers_d, float dw_scale, float moment_scale, float alpha, float beta, Matrix<float> training_data, Matrix<float> training_classifications, Matrix<float> testing_data, Matrix<float> testing_classifications, int number_of_classes)
         {
             int number_of_testing_samples = testing_data.Rows;
