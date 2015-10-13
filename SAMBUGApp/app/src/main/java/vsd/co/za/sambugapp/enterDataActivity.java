@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,10 +28,13 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DomainModels.Block;
@@ -56,7 +60,7 @@ public class enterDataActivity extends AppCompatActivity {
     Spinner mySpin;
     NumberPicker npTrees;
     Farm farm;
-    HashSet<ScoutBug> listAddedBugs;
+    ArrayList<ScoutBug> listAddedBugs;
     RecyclerView rvAddedBugs;
 
     @Override
@@ -79,11 +83,11 @@ public class enterDataActivity extends AppCompatActivity {
 
         //check for previous activity state
         if (savedInstanceState != null) {
-            listAddedBugs = (HashSet<ScoutBug>) savedInstanceState.get(BUG_LIST);
+            listAddedBugs = (ArrayList<ScoutBug>) savedInstanceState.get(BUG_LIST);
             blockInfoCollapsed = savedInstanceState.getBoolean(BLOCK_INFO_COLLAPSED);
             hasBugs = savedInstanceState.getBoolean(HAS_BUGS);
         } else {
-            listAddedBugs = new HashSet<>();
+            listAddedBugs = new ArrayList<>();
         }
 
         //set bug list adapter
@@ -94,10 +98,8 @@ public class enterDataActivity extends AppCompatActivity {
 
         //add default instruction item if no bugs added
         if (!hasBugs) {
-            listAddedBugs.add(null);
+            addDefaultBug();
         }
-
-        rvAddedBugs.getAdapter().notifyDataSetChanged();
 
         if (!blockInfoCollapsed) {
             expandScoutStopDetails(null);
@@ -158,7 +160,8 @@ public class enterDataActivity extends AppCompatActivity {
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
             //remove default instruction item
             if (!hasBugs) {
-                listAddedBugs.clear();
+                listAddedBugs.remove(0);
+                rvAddedBugs.getAdapter().notifyItemRemoved(0);
                 hasBugs = true;
             }
             //get activity variables for bug
@@ -302,8 +305,13 @@ public class enterDataActivity extends AppCompatActivity {
             temp.setFieldPicture(stream.toByteArray());
         }
         temp.setNumberOfBugs(bugCount);
-        listAddedBugs.add(temp);
-        rvAddedBugs.getAdapter().notifyDataSetChanged();
+        listAddedBugs.add(0, temp);
+        rvAddedBugs.getAdapter().notifyItemInserted(0);
+    }
+
+    public void addDefaultBug() {
+        listAddedBugs.add(0, null);
+        rvAddedBugs.getAdapter().notifyItemInserted(0);
     }
 
     public void collapseScoutStopDetails(View v) {
@@ -364,19 +372,23 @@ public class enterDataActivity extends AppCompatActivity {
 
     public class RVAddedBugsAdapter extends RecyclerView.Adapter<RVAddedBugsAdapter.AddedBugViewHolder> {
 
-        HashSet<ScoutBug> bugs;
+        ArrayList<ScoutBug> bugs;
 
-        public RVAddedBugsAdapter(HashSet<ScoutBug> bugs) {
+        public RVAddedBugsAdapter(ArrayList<ScoutBug> bugs) {
             this.bugs = bugs;
         }
 
         public class AddedBugViewHolder extends RecyclerView.ViewHolder {
+            SwipeLayout slAddedBug;
+            LinearLayout llDraggedMenu;
             ImageView ivAddedBugPic;
             CheckedTextView tvAddedBugSpecies;
             CheckedTextView tvAddedBugCount;
 
             AddedBugViewHolder(View itemView) {
                 super(itemView);
+                slAddedBug = (SwipeLayout) itemView.findViewById(R.id.swiper);
+                llDraggedMenu = (LinearLayout) itemView.findViewById(R.id.draggedMenu);
                 tvAddedBugSpecies = (CheckedTextView) itemView.findViewById(R.id.tvAddedBugSpecies);
                 tvAddedBugCount = (CheckedTextView) itemView.findViewById(R.id.tvAddedBugCount);
                 ivAddedBugPic = (ImageView) itemView.findViewById(R.id.ivAddedBugPic);
@@ -396,23 +408,34 @@ public class enterDataActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(AddedBugViewHolder addedBugViewHolder, int i) {
+        public void onBindViewHolder(final AddedBugViewHolder addedBugViewHolder, int i) {
             if (hasBugs) {
-                ScoutBug bug = null;
-                int pos = 0;
-                for (ScoutBug b : bugs) {
-                    if (pos++ == i)
-                        bug = b;
-                }
+                ScoutBug bug = bugs.get(addedBugViewHolder.getAdapterPosition());
                 Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length), 88, 88, true);
                 addedBugViewHolder.ivAddedBugPic.setImageBitmap(bm);
                 addedBugViewHolder.tvAddedBugSpecies.setText(bug.getSpecies().getSpeciesName() + " Instar " + bug.getSpecies().getLifestage());
                 addedBugViewHolder.tvAddedBugCount.setText(bug.getNumberOfBugs() + "");
             } else {
-                addedBugViewHolder.ivAddedBugPic.setMaxWidth(0);
+                addedBugViewHolder.ivAddedBugPic.setImageBitmap(null);
                 addedBugViewHolder.tvAddedBugSpecies.setText("No bugs added yet. Click '+' to add.");
                 addedBugViewHolder.tvAddedBugCount.setText("");
             }
+
+            addedBugViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = addedBugViewHolder.getAdapterPosition();
+                    bugs.remove(pos);
+                    rvAddedBugs.getAdapter().notifyItemRemoved(pos);
+                    if (bugs.size() == 0) {
+                        hasBugs = false;
+                        addDefaultBug();
+                    }
+                }
+            });
+
+            addedBugViewHolder.slAddedBug.setShowMode(SwipeLayout.ShowMode.LayDown);
+            addedBugViewHolder.slAddedBug.addDrag(SwipeLayout.DragEdge.Right, addedBugViewHolder.llDraggedMenu);
         }
     }
 

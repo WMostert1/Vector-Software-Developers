@@ -331,35 +331,31 @@ public class ScoutTripActivity extends AppCompatActivity {
                     @Override
                     public void onClose(SwipeLayout layout) {
                         //when the SurfaceView totally cover the BottomView.
-                        Log.e("SWIPE", "1");
                     }
 
                     @Override
                     public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
                         //you are swiping.
-                        Log.e("SWIPE", "2");
                     }
 
                     @Override
                     public void onStartOpen(SwipeLayout layout) {
-                        Log.e("SWIPE", "3");
+
                     }
 
                     @Override
                     public void onOpen(SwipeLayout layout) {
                         //when the BottomView totally show.
-                        Log.e("SWIPE", "4");
                     }
 
                     @Override
                     public void onStartClose(SwipeLayout layout) {
-                        Log.e("SWIPE", "5");
+
                     }
 
                     @Override
                     public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
                         //when user's hand released.
-                        Log.e("SWIPE", "6");
                     }
                 });
             }
