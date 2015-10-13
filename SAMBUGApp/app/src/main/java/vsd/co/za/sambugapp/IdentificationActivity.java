@@ -331,8 +331,8 @@ public class IdentificationActivity extends AppCompatActivity {
 
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            Bitmap rBitmap = rotateBitmap(fullPathName,myBitmap);
-            mImageView.setImageBitmap(rBitmap);
+            bitmap = rotateBitmap(fullPathName,myBitmap);
+            mImageView.setImageBitmap(bitmap);
         }
     }
 
