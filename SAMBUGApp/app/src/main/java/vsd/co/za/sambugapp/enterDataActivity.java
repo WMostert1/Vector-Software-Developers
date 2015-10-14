@@ -437,6 +437,7 @@ public class enterDataActivity extends AppCompatActivity {
             addedBugViewHolder.slAddedBug.setShowMode(SwipeLayout.ShowMode.LayDown);
             addedBugViewHolder.slAddedBug.addDrag(SwipeLayout.DragEdge.Right, addedBugViewHolder.llDraggedMenu);
         }
+
     }
 
 }

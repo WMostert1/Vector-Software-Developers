@@ -24,20 +24,24 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
             android:name=".enterDataActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/title_activity_enter_data" >
         </activity>
         <activity
             android:name=".ScoutTripActivity"
+            android:screenOrientation="portrait"
             android:label="SAMBUGApp" >
         </activity>
         <activity
             android:name=".IdentificationActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/title_activity_identification"
             android:parentActivityName=".enterDataActivity" >
@@ -47,6 +51,7 @@
         </activity>
         <activity
             android:name=".SplashScreenActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_splash_screen"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -57,6 +62,7 @@
         </activity>
         <activity
             android:name=".HomeScreenActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_home_screen"
             android:theme="@style/AppTheme">
         </activity>

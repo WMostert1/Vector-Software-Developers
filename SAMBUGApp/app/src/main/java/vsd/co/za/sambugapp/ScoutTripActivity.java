@@ -168,7 +168,11 @@ public class ScoutTripActivity extends AppCompatActivity {
      */
     public void acceptFarms(Intent intent) {
         Bundle b=intent.getExtras();
-        farms = new ArrayList<>((HashSet<Farm>) b.getSerializable(LoginActivity.USER_FARMS));
+        try {
+            farms = new ArrayList<>((HashSet<Farm>) b.getSerializable(LoginActivity.USER_FARMS));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
