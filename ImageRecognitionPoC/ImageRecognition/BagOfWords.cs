@@ -15,15 +15,17 @@ using Emgu.CV.Util;
 using Emgu.CV.Flann;
 using System.IO;
 using System;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace ImageRecognition
 {
-    class BagOfWords :  Classifier
+    class BagOfWords : Classifier
     {
         public void runBoW()
         {
-            try
-            {
+      
                 //analyseConfusionMatrix(classifyORB_ANN("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training", false));
 
                 //Console.WriteLine("Running SURF with SVM BoW");
@@ -31,18 +33,15 @@ namespace ImageRecognition
                 //    analyseConfusionMatrix(ClassifySURF_SVM("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training", false));
 
                 Console.WriteLine("Running SURF with ANN");
-                for (int i = 0; i < 5; i++)
-                    analyseConfusionMatrix(ClassifySURF_ANN("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training", false));
+                //for (int i = 0; i < 5; i++)
+                analyseConfusionMatrix(ClassifySURF_ANN("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training", false));
 
 
-                Debug.WriteLine("");
+                Console.WriteLine("Done Training");
                 Console.ReadLine();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-            }
+  
         }
+
         public Matrix<int> classifyORB_ANN(string folder, bool restructure)
         {
             int number_of_clusters;
@@ -203,9 +202,47 @@ namespace ImageRecognition
             }
         }
 
+
+
+        public string classify(Image<Bgr, byte> image, Matrix<float> dictionary,List<string> class_labels,Emgu.CV.ML.ANN_MLP network)  //class labels and dict read from XML docs
+        {
+            Matrix<float> classification_result = new Matrix<float>(1, class_labels.Count);
+            SURFDetector detector = new SURFDetector(400, false);
+            BruteForceMatcher<float> matcher = new BruteForceMatcher<float>(DistanceType.L2);
+            BOWImgDescriptorExtractor<float> bowDE = new BOWImgDescriptorExtractor<float>(detector, matcher);
+
+            //Store the vocabulary
+            bowDE.SetVocabulary(dictionary);
+
+            Image<Gray, Byte> testImgGray = image.Convert<Gray, byte>();
+            VectorOfKeyPoint testKeyPoints = detector.DetectKeyPointsRaw(testImgGray, null);
+            Matrix<float> testBOWDescriptor = bowDE.Compute(testImgGray, testKeyPoints);
+
+            network.Predict(testBOWDescriptor, classification_result);
+
+            int predicted_class_index = 0;
+            for (int i = 0; i < classification_result.Cols; i++)
+                if (classification_result[0, i] > classification_result[0, predicted_class_index])
+                    predicted_class_index = i;
+
+            return class_labels[predicted_class_index];
+        }
+
+        public Matrix<int> ClassifySURF_ANN_NoCompute(string folder)
+        {
+            int number_of_clusters = 500;   //This is just for testing purposes
+            int input_num = 0;  //number of train images
+            List<string> class_labels = new List<string>();
+
+            return null;
+        }
+
+
+
         public Matrix<int> ClassifySURF_ANN(string folder, bool restructure)
         {
-            int number_of_clusters;
+            
+
             if (restructure)
             {
                 restructureTrainingData(folder);  //number of classes
@@ -213,11 +250,8 @@ namespace ImageRecognition
             }
 
             double testing_part = 0.2;
-            number_of_clusters = 500;   //This is just for testing purposes
-
+            int number_of_clusters = 500;   //This is just for testing purposes
             int input_num = 0;  //number of train images
-           
-
             List<string> class_labels = new List<string>();
 
 
@@ -274,11 +308,7 @@ namespace ImageRecognition
                 bowDE.SetVocabulary(dictionary);
                 //To store all modelBOWDescriptor in a single trainingDescriptors
                 Matrix<float> trainingDescriptors = new Matrix<float>(input_num, number_of_clusters);
-                //To label each modelBOWDescriptor, in this case all train images are labelled with different integer 
-                //hence all images are considered as a unique class, i.e class_num = input_num
-                //Matrix<float> labels = new Matrix<float>(input_num, 1);
-                //Use labels of type <int> instead of <float> for NormalBayesClassifier
-                //Matrix<int> labels = new Matrix<int>(input_num, 1);
+
 
                 Matrix<float> training_classifications = new Matrix<float>(training_files.Count, class_labels.Count);
                 Matrix<float> testing_classifications = new Matrix<float>(testing_files.Count, class_labels.Count);
@@ -290,9 +320,9 @@ namespace ImageRecognition
                     string class_category = fileName.Substring(0, fileName.IndexOf("--"));
                     testing_classifications.Data[j++, class_labels.IndexOf(class_category)] = 1;
                 }
-                    
 
-                    j = 0;
+
+                j = 0;
                 foreach (FileInfo file in training_files)
                 {
                     if (file.Extension.Equals(".db")) continue;
@@ -311,12 +341,12 @@ namespace ImageRecognition
                         string class_category = fileName.Substring(0, fileName.IndexOf("--"));
 
                         training_classifications.Data[j++, class_labels.IndexOf(class_category)] = 1;
-                        
+
                     }
                 }
 
                 //Declaration for Support Vector Machine & parameters
-                int[] layers_d = { number_of_clusters, number_of_clusters/2,number_of_clusters/4, class_labels.Count };
+                int[] layers_d = { number_of_clusters, number_of_clusters / 2, number_of_clusters / 4, class_labels.Count };
                 int number_of_testing_samples = testing_files.Count;
                 Matrix<int> layerSize = new Matrix<int>(layers_d);
                 Matrix<float> classification_result = new Matrix<float>(1, class_labels.Count);
@@ -328,11 +358,9 @@ namespace ImageRecognition
                 parameters.bp_moment_scale = 0.1;
 
                 Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, 0.6, 1.0); //use normal sigmoid
-                
-                Console.WriteLine("Training the neural network...");
 
+                Console.WriteLine("Training the neural network...");
                 int iterations = network.Train(trainingDescriptors, training_classifications, null, parameters, Emgu.CV.ML.MlEnum.ANN_MLP_TRAINING_FLAG.DEFAULT);
-            
 
                 Matrix<int> confusion_matrix = new Matrix<int>(class_labels.Count, class_labels.Count);
                 confusion_matrix.SetZero();
@@ -355,11 +383,39 @@ namespace ImageRecognition
                                 predicted_class_index = i;
 
 
-                            confusion_matrix[actual_class_index, predicted_class_index]++;
+                        confusion_matrix[actual_class_index, predicted_class_index]++;
 
 
                     }
                 }
+
+                
+                /*try
+                {
+                    while (true)
+                    {
+                        Console.WriteLine("Enter file path to classify:");
+                        Console.WriteLine(classify(new Image<Bgr, byte>(Console.ReadLine()), dictionary, class_labels, network));
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+                 * */
+
+                //Persist the data to files
+                network.Save("C:\\Users\\Aeolus\\Desktop\\network.stat");
+                File.WriteAllLines("C:\\Users\\Aeolus\\Desktop\\classes.txt", class_labels);
+                XDocument xDictionary = Emgu.Util.Toolbox.XmlSerialize<Matrix<float>>(dictionary);
+
+                xDictionary.Save("C:\\Users\\Aeolus\\Desktop\\dictionary.xml");
+
+                
+
+
+               
 
                 return confusion_matrix;
             }
@@ -373,7 +429,7 @@ namespace ImageRecognition
                 restructureTrainingData(folder);  //number of classes
                 preProcessTrainingData();
             }
-            
+
             double testing_part = 0.2;
             class_num = 500;   //This is just for testing purposes
 
@@ -383,7 +439,7 @@ namespace ImageRecognition
             List<string> class_labels = new List<string>();
 
 
-            using (SURFDetector detector = new SURFDetector(400,false))
+            using (SURFDetector detector = new SURFDetector(400, false))
             using (BruteForceMatcher<float> matcher = new BruteForceMatcher<float>(DistanceType.L2))
             {
                 BOWKMeansTrainer bowTrainer = new BOWKMeansTrainer(class_num, new MCvTermCriteria(100, 0.01), 3, Emgu.CV.CvEnum.KMeansInitType.PPCenters);
@@ -394,20 +450,19 @@ namespace ImageRecognition
                 List<FileInfo> testing_files = new List<FileInfo>();
 
                 Random r = new Random();
-                foreach(FileInfo file in files)
+                foreach (FileInfo file in files)
                     if (file.Extension.Equals(".db")) continue;
                     else
-                    if(r.NextDouble() >= testing_part)
-                        training_files.Add(file);
-                    else
-	                    testing_files.Add(file);
+                        if (r.NextDouble() >= testing_part)
+                            training_files.Add(file);
+                        else
+                            testing_files.Add(file);
 
 
                 List<Matrix<float>> descriptors = new List<Matrix<float>>();
 
                 foreach (FileInfo file in training_files)
                 {
-                    
 
                     Image<Bgr, Byte> model = new Image<Bgr, byte>(file.FullName);
                     Image<Gray, Byte> modelGray = model.Convert<Gray, Byte>();
@@ -415,14 +470,14 @@ namespace ImageRecognition
                     VectorOfKeyPoint modelKeyPoints = detector.DetectKeyPointsRaw(modelGray, null);
                     //Compute detected SURF key points & extract modelDescriptors
                     Matrix<float> modelDescriptors = detector.ComputeDescriptorsRaw(modelGray, null, modelKeyPoints);
-                    
-                        //Add the extracted BoW modelDescriptors into BOW trainer
-                        descriptors.Add(modelDescriptors);
-                    
 
-                    
+                    //Add the extracted BoW modelDescriptors into BOW trainer
+                    descriptors.Add(modelDescriptors);
+
+
+
                     string fileName = Path.GetFileName(file.FullName);
-                    string class_category = fileName.Substring(0,fileName.IndexOf("--"));
+                    string class_category = fileName.Substring(0, fileName.IndexOf("--"));
                     if (!class_labels.Contains(class_category))
                     {
                         class_labels.Add(class_category);
@@ -461,7 +516,7 @@ namespace ImageRecognition
                         string fileName = Path.GetFileName(file.FullName);
                         string class_category = fileName.Substring(0, fileName.IndexOf("--"));
 
-                        labels.Data[j, 0] = class_labels.IndexOf(class_category)+1;
+                        labels.Data[j, 0] = class_labels.IndexOf(class_category) + 1;
                         j++;
                     }
                 }
@@ -482,7 +537,7 @@ namespace ImageRecognition
 
                 foreach (var file in testing_files)
                 {
-                    using (Image<Gray, Byte> testImgGray = new Image<Gray,byte>(file.FullName))
+                    using (Image<Gray, Byte> testImgGray = new Image<Gray, byte>(file.FullName))
                     using (VectorOfKeyPoint testKeyPoints = detector.DetectKeyPointsRaw(testImgGray, null))
                     using (Matrix<float> testBOWDescriptor = bowDE.Compute(testImgGray, testKeyPoints))
                     {
@@ -490,10 +545,10 @@ namespace ImageRecognition
                         //float result = classifier.Predict(testBOWDescriptor, null);
                         //result will indicate whether test image belongs to trainDescriptor label 1, 2 or 3  
                         string fileName = Path.GetFileName(file.FullName);
-                        string class_category = fileName.Substring(0,fileName.IndexOf("--"));
+                        string class_category = fileName.Substring(0, fileName.IndexOf("--"));
                         int actual_class_index = class_labels.IndexOf(class_category);
-                        int predicted_class_index = (int)(result -1.0);
-                        confusion_matrix[actual_class_index,predicted_class_index]++;
+                        int predicted_class_index = (int)(result - 1.0);
+                        confusion_matrix[actual_class_index, predicted_class_index]++;
 
 
                     }
