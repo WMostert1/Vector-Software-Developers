@@ -52,7 +52,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     public static final int REQUEST_TAKE_PHOTO = 89;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
-    private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
+    public static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     public static final String BUG_COUNT = "za.co.vsd.bug_count";
     public static final String CLASSIFICATION_RESULT = "za.co.vsd.classification_result";

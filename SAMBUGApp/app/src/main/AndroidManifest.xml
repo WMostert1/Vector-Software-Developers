@@ -34,7 +34,7 @@
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
-            android:name=".EnterDataActivity"
+            android:name=".util.EnterDataActivity"
             android:exported="true"
             android:label="@string/title_activity_enter_data" >
         </activity>
@@ -47,10 +47,10 @@
             android:name=".IdentificationActivity"
             android:exported="true"
             android:label="@string/title_activity_identification"
-            android:parentActivityName=".EnterDataActivity" >
+            android:parentActivityName=".util.EnterDataActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".EnterDataActivity" />
+                android:value=".util.EnterDataActivity"/>
         </activity>
         <activity
             android:name=".CameraProcessing.ImagePreview"
