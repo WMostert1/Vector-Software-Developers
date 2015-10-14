@@ -34,12 +34,6 @@ namespace BugWeb.Controllers
                 return RedirectToAction("index", "farmmanagement");
         }
 
-        public ActionResult Logout()
-        {
-            Session.Abandon();
-            return RedirectToAction("index", "home");
-        }
-
         public ActionResult RecoverAccount()
         {
             //return RedirectToAction("login", "home");

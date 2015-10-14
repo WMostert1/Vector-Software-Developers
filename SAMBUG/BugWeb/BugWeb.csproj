@@ -285,13 +285,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\Reporting\Controllers\" />
+    <Folder Include="App\Reporting\Directives\" />
+    <Folder Include="App\Reporting\Filters\" />
+    <Folder Include="App\Reporting\Services\" />
     <Folder Include="App\Reporting\Views\" />
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\Controllers\" />
-    <Folder Include="Scripts\Directives\" />
-    <Folder Include="Scripts\Filters\" />
-    <Folder Include="Scripts\Services\" />
-    <Folder Include="Scripts\Vendor\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

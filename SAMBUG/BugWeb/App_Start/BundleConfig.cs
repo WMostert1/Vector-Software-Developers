@@ -24,8 +24,7 @@ namespace BugWeb
                         "~/Scripts/angular-messages.js",
                         "~/Scripts/angular-aria.js",
                         "~/Scripts/angular-animate.js",
-                        "~/Scripts/angular-material.js",
-                        "~/Scripts/angular-material-icons.js"));
+                        "~/Scripts/angular-material.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/angular-icons", cdnJsAngularIcons)

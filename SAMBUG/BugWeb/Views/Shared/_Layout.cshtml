@@ -1,8 +1,8 @@
 ﻿@using BugWeb.Security
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
 
@@ -22,142 +22,50 @@
     </md-toolbar>
     <md-content layout="row" flex class="md-hue-1">
         <md-list layout-fill flex ng-cloak>
-            
-            <md-list-item class="md-primary md-clickable" md-ink-ripple>
-                <a flex href="@Url.Content("~/")">
-                    <md-item-content layout="row">
-                        <div class="inset">
-                            <ng-md-icon icon="home"></ng-md-icon>
-                        </div>
-                        <h1 class="md-title">Home</h1>
+            <md-list-item flex ng-repeat="item in navMenu.items | filter: onlyApplicableItems" ng-click="$parent.navMenu.actions[item.actionName]($event)">
+                    <md-item-content flex layout="row">
+                        <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+                        <h1 flex offset="10" class="md-body-2">{{item.title}}</h1>
                     </md-item-content>
-                </a>
             </md-list-item>
 
+            <md-divider ng-if="user.isLoggedIn"></md-divider>
 
-            @{
-                /*
-                 * list only items applicable to the current HTTP context
-                 * e.g. a user's role and whether they are logged in or not
-                 * will determine what functions they can perform
-                 */
-                if (SecurityProvider.isLoggedIn(Session))
-                {
-                    <md-list-item class="md-clickable" md-ink-ripple>
-                        <a flex href="@Url.Content("~/home/logout")">
-                            <md-item-content layout="row">
-                                <div class="inset">
-                                    <ng-md-icon icon="logout"></ng-md-icon>
-                                </div>
-                                <h1 class="md-title">Logout</h1>
-                            </md-item-content>
-                        </a>
-                    </md-list-item>
-                }
-                else
-                {
-                    <md-list-item ng-click="showDialog('login', $event)">
-                        <md-item-content layout="row">
-                            <div class="inset">
-                                <ng-md-icon icon="login"></ng-md-icon>
-                            </div>
-                            <h1 class="md-title">Sign In</h1>
-                        </md-item-content>
-                    </md-list-item>
+            <div ng-repeat="item in managementMenu.items | filter: onlyApplicableItems">
+                <md-list-item ng-click="$parent.managementMenu.actions[item.actionName](item)" data-toggle="collapse" data-target="{{'#'+ item.collapseTargetId}}">
+                    <md-item-content flex layout="row">
+                        <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+                        <h1 flex offset="10" class="md-body-2">{{item.title}}</h1>
+                        <ng-md-icon icon="{{item.collapseIcon}}"></ng-md-icon>
+                    </md-item-content>
+                </md-list-item>
 
-    <md-list-item ng-click="showDialog('register', $event)">
-        <md-item-content layout="row">
-            <div class="inset">
-                <ng-md-icon icon="person"></ng-md-icon>
-            </div>
-            <h1 class="md-title">Sign Up</h1>
-        </md-item-content>
-    </md-list-item>
-                }
-}
-
-            @{
-                if (SecurityProvider.isLoggedIn(Session))
-                {
-                    <md-divider></md-divider>
-
-                    <md-list-item ng-click="toggleChevron('reportingChevron')"  data-toggle="collapse" data-target="#reportingSubMenu">
-                        <md-item-content flex layout="row">
-                            <div class="inset">
-                                <ng-md-icon icon="equalizer"></ng-md-icon>
-                            </div>
-                            <h1 class="md-title">Reporting</h1>
-                            <span flex></span>
-                            <ng-md-icon icon="{{reportingChevron}}"></ng-md-icon>
-                        </md-item-content>
-                    </md-list-item>
-
-                    <div id="reportingSubMenu" class="collapse">
-                        <md-list id="reportingSubMenu" flex layout-fill>
-                            <md-list-item ng-repeat="item in farmManagementMenuItems" class="md-clickable" md-ink-ripple>
-                                <md-item-content offset="15">
-                                    <div>
-                                        <h2 class="md-subhead">{{item.title}}</h2>
-                                    </div>
-                                </md-item-content>
-                            </md-list-item>
-                        </md-list>
-                    </div>
-
-                    /*
-                     * Admin and Grower roles are the only roles at this stage which will affect
-                     * functionality on the entire web site
-                     *
-                     * Currently all roles can make use of reporting features, but only growers
-                     * can manage their farms, and only admins can manage users
-                     */
-                    if (SecurityProvider.isGrower(Session))
-                    {
-                        <md-list-item ng-click="toggleChevron('farmManagementChevron')" data-toggle="collapse" data-target="#farmManagementSubMenu">
+                <div id="{{item.collapseTargetId}}" class="collapse">
+                    <md-list flex layout-fill>
+                        <md-list-item ng-repeat="subItem in item.subList">
                             <md-item-content flex layout="row">
-                                <div class="inset">
-                                    <ng-md-icon icon="nature"></ng-md-icon>
-                                </div>
-                                <h1 class="md-title">Farm Management</h1>
-                                <span flex></span>
-                                <ng-md-icon icon="{{farmManagementChevron}}"></ng-md-icon>
+                                <h1 flex offset="10" class="md-body-1">{{subItem.title}}</h1>
                             </md-item-content>
                         </md-list-item>
+                    </md-list>
+                </div>
+            </div>
 
-                        <div id="farmManagementSubMenu" class="collapse">
-                            <md-list flex layout-fill>
-                                <md-list-item ng-repeat="item in reportingMenuItems" class="md-clickable" md-ink-ripple>
-                                    <md-item-content offset="15">
-                                        <div><h2 class="md-subhead">{{item.title}}</h2></div>
-                                    </md-item-content>
-                                </md-list-item>
-                            </md-list>
-                        </div>
-                    }
-
-                    if (SecurityProvider.isAdmin(Session))
-                    {
-                        <md-list-item class="md-clickable" md-ink-ripple>
-                            <md-item-content layout="row">
-                                <div class="inset">
-                                    <ng-md-icon icon="people"></ng-md-icon>
-                                </div>
-                                <h1 class="md-title">User Management</h1>
-                            </md-item-content>
-                        </md-list-item>
-                    }
-                }
-            }
-            <md-divider></md-divider>
-            <md-list-item class="md-clickable" md-ink-ripple>
-                <md-item-content layout="row">
-                    <div class="inset">
-                        <ng-md-icon icon="info_outline"></ng-md-icon>
-                    </div>
-                    <h1 class="md-title">About Us</h1>
+            <md-list-item ng-if="user.isLoggedIn" flex ng-click="">
+                <md-item-content flex layout="row">
+                    <ng-md-icon icon="people"></ng-md-icon>
+                    <h1 flex offset="10" class="md-body-2">User Management</h1>
                 </md-item-content>
             </md-list-item>
 
+            <md-divider></md-divider>
+
+            <md-list-item flex ng-click="">
+                <md-item-content flex layout="row">
+                    <ng-md-icon icon="info_outline"></ng-md-icon>
+                    <h1 flex offset="10" class="md-body-2">About Us</h1>
+                </md-item-content>
+            </md-list-item>
         </md-list>
     </md-content>
 </md-sidenav>
@@ -177,7 +85,7 @@
     <md-content class="md-body-1" flex layout-padding>
         @RenderBody()
     </md-content>
-    
+
 </div>
 
 @Scripts.Render("~/bundles/jquery")
@@ -188,12 +96,18 @@
 @Scripts.Render("~/bundles/app")
 
 <script type="text/javascript">
+    /*Set globally accessible user state*/
+    var isLoggedIn = @Json.Encode(SecurityProvider.isLoggedIn(Session));
+    var isGrower = @Json.Encode(SecurityProvider.isGrower(Session));
+    var isAdmin = @Json.Encode(SecurityProvider.isAdmin(Session));
+
+
     /*Set globally accessible rootPath of the main Angular App*/
     app.rootPath = "@Url.Content("~")";
 
     /*todo remove the patch below when Angular Material prevents browser default invalid messages*/
-    document.addEventListener("invalid", (function () {
-        return function (e) {
+    document.addEventListener("invalid", (function() {
+        return function(e) {
             e.preventDefault();
         };
     })(), true);

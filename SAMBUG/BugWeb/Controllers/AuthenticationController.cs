@@ -23,7 +23,6 @@ namespace BugWeb.Controllers
 {
     public class AuthenticationController : Controller
     {
-
         private readonly IBugSecurity _bugSecurity;
         private readonly IBugAuthentication _bugAuthentication;
 
@@ -33,8 +32,7 @@ namespace BugWeb.Controllers
             _bugAuthentication = new BugAuthentication(_bugSecurity);
         }
 
-
-
+        [HttpPost]
         public ActionResult Login(LoginViewModel loginViewModel)
         {
 
@@ -47,32 +45,25 @@ namespace BugWeb.Controllers
             try
             {
                 LoginResponse loginResponse = _bugSecurity.Login(loginRequest);
-
                 //set up session
-                //todo: we should rather store ids in the session rather than the entire objects
-                //todo: even though entire object takes up space, what about the added amount of calls to db we must make otherwise??
-               Session["UserInfo"] = loginResponse.User;
-
-                //check to go to home page or farm setup
-                int blockCount = 0;
-                foreach (FarmDTO f in loginResponse.User.Farms){
-                    blockCount += f.Blocks.Count;
-                }
-                if (blockCount > 0)
+                Session["UserInfo"] = loginResponse.User;
+                return Json(new
                 {
-                    return RedirectToAction("index", "home");
-                }
-                else
-                {
-                    //todo: I don't know where this is supposed to redirect to
-                    //return RedirectToAction("index", "farmmanagement");
-                    return RedirectToAction("index", "home");
-                }
+                    success = true,
+                    isGrower = SecurityProvider.isGrower(Session),
+                    isAdmin = SecurityProvider.isAdmin(Session)
+                });
             }
             catch (NotRegisteredException)
             {
-                return RedirectToAction("login", "home");
+                return Json(new {success = false});
             }
+        }
+
+        public ActionResult Logout()
+        {
+            Session.Abandon();
+            return RedirectToAction("index", "home");
         }
 
         public ActionResult Register(RegisterViewModel registerViewModel)
