@@ -20,11 +20,16 @@ namespace ImageRecognition
 {
     class Classifier
     {
+        public void saveDescriptorsToFile(Matrix<float> descriptors)
+        {
+
+        }
+
         public Matrix<byte> floatToByteMatrix(Matrix<float> matrix)
         {
             Matrix<byte> result = new Matrix<byte>(matrix.Width, matrix.Height);
-            for (int x = 0; x < matrix.Width; x++)
-                for (int y = 0; y < matrix.Height; y++)
+            for (int x = 0; x < matrix.Rows; x++)
+                for (int y = 0; y < matrix.Cols; y++)
                     result[x, y] = (byte)matrix[x, y];
 
             return result;
@@ -33,8 +38,8 @@ namespace ImageRecognition
         public Matrix<float> byteToFloatMatrix(Matrix<byte> matrix)
         {
             Matrix<float> result = new Matrix<float>(matrix.Width, matrix.Height);
-            for (int x = 0; x < matrix.Width; x++)
-                for (int y = 0; y < matrix.Height; y++)
+            for (int x = 0; x < matrix.Rows; x++)
+                for (int y = 0; y < matrix.Cols; y++)
                     result[x, y] = (float)matrix[x, y];
 
             return result;
@@ -77,13 +82,41 @@ namespace ImageRecognition
         {
                 restructureTrainingData("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training");
                 FileInfo[] files = new DirectoryInfo("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training").GetFiles();
+                Console.WriteLine("Processing images...");
+                int file_count = 0;
                 foreach (FileInfo file in files)
                 {
+                    
+                    Console.WriteLine((int)((file_count++)/(double)file.Length*100.0)+"%");
                     if (file.Extension.Equals(".db")) continue;
                     Image<Bgr, byte> image = new Image<Bgr, byte>(file.FullName);
                     while (image.Width > 1000 || image.Height > 1000)
                         image = image.Resize(0.5, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-                    doGrabCut(image).Save(file.FullName);
+
+                    image = doGrabCut(image);
+                    image.Save(file.FullName);
+
+                    string fileName = Path.GetFileName(file.FullName);
+                    fileName = fileName.Substring(0, fileName.IndexOf("."));
+                    int x = 0, y = 0;
+                    for (double Y_Scale = 1.2; Y_Scale <= 2.0; Y_Scale += 0.2)
+                    {
+                        image.Resize(image.Width, (int)(image.Height * Y_Scale), INTER.CV_INTER_CUBIC, false).Resize(256, 256, INTER.CV_INTER_CUBIC, true).Save(file.DirectoryName + "\\" + fileName + "Y" + (y++) + file.Extension);
+                    }                 
+                        
+                    for (double X_Scale = 1.2; X_Scale <= 2.0; X_Scale += 0.2 ){
+                  
+                        image.Resize((int)(image.Width * X_Scale), image.Height, INTER.CV_INTER_CUBIC, false).Resize(256,256,INTER.CV_INTER_CUBIC,true).Save(file.DirectoryName + "\\" + fileName+"X"+(x++) + file.Extension);
+                    }
+
+                    int g = 0;
+                    for (double gamma = 0.4; gamma <= 1.8; gamma += 0.2)
+                    {
+                        Image<Bgr, byte> input_image = image.Copy();
+                        input_image._GammaCorrect(gamma);
+                        doGrabCut(input_image).Save(file.DirectoryName + "\\" + fileName + "G" + (g++) + file.Extension); ;
+                    }
+                        
                 }
         }
 
@@ -106,125 +139,14 @@ namespace ImageRecognition
             return directories_of_classes.Length;
         }
 
-        protected int computeTrainingAndTestingMatrices(String path, out Matrix<float> training_data,out Matrix<float> training_classifications,out Matrix<float> testing_data,out Matrix<float> testing_classifications)
-        {
-            //Set up matrices
-                float training_percentage = 0.2F;    
-                
-                FileInfo[] files = new DirectoryInfo(path).GetFiles();
-                
-                 
-
-                const int DIMENSIONS = 64;
-
-                int attributes_per_sample = DIMENSIONS * DIMENSIONS; //Dimensions of the picture
-
-             
-                
-                //Populate training data
-                Console.WriteLine("Loading images from disk...");
-                List<Image<Gray, byte>> training_images = new List<Image<Gray, byte>>();
-                List<Image<Gray, byte>> testing_images = new List<Image<Gray, byte>>();
-                List<String> class_labels_unique = new List<String>();
-                List<String> class_labels_training = new List<String>();
-                List<String> class_labels_testing = new List<String>();
-                
-                Random r = new Random();
-                
-                foreach (var file in files)
-                {
-                    if (file.Extension.Equals(".db")) continue;  //random db file for windows sytems
-
-                    string fileName = Path.GetFileName(file.FullName);
-                    string class_label = fileName.Substring(0,fileName.IndexOf("--"));
-                    if(!class_labels_unique.Contains(class_label))
-                        class_labels_unique.Add(class_label);
-
-
-                    if ((float)r.NextDouble() > training_percentage)
-                    {
-                        training_images.Add(new Image<Gray, byte>(file.FullName));
-                        class_labels_training.Add(class_label);
-                    }
-                    else
-                    {
-                        testing_images.Add(new Image<Gray, byte>(file.FullName));
-                        class_labels_testing.Add(class_label);
-                    }
-                }
-
-                int number_of_classes = class_labels_unique.Count;
-                int number_of_training_samples = class_labels_training.Count;
-                int number_of_testing_samples = class_labels_testing.Count;
-
-                 training_data = new Matrix<float>(number_of_training_samples, attributes_per_sample);
-                 training_classifications = new Matrix<float>(number_of_training_samples, number_of_classes);
-                training_classifications.SetZero();
-
-                 testing_data = new Matrix<float>(number_of_testing_samples, attributes_per_sample);
-                testing_classifications = new Matrix<float>(number_of_testing_samples, number_of_classes);
-                testing_classifications.SetZero();
-
-                Matrix<float> classification_result = new Matrix<float>(1, number_of_classes);
-
-                //Set classification matrix values
-                Console.WriteLine("Converting images to numerical format...");
-                int count = 0;
-                foreach (var class_label in class_labels_training)
-                    training_classifications.Data[count++, class_labels_unique.IndexOf(class_label)] = 1;
-
-                count = 0;
-                foreach(var class_label in class_labels_testing)
-                    testing_classifications.Data[count++, class_labels_unique.IndexOf(class_label)] = 1;
-
-                
-
-
-
-                //Set training and testing data
-                List<Matrix<float>> flattenedImages = new List<Matrix<float>>();
-                foreach (var img in training_images)
-                {
-      
-                        //Emgu.CV.UI.ImageViewer.Show(img);
-                        Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
-                        int c = 0;
-                        for (int i = 0; i < DIMENSIONS; i++)
-                            for (int j = 0; j < DIMENSIONS; j++)
-                                flattened.Data[0, c++] = img.Data[i, j, 0]/255F;
-                        flattenedImages.Add(flattened);
-                    
-                }
-
-
-                training_data = ConcatDescriptors(flattenedImages);
-
-                //Testing data
-                List<Matrix<float>> flattenedTestImages = new List<Matrix<float>>();
-                foreach (var img in testing_images)
-                {
-                        //Emgu.CV.UI.ImageViewer.Show(img);
-                        Matrix<float> flattened = new Matrix<float>(1, DIMENSIONS * DIMENSIONS);
-                        int c = 0;
-                        for (int i = 0; i < DIMENSIONS; i++)
-                            for (int j = 0; j < DIMENSIONS; j++)
-                                flattened.Data[0, c++] = img.Data[i, j, 0];
-                        flattenedTestImages.Add(flattened);
-                    
-                }
-
-
-                testing_data = ConcatDescriptors(flattenedTestImages);
-                return class_labels_unique.Count;
-            
-        }
+        
 
         protected Image<Bgr, byte> doGrabCut(Image<Bgr, byte> image)
         {
 
             //1. Convert the image to grayscale.
 
-            int numberOfIterations = 4;
+            int numberOfIterations = 5;
             Image<Gray, byte> grayImage = image.Convert<Gray, Byte>();
 
             //2. Threshold it using otsu.
@@ -275,8 +197,8 @@ namespace ImageRecognition
 
             result.ROI = ROI;
             result = result.Resize(256, 256, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-            for (int x = 0; x < result.Width; x++)
-                for (int y = 0; y < result.Height; y++)
+            for (int x = 0; x < result.Rows; x++)
+                for (int y = 0; y < result.Cols; y++)
                     if (result.Data[x, y, 0] == 0 && result.Data[x, y, 1] == 0 && result.Data[x, y, 2] == 0){
                         result.Data[x, y, 0] = 255;
                         result.Data[x, y, 1] = 255;
