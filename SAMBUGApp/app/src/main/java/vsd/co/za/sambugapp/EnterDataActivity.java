@@ -1,4 +1,4 @@
-package vsd.co.za.sambugapp.util;
+package vsd.co.za.sambugapp;
 
 import android.content.Context;
 import android.content.Intent;
@@ -40,10 +40,6 @@ import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 import vsd.co.za.sambugapp.DomainModels.Species;
-import vsd.co.za.sambugapp.IdentificationActivity;
-import vsd.co.za.sambugapp.MyLocationListener;
-import vsd.co.za.sambugapp.R;
-import vsd.co.za.sambugapp.ScoutTripActivity;
 
 
 public class EnterDataActivity extends AppCompatActivity {

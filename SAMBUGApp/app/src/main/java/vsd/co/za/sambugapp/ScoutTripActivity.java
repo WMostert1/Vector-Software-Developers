@@ -32,7 +32,6 @@ import java.util.List;
 import vsd.co.za.sambugapp.DataAccess.ScoutStopDAO;
 import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.*;
-import vsd.co.za.sambugapp.util.EnterDataActivity;
 
 
 public class ScoutTripActivity extends AppCompatActivity {
