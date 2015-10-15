@@ -200,7 +200,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
             }
         }
 
-        return(result);
+        return result;
     }
 
     @Override
@@ -380,7 +380,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
 
         bitmap.getPixels(pixels, 0, squareLength,minX,  minY,maxX-minX, maxY-minY);
         bitmap = Bitmap.createBitmap(pixels, 0, squareLength,2*padding, 2*padding, Bitmap.Config.ARGB_8888);//ARGB_8888 is a good quality configuration
-
 
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

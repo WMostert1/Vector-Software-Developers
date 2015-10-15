@@ -32,6 +32,7 @@ import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 import vsd.co.za.sambugapp.DomainModels.Species;
 import vsd.co.za.sambugapp.DomainModels.User;
+import vsd.co.za.sambugapp.HomeScreenActivity;
 import vsd.co.za.sambugapp.IdentificationActivity;
 import vsd.co.za.sambugapp.LoginActivity;
 import vsd.co.za.sambugapp.R;
@@ -231,7 +232,7 @@ public class WebAPI {
                     editor.putString(context.getString(R.string.logged_in_user), response.toString());
                     editor.commit();
 
-                    Intent intent = new Intent(context,ScoutTripActivity.class);
+                    Intent intent = new Intent(context, HomeScreenActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Bundle bundle=new Bundle();
                     HashSet<Farm> activeFarms = user.getFarms();

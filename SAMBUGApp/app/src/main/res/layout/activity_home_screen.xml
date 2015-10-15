@@ -44,9 +44,17 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Historical Data"
+        android:text="View Website"
         android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"/>
+        android:layout_marginRight="40dp"
+        android:onClick="openWebsite"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:onClick="logout"/>
 
 </LinearLayout>
