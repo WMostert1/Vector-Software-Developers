@@ -16,6 +16,7 @@ using BugBusiness.FarmManagement;
 using BugBusiness.Interface.FarmManagement;
 using DataAccess.Interface;
 using DataAccess.MSSQL;
+using BugBusiness.BugIntelligence;
 
 namespace BugWeb
 {
@@ -31,8 +32,7 @@ namespace BugWeb
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-            
+            BundleConfig.RegisterBundles(BundleTable.Bundles);          
         }
     }
 }
