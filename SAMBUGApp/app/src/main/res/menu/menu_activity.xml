@@ -4,14 +4,8 @@
       tools:context="vsd.co.za.sambugapp.EnterDataActivity">
 
     <item
-        android:id="@+id/menu_logout"
-        android:title="Logout"
-        android:orderInCategory="1"
-        app:showAsAction="never"/>
-
-    <item
         android:id="@+id/menu_about"
         android:title="@string/action_settings"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         app:showAsAction="never"/>
 </menu>

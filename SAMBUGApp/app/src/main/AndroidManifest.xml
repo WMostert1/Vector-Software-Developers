@@ -31,12 +31,14 @@
             android:name=".LoginActivity"
             android:label="@string/app_name"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".EnterDataActivity"
             android:exported="true"
-            android:label="@string/title_activity_enter_data" >
+            android:label="@string/title_activity_enter_data"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ScoutTripActivity"
@@ -47,6 +49,7 @@
             android:name=".IdentificationActivity"
             android:exported="true"
             android:label="@string/title_activity_identification"
+            android:screenOrientation="portrait"
             android:parentActivityName=".EnterDataActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -55,17 +58,20 @@
         <activity
             android:name=".CameraProcessing.ImagePreview"
             android:label="@string/title_activity_image_preview"
+            android:screenOrientation="portrait"
             >
         </activity>
         <activity
             android:name=".CameraProcessing.CustomCamera"
             android:exported="true"
-            android:label="@string/title_activity_cam">
+            android:label="@string/title_activity_cam"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/title_activity_splash_screen"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -75,7 +81,8 @@
         <activity
             android:name=".HomeScreenActivity"
             android:label="@string/title_activity_home_screen"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
         </activity>
 
 
