@@ -27,9 +27,9 @@
             android:src="@drawable/samac_logo"/>
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/up_logo"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/vsd_logo"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </RelativeLayout>
