@@ -160,7 +160,6 @@
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\FarmManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IntelligenceController.cs" />
     <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -179,6 +178,8 @@
     <Compile Include="Security\SecurityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\ANN\classes.txt" />
+    <Content Include="App_Data\ANN\dictionary.xml" />
     <Content Include="Content\chartist.min.css" />
     <Content Include="Content\charts.css" />
     <Content Include="Content\EditBlocks.css" />
@@ -191,6 +192,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="App_Data\ANN\config.json" />
+    <Content Include="App_Data\ANN\network.stat" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartist.js" />
     <Content Include="Scripts\charts.js" />
@@ -236,12 +239,8 @@
     <Content Include="Views\Authentication\CheckEmail.cshtml" />
     <Content Include="Views\Authentication\ChangePassword.cshtml" />
     <Content Include="Views\FarmManagement\Treatments.cshtml" />
-    <Content Include="Views\Intelligence\Index.cshtml" />
-    <Content Include="Views\Intelligence\_TrainingData.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

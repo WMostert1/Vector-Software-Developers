@@ -32,9 +32,7 @@ namespace BugWeb
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-            var net = ANNClassifier.getInstance;
-            
+            BundleConfig.RegisterBundles(BundleTable.Bundles);          
         }
     }
 }

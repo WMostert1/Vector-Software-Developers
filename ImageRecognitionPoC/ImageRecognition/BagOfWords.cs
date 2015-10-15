@@ -18,26 +18,78 @@ using System;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace ImageRecognition
 {
     class BagOfWords : Classifier
     {
+        private class ANNConfig
+        {
+            public ANNConfig(int[] _layers, double _alpha, double _beta)
+            {
+                layers = _layers;
+                alpha = _alpha;
+                beta = _beta;
+            }
+
+            public int [] layers { get; set; }
+            public double alpha { get; set; }
+            public double beta { get; set; }
+        }
+        
+       
+        private const string dictionary_file_name = "C:\\Users\\Aeolus\\Desktop\\dictionary.xml";
+        private const string network_file_name = "C:\\Users\\Aeolus\\Desktop\\network.stat";
+        private const string classes_file_name = "C:\\Users\\Aeolus\\Desktop\\classes.txt";
+        private const string ann_config_file_name = "C:\\Users\\Aeolus\\Desktop\\config.json";
+        
+        private List<string> restoreClasses(string fileName)
+        {
+           return File.ReadAllLines(fileName).ToList<string>();
+        }
+
+        private ANNConfig restoreNetworkConfig(string fileName)
+        {
+            string configJSON = File.ReadAllText(ann_config_file_name);
+            return JsonConvert.DeserializeObject<ANNConfig>(configJSON);
+        }
+
+        private Emgu.CV.ML.ANN_MLP restoreNetwork(string networkFileName, string configFileName)
+        {
+            ANNConfig config = restoreNetworkConfig(configFileName);
+            ANN_MLP net = new ANN_MLP(new Matrix<int>(config.layers), Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, config.alpha, config.beta);
+            net.Load(networkFileName);
+            return net;
+        }
+
+        private Matrix<float> restoreDictionary(string fileName)
+        {
+           return Emgu.Util.Toolbox.XmlDeserialize<Matrix<float>>(XDocument.Load(fileName));
+        }
+
         public void runBoW()
         {
-      
                 //analyseConfusionMatrix(classifyORB_ANN("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training", false));
 
                 //Console.WriteLine("Running SURF with SVM BoW");
                 //for (int i = 0; i < 3; i++ )
                 //    analyseConfusionMatrix(ClassifySURF_SVM("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training", false));
 
-                Console.WriteLine("Running SURF with ANN");
+                //Console.WriteLine("Running SURF with ANN");
                 //for (int i = 0; i < 5; i++)
                 analyseConfusionMatrix(ClassifySURF_ANN("C:\\Users\\Aeolus\\Pictures\\SAMBUG\\ANN\\Training", false));
 
 
-                Console.WriteLine("Done Training");
+                //Console.WriteLine("Done Training");
+            string path = "C:\\Users\\Aeolus\\Pictures\\SAMBUG\\BF";
+            FileInfo[] files = new DirectoryInfo(path).GetFiles();
+            foreach(var file in files){
+                Image<Bgr, byte> image = new Image<Bgr,byte>(file.FullName);
+                Console.WriteLine(classify(image));
+                Emgu.CV.UI.ImageViewer.Show(image);
+
+            }
                 Console.ReadLine();
   
         }
@@ -202,9 +254,12 @@ namespace ImageRecognition
             }
         }
 
+        public string classify(Image<Bgr, byte> image){
+            return classify(image,restoreDictionary(dictionary_file_name), restoreClasses(classes_file_name), restoreNetwork(network_file_name, ann_config_file_name));
+        }
 
 
-        public string classify(Image<Bgr, byte> image, Matrix<float> dictionary,List<string> class_labels,Emgu.CV.ML.ANN_MLP network)  //class labels and dict read from XML docs
+        public string classify(Image<Bgr, byte> image,Matrix<float> dictionary ,List<string> class_labels,Emgu.CV.ML.ANN_MLP network)  //class labels and dict read from XML docs
         {
             Matrix<float> classification_result = new Matrix<float>(1, class_labels.Count);
             SURFDetector detector = new SURFDetector(400, false);
@@ -241,7 +296,7 @@ namespace ImageRecognition
 
         public Matrix<int> ClassifySURF_ANN(string folder, bool restructure)
         {
-            
+            Console.WriteLine("Process started...");
 
             if (restructure)
             {
@@ -249,8 +304,8 @@ namespace ImageRecognition
                 preProcessTrainingData();
             }
 
-            double testing_part = 0.2;
-            int number_of_clusters = 500;   //This is just for testing purposes
+            double testing_part = 0.01;
+            int number_of_clusters = 300;   //This is just for testing purposes
             int input_num = 0;  //number of train images
             List<string> class_labels = new List<string>();
 
@@ -276,17 +331,25 @@ namespace ImageRecognition
 
 
                 List<Matrix<float>> descriptors = new List<Matrix<float>>();
-
+                Console.WriteLine("Computing individual descriptors...");
                 foreach (FileInfo file in training_files)
                 {
-
+                    if (input_num % (training_files.Count / 10) == 0)
+                        Console.WriteLine((input_num/(double)training_files.Count)*10.0);
 
                     Image<Bgr, Byte> model = new Image<Bgr, byte>(file.FullName);
                     Image<Gray, Byte> modelGray = model.Convert<Gray, Byte>();
                     //Detect SURF key points from images
                     VectorOfKeyPoint modelKeyPoints = detector.DetectKeyPointsRaw(modelGray, null);
                     //Compute detected SURF key points & extract modelDescriptors
+
                     Matrix<float> modelDescriptors = detector.ComputeDescriptorsRaw(modelGray, null, modelKeyPoints);
+
+                    if (modelDescriptors == null)
+                    {
+                        file.Delete();
+                        throw new Exception();
+                    }
 
                     //Add the extracted BoW modelDescriptors into BOW trainer
                     descriptors.Add(modelDescriptors);
@@ -301,8 +364,11 @@ namespace ImageRecognition
                 }
 
                 //Cluster the feature vectors
+                Console.WriteLine("Concatenating descriptors...");
                 Matrix<float> desc = ConcatDescriptors(descriptors);
                 bowTrainer.Add(desc);
+
+                Console.WriteLine("Performing clustering...");
                 Matrix<float> dictionary = bowTrainer.Cluster();
                 //Store the vocabulary
                 bowDE.SetVocabulary(dictionary);
@@ -321,6 +387,7 @@ namespace ImageRecognition
                     testing_classifications.Data[j++, class_labels.IndexOf(class_category)] = 1;
                 }
 
+                Console.WriteLine("Computing training descriptors...");
 
                 j = 0;
                 foreach (FileInfo file in training_files)
@@ -357,7 +424,10 @@ namespace ImageRecognition
                 parameters.bp_dw_scale = 0.1;
                 parameters.bp_moment_scale = 0.1;
 
-                Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, 0.6, 1.0); //use normal sigmoid
+                double alpha = 0.6;
+                double beta = 1.0;
+
+                Emgu.CV.ML.ANN_MLP network = new ANN_MLP(layerSize, Emgu.CV.ML.MlEnum.ANN_MLP_ACTIVATION_FUNCTION.SIGMOID_SYM, alpha, beta); //use normal sigmoid
 
                 Console.WriteLine("Training the neural network...");
                 int iterations = network.Train(trainingDescriptors, training_classifications, null, parameters, Emgu.CV.ML.MlEnum.ANN_MLP_TRAINING_FLAG.DEFAULT);
@@ -406,11 +476,12 @@ namespace ImageRecognition
                  * */
 
                 //Persist the data to files
-                network.Save("C:\\Users\\Aeolus\\Desktop\\network.stat");
-                File.WriteAllLines("C:\\Users\\Aeolus\\Desktop\\classes.txt", class_labels);
+                network.Save(network_file_name);
+                File.WriteAllLines(classes_file_name, class_labels);
                 XDocument xDictionary = Emgu.Util.Toolbox.XmlSerialize<Matrix<float>>(dictionary);
+                File.WriteAllText(ann_config_file_name,JsonConvert.SerializeObject(new ANNConfig(layers_d,alpha,beta)));
 
-                xDictionary.Save("C:\\Users\\Aeolus\\Desktop\\dictionary.xml");
+                xDictionary.Save(dictionary_file_name);
 
                 
 

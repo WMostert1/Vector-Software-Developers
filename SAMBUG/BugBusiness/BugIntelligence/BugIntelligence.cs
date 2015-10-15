@@ -29,14 +29,18 @@ namespace BugBusiness.BugIntelligence
 
         public ClassifyResult classify(byte[] image)
         {
-            if (ANNClassifier.getInstance.isCurrentlyTraining())
-                throw new Exception("The nerual network is busy training. Please try again.");
 
-            int speciesID = ANNClassifier.getInstance.classify(image);
+            string className = ANNClassifier.getInstance.classify(image);
 
-            var species = _dbBugReporting.getSpeciesByID(speciesID);
+            
+            int delim_index = className.IndexOf("--");
+            if (delim_index == -1) return new ClassifyResult { SpeciesName = "Coconut Bug", Lifestage = 1,SpeciesID = 1 };
+            string speciesName = className.Substring(0, delim_index);
+            string lifestage = className.Substring(delim_index + 2, className.IndexOf(".") - delim_index);
 
-            return new ClassifyResult { SpeciesName = species.SpeciesName, Lifestage = (int)species.SpeciesID, SpeciesID = (int)species.SpeciesID };
+           // var species = _dbBugReporting.getSpeciesByID(speciesID);
+
+            return new ClassifyResult { SpeciesName = speciesName, Lifestage = Convert.ToInt32(lifestage), SpeciesID = 1 };
         }
     }
 }
