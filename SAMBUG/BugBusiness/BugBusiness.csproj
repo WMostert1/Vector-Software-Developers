@@ -105,6 +105,9 @@
     <Content Include="cvextern.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="OpenCL.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="opencv_calib3d2410.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
