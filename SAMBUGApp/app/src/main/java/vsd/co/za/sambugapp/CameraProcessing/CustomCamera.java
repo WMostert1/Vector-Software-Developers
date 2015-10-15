@@ -59,6 +59,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
     private String fullPathName;
     int width,height;
     boolean cameraConfigured;
+    private boolean pictureTaken;
     public static final double SQUARERATIO =0.75;
 
 
@@ -84,11 +85,13 @@ public class CustomCamera extends Activity implements SensorEventListener {
         // Add a listener to the Capture button
         rotatingImage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mCamera.takePicture(null, null, mPicture);
+                if (!pictureTaken) {
+                    mCamera.takePicture(null, null, mPicture);
+                }
             }
         });
         cameraConfigured = false;
-
+        pictureTaken = false;
     }
 
     /**
@@ -97,6 +100,9 @@ public class CustomCamera extends Activity implements SensorEventListener {
     private void createCamera() {
 
         mCamera = getCameraInstance();
+        if (mCamera == null) {
+            Log.e("BLAH", "NULL CAMERA");
+        }
         //Configuring the camera
       //  if (!cameraConfigured) {
             Camera.Parameters parameters=mCamera.getParameters();
@@ -262,6 +268,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
             // attempt to get a CustomCamera instance
             c = android.hardware.Camera.open();
         } catch (Exception e) {
+            e.printStackTrace();
             // CustomCamera is not available (in use or does not exist)
         }
 
@@ -281,7 +288,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
                 data = getBitmap(data);
             }
             catch(IOException e){
-
+                e.printStackTrace();
             }
 
             //Saving the image in a Folder called Sambug - specified in getDir()
