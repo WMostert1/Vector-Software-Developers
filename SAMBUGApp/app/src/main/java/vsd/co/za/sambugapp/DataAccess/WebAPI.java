@@ -43,11 +43,11 @@ import vsd.co.za.sambugapp.ScoutTripActivity;
  *
  */
 public class WebAPI {
-    private static final String HOST = "sambug.co.za";
+    private static final String HOST = "sambug.apphb.com";
     private static final String AUTHENTICATION_URL = "http://"+HOST+"/api/authentication/login";
     private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/Synchronization";
     private static final String CLASSIFICATION_URL= "http://"+HOST+"/api/apiSpeciesClassification";
-    private static final int SOCKET_TIMEOUT_MS = 10000; //10 seconds
+    private static final int SOCKET_TIMEOUT_MS = 100000; //10 seconds
 
 
     private WebAPI() {
