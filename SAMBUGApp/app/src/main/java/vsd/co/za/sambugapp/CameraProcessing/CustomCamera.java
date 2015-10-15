@@ -86,6 +86,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
         rotatingImage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!pictureTaken) {
+                    pictureTaken=true;
                     mCamera.takePicture(null, null, mPicture);
                 }
             }
