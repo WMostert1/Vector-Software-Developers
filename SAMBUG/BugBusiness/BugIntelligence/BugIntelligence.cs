@@ -1,5 +1,7 @@
 ﻿using BugBusiness.Interface.BugIntelligence;
 using BugBusiness.Interface.BugIntelligence.DTO;
+using DataAccess.Interface;
+using DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,38 +14,33 @@ namespace BugBusiness.BugIntelligence
 {
     public class BugIntelligence : IBugIntelligence
     {
+        private readonly IDbBugReporting _dbBugReporting;
+
+        public BugIntelligence(IDbBugReporting dbBugReporting)
+        {
+           
+            _dbBugReporting = dbBugReporting;
+        }
+
+        public List<Species> getAllSpecies()
+        {
+            return _dbBugReporting.getAllSpecies();
+        }
+
         public ClassifyResult classify(byte[] image)
         {
-            string workingPath = Directory.GetCurrentDirectory();
-            string path = workingPath+"\\ProcessedImages";
-            Directory.CreateDirectory(path);
-            var ms = new MemoryStream(image);
-            Bitmap colourImage = new Bitmap(ms);
-            Bitmap grayImage;
 
-            Bitmap[] colourPyramid;
-            Bitmap[] grayPyramid;
-            var processor = new ImageProcessing();
+            string className = ANNClassifier.getInstance.classify(image);
 
-                processor.IdentifyContours(colourImage, 100, true, out grayImage, out colourImage);
-                colourPyramid = processor.getImagePyramid(colourImage, 1);
-                grayPyramid = processor.getImagePyramid(grayImage, 1);
             
+            int delim_index = className.IndexOf("--");
+            if (delim_index == -1) return new ClassifyResult { SpeciesName = "Coconut Bug", Lifestage = 1,SpeciesID = 1 };
+            string speciesName = className.Substring(0, delim_index);
+            string lifestage = className.Substring(delim_index + 2, className.IndexOf(".") - delim_index);
 
-            int count = 0;
-            foreach (var img in colourPyramid)
-            {
-                img.Save(count+"colour"+(count++)+".jpg");
-            }
+           // var species = _dbBugReporting.getSpeciesByID(speciesID);
 
-            count = 0;
-
-            foreach (var img in grayPyramid)
-            {
-                img.Save(count + "gray"+(count++)+".jpg");
-            }
-
-            return new ClassifyResult { SpeciesName = "Coconut Bug", Lifestage = 1, SpeciesID = 1 };
+            return new ClassifyResult { SpeciesName = speciesName, Lifestage = Convert.ToInt32(lifestage), SpeciesID = 1 };
         }
     }
 }

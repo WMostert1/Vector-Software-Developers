@@ -26,13 +26,8 @@ namespace BugWeb.Controllers
            
             try
             {
-                Debug.WriteLine("Happens");
-                var result = new ClassifyResult();
-                result.SpeciesID = 1;
-                result.Lifestage = 1;
-                result.SpeciesName = "Coconut Bug";
-                return result;
-               // return _bugIntelligence.classify(BugBusiness.ExtensionMethods.DataConversion.sbyteToByteArray(request.FieldPicture));
+               
+                return _bugIntelligence.classify(BugBusiness.ExtensionMethods.DataConversion.sbyteToByteArray(request.FieldPicture));
             }
             catch (Exception e)
             {

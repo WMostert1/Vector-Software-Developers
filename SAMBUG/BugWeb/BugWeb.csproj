@@ -183,6 +183,8 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="App_Data\ANN\classes.txt" />
+    <Content Include="App_Data\ANN\dictionary.xml" />
     <Content Include="Content\chartist.min.css" />
     <Content Include="Content\charts.css" />
     <Content Include="Content\EditBlocks.css" />
@@ -210,6 +212,8 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\jasny-bootstrap.css.map" />
+    <Content Include="App_Data\ANN\config.json" />
+    <Content Include="App_Data\ANN\network.stat" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartist-plugin-axistitle.js" />
     <Content Include="Scripts\chartist-plugin-tooltip.js" />
@@ -265,9 +269,7 @@
     <Content Include="Views\FarmManagement\Treatments.cshtml" />
     <Content Include="Views\FarmManagement\EditFarms.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />

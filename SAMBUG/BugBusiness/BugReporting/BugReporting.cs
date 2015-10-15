@@ -19,6 +19,11 @@ namespace BugBusiness.BugReporting
             _dbBugReporting = dbBugReporting;
         }
 
+        public List<Species> getAllSpecies()
+        {
+            return _dbBugReporting.getAllSpecies();
+        }
+
         public GetCapturedDataResponse GetCapturedData(GetCapturedDataRequest getCapturedDataRequest)
         {
             List<ScoutStop> scoutStops = _dbBugReporting.GetScoutStopsByUserId(getCapturedDataRequest.UserId);
@@ -57,7 +62,7 @@ namespace BugBusiness.BugReporting
 
         public GetSpeciesResponse GetSpecies()
         {
-            List<Species> species = _dbBugReporting.GetAllSpecies();
+            List<Species> species = _dbBugReporting.getAllSpecies();
             
             if (!species.Any() )
                 return null;

@@ -75,8 +75,8 @@ public class IdentificationActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
 
-        WebAPI.attemptAPIClassification(byteArray, getApplicationContext());
-        Toast.makeText(getApplicationContext(), "Starting classification...", Toast.LENGTH_SHORT).show();
+        WebAPI.attemptAPIClassification(byteArray, this);
+        Toast.makeText(this, "Starting classification...", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -106,14 +106,14 @@ public class IdentificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
-            createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
-            isClassified = savedInstanceState.getBoolean(CLASSIFICATION_RESULT);
+            if (savedInstanceState != null) {
+                bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
+                createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
+                isClassified = savedInstanceState.getBoolean(CLASSIFICATION_RESULT);
         } else {
             dispatchTakePictureIntent();
 
-            //Checks/loads species data into the Species table of the database
+        //Checks/loads species data into the Species table of the database
             if (createCounter == 0) {
                 SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
                 try {
@@ -160,6 +160,7 @@ public class IdentificationActivity extends AppCompatActivity {
     public void changeEntrySelection(ClassificationResultDTO currentEntry){
         isClassified = true;
         //Possibly validate that ID's are correct in future
+        Toast.makeText(getApplicationContext(),"Species Identified!",Toast.LENGTH_SHORT).show();
         changeEntrySelection(currentEntry.SpeciesID);
     }
 
@@ -168,7 +169,7 @@ public class IdentificationActivity extends AppCompatActivity {
         try {
             speciesDAO.open();
             currentEntry = speciesDAO.getSpeciesByID(id);
-            Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
             ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompareImage);
             byte[] imgData = currentEntry.getIdealPicture();
             comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0, imgData.length));
@@ -254,6 +255,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 //TODO: Rotate the image
 
                 mImageView.setImageBitmap(bitmap);
+                if(!isClassified)
+                    doAutomaticClassification(null);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -264,8 +267,8 @@ public class IdentificationActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+            }
         }
-    }
 
     /**
      * Starts a new intent to take a picture with the Custom Camera
