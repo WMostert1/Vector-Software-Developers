@@ -35,12 +35,12 @@ namespace BugBusiness.BugIntelligence
             public double beta { get; set; }
         }
 
-      
 
-        private const string dictionary_file_name = "C:\\Users\\Aeolus\\Documents\\GitHub\\Vector-Software-Developers\\SAMBUG\\BugWeb\\App_Data\\ANN\\dictionary.xml";
-        private const string network_file_name = "C:\\Users\\Aeolus\\Documents\\GitHub\\Vector-Software-Developers\\SAMBUG\\BugWeb\\App_Data\\ANN\\network.stat";
-        private const string classes_file_name = "C:\\Users\\Aeolus\\Documents\\GitHub\\Vector-Software-Developers\\SAMBUG\\BugWeb\\App_Data\\ANN\\classes.txt";
-        private const string ann_config_file_name = "C:\\Users\\Aeolus\\Documents\\GitHub\\Vector-Software-Developers\\SAMBUG\\BugWeb\\App_Data\\ANN\\config.json";
+
+        private string dictionary_file_name;
+        private string network_file_name;
+        private string classes_file_name;
+        private string ann_config_file_name;
 
         private static volatile ANNClassifier instance;
         private static object syncRoot = new Object();
@@ -209,7 +209,7 @@ namespace BugBusiness.BugIntelligence
 
         public string classify(Image<Bgr, byte> image, Matrix<float> dictionary, List<string> class_labels, Emgu.CV.ML.ANN_MLP network)  //class labels and dict read from XML docs
         {
-            Emgu.CV.UI.ImageViewer.Show(image);
+            //Emgu.CV.UI.ImageViewer.Show(image);
             Matrix<float> classification_result = new Matrix<float>(1, class_labels.Count);
             SURFDetector detector = new SURFDetector(400, false);
             BruteForceMatcher<float> matcher = new BruteForceMatcher<float>(DistanceType.L2);
@@ -218,7 +218,7 @@ namespace BugBusiness.BugIntelligence
             //Store the vocabulary
             bowDE.SetVocabulary(dictionary);
             image = preProcessImage(image);
-            Emgu.CV.UI.ImageViewer.Show(image);
+            //Emgu.CV.UI.ImageViewer.Show(image);
             Image<Gray, Byte> testImgGray = image.Convert<Gray, byte>();
             VectorOfKeyPoint testKeyPoints = detector.DetectKeyPointsRaw(testImgGray, null);
             Matrix<float> testBOWDescriptor = bowDE.Compute(testImgGray, testKeyPoints);
@@ -230,16 +230,22 @@ namespace BugBusiness.BugIntelligence
                 if (classification_result[0, i] > classification_result[0, predicted_class_index])
                     predicted_class_index = i;
 
-            return class_labels[predicted_class_index];
+            return class_labels[predicted_class_index]+"@"+predicted_class_index;
         }
 
         private ANNClassifier() //Trains the network
         {
-
+            string app_data_path = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
+            dictionary_file_name = app_data_path+"\\ANN\\dictionary.xml";
+            network_file_name = app_data_path+"\\ANN\\network.stat";
+            classes_file_name = app_data_path+"\\ANN\\classes.txt";
+            ann_config_file_name = app_data_path+"\\ANN\\config.json";
         }
 
         public static ANNClassifier getInstance
         {
+            
+
             get
             {
                 if (instance == null)
