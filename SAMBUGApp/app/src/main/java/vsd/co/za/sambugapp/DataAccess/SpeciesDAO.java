@@ -50,6 +50,13 @@ public class SpeciesDAO extends DataSourceAdapter {
         //These strings story the species name
         Integer[] mThumbIds = {
                 R.drawable.anolcuscampestris0,
+                R.drawable.cletus0,
+                R.drawable.coconutbug0,
+                R.drawable.coconutbug1,
+                R.drawable.coconutbug2,
+                R.drawable.coconutbug3,
+                R.drawable.coconutbug4,
+                R.drawable.coconutbug5,
                 R.drawable.greenvegbug0,
                 R.drawable.pseudatelusraptoria0,
                 R.drawable.pseudatelusraptoria5,
@@ -59,18 +66,18 @@ public class SpeciesDAO extends DataSourceAdapter {
                 R.drawable.twospottedbug4,
                 R.drawable.twospottedbug5,
                 R.drawable.yellowedgedbug0,
-                R.drawable.yellowedgedbug4,
-                R.drawable.cletus0,
-                R.drawable.coconutbug0,
-                R.drawable.coconutbug1,
-                R.drawable.coconutbug2,
-                R.drawable.coconutbug3,
-                R.drawable.coconutbug4,
-                R.drawable.coconutbug5
+                R.drawable.yellowedgedbug4
         };
 
         String [] names = {
                 "Anolcus Campestris",
+                "Cletus",
+                "Coconut Bug",
+                "Coconut Bug",
+                "Coconut Bug",
+                "Coconut Bug",
+                "Coconut Bug",
+                "Coconut Bug",
                 "Green Vegetable Bug",
                 "Pseudatelus Raptoria",
                 "Pseudatelus Raptoria",
@@ -80,17 +87,10 @@ public class SpeciesDAO extends DataSourceAdapter {
                 "Two Spotted Bug",
                 "Two Spotted Bug",
                 "Yellow Edged Bug",
-                "Yellow Edged Bug",
-                "Cletus",
-                "Coconut Bug",
-                "Coconut Bug",
-                "Coconut Bug",
-                "Coconut Bug",
-                "Coconut Bug",
-                "Coconut Bug"
+                "Yellow Edged Bug"
         };
 
-        Integer [] lifestages = {0,0,0,5,0,2,3,4,5,0,4,0,0,1,2,3,4,5};
+        Integer [] lifestages = {0,0,0,1,2,3,4,5,0,5,0,0,2,3,4,5,0,4};
 
         for(int i = 0; i < mThumbIds.length; i++){
             Species speciesEntry = new Species();

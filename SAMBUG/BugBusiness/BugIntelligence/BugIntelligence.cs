@@ -35,16 +35,17 @@ namespace BugBusiness.BugIntelligence
             try
             {
                 string className = ANNClassifier.getInstance.classify(image);
-             
 
-                int delim_index = className.IndexOf("_");
-                if (delim_index == -1) return new ClassifyResult { SpeciesName = "Coconut Bug", Lifestage = 1, SpeciesID = 1 };
-                string speciesName = className.Substring(0, delim_index);
-                string lifestage = className.Substring(delim_index + 1, className.Length - (delim_index+1));
+                int _delim_index = className.IndexOf("_");
+                
+                string speciesName = className.Substring(0, _delim_index);
+                int @delim_index = className.IndexOf("@");
+                string lifestage = className.Substring(_delim_index + 1, @delim_index - _delim_index -1);
+                string id = className.Substring(@delim_index + 1, className.Length - @delim_index -1);
 
-               
 
-                return new ClassifyResult { SpeciesName = speciesName, Lifestage = Convert.ToInt32(lifestage), SpeciesID = 1 };
+
+                return new ClassifyResult { SpeciesName = speciesName, Lifestage = Convert.ToInt32(lifestage), SpeciesID = Convert.ToInt32(id) };
             }
             catch (Exception e)
             {

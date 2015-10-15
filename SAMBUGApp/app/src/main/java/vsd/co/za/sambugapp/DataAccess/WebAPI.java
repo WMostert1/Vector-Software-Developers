@@ -43,9 +43,10 @@ import vsd.co.za.sambugapp.ScoutTripActivity;
  *
  */
 public class WebAPI {
-    private static final String AUTHENTICATION_URL = "http://sambug.apphb.com/api/authentication/login";
-    private static final String SYNC_SERVICE_URL = "http://sambug.apphb.com/api/Synchronization";
-    private static final String CLASSIFICATION_URL= "http://sambug.apphb.com/api/apiSpeciesClassification";
+    private static final String HOST = "sambug.co.za";
+    private static final String AUTHENTICATION_URL = "http://"+HOST+"/api/authentication/login";
+    private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/Synchronization";
+    private static final String CLASSIFICATION_URL= "http://"+HOST+"/api/apiSpeciesClassification";
     private static final int SOCKET_TIMEOUT_MS = 10000; //10 seconds
 
 

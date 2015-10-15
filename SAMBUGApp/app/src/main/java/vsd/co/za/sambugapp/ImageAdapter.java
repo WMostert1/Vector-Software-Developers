@@ -81,6 +81,13 @@ public class ImageAdapter extends BaseAdapter {
     */
     private Integer[] mThumbIds = {
             R.drawable.anolcuscampestris0,
+            R.drawable.cletus0,
+            R.drawable.coconutbug0,
+            R.drawable.coconutbug1,
+            R.drawable.coconutbug2,
+            R.drawable.coconutbug3,
+            R.drawable.coconutbug4,
+            R.drawable.coconutbug5,
             R.drawable.greenvegbug0,
             R.drawable.pseudatelusraptoria0,
             R.drawable.pseudatelusraptoria5,
@@ -90,14 +97,7 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.twospottedbug4,
             R.drawable.twospottedbug5,
             R.drawable.yellowedgedbug0,
-            R.drawable.yellowedgedbug4,
-            R.drawable.cletus0,
-            R.drawable.coconutbug0,
-            R.drawable.coconutbug1,
-            R.drawable.coconutbug2,
-            R.drawable.coconutbug3,
-            R.drawable.coconutbug4,
-            R.drawable.coconutbug5
+            R.drawable.yellowedgedbug4
     };
 
     public static Bitmap compressBitmap(InputStream in, int reqWidth, int reqHeight) {
