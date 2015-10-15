@@ -95,7 +95,7 @@ public class EnterDataActivity extends AppCompatActivity {
         rvAddedBugs.setHasFixedSize(true);
 
         //add default instruction item if no bugs added
-        if (!hasBugs) {
+        if (!hasBugs && listAddedBugs.size() == 0) {
             addDefaultBug();
         }
 
@@ -114,7 +114,7 @@ public class EnterDataActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_enter_data, menu);
+        getMenuInflater().inflate(R.menu.menu_activity, menu);
         return true;
     }
 
@@ -126,7 +126,7 @@ public class EnterDataActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_about) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -413,27 +413,28 @@ public class EnterDataActivity extends AppCompatActivity {
                 addedBugViewHolder.ivAddedBugPic.setImageBitmap(bm);
                 addedBugViewHolder.tvAddedBugSpecies.setText(bug.getSpecies().getSpeciesName() + " Instar " + bug.getSpecies().getLifestage());
                 addedBugViewHolder.tvAddedBugCount.setText(bug.getNumberOfBugs() + "");
+
+                addedBugViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = addedBugViewHolder.getAdapterPosition();
+                        bugs.remove(pos);
+                        rvAddedBugs.getAdapter().notifyItemRemoved(pos);
+                        if (bugs.size() == 0) {
+                            hasBugs = false;
+                            addDefaultBug();
+                        }
+                    }
+                });
+
+                addedBugViewHolder.slAddedBug.setShowMode(SwipeLayout.ShowMode.LayDown);
+                addedBugViewHolder.slAddedBug.addDrag(SwipeLayout.DragEdge.Right, addedBugViewHolder.llDraggedMenu);
             } else {
                 addedBugViewHolder.ivAddedBugPic.setImageBitmap(null);
                 addedBugViewHolder.tvAddedBugSpecies.setText("No bugs added yet. Click '+' to add.");
                 addedBugViewHolder.tvAddedBugCount.setText("");
+                addedBugViewHolder.slAddedBug.setSwipeEnabled(false);
             }
-
-            addedBugViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = addedBugViewHolder.getAdapterPosition();
-                    bugs.remove(pos);
-                    rvAddedBugs.getAdapter().notifyItemRemoved(pos);
-                    if (bugs.size() == 0) {
-                        hasBugs = false;
-                        addDefaultBug();
-                    }
-                }
-            });
-
-            addedBugViewHolder.slAddedBug.setShowMode(SwipeLayout.ShowMode.LayDown);
-            addedBugViewHolder.slAddedBug.addDrag(SwipeLayout.DragEdge.Right, addedBugViewHolder.llDraggedMenu);
         }
 
     }

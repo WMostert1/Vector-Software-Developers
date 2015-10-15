@@ -215,7 +215,7 @@ public class ScoutTripActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_scout_trip, menu);
+        getMenuInflater().inflate(R.menu.menu_activity, menu);
         return true;
     }
 
@@ -227,7 +227,7 @@ public class ScoutTripActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_about) {
             return true;
         }
 
@@ -287,6 +287,23 @@ public class ScoutTripActivity extends AppCompatActivity {
                 }
                 scoutStopViewHolder.tvTreeCount.setText(stop.getNumberOfTrees() + "");
                 scoutStopViewHolder.tvTreeCount.setTextSize(36);
+
+                scoutStopViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = scoutStopViewHolder.getAdapterPosition();
+                        scoutStops.remove(pos);
+                        rvScoutStops.getAdapter().notifyItemRemoved(pos);
+                        rvPestsPerTree.getAdapter().notifyItemRemoved(pos);
+                        if (scoutStops.size() == 0) {
+                            hasStops = false;
+                            addDefaultStop();
+                        }
+                    }
+                });
+
+                scoutStopViewHolder.slScoutStop.setShowMode(SwipeLayout.ShowMode.LayDown);
+                scoutStopViewHolder.slScoutStop.addDrag(SwipeLayout.DragEdge.Right, scoutStopViewHolder.llDraggedMenu);
             } else {
                 scoutStopViewHolder.tvBlockName.setText("No stops added yet. Click '+'");
                 scoutStopViewHolder.tvTreeCount.setText("");
@@ -294,55 +311,8 @@ public class ScoutTripActivity extends AppCompatActivity {
                 scoutStopViewHolder.llDraggedMenu.removeAllViews();
                 scoutStopViewHolder.ivSwipeIcon.setVisibility(View.INVISIBLE);
                 scoutStopViewHolder.tvTreeCount.setTextSize(0);
+                scoutStopViewHolder.slScoutStop.setSwipeEnabled(false);
             }
-
-            scoutStopViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = scoutStopViewHolder.getAdapterPosition();
-                    scoutStops.remove(pos);
-                    rvScoutStops.getAdapter().notifyItemRemoved(pos);
-                    rvPestsPerTree.getAdapter().notifyItemRemoved(pos);
-                    if (scoutStops.size() == 0) {
-                        hasStops = false;
-                        addDefaultStop();
-                    }
-                }
-            });
-
-            scoutStopViewHolder.slScoutStop.setShowMode(SwipeLayout.ShowMode.LayDown);
-            scoutStopViewHolder.slScoutStop.addDrag(SwipeLayout.DragEdge.Right, scoutStopViewHolder.llDraggedMenu);
-            scoutStopViewHolder.slScoutStop.addSwipeListener(new SwipeLayout.SwipeListener() {
-                @Override
-                public void onClose(SwipeLayout layout) {
-                    //when the SurfaceView totally cover the BottomView.
-                }
-
-                @Override
-                public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                    //you are swiping.
-                }
-
-                @Override
-                public void onStartOpen(SwipeLayout layout) {
-
-                }
-
-                @Override
-                public void onOpen(SwipeLayout layout) {
-                    //when the BottomView totally show.
-                }
-
-                @Override
-                public void onStartClose(SwipeLayout layout) {
-
-                }
-
-                @Override
-                public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                    //when user's hand released.
-                }
-            });
         }
     }
 

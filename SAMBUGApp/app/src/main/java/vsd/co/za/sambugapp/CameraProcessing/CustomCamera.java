@@ -68,7 +68,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
 
-
         // Getting all the needed elements from the layout
         rotatingImage = (ImageButton) findViewById(R.id.imgbCamera);
         flBtnContainer = (FrameLayout) findViewById(R.id.flBtnContainer);
@@ -96,7 +95,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
     }
 
     /**
-     * Creates the camera and adjusts paramets.
+     * Creates the camera and adjusts parameters.
      */
     private void createCamera() {
 
@@ -121,6 +120,8 @@ public class CustomCamera extends Activity implements SensorEventListener {
                 parameters.setPictureFormat(ImageFormat.JPEG);
                 parameters.setPictureFormat(PixelFormat.JPEG);
                 parameters.setJpegQuality(100);
+                if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
                 mCamera.setParameters(parameters);
 
                 cameraConfigured=true;
