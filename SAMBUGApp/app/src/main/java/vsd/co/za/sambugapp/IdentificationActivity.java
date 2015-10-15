@@ -72,7 +72,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         byte[] byteArray = stream.toByteArray();
 
         WebAPI.attemptAPIClassification(byteArray, this);
