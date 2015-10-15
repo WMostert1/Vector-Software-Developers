@@ -1,10 +1,10 @@
-﻿<md-dialog layout="column" class="custom-dialog" aria-label="Login" ng-cloak>
-    <form ng-submit="post($event, $scope)" flex layout="column" name="loginForm">
+﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Login" ng-cloak>
+    <form ng-submit="post($event)" action="/authentication/login" flex layout="column" name="loginForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 class="md-title">Login</h2>
                 <span flex></span>
-                <md-button class="md-icon-button" ng-click="cancel()">
+                <md-button type="button" class="md-icon-button" ng-click="cancel()">
                     <ng-md-icon icon="close" aria-label="Close Dialog"></ng-md-icon>
                 </md-button>
             </div>
@@ -12,7 +12,7 @@
         <md-dialog-content flex layout="column">
             <md-input-container>
                 <label>Email</label>
-                <input required type="email" ng-model="user.email" name="username" minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-autofocus/>
+                <input required type="email" ng-model="user.email" name="username" minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-autofocus />
                 <div ng-messages="loginForm.username.$error" role="alert">
                     <div ng-message="required">Please enter an email address</div>
                     <div ng-message="minlength, maxlength">Your email must be between 10 and 100 characters long</div>
@@ -26,13 +26,17 @@
                     <div ng-message="required">Please enter your password</div>
                 </div>
             </md-input-container>
+            <div class="loaderContainer" flex layout="row" layout-align="center center">
+                <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="50px"></md-progress-circular>
+                {{errorMessage}}
+            </div>
         </md-dialog-content>
         <div class="md-actions" layout="row">
             <span flex></span>
-            <md-button type="submit" class="md-primary" ng-click="">
+            <md-button type="submit" class="md-primary">
                 Login
             </md-button>
-            <md-button class="md-primary" ng-click="">
+            <md-button type="button" class="md-primary">
                 Forgot Password?
             </md-button>
         </div>

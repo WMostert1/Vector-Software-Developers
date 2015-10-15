@@ -1,28 +1,38 @@
-﻿/*todo remove overflow: hidden when Angular extra scrollbar bug is fixed*/
+﻿/* 
+  Allow angular.js to be loaded in body, hiding cloaked elements until 
+  templates compile.  The !important is important given that there may be 
+  other selectors that are more specific or come later and might alter display.  
+ */
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+/*todo remove overflow: hidden when Angular extra scrollbar bug is fixed*/
 html {
-    overflow: hidden;
+    overflow: hidden !important;
 }
 
 body {
-    overflow: hidden;
+    overflow: hidden !important;
+}
+
+.loaderContainer {
+    height: 60px;
 }
 
 #logo {
-    height: 95%;
-}
-
-/*todo rather use flex to stretch the dialog container*/
-.custom-dialog {
-    max-height: 400px;
-    max-width: 650px;
-    width: 100%;
-    height: 100%;
+   height: 100%;
 }
 
 md-sidenav .md-title {
     font-size: 1em !important;
 }
 
+md-sidenav md-toolbar {
+    height: 160px !important;
+    min-height: 160px !important;
+    max-height: 160px !important;
+}
 
 
 *:focus {

@@ -57,7 +57,7 @@ namespace DataAccess.MSSQL
         }
 
         //TODO: Remove magic number => 1
-        public bool InsertNewUser(string username, string password, string farmName)
+        public bool InsertNewUser(string username, string password)
         {
             var userQuery = GetUserByCredentials(username, password);
 
@@ -77,13 +77,6 @@ namespace DataAccess.MSSQL
             };
 
             user.Roles.Add(role);
-
-            Farm farm = new Farm()
-            {
-                FarmName = farmName
-            };
-
-            user.Farms.Add(farm);
             db.Users.Add(user);
             db.SaveChanges();
 
@@ -131,7 +124,6 @@ namespace DataAccess.MSSQL
             {
                 user.Roles.Remove(grower);
             }
-
 
             if (isAdministrator && !user.Roles.Contains(admin))
             {

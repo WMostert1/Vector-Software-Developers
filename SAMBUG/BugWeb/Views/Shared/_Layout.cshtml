@@ -18,7 +18,7 @@
 
 <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" ng-cloak>
     <md-toolbar layout="column" layout-align="center center" class="md-primary md-hue-1 md-whiteframe-z1 md-tall">
-        <img id="logo" src="@Url.Content("~/Content/Images/logo.png")" alt="sambug logo"/>
+            <img id="logo" src="@Url.Content("~/Content/Images/logo.png")" alt="sambug logo" />
     </md-toolbar>
     <md-content layout="row" flex class="md-hue-1">
         <md-list layout-fill flex ng-cloak>
@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <md-list-item ng-if="user.isLoggedIn" flex ng-click="">
+            <md-list-item ng-if="user.isLoggedIn && user.isAdmin"  flex ng-click="">
                 <md-item-content flex layout="row">
                     <ng-md-icon icon="people"></ng-md-icon>
                     <h1 flex offset="10" class="md-body-2">User Management</h1>
@@ -100,8 +100,7 @@
     var isLoggedIn = @Json.Encode(SecurityProvider.isLoggedIn(Session));
     var isGrower = @Json.Encode(SecurityProvider.isGrower(Session));
     var isAdmin = @Json.Encode(SecurityProvider.isAdmin(Session));
-
-
+    
     /*Set globally accessible rootPath of the main Angular App*/
     app.rootPath = "@Url.Content("~")";
 

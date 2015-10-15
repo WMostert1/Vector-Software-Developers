@@ -16,8 +16,6 @@ using BugWeb.Models;
 using BugWeb.Security;
 using BugBusiness.Interface.BugAuthentication;
 using BugBusiness.Interface.BugAuthentication.DTO;
-using BugBusiness.Interface.FarmManagement.DTO;
-
 
 namespace BugWeb.Controllers
 {
@@ -45,6 +43,7 @@ namespace BugWeb.Controllers
             try
             {
                 LoginResponse loginResponse = _bugSecurity.Login(loginRequest);
+                
                 //set up session
                 Session["UserInfo"] = loginResponse.User;
                 return Json(new
@@ -66,6 +65,7 @@ namespace BugWeb.Controllers
             return RedirectToAction("index", "home");
         }
 
+        [HttpPost]
         public ActionResult Register(RegisterViewModel registerViewModel)
         {
             RegisterRequest registerRequest = new RegisterRequest()
@@ -74,22 +74,52 @@ namespace BugWeb.Controllers
                 UsernameConfirmation = registerViewModel.UsernameConfirmation,
                 Password = registerViewModel.Password,
                 PasswordConfirmation = registerViewModel.PasswordConfirmation,
-                FarmName = registerViewModel.FarmName
             };
 
             try
             {
-                RegisterResponse registerResponse = _bugSecurity.Register(registerRequest);
-                return RedirectToAction("login", "home");
+                _bugSecurity.Register(registerRequest);
+                LoginResponse loginResponse = _bugSecurity.Login(new LoginRequest()
+                {
+                    Username = registerRequest.Username,
+                    Password = registerRequest.Password
+                });
+
+                //set up session - automatically log in
+                Session["UserInfo"] = loginResponse.User;
+
+                //todo factorise the Json object (define a DTO)
+                return Json( new {
+                    success = true,
+                    invalidInputError = false,
+                    userExistsError = false,
+                    isGrower = SecurityProvider.isGrower(Session),
+                    isAdmin = SecurityProvider.isAdmin(Session)
+                });
             }
             catch (InvalidInputException)
             {
-                return RedirectToAction("register", "home");
+                return Json(new
+                {
+                    success = false,
+                    invalidInputError = true,
+                    userExistsError = false,
+                    isGrower = false,
+                    isAdmin = false
+                });
             }
             catch (UserExistsException)
             {
-                return RedirectToAction("register", "home");
+                return Json(new
+                {
+                    success = false,
+                    invalidInputError = false,
+                    userExistsError = true,
+                    isGrower = false,
+                    isAdmin = false
+                });
             }
+
         }
 
         [HttpGet]

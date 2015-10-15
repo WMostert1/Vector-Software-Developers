@@ -15,7 +15,6 @@
 
             //-----------event handlers--------------//
             function navigateToHome(event) {
-                console.log("navigating");
                 window.location = "/";
             };
 
@@ -46,6 +45,124 @@
             $scope.onlyApplicableItems = function(value) {
                  return value.mustShow();
             };
+
+            //--------------------------------------//
+
+
+            //-----------Dialog Controllers---------//
+            var LoginDialogCtrl = [
+                "$scope", "$mdDialog", "$mdToast", function(scope, mdDialog, mdToast) {
+                    scope.hide = function() {
+                        mdDialog.hide();
+                    };
+
+                    scope.cancel = function() {
+                        mdDialog.cancel();
+                    };
+
+                    scope.post = function(event) {
+                        event.preventDefault();
+
+                        scope.errorMessage = "";
+
+                        if (!event.target.checkValidity) {
+                            return false;
+                        }
+
+                        scope.loading = true;
+
+                        $http.post(event.target.action, {
+                            username: scope.user.email,
+                            password: scope.user.password
+                        }).then(function success(response) {
+                            scope.loading = false;
+                            if (response.data.success === true) {
+                                mdDialog.hide();
+                                mdToast.show(
+                                    mdToast.simple()
+                                    .content("You are now logged in")
+                                    .position("top right")
+                                    .hideDelay(4000)
+                                );
+                                $scope.user.isLoggedIn = true;
+                                $scope.user.isGrower = response.data.isGrower;
+                                $scope.user.isAdmin = response.data.isAdmin;
+                            } else {
+                                scope.errorMessage = "The email or password you entered is incorrect";
+                            }
+                        }, function error() {
+                            scope.loading = false;
+                            scope.errorMessage = "Trouble contacting server. Please try again.";
+                        });
+
+                        return true;
+                    }
+                }
+            ];
+
+            var RegisterDialogCtrl = [
+                "$scope", "$mdDialog", "$mdToast", function (scope, mdDialog, mdToast) {
+                    scope.hide = function () {
+                        mdDialog.hide();
+                    };
+
+                    scope.cancel = function () {
+                        mdDialog.cancel();
+                    };
+
+                    scope.post = function (event) {
+                        event.preventDefault();
+
+                        scope.errorMessage = "";
+
+                        if (!event.target.checkValidity) {
+                            return false;
+                        }
+
+                        if (scope.user.email !== scope.user.emailConfirmation) {
+                            scope.errorMessage = "The email addresses you entered do not match";
+                            return false;
+                        }
+
+                        if (scope.user.password !== scope.user.passwordConfirmation) {
+                            scope.errorMessage = "The passwords you entered do not match";
+                            return false;
+                        }
+
+                        scope.loading = true;
+                        $http.post(event.target.action, {
+                            username: scope.user.email,
+                            usernameConfirmation: scope.user.emailConfirmation,
+                            password: scope.user.password,
+                            passwordConfirmation: scope.user.passwordConfirmation
+                        }).then(function success(response) {
+                            scope.loading = false;
+                            if (response.data.success === true) {
+                                mdDialog.hide();
+                                mdToast.show(
+                                    mdToast.simple()
+                                    .content("You are now logged in")
+                                    .position("top right")
+                                    .hideDelay(4000)
+                                );
+                                $scope.user.isLoggedIn = true;
+                                $scope.user.isGrower = response.data.isGrower;
+                                $scope.user.isAdmin = response.data.isAdmin;
+                            } else {
+                                if (response.data.userExistsError)
+                                    scope.errorMessage = "This email address is already registered";
+                                else if (response.data.invalidInputError)
+                                    scope.errorMessage = "The details you have entered are incorrect";
+                            }
+                        }, function error() {
+                            scope.loading = false;
+                            scope.errorMessage = "Trouble contacting server. Please try again.";
+                        });
+
+                        return true;
+                    }
+                }
+            ];
 
             //--------------------------------------//
 
@@ -130,49 +247,19 @@
                             { title: "Farms" },
                             { title: "Spray Data" }
                         ]
-                    }
-                ]
+                }]
             };
 
-           $scope.showDialog = function(type, event) {
-                $mdDialog.show({
-                    templateUrl: "/App/Views/" + type + "Dialog.html",
-                    scope: $scope,
-                    parent: angular.element(document.body),
-                    targetEvent: event,
-                    clickOutsideToClose: true,
-                    controller: ["$scope", "$mdDialog", "$mdToast", function(scope, mdDialog, mdToast) {
-                            scope.hide = function () {
-                                mdDialog.hide();
-                            };
 
-                            scope.cancel = function() {
-                                mdDialog.cancel();
-                            };
-                        
-                            scope.post = function (event) {
-                                event.preventDefault();
-                                $http.post("/authentication/login", {
-                                    username: scope.user.email,
-                                    password: scope.user.password
-                                }).success(function(data) {
-                                    if (data.success === true) {
-                                        mdDialog.hide();
-                                        mdToast.show(
-                                              mdToast.simple()
-                                                .content("You are now logged in")
-                                                .position("top right")
-                                                .hideDelay(4000)
-                                        );
-                                        scope.user.isLoggedIn = true;
-                                        scope.user.isGrower = data.isGrower;
-                                        scope.user.isAdmin = data.isAdmin;
-                                    }
-                                });
-                            }
-                        }
-                    ]
-                });
+            //function to show either the login or the register dialog
+           $scope.showDialog = function(type, event) {
+               $mdDialog.show({
+                   templateUrl: "/App/Views/" + type + "Dialog.html",
+                   parent: angular.element(document.body),
+                   targetEvent: event,
+                   clickOutsideToClose: true,
+                   controller: type === "login" ? LoginDialogCtrl : RegisterDialogCtrl
+           });
             }
 
         }

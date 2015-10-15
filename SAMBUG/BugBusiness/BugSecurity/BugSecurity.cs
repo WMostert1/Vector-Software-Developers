@@ -59,7 +59,7 @@ namespace BugBusiness.BugSecurity
                 throw new InvalidInputException();
             }
 
-            bool queryResult = _dbBugSecurity.InsertNewUser(registerRequest.Username, registerRequest.Password, registerRequest.FarmName);
+            bool queryResult = _dbBugSecurity.InsertNewUser(registerRequest.Username, registerRequest.Password);
 
             if (queryResult == false)
             {
