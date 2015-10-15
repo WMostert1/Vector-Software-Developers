@@ -19,22 +19,30 @@ namespace ImageRecognition
     {
         static void Main(string[] args)
         {
-          try
-            {
-                BagOfWords bow = new BagOfWords();
-                bow.runBoW();
-              
-            }catch(Exception e){
-                Debug.WriteLine(e.Message);
-            }
+         
            
-          /*  Stopwatch sw = Stopwatch.StartNew();
+         /*   Stopwatch sw = Stopwatch.StartNew();
             Classifier classifier = new Classifier();
             classifier.preProcessTrainingData();
             sw.Stop();
             Console.WriteLine(sw.Elapsed);
-           
-           * */
+          * */
+
+        
+            try
+            {
+                Stopwatch sw1 = Stopwatch.StartNew();
+                BagOfWords bow = new BagOfWords();
+                bow.runBoW();
+                sw1.Stop();
+                Console.WriteLine(sw1.Elapsed);
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        
           Console.ReadLine();
 
         }

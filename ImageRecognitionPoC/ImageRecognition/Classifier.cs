@@ -87,7 +87,7 @@ namespace ImageRecognition
                 foreach (FileInfo file in files)
                 {
                     
-                    Console.WriteLine((int)((file_count++)/(double)file.Length*100.0)+"%");
+                    Console.WriteLine((int)((file_count++)/(double)files.Length*100.0)+"%");
                     if (file.Extension.Equals(".db")) continue;
                     Image<Bgr, byte> image = new Image<Bgr, byte>(file.FullName);
                     while (image.Width > 1000 || image.Height > 1000)
@@ -110,13 +110,14 @@ namespace ImageRecognition
                     }
 
                     int g = 0;
-                    for (double gamma = 0.4; gamma <= 1.8; gamma += 0.2)
+                    for (double gamma = 0.6; gamma <= 1.4; gamma += 0.2)
                     {
                         Image<Bgr, byte> input_image = image.Copy();
                         input_image._GammaCorrect(gamma);
                         doGrabCut(input_image).Save(file.DirectoryName + "\\" + fileName + "G" + (g++) + file.Extension); ;
                     }
-                        
+
+                    //file.Delete();
                 }
         }
 

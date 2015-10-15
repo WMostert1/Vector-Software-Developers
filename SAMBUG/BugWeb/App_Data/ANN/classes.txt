@@ -1,10 +1,18 @@
-BN_2nd instar
-BN_4th instar
-BN_Adult
-C_4th instar
-C_Adult
-Green Vegetable Bug - Nezara viridula
-Nezara prunasis - non-pest
-PR_5th instar
-Small brown bug - non-pest
-Yellow Edged bug - Nezara pallidoconspersa
+Anolcus campestris _0
+Cletus_0
+Coconut bug_0
+Coconut bug_1
+Coconut bug_2
+Coconut bug_3
+Coconut bug_4
+Coconut bug_5
+Green Vegetable Bug_0
+Pseudatelus raptoria_0
+Pseudatelus raptoria_5
+Two spotted bug_0
+Two spotted bug_2
+Two spotted bug_3
+Two spotted bug_4
+Two spotted bug_5
+Yellow Edged bug_0
+Yellow Edged bug_4
