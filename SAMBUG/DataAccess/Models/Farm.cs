@@ -22,6 +22,8 @@ namespace DataAccess.Models
         public long FarmID { get; set; }
         public long UserID { get; set; }
         public string FarmName { get; set; }
+        public string LastModifiedID { get; set; }
+        public System.DateTime TMStamp { get; set; }
     
         public virtual ICollection<Block> Blocks { get; set; }
         public virtual User User { get; set; }
