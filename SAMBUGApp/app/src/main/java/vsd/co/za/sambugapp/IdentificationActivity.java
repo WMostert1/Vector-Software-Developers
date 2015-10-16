@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.graphics.Matrix;
@@ -62,6 +63,7 @@ public class IdentificationActivity extends AppCompatActivity {
     private int createCounter = 0;
     private String fullPathName;
     private boolean isClassified = false;
+    private AsyncTask classifyTask;
 
 
 
@@ -72,10 +74,10 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
         byte[] byteArray = stream.toByteArray();
 
-        WebAPI.attemptAPIClassification(byteArray, this);
+        classifyTask = WebAPI.attemptAPIClassification(byteArray, this);
         Toast.makeText(this, "Starting classification...", Toast.LENGTH_SHORT).show();
     }
 
@@ -215,7 +217,6 @@ public class IdentificationActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         setIntent(intent);//must store the new intent unless getIntent() will return the old one
         getPicture(getIntent());
-
     }
 
     public Bitmap rotateBitmap(Bitmap source, float angle)
@@ -274,9 +275,9 @@ public class IdentificationActivity extends AppCompatActivity {
      * Starts a new intent to take a picture with the Custom Camera
      */
     private void dispatchTakePictureIntent(){
+        classifyTask = null;
         Intent takePictureIntent = new Intent(this,CustomCamera.class);
         startActivityForResult(takePictureIntent, 0);
-
     }
 
     public void showDialogNumberOfBugs(View v) {
@@ -296,6 +297,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 .show();
         np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
         np.setMaxValue(100);
+        np.setWrapSelectorWheel(false);
     }
 
     /**
@@ -315,11 +317,13 @@ public class IdentificationActivity extends AppCompatActivity {
         }
         Bitmap currentPicture = bitmap;
         currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
-        bundle.putParcelable("Image", currentPicture);
+        bundle.putParcelable(FIELD_BITMAP, currentPicture);
         bundle.putInt(BUG_COUNT, numBugs);
         output.putExtras(bundle);
         setResult(RESULT_OK, output);
-
+        if (classifyTask != null) {
+            classifyTask.cancel(true);
+        }
         finish();
     }
 

@@ -203,7 +203,6 @@ public class ImagePreview extends AppCompatActivity {
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtras(b);
             startActivity(intent);
-
         }
     }
 

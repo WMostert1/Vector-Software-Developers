@@ -400,6 +400,9 @@ public class CustomCamera extends Activity implements SensorEventListener {
         intent.putExtras(b);
         startActivityForResult(intent,0);
     }
+
+    @Override
+
     /**
      * Putting in place a listener so we can get the sensor data only when
      * something changes.

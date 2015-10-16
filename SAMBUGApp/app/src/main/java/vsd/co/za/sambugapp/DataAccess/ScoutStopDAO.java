@@ -4,10 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
-
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -117,9 +117,28 @@ public class ScoutStopDAO extends DataSourceAdapter{
         scoutStop.setLatitude(cursor.getFloat(3));
         scoutStop.setLongitude(cursor.getFloat(4));
         try {
-            String date = cursor.getString(5);
-            Log.e("DAO", date);
-            scoutStop.setDate(DateFormat.getDateTimeInstance().parse(date));
+            String strDate = cursor.getString(5);
+            Log.e("DAO", strDate);
+            String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
+
+            String outputPattern = "dd-MM-yyyy";
+
+            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+            Date date = null;
+            String str = null;
+
+            try {
+                date = inputFormat.parse(strDate);
+                str = outputFormat.format(date);
+
+                Log.i("mini", "Converted Date Today:" + str);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            scoutStop.setDate(outputFormat.parse(str));
         } catch (ParseException e) {
             e.printStackTrace();
             scoutStop.setDate(null);

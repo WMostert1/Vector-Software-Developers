@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import vsd.co.za.sambugapp.CameraProcessing.CustomCamera;
 import vsd.co.za.sambugapp.DomainModels.Block;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
