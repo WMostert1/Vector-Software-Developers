@@ -218,7 +218,7 @@ namespace BugBusiness.BugIntelligence
             //Store the vocabulary
             bowDE.SetVocabulary(dictionary);
             image = preProcessImage(image);
-            //Emgu.CV.UI.ImageViewer.Show(image);
+            Emgu.CV.UI.ImageViewer.Show(image);
             Image<Gray, Byte> testImgGray = image.Convert<Gray, byte>();
             VectorOfKeyPoint testKeyPoints = detector.DetectKeyPointsRaw(testImgGray, null);
             Matrix<float> testBOWDescriptor = bowDE.Compute(testImgGray, testKeyPoints);

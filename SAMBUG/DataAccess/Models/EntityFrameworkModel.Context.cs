@@ -27,11 +27,11 @@ namespace DataAccess.Models
     
         public virtual DbSet<Block> Blocks { get; set; }
         public virtual DbSet<Farm> Farms { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<ScoutBug> ScoutBugs { get; set; }
         public virtual DbSet<ScoutStop> ScoutStops { get; set; }
         public virtual DbSet<Species> Species { get; set; }
         public virtual DbSet<Treatment> Treatments { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<User> Users { get; set; }
     }
 }

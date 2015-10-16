@@ -43,7 +43,7 @@ import vsd.co.za.sambugapp.ScoutTripActivity;
  *
  */
 public class WebAPI {
-    private static final String HOST = "sambug.apphb.com";
+    private static final String HOST = "sambug.azurewebsites.net/";
     private static final String AUTHENTICATION_URL = "http://"+HOST+"/api/authentication/login";
     private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/Synchronization";
     private static final String CLASSIFICATION_URL= "http://"+HOST+"/api/apiSpeciesClassification";

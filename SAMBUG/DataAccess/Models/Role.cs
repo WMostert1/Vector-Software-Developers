@@ -22,6 +22,8 @@ namespace DataAccess.Models
         public long RoleID { get; set; }
         public int RoleType { get; set; }
         public string RoleDescription { get; set; }
+        public string LastModifiedID { get; set; }
+        public System.DateTime TMStamp { get; set; }
     
         public virtual ICollection<User> Users { get; set; }
     }

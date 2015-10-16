@@ -161,7 +161,7 @@ public class IdentificationActivity extends AppCompatActivity {
         isClassified = true;
         //Possibly validate that ID's are correct in future
         Toast.makeText(getApplicationContext(),"Species Identified!",Toast.LENGTH_SHORT).show();
-        changeEntrySelection(currentEntry.SpeciesID);
+        changeEntrySelection(currentEntry.SpeciesID+1);
     }
 
     public void changeEntrySelection(int id){
