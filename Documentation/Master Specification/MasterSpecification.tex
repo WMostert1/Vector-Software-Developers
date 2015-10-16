@@ -5,7 +5,7 @@
 \usepackage{titling}
 \usepackage{graphicx}
 \usepackage{titlesec}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 
 \graphicspath{ {./Images/} }
 
@@ -23,24 +23,27 @@
     \centering
     \vfill
     {\bfseries\Huge
-        Master Specification for the SAMBUG Project\\
+        SAMBUG\\
+        Master Specification\\
       \hfill\\
          \Large COS 301
         \vskip2cm
-        \includegraphics[width=6cm]{sambug} \\
+        \includegraphics[width=6cm]{sambug}
+        \includegraphics[width=8cm]{logo} \\
 
     }    
     \vfill
-        Abrie van Aardt 13178840\\
-		Werner Mostert 13019695\\
-		Kele-ab Tessera 13048423\\
-		Keagan Thompson 13023782\\
-		Michelle Swanepoel 13066294\\
+    \begin{tabular}{lr}
+        	Abrie van Aardt&13178840\\
+		Werner Mostert&13019695\\
+		Kale-ab Tessera&13048423\\
+		Keagan Thompson&13023782\\
+		Michelle Swanepoel&13066294\\
+	\end{tabular}
     
     
     \vfill
-    \includegraphics[width=6cm]{logo} \\
-    \textbf{May 2015}
+    \textbf{October 2015}
     \vfill
 \end{titlepage}
 	
@@ -92,8 +95,8 @@ An innovative approach to handling the management and acquisition of scout data 
 	\subsection{BugScouting}
 		The BugScouting module has the following functionality:
 		\begin{enumerate}
-			\item It provides the functionality for a user to be able to enter data related to a scouting trip - entering data such as the number of trees scouted, the average number of bugs per tree and the different kind of bugs specified. After which a summary should be displayed.
-			\item It provides the ability for a user to record the details related to spraying.
+			\item It provides the functionality for a user to be able to enter data related to a scouting trip - entering data such as the number of trees scouted, the number of bugs per tree and the different kind of bugs specified. After this data has been entered, a summary should be displayed for the user.
+			\item It provides the ability for a user to record the details related to spraying, such as the date of spraying and the specific block that was sprayed.
 		\end{enumerate}
 
 		In many ways this module may be regarded as the "core" functionality of the system. This encompasses the main purpose of the system.
@@ -115,7 +118,7 @@ An innovative approach to handling the management and acquisition of scout data 
 		\includegraphics[width=\linewidth]{updateInfo}
 		
 		\paragraph{showTripSummary \dotfill [Priority - High]}
-		After completing a full scouting trip, this use case should provide a summary of the entire scouting trip. One scouting trip may consist of many scouting stops. The averages for the scouting trip data is used in the summary.\\\hfill\\
+		After completing a full scouting trip, this use case should provide a summary of the entire scouting trip. One scouting trip may consist of many scouting stops and each scout stop may include the finding of various bugs. The averages for the scouting trip data is used in the summary.\\\hfill\\
 		The Service Contract for the \textit{showTripSummary} use case is shown below:\\\hfill\\
 		\includegraphics[width=\linewidth]{showTripSummary}
 		
@@ -126,7 +129,7 @@ An innovative approach to handling the management and acquisition of scout data 
 		\includegraphics[width=\linewidth]{EnterTreatmentData}
 		
 		\paragraph{enterScoutingData \dotfill [Priority - Critical]}
-		This is the core use case of this module. This use case allows entering data related to a scouting stop. Data captured should include the number of trees observed, number of bugs counter and the block or orchard number where the scouting took place. After entering the data, the specimen should be identified (classified) before successfully submitting it for persistence.\\\hfill\\
+		This is the core use case of this module. This use case allows entering data related to a scouting stop. Data captured should include the number of trees observed, the number of bugs encountered and the block number where the scouting took place. After entering the data, the specimen should be identified (classified), either manually or automatically, before successfully submitting it for persistence.\\\hfill\\
 		The Service Contract for the \textit{enterScoutingData} use case is shown below:\\\hfill\\
 		\includegraphics[width=\linewidth]{enterScoutingData}
 		The Process Specification for the \textit{enterScoutingData} use case is shown below:\\\hfill\\
@@ -206,7 +209,7 @@ An innovative approach to handling the management and acquisition of scout data 
 		\paragraph{isAuthorised \dotfill [Priority - High]}
 		Whenever a service which should not be accessibility to entire plethora of users is requested, authorization is required. This use case makes provision for this.\\\hfill\\
 		The Service Contract for the \textit{isAuthorised} use case is shown below:\\\hfill\\
-		%\includegraphics[width=\linewidth]{}
+		\includegraphics[width=\linewidth]{isAuthorised}
 		\paragraph{authoriseUser \dotfill [Priority - Medium]}
 		This use case allows for an authorization restriction for a service to be added/\\\hfill\\
 		The Service Contract for the \textit{authoriseUser} use case is shown below:\\\hfill\\
@@ -233,19 +236,19 @@ An innovative approach to handling the management and acquisition of scout data 
 		\subsubsection{Use Cases}
 		The concrete use cases for the \textit{BugReporting} module follow:
 		\paragraph{viewMap \dotfill [Priority - Medium]}
-		This use case allows for the generation of a heat map based on historical data.\\\hfill\\
+		This use case provides the functionality to view a heat map, where the total number of pests found will be shown. Areas with more pests will show a darker area on the map. One will this be able to conclude which areas are experiencing a problem with pests. Multiple constraints and filters can be applied to show only a subset of the data available.\\\hfill\\
 		The Service Contract for the \textit{viewMap} use case is shown below:\\\hfill\\		
 		\includegraphics[width=\linewidth]{viewMapSC}
 		
-		\paragraph{viewGraph \dotfill [Priority - Medium]}
-		This use case allows for the generation of a graphs based on historical data.\\\hfill\\
-		The Service Contract for the \textit{viewGraph} use case is shown below:\\\hfill\\	
-		\includegraphics[width=\linewidth]{viewGraphSC}	
+		\paragraph{viewCharts \dotfill [Priority - Medium]}
+		This use case provides the functionality to view data that was collected through the mobile application, specifically sccouting data. The data will be displayed in the form of dynamic charts, where one can choose multiple filters and constraints to apply to the data. One will be able to see how spraying affects the pest count.\\\hfill\\
+		The Service Contract for the \textit{viewCharts} use case is shown below:\\\hfill\\	
+		\includegraphics[width=\linewidth]{viewCharts}	
 		
-		\paragraph{viewHistoricalData \dotfill [Priority - Medium]}
-		This use case allows for the generation of historical data.\\\hfill\\
-		The Service Contract for the \textit{viewHistoricalData} use case is shown below:\\\hfill\\
-				\includegraphics[width=\linewidth]{viewHistoricalDataSC}	
+		\paragraph{viewTables \dotfill [Priority - Medium]}
+		This use case allows the user to see data that has been collected through the mobile application, specifically scouting data. The data will be displayed in the form of a table and will have the functionlity to download this as an Excel spreadsheet, PDF document or to print the table. One will be able to also view spraying data. Multiple filters and constraints can be applied to the data to only view a subset of the data available.\\\hfill\\
+		The Service Contract for the \textit{viewTables} use case is shown below:\\\hfill\\
+				\includegraphics[width=\linewidth]{viewTables}	
 
 	
 		
@@ -415,7 +418,11 @@ For more information on why JUnit was chosen compared to other Testing Framework
 		\paragraph{Fiddler 4}
 			Fiddler is a .NET orientated debugging program similar to WireShark which is used to monitor HTTP requests and set up custom requests to any specified server in almost any specific form (GET, POST, PUT etc.)
 		\paragraph{Git and GitHub}
-			Git is the version control system of choice which is uituilised for the system. The public repository from whch the code base is hosted is named GitHub and may be accessed at \url{https://github.com/WMostert1/Vector-Software-Developers}.
+			Git is the version control system of choice which is utilised for the system. The public repository from whch the code base is hosted is named GitHub and may be accessed at \url{https://github.com/WMostert1/Vector-Software-Developers}.
+		\paragraph{Material Design}
+			Material Design is a design language that was developed by Google used to make the experience of viewing a mobile or web application more real and alive. We have decided with this technology as we believe it can make our system only better, especially when Material Design and implementations thereof has had time to grow. We believe it can make our system visually more appealing and also make our system more accessible.
+			
+			Angular Material will be used on the web interface. Angular material is an implementation of Material Design.  
 		\paragraph{Misc. Javascript Frameworks and Libraries}
 			Various, mostly JavaScript, libraries are utilised for the reporting services and user interface.
 %\section{Open Issues}
