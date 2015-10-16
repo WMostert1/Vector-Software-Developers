@@ -1,9 +1,13 @@
-﻿@using BugWeb.Security
+﻿@using BugBusiness.Interface.BugSecurity.DTO
+@using BugWeb.Security
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="@Url.Content("~")">
+
     <title>@ViewBag.Title</title>
 
     @Styles.Render("~/Content/css")
@@ -42,7 +46,7 @@
 
                 <div id="{{item.collapseTargetId}}" class="collapse">
                     <md-list flex layout-fill>
-                        <md-list-item ng-repeat="subItem in item.subList">
+                        <md-list-item ng-repeat="subItem in item.subList" ng-click="$parent.managementMenu.actions[subItem.actionName]($event)">
                             <md-item-content flex layout="row">
                                 <h1 flex offset="10" class="md-body-1">{{subItem.title}}</h1>
                             </md-item-content>
@@ -70,7 +74,7 @@
     </md-content>
 </md-sidenav>
 
-<div layout="column" ng-cloak>
+<div flex layout="column" ng-cloak>
     <md-toolbar md-scroll-shrink ng-if="true">
         <div class="md-toolbar-tools">
             <md-button ng-click="toggleSideNav('left')" class="md-icon-button" hide-gt-md aria-label="Settings">
@@ -96,13 +100,19 @@
 @Scripts.Render("~/bundles/app")
 
 <script type="text/javascript">
+    
+    /*todo remove globals*/
     /*Set globally accessible user state*/
     var isLoggedIn = @Json.Encode(SecurityProvider.isLoggedIn(Session));
     var isGrower = @Json.Encode(SecurityProvider.isGrower(Session));
     var isAdmin = @Json.Encode(SecurityProvider.isAdmin(Session));
-    
+
+    /*Set globally accessible API URLs*/
+    var recordsUrl = "@Url.Content("~/api/records/")";
+    var speciesUrl = "@Url.Content("~/api/species")";
+
     /*Set globally accessible rootPath of the main Angular App*/
-    app.rootPath = "@Url.Content("~")";
+    angular.module("appMain").rootPath = "@Url.Content("~")";
 
     /*todo remove the patch below when Angular Material prevents browser default invalid messages*/
     document.addEventListener("invalid", (function() {
@@ -113,7 +123,6 @@
 
 </script>
 
-@*todo remember to bootstrap Angular SPA silos in this section*@
 @RenderSection("scripts", required: false)
 
 </body>

@@ -184,6 +184,14 @@
     <Content Include="App\Controllers\homeCtrl.js" />
     <Content Include="App\Controllers\loginDialogCtrl.js" />
     <Content Include="App\Reporting\app.js" />
+    <Content Include="App\Reporting\Controllers\appCtrl.js" />
+    <Content Include="App\Reporting\Controllers\chartsCtrl.js" />
+    <Content Include="App\Reporting\Controllers\mapCtrl.js" />
+    <Content Include="App\Reporting\Controllers\tablesCtrl.js" />
+    <Content Include="App\Reporting\Services\reportingDataService.js" />
+    <Content Include="App\Reporting\Views\charts.html" />
+    <Content Include="App\Reporting\Views\map.html" />
+    <Content Include="App\Reporting\Views\tables.html" />
     <Content Include="App\Views\loginDialog.html" />
     <Content Include="App\Views\registerDialog.html" />
     <Content Include="Content\angular-material-icons.css" />
@@ -221,6 +229,8 @@
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular-resource.js" />
     <Content Include="Scripts\angular-resource.min.js" />
+    <Content Include="Scripts\angular-route.js" />
+    <Content Include="Scripts\angular-route.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap-tagsinput.js" />
@@ -229,6 +239,7 @@
     <Content Include="Scripts\angular-aria.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
     <Content Include="Scripts\angular-messages.min.js.map" />
+    <Content Include="Scripts\angular-route.min.js.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\chartist-plugin-axistitle.js" />
@@ -268,13 +279,11 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Shared\Authentication.cshtml" />
-    <Content Include="Views\Authentication\Register.cshtml" />
     <Content Include="Views\Reporting\Tabular.cshtml" />
     <Content Include="Views\Reporting\Charts.cshtml" />
-    <Content Include="Views\Reporting\Index.cshtml" />
+    <Content Include="Views\Home\Reporting.cshtml" />
     <Content Include="Views\FarmManagement\EditBlocks.cshtml" />
     <Content Include="Views\Authentication\EditUserRoles.cshtml" />
     <Content Include="Views\Reporting\Map.cshtml" />
@@ -284,11 +293,8 @@
     <Content Include="Views\FarmManagement\Treatments.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App\Reporting\Controllers\" />
     <Folder Include="App\Reporting\Directives\" />
     <Folder Include="App\Reporting\Filters\" />
-    <Folder Include="App\Reporting\Services\" />
-    <Folder Include="App\Reporting\Views\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>

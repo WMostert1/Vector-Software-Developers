@@ -17,7 +17,7 @@ namespace BugWeb
             routes.MapRoute(
                 name: "reporting",
                 url: "reporting/{*catchall}",
-                defaults: new {controller = "reporting", action = "index"});
+                defaults: new {controller = "home", action = "reporting"});
             
             routes.MapRoute(
                 name: "Default",

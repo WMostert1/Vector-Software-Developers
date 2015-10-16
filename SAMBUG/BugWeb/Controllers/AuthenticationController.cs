@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using BugBusiness.Interface.BugSecurity;
 using BugBusiness.BugAuthentication;
 using BugBusiness.Interface.BugSecurity.DTO;
@@ -88,7 +79,7 @@ namespace BugWeb.Controllers
                 //set up session - automatically log in
                 Session["UserInfo"] = loginResponse.User;
 
-                //todo factorise the Json object (define a DTO)
+                //todo factorise these Json object (define a DTO)
                 return Json( new {
                     success = true,
                     invalidInputError = false,

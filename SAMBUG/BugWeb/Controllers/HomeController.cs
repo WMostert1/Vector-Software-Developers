@@ -12,19 +12,13 @@ namespace BugWeb.Controllers
         
         public ActionResult Index()
         {
-          /* if (!SecurityProvider.isGrower(Session) && !SecurityProvider.isAdmin(Session))
-               return RedirectToAction("login","home");*/
             return View();
         }
 
-        public ActionResult Login()
+        //[Authenticate(Roles = "1, 2", Alternate = true)]
+        public ActionResult Reporting()
         {
-            return View("~/Views/Authentication/Login.cshtml");
-        }
-
-        public ActionResult Register()
-        {    
-            return View("~/Views/Authentication/Register.cshtml");
+            return View();
         }
 
         public ActionResult BlockEdit()

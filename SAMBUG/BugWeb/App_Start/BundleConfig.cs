@@ -10,7 +10,7 @@ namespace BugWeb
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.UseCdn = true;
-
+            
             const string cdnJsChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.js",
                 cdnCssChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.css",
                 cdnJsTypeAhead = "https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.js",
@@ -21,6 +21,7 @@ namespace BugWeb
                 .Add(new ScriptBundle("~/bundles/angular")
                     .Include("~/Scripts/angular.js",
                         "~/Scripts/angular-resource.js",
+                        "~/Scripts/angular-route.js",
                         "~/Scripts/angular-messages.js",
                         "~/Scripts/angular-aria.js",
                         "~/Scripts/angular-animate.js",
@@ -64,10 +65,16 @@ namespace BugWeb
                 .Add(new ScriptBundle("~/bundles/bootstrap-tagsinput")
                     .Include("~/Scripts/bootstrap-tagsinput.js"));
 
-            //TODO: this script bundle must include all scripts needed by tables and charts, rename as needed
+            //TODO: made changes here for reporting, must remember to reconfigure
             bundles
-                .Add(new ScriptBundle("~/bundles/reporting")
-                    .Include("~/Scripts/charts.js"));
+                .Add(new ScriptBundle("~/bundles/report")
+                    .Include("~/App/Reporting/app.js",
+                    "~/App/Reporting/Services/reportingDataService.js",
+                    "~/App/Reporting/Controllers/appCtrl.js",
+                    "~/App/Reporting/Controllers/mapCtrl.js",
+                    "~/App/Reporting/Controllers/chartsCtrl.js",
+                    "~/App/Reporting/Controllers/tablesCtrl.js"
+                    ));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/chartist", cdnJsChartist)

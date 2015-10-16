@@ -22,6 +22,18 @@
                 window.location = "/authentication/logout";
             };
 
+            function navigateToMap(event) {
+                window.location = "/reporting/map";
+            };
+
+            function navigateToCharts(event) {
+                window.location = "/reporting/charts";
+            };
+
+            function navigateToTables(event) {
+                window.location = "/reporting/tables";
+            };
+
             function showLoginDialog(event) {
                 $scope.showDialog("login", event);
             };
@@ -87,6 +99,9 @@
                                 $scope.user.isLoggedIn = true;
                                 $scope.user.isGrower = response.data.isGrower;
                                 $scope.user.isAdmin = response.data.isAdmin;
+                                $scope.user.userId = response.data.userId;
+                                /*todo improve mechanism, this is very insecure*/
+                                recordsUrl += isAdmin ? "" : $scope.user.userId;
                             } else {
                                 scope.errorMessage = "The email or password you entered is incorrect";
                             }
@@ -148,6 +163,9 @@
                                 $scope.user.isLoggedIn = true;
                                 $scope.user.isGrower = response.data.isGrower;
                                 $scope.user.isAdmin = response.data.isAdmin;
+                                $scope.user.userId = response.data.userId;
+                                /*todo improve mechanism, this is very insecure*/
+                                recordsUrl += isAdmin ? "" : $scope.user.userId;
                             } else {
                                 if (response.data.userExistsError)
                                     scope.errorMessage = "This email address is already registered";
@@ -215,7 +233,10 @@
 
             $scope.managementMenu = {
                 actions: {
-                    toggleCollapseIcon: toggleCollapseIcon
+                    toggleCollapseIcon: toggleCollapseIcon,
+                    navigateToMap: navigateToMap,
+                    navigateToCharts: navigateToCharts,
+                    navigateToTables: navigateToTables
                 },
                 items: [
                 {
@@ -228,9 +249,18 @@
                     collapseTargetId: "reportingSubmenu",
                     title: "Reporting",
                     subList: [
-                        { title: "Map" },
-                        { title: "Charts" },
-                        { title: "Tables" }
+                        {
+                            actionName: "navigateToMap",
+                            title: "Map"
+                        },
+                        {
+                            actionName: "navigateToCharts",
+                            title: "Charts"
+                        },
+                        {
+                            actionName: "navigateToTables",
+                            title: "Tables"
+                        }
                     ]
                 },
                 {
