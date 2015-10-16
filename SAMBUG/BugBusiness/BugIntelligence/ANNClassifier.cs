@@ -209,7 +209,7 @@ namespace BugBusiness.BugIntelligence
 
         public string classify(Image<Bgr, byte> image, Matrix<float> dictionary, List<string> class_labels, Emgu.CV.ML.ANN_MLP network)  //class labels and dict read from XML docs
         {
-            //Emgu.CV.UI.ImageViewer.Show(image);
+            Emgu.CV.UI.ImageViewer.Show(image);
             Matrix<float> classification_result = new Matrix<float>(1, class_labels.Count);
             SURFDetector detector = new SURFDetector(400, false);
             BruteForceMatcher<float> matcher = new BruteForceMatcher<float>(DistanceType.L2);

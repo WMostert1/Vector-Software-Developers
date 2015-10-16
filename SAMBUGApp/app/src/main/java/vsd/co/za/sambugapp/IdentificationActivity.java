@@ -74,7 +74,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         byte[] byteArray = stream.toByteArray();
 
         classifyTask = WebAPI.attemptAPIClassification(byteArray, this);
@@ -163,7 +163,7 @@ public class IdentificationActivity extends AppCompatActivity {
         isClassified = true;
         //Possibly validate that ID's are correct in future
         Toast.makeText(getApplicationContext(),"Species Identified!",Toast.LENGTH_SHORT).show();
-        changeEntrySelection(currentEntry.SpeciesID+1);
+        changeEntrySelection(currentEntry.SpeciesID);
     }
 
     public void changeEntrySelection(int id){

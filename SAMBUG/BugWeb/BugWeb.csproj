@@ -214,6 +214,8 @@
     <Content Include="Content\jasny-bootstrap.css.map" />
     <Content Include="App_Data\ANN\config.json" />
     <Content Include="App_Data\ANN\network.stat" />
+    <None Include="Properties\PublishProfiles\sambug - FTP %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\sambug - Web Deploy %282%29.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\chartist-plugin-axistitle.js" />
     <Content Include="Scripts\chartist-plugin-tooltip.js" />
