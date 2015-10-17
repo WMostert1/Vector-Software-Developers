@@ -176,7 +176,7 @@ public class EnterDataActivity extends AppCompatActivity {
     private ScoutStop createScoutStop() {
         Location location = getGeoLocation();
         ScoutStop stop = new ScoutStop();
-        stop.setDate(new Date());
+        stop.setDate(new java.sql.Date(new Date().getTime()));
         stop.setLatitude((float) location.getLatitude());
         stop.setLongitude((float) location.getLongitude());
         stop.setNumberOfTrees(0);

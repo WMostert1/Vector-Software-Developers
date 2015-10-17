@@ -117,31 +117,38 @@ public class ScoutStopDAO extends DataSourceAdapter{
         scoutStop.setLatitude(cursor.getFloat(3));
         scoutStop.setLongitude(cursor.getFloat(4));
         try {
-            String strDate = cursor.getString(5);
-            Log.e("DAO", strDate);
-            String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
+//            String strDate = cursor.getString(5);
+//            Log.e("DAO", strDate);
+//            String inputPattern = "EEE MMM d HH:mm:ss zzz yyyy";
+//
+//            String outputPattern = "dd-MM-yyyy";
+//
+//            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+//            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+//
+//            Date date = null;
+//            String str = null;
+//
+//            try {
+//                date = inputFormat.parse(strDate);
+//                str = outputFormat.format(date);
+//
+//                Log.i("mini", "Converted Date Today:" + str);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
 
-            String outputPattern = "dd-MM-yyyy";
+           // scoutStop.setDate(outputFormat.parse(str));
+//            SimpleDateFormat sdf1 = new SimpleDateFormat("dd-mm-yyyy");
+//            scoutStop.setDate(sdf1.parse(cursor.getString(5)));
+            String startDate=cursor.getString(5);
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date date = sdf1.parse(startDate);
+            java.sql.Date sqlStartDate = new java.sql.Date(date.getTime());
+            scoutStop.setDate(sqlStartDate);
 
-            SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
-            SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+        } catch(Exception k){
 
-            Date date = null;
-            String str = null;
-
-            try {
-                date = inputFormat.parse(strDate);
-                str = outputFormat.format(date);
-
-                Log.i("mini", "Converted Date Today:" + str);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            scoutStop.setDate(outputFormat.parse(str));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            scoutStop.setDate(null);
         }
 
         return scoutStop;

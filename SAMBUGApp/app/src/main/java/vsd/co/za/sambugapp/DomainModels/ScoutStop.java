@@ -17,7 +17,7 @@ public class ScoutStop implements Serializable {
     public float Latitude;
     public float Longitude;
 
-    public java.util.Date Date;
+    public java.sql.Date Date;
 
     public Block Block;
     public ArrayList<ScoutBug> ScoutBugs;
@@ -89,11 +89,11 @@ public class ScoutStop implements Serializable {
         Longitude = longitude;
     }
 
-    public java.util.Date getDate() {
+    public java.sql.Date getDate() {
         return Date;
     }
 
-    public void setDate(java.util.Date date) {
+    public void setDate(java.sql.Date date) {
         Date = date;
     }
 
