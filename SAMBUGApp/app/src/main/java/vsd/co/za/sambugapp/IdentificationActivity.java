@@ -143,7 +143,7 @@ public class IdentificationActivity extends AppCompatActivity {
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
-                    changeEntrySelection(position + 1);
+                    changeEntrySelection(position+1);
                 }
             });
 
@@ -163,7 +163,7 @@ public class IdentificationActivity extends AppCompatActivity {
         isClassified = true;
         //Possibly validate that ID's are correct in future
         Toast.makeText(getApplicationContext(),"Species Identified!",Toast.LENGTH_SHORT).show();
-        changeEntrySelection(currentEntry.SpeciesID);
+        changeEntrySelection(currentEntry.SpeciesID+1);
     }
 
     public void changeEntrySelection(int id){
