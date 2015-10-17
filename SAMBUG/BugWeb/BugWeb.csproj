@@ -181,7 +181,6 @@
   <ItemGroup>
     <Content Include="App\app.js" />
     <Content Include="App\Controllers\appCtrl.js" />
-    <Content Include="App\Controllers\homeCtrl.js" />
     <Content Include="App\Controllers\loginDialogCtrl.js" />
     <Content Include="App\Reporting\app.js" />
     <Content Include="App\Reporting\Controllers\appCtrl.js" />
@@ -280,7 +279,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\Shared\Authentication.cshtml" />
     <Content Include="Views\Reporting\Tabular.cshtml" />
     <Content Include="Views\Reporting\Charts.cshtml" />
     <Content Include="Views\Home\Reporting.cshtml" />

@@ -2,9 +2,13 @@
     .controller("MapCtrl", ["$scope", "reportingDataService", function ($scope, reportingDataService) {
         var data;
 
-        reportingDataService.fetch(function(data) {
-
+        reportingDataService.fetch(recordsUrl,function(data) {
+            console.log(data);
         });
+
+        $scope.farms = [
+
+        ];
         
         $scope.optionsContainer = {
             collapseIcon: "expand_more"
