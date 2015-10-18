@@ -7,5 +7,7 @@ namespace DataAccess.Interface
     public interface IDbScouting
     {
         bool PersistScoutStops(ICollection<ScoutStop> stops);
+        
+
     }
 }

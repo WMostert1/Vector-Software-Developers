@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.graphics.Matrix;
@@ -52,7 +53,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     public static final int REQUEST_TAKE_PHOTO = 89;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
-    private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
+    public static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     public static final String BUG_COUNT = "za.co.vsd.bug_count";
     public static final String CLASSIFICATION_RESULT = "za.co.vsd.classification_result";
@@ -62,6 +63,7 @@ public class IdentificationActivity extends AppCompatActivity {
     private int createCounter = 0;
     private String fullPathName;
     private boolean isClassified = false;
+    private AsyncTask classifyTask;
 
 
 
@@ -72,11 +74,11 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         byte[] byteArray = stream.toByteArray();
 
-        WebAPI.attemptAPIClassification(byteArray, getApplicationContext());
-        Toast.makeText(getApplicationContext(), "Starting classification...", Toast.LENGTH_SHORT).show();
+        classifyTask = WebAPI.attemptAPIClassification(byteArray, this);
+        Toast.makeText(this, "Starting classification...", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -106,14 +108,14 @@ public class IdentificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
-            createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
-            isClassified = savedInstanceState.getBoolean(CLASSIFICATION_RESULT);
+            if (savedInstanceState != null) {
+                bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
+                createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
+                isClassified = savedInstanceState.getBoolean(CLASSIFICATION_RESULT);
         } else {
             dispatchTakePictureIntent();
 
-            //Checks/loads species data into the Species table of the database
+        //Checks/loads species data into the Species table of the database
             if (createCounter == 0) {
                 SpeciesDAO speciesDAO = new SpeciesDAO(getApplicationContext());
                 try {
@@ -141,7 +143,7 @@ public class IdentificationActivity extends AppCompatActivity {
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
-                    changeEntrySelection(position + 1);
+                    changeEntrySelection(position+1);
                 }
             });
 
@@ -160,7 +162,8 @@ public class IdentificationActivity extends AppCompatActivity {
     public void changeEntrySelection(ClassificationResultDTO currentEntry){
         isClassified = true;
         //Possibly validate that ID's are correct in future
-        changeEntrySelection(currentEntry.SpeciesID);
+        Toast.makeText(getApplicationContext(),"Species Identified!",Toast.LENGTH_SHORT).show();
+        changeEntrySelection(currentEntry.SpeciesID+1);
     }
 
     public void changeEntrySelection(int id){
@@ -168,7 +171,7 @@ public class IdentificationActivity extends AppCompatActivity {
         try {
             speciesDAO.open();
             currentEntry = speciesDAO.getSpeciesByID(id);
-            Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
             ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompareImage);
             byte[] imgData = currentEntry.getIdealPicture();
             comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0, imgData.length));
@@ -186,7 +189,7 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_identification, menu);
+        getMenuInflater().inflate(R.menu.menu_activity, menu);
         return true;
     }
 
@@ -198,7 +201,7 @@ public class IdentificationActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_about) {
             return true;
         }
 
@@ -214,7 +217,6 @@ public class IdentificationActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         setIntent(intent);//must store the new intent unless getIntent() will return the old one
         getPicture(getIntent());
-
     }
 
     public Bitmap rotateBitmap(Bitmap source, float angle)
@@ -254,6 +256,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 //TODO: Rotate the image
 
                 mImageView.setImageBitmap(bitmap);
+                if(!isClassified)
+                    doAutomaticClassification(null);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -264,16 +268,16 @@ public class IdentificationActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+            }
         }
-    }
 
     /**
      * Starts a new intent to take a picture with the Custom Camera
      */
     private void dispatchTakePictureIntent(){
+        classifyTask = null;
         Intent takePictureIntent = new Intent(this,CustomCamera.class);
         startActivityForResult(takePictureIntent, 0);
-
     }
 
     public void showDialogNumberOfBugs(View v) {
@@ -293,6 +297,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 .show();
         np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
         np.setMaxValue(100);
+        np.setWrapSelectorWheel(false);
     }
 
     /**
@@ -312,11 +317,13 @@ public class IdentificationActivity extends AppCompatActivity {
         }
         Bitmap currentPicture = bitmap;
         currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
-        bundle.putParcelable("Image", currentPicture);
+        bundle.putParcelable(FIELD_BITMAP, currentPicture);
         bundle.putInt(BUG_COUNT, numBugs);
         output.putExtras(bundle);
         setResult(RESULT_OK, output);
-
+        if (classifyTask != null) {
+            classifyTask.cancel(true);
+        }
         finish();
     }
 

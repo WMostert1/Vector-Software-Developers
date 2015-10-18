@@ -37,7 +37,7 @@ namespace BugWeb.Controllers
             {
                     _bugScouting.persistScoutingData(request);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }

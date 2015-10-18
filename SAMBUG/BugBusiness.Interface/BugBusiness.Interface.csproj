@@ -163,32 +163,6 @@
     <None Include="tessdata\eng.tesseract_cube.nn" />
     <None Include="tessdata\eng.traineddata" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="x86\cudart32_65.dll" />
-    <Content Include="x86\cufft32_65.dll" />
-    <Content Include="x86\cvextern.dll" />
-    <Content Include="x86\nppc32_65.dll" />
-    <Content Include="x86\nppi32_65.dll" />
-    <Content Include="x86\npps32_65.dll" />
-    <Content Include="x86\OpenCL.dll" />
-    <Content Include="x86\opencv_calib3d2410.dll" />
-    <Content Include="x86\opencv_contrib2410.dll" />
-    <Content Include="x86\opencv_core2410.dll" />
-    <Content Include="x86\opencv_features2d2410.dll" />
-    <Content Include="x86\opencv_flann2410.dll" />
-    <Content Include="x86\opencv_gpu2410.dll" />
-    <Content Include="x86\opencv_highgui2410.dll" />
-    <Content Include="x86\opencv_imgproc2410.dll" />
-    <Content Include="x86\opencv_legacy2410.dll" />
-    <Content Include="x86\opencv_ml2410.dll" />
-    <Content Include="x86\opencv_nonfree2410.dll" />
-    <Content Include="x86\opencv_objdetect2410.dll" />
-    <Content Include="x86\opencv_photo2410.dll" />
-    <Content Include="x86\opencv_stitching2410.dll" />
-    <Content Include="x86\opencv_superres2410.dll" />
-    <Content Include="x86\opencv_video2410.dll" />
-    <Content Include="x86\opencv_videostab2410.dll" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

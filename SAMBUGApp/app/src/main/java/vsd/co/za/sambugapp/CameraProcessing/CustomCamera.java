@@ -59,6 +59,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
     private String fullPathName;
     int width,height;
     boolean cameraConfigured;
+    private boolean pictureTaken;
     public static final double SQUARERATIO =0.75;
 
 
@@ -66,7 +67,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
-
 
         // Getting all the needed elements from the layout
         rotatingImage = (ImageButton) findViewById(R.id.imgbCamera);
@@ -84,19 +84,25 @@ public class CustomCamera extends Activity implements SensorEventListener {
         // Add a listener to the Capture button
         rotatingImage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mCamera.takePicture(null, null, mPicture);
+                if (!pictureTaken) {
+                    pictureTaken=true;
+                    mCamera.takePicture(null, null, mPicture);
+                }
             }
         });
         cameraConfigured = false;
-
+        pictureTaken = false;
     }
 
     /**
-     * Creates the camera and adjusts paramets.
+     * Creates the camera and adjusts parameters.
      */
     private void createCamera() {
 
         mCamera = getCameraInstance();
+        if (mCamera == null) {
+            Log.e("BLAH", "NULL CAMERA");
+        }
         //Configuring the camera
       //  if (!cameraConfigured) {
             Camera.Parameters parameters=mCamera.getParameters();
@@ -114,6 +120,8 @@ public class CustomCamera extends Activity implements SensorEventListener {
                 parameters.setPictureFormat(ImageFormat.JPEG);
                 parameters.setPictureFormat(PixelFormat.JPEG);
                 parameters.setJpegQuality(100);
+                if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
+                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
                 mCamera.setParameters(parameters);
 
                 cameraConfigured=true;
@@ -192,7 +200,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
             }
         }
 
-        return(result);
+        return result;
     }
 
     @Override
@@ -262,6 +270,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
             // attempt to get a CustomCamera instance
             c = android.hardware.Camera.open();
         } catch (Exception e) {
+            e.printStackTrace();
             // CustomCamera is not available (in use or does not exist)
         }
 
@@ -281,7 +290,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
                 data = getBitmap(data);
             }
             catch(IOException e){
-
+                e.printStackTrace();
             }
 
             //Saving the image in a Folder called Sambug - specified in getDir()
@@ -373,7 +382,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
         bitmap = Bitmap.createBitmap(pixels, 0, squareLength,2*padding, 2*padding, Bitmap.Config.ARGB_8888);//ARGB_8888 is a good quality configuration
 
 
-
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);//100 is the best quality possible
         bitmap.recycle();
@@ -392,6 +400,9 @@ public class CustomCamera extends Activity implements SensorEventListener {
         intent.putExtras(b);
         startActivityForResult(intent,0);
     }
+
+    @Override
+
     /**
      * Putting in place a listener so we can get the sensor data only when
      * something changes.

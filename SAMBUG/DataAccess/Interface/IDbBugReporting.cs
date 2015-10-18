@@ -9,6 +9,8 @@ namespace DataAccess.Interface
         List<Treatment> GetTreatmentsByUserId(long userId);
         List<ScoutStop> GetAllScoutStops();
         List<Treatment> GetAllTreatments();
-        List<Species> GetAllSpecies();
+        List<Species> getAllSpecies();
+        Species getSpeciesByID(int id);
+
     }
 }
