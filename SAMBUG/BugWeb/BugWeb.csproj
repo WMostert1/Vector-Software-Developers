@@ -181,16 +181,13 @@
   <ItemGroup>
     <Content Include="App\app.js" />
     <Content Include="App\Controllers\appCtrl.js" />
-    <Content Include="App\Controllers\loginDialogCtrl.js" />
-    <Content Include="App\Reporting\app.js" />
-    <Content Include="App\Reporting\Controllers\appCtrl.js" />
-    <Content Include="App\Reporting\Controllers\chartsCtrl.js" />
-    <Content Include="App\Reporting\Controllers\mapCtrl.js" />
-    <Content Include="App\Reporting\Controllers\tablesCtrl.js" />
-    <Content Include="App\Reporting\Services\reportingDataService.js" />
-    <Content Include="App\Reporting\Views\charts.html" />
-    <Content Include="App\Reporting\Views\map.html" />
-    <Content Include="App\Reporting\Views\tables.html" />
+    <Content Include="App\Controllers\chartsCtrl.js" />
+    <Content Include="App\Controllers\mapCtrl.js" />
+    <Content Include="App\Controllers\tablesCtrl.js" />
+    <Content Include="App\Services\chartService.js" />
+    <Content Include="App\Services\mapService.js" />
+    <Content Include="App\Services\reportingDataService.js" />
+    <Content Include="App\Services\tableService.js" />
     <Content Include="App\Views\loginDialog.html" />
     <Content Include="App\Views\registerDialog.html" />
     <Content Include="Content\angular-material-icons.css" />
@@ -279,9 +276,8 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\Reporting\Tabular.cshtml" />
+    <Content Include="Views\Reporting\Tables.cshtml" />
     <Content Include="Views\Reporting\Charts.cshtml" />
-    <Content Include="Views\Home\Reporting.cshtml" />
     <Content Include="Views\FarmManagement\EditBlocks.cshtml" />
     <Content Include="Views\Authentication\EditUserRoles.cshtml" />
     <Content Include="Views\Reporting\Map.cshtml" />
@@ -291,8 +287,8 @@
     <Content Include="Views\FarmManagement\Treatments.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App\Reporting\Directives\" />
-    <Folder Include="App\Reporting\Filters\" />
+    <Folder Include="App\Directives\" />
+    <Folder Include="App\Filters\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>

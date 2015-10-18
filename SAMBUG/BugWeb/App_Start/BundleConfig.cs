@@ -54,10 +54,6 @@ namespace BugWeb
                     .Include("~/App/app.js", "~/App/Controllers/appCtrl.js"));
 
             bundles
-                .Add(new ScriptBundle("~/bundles/mapReporting")
-                    .Include("~/Scripts/MapControls.js"));
-
-            bundles
                 .Add(new ScriptBundle("~/bundles/typeahead", cdnJsTypeAhead)
                     .Include("~/Scripts/typeahead.bundle.js"));
 
@@ -65,16 +61,21 @@ namespace BugWeb
                 .Add(new ScriptBundle("~/bundles/bootstrap-tagsinput")
                     .Include("~/Scripts/bootstrap-tagsinput.js"));
 
-            //TODO: made changes here for reporting, must remember to reconfigure
             bundles
-                .Add(new ScriptBundle("~/bundles/report")
-                    .Include("~/App/Reporting/app.js",
-                    "~/App/Reporting/Services/reportingDataService.js",
-                    "~/App/Reporting/Controllers/appCtrl.js",
-                    "~/App/Reporting/Controllers/mapCtrl.js",
-                    "~/App/Reporting/Controllers/chartsCtrl.js",
-                    "~/App/Reporting/Controllers/tablesCtrl.js"
-                    ));
+                .Add(new ScriptBundle("~/bundles/reporting/common")
+                    .Include("~/App/Services/reportingDataService.js"));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/reporting/tables")
+                    .Include("~/App/Services/tableService.js", "~/App/Controllers/tablesCtrl.js"));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/reporting/charts")
+                    .Include("~/App/Services/chartService.js", "~/App/Controllers/chartsCtrl.js"));
+                
+            bundles
+                .Add(new ScriptBundle("~/bundles/reporting/map")
+                    .Include("~/App/Services/mapService.js", "~/App/Controllers/mapCtrl.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/chartist", cdnJsChartist)

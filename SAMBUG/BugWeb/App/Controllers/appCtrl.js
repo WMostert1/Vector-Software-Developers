@@ -2,15 +2,15 @@
     /*
     Angular App Controller
     */
-    .controller("AppCtrl", ["$scope", "$mdSidenav", "$mdDialog", "$http",
-        function($scope, $mdSidenav, $mdDialog, $http) {
+    .controller("AppCtrl", ["$scope", "$mdSidenav", "$mdDialog", "$http", "userDetails",
+        function($scope, $mdSidenav, $mdDialog, $http, userDetails) {
 
             $scope.user = {
                 email: "",
                 password: "",
-                isLoggedIn: isLoggedIn,
-                isGrower: isGrower,
-                isAdmin: isAdmin
+                isLoggedIn: userDetails.isLoggedIn,
+                isGrower: userDetails.isGrower,
+                isAdmin: userDetails.isAdmin
             }
 
             //-----------event handlers--------------//
@@ -99,9 +99,6 @@
                                 $scope.user.isLoggedIn = true;
                                 $scope.user.isGrower = response.data.isGrower;
                                 $scope.user.isAdmin = response.data.isAdmin;
-                                $scope.user.userId = response.data.userId;
-                                /*todo improve mechanism, this is very insecure*/
-                                recordsUrl += isAdmin ? "" : $scope.user.userId;
                             } else {
                                 scope.errorMessage = "The email or password you entered is incorrect";
                             }
@@ -134,16 +131,6 @@
                             return false;
                         }
 
-                        if (scope.user.email !== scope.user.emailConfirmation) {
-                            scope.errorMessage = "The email addresses you entered do not match";
-                            return false;
-                        }
-
-                        if (scope.user.password !== scope.user.passwordConfirmation) {
-                            scope.errorMessage = "The passwords you entered do not match";
-                            return false;
-                        }
-
                         scope.loading = true;
                         $http.post(event.target.action, {
                             username: scope.user.email,
@@ -163,9 +150,6 @@
                                 $scope.user.isLoggedIn = true;
                                 $scope.user.isGrower = response.data.isGrower;
                                 $scope.user.isAdmin = response.data.isAdmin;
-                                $scope.user.userId = response.data.userId;
-                                /*todo improve mechanism, this is very insecure*/
-                                recordsUrl += isAdmin ? "" : $scope.user.userId;
                             } else {
                                 if (response.data.userExistsError)
                                     scope.errorMessage = "This email address is already registered";
@@ -279,9 +263,7 @@
                         ]
                 }]
             };
-
-
-            //function to show either the login or the register dialog
+            
            $scope.showDialog = function(type, event) {
                $mdDialog.show({
                    templateUrl: "/App/Views/" + type + "Dialog.html",

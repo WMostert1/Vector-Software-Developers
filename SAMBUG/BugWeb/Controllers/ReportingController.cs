@@ -17,15 +17,15 @@ namespace BugWeb.Controllers
             return View();
         }
 
-        // GET: reporting/tabular
-        public ActionResult Tabular()
+        // GET: reporting/tables
+        public ActionResult Tables()
         {
             return View(new ReportingViewModel(Session));
         }
 
         // GET: reporting/charts
         //todo this is just a demo of the new authentication functionality
-        [Authenticate(Roles = "1, 2", Alternate = true)]
+        //[Authenticate(Roles = "1, 2", Alternate = true)]
         public ActionResult Charts()
         {
             return View(new ReportingViewModel(Session));

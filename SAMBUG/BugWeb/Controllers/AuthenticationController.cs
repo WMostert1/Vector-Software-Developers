@@ -70,13 +70,15 @@ namespace BugWeb.Controllers
             try
             {
                 _bugSecurity.Register(registerRequest);
+
+                //automatically log in
                 LoginResponse loginResponse = _bugSecurity.Login(new LoginRequest()
                 {
                     Username = registerRequest.Username,
                     Password = registerRequest.Password
                 });
 
-                //set up session - automatically log in
+                //set up session
                 Session["UserInfo"] = loginResponse.User;
 
                 //todo factorise these Json object (define a DTO)

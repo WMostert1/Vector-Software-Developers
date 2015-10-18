@@ -26,12 +26,14 @@
                     <div ng-message="required">Please enter your password</div>
                 </div>
             </md-input-container>
-            <div class="loaderContainer" flex layout="row" layout-align="center center">
-                <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="50px"></md-progress-circular>
+            <div class="errorMessageContainer" flex layout="row" layout-align="center center">
                 {{errorMessage}}
             </div>
         </md-dialog-content>
         <div class="md-actions" layout="row">
+            <div class="loaderContainer" layout="row" layout-align="center center">
+                <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="15px"></md-progress-circular>
+            </div>
             <span flex></span>
             <md-button type="submit" class="md-primary">
                 Login

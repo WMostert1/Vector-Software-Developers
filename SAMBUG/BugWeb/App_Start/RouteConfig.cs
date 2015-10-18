@@ -13,12 +13,6 @@ namespace BugWeb
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            //Ensures that the "Reporting" Angular SPA is always bootstrapped
-            routes.MapRoute(
-                name: "reporting",
-                url: "reporting/{*catchall}",
-                defaults: new {controller = "home", action = "reporting"});
-            
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

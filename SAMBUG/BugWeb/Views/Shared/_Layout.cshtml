@@ -100,19 +100,15 @@
 @Scripts.Render("~/bundles/app")
 
 <script type="text/javascript">
+
+    angular.module("appMain").factory("userDetails", function() {
+        return {
+            isLoggedIn: @Json.Encode(SecurityProvider.isLoggedIn(Session)),
+            isGrower: @Json.Encode(SecurityProvider.isGrower(Session)),
+            isAdmin: @Json.Encode(SecurityProvider.isAdmin(Session))
+        };
+    });
     
-    /*todo remove globals*/
-    /*Set globally accessible user state*/
-    var isLoggedIn = @Json.Encode(SecurityProvider.isLoggedIn(Session));
-    var isGrower = @Json.Encode(SecurityProvider.isGrower(Session));
-    var isAdmin = @Json.Encode(SecurityProvider.isAdmin(Session));
-
-    /*Set globally accessible API URLs*/
-    var recordsUrl = "@Url.Content("~/api/records/")";
-    var speciesUrl = "@Url.Content("~/api/species")";
-
-    /*Set globally accessible rootPath of the main Angular App*/
-    angular.module("appMain").rootPath = "@Url.Content("~")";
 
     /*todo remove the patch below when Angular Material prevents browser default invalid messages*/
     document.addEventListener("invalid", (function() {

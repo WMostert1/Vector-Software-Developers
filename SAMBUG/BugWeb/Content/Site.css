@@ -16,8 +16,12 @@ body {
     overflow: hidden !important;
 }
 
+.errorMessageContainer {
+    height: 15px;
+}
+
 .loaderContainer {
-    height: 60px;
+    height: 20px;
 }
 
 #logo {

@@ -2,9 +2,53 @@
 
 @{
     ViewBag.Title = "Map";
-}  
+}
+<div layout="row" ng-controller="MapCtrl">
+    <!--Component which shows the map options/constraints-->
+    <div>
+        <md-toolbar class="md-hue-1">
+            <div class="md-toolbar-tools">
+                <md-button ng-click="toggleCollapseIcon()" class="md-icon-button" aria-label="Expand Constraints">
+                    <ng-md-icon icon="{{optionsContainer.collapseIcon}}"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content class="md-hue-1">
+            <md-input-container class="md-hue-1" ng-repeat="constraint in constraints">
+                <label>{{constraint.title}}</label>
+                <md-select ng-model="contraint.value">
+                    <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item == constraint.list[0]">
+                        {{item}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+           
+                <label>Date From</label>
+                <md-datepicker class="md-hue-1" ng-model="fromDate"></md-datepicker>
+            
+            
+            <md-datepicker class="md-hue-1" ng-model="toDate"></md-datepicker>
+        </md-content>
+    </div>
+</div>
 
-<div class="container">
+
+@section scripts
+{
+    <script type="application/javascript">
+        angular.module("appMain").factory("reportingUrlService", function(){
+            return {
+                recordsUrl: "@Url.Content("~/api/records/" + Model.RecordsUrlSuffix)",
+                speciesUrl: "@Url.Content("~/api/species")"
+            };
+        });
+    </script>
+
+    @Scripts.Render("~/bundles/reporting/common")
+    @Scripts.Render("~/bundles/reporting/map")
+}
+
+@*<div class="container">
     <div class="tab-content">
         <div id="Scout_Data">
 
@@ -156,4 +200,4 @@
 
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=visualization&callback=initMap">
-    </script>
+    </script>*@
