@@ -3,33 +3,73 @@
 @{
     ViewBag.Title = "Map";
 }
-<div layout="row" ng-controller="MapCtrl">
-    <!--Component which shows the map options/constraints-->
-    <div>
-        <md-toolbar class="md-hue-1">
-            <div class="md-toolbar-tools">
-                <md-button ng-click="toggleCollapseIcon()" class="md-icon-button" aria-label="Expand Constraints">
-                    <ng-md-icon icon="{{optionsContainer.collapseIcon}}"></ng-md-icon>
-                </md-button>
-            </div>
+<div layout-fill layout="column" ng-controller="MapCtrl">
+    <md-sidenav layout="column" class="md-sidenav-right md-whiteframe-z2" md-component-id="right" ng-cloak>
+        <md-toolbar layout="column" class="md-primary md-hue-1 md-whiteframe-z1">
+            <md-toolbar-tools layout-padding>
+                <h2 class="md-title">Map Settings</h2>
+            </md-toolbar-tools>
         </md-toolbar>
-        <md-content class="md-hue-1">
-            <md-input-container class="md-hue-1" ng-repeat="constraint in constraints">
-                <label>{{constraint.title}}</label>
-                <md-select ng-model="contraint.value">
-                    <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item == constraint.list[0]">
-                        {{item}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-           
+        <md-content flex layout="row" layout-align="center start" layout-wrap class="md-hue-1">
+            <div ng-repeat="constraint in constraints">
+                <md-input-container flex class="md-hue-1">
+                    <label>{{constraint.title}}</label>
+                    <md-select ng-model="contraint.value">
+                        <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item === constraint.list[0]">
+                            {{item}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <span flex="15"></span>
+            </div>
+            <div>
                 <label>Date From</label>
-                <md-datepicker class="md-hue-1" ng-model="fromDate"></md-datepicker>
-            
-            
-            <md-datepicker class="md-hue-1" ng-model="toDate"></md-datepicker>
+                <md-datepicker class="md-hue-1" ng-model="constraints.fromDate"></md-datepicker>
+            </div>
+            <div flex>
+                <label>Date To</label>
+                <md-datepicker class="md-hue-1" ng-model="constraints.toDate"></md-datepicker>
+            </div>
         </md-content>
-    </div>
+    </md-sidenav>
+    @*<!--Component which shows the map options/constraints-->
+    <div layout-fill flex layout="row" layout-align="center start">
+        <div flex="70">
+            <div flex layout="column">
+                <md-toolbar class="md-hue-1">
+                    <div class="md-toolbar-tools">
+                        <md-button ng-click="toggleCollapseIcon()" class="md-icon-button" aria-label="Expand Constraints">
+                            <ng-md-icon icon="{{optionsContainer.collapseIcon}}"></ng-md-icon>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+                <div>
+                    <md-content layout="row" layout-align="center start" layout-wrap class="md-hue-1">
+                        <div ng-repeat="constraint in constraints">
+                            <md-input-container flex class="md-hue-1">
+                                <label>{{constraint.title}}</label>
+                                <md-select ng-model="contraint.value">
+                                    <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item === constraint.list[0]">
+                                        {{item}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                            <span flex="15"></span>
+                        </div>
+                        <div>
+                            <label>Date From</label>
+                            <md-datepicker class="md-hue-1" ng-model="constraints.fromDate"></md-datepicker>
+                        </div>
+                        <div flex>
+                            <label>Date To</label>
+                            <md-datepicker class="md-hue-1" ng-model="constraints.toDate"></md-datepicker>
+                        </div>
+                    </md-content>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
 </div>
 
 

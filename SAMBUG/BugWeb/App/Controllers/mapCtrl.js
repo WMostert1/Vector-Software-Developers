@@ -9,40 +9,28 @@
                 title: "Farm",
                 value: "All Farms",
                 list: [
-                    "All Farms",
-                    "FarmA",
-                    "FarmB",
-                    "FarmC"
+                    "All Farms"
                 ]
             },
             block: {
                 title: "Block",
                 value: "All Blocks",
                 list: [
-                    "All Blocks",
-                    "b1",
-                    "b2",
-                    "b3"
+                    "All Blocks"
                 ]
             },
             species: {
                 title: "Species",
                 value: "All Species",
                 list: [
-                    "All Species",
-                    "s1",
-                    "s2",
-                    "s3"
+                    "All Species"
                 ]
             },
             lifeStage: {
                 title: "Life Cycle Stage",
                 value: "All Life Cycle Stages",
                 list: [
-                    "All Life Cycle Stages",
-                    "ls1",
-                    "ls2",
-                    "ls3"
+                    "All Life Cycle Stages"
                 ]
             }
         }

@@ -11,13 +11,7 @@ namespace BugWeb.Controllers
 {
     public class ReportingController : Controller
     {
-        // GET: reporting
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: reporting/tables
+       // GET: reporting/tables
         public ActionResult Tables()
         {
             return View(new ReportingViewModel(Session));
@@ -31,6 +25,7 @@ namespace BugWeb.Controllers
             return View(new ReportingViewModel(Session));
 		}
 
+        [Authenticate(Roles = "1, 2", Alternate = true)]
         public ActionResult Map()
         {
             return View(new ReportingViewModel(Session));

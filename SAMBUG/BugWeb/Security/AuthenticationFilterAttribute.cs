@@ -64,7 +64,8 @@ namespace BugWeb.Security
                 context.Result = new RedirectToRouteResult("Default",
                     new System.Web.Routing.RouteValueDictionary{
                         {"controller", "home"},
-                        {"action", "index"}
+                        {"action", "index"},
+                        {"returnUrl", context.HttpContext.Request.RawUrl}
                     });
             }
         }

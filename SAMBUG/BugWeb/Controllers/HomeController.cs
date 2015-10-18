@@ -10,16 +10,16 @@ namespace BugWeb.Controllers
     public class HomeController : Controller
     {
         
-        public ActionResult Index()
+        public ActionResult Index(string returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
-        //[Authenticate(Roles = "1, 2", Alternate = true)]
-        public ActionResult Reporting()
+        /*public ActionResult Index(bool login)
         {
-            return View();
-        }
+            return View(login);
+        }*/
 
         public ActionResult BlockEdit()
         {
@@ -38,11 +38,6 @@ namespace BugWeb.Controllers
         {
             return View("~/Views/Authentication/ChangePassword.cshtml");
         }
-
-
-        public ActionResult viewMap()
-        {
-            return PartialView("_HeatMap");
-        }
+        
     }
 }

@@ -257,8 +257,7 @@
                     collapseTargetId: "farmManagementSubMenu",
                     title: "Farm Management",
                     subList: [
-                            { title: "Blocks" },
-                            { title: "Farms" },
+                            { title: "Farms & Blocks" },
                             { title: "Spray Data" }
                         ]
                 }]

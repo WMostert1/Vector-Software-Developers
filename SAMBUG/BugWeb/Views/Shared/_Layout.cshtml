@@ -75,18 +75,23 @@
 </md-sidenav>
 
 <div flex layout="column" ng-cloak>
-    <md-toolbar md-scroll-shrink ng-if="true">
+    <!--todo add md-scroll-shrink when AM bugs are fixed-->
+    <md-toolbar ng-if="true">
         <div class="md-toolbar-tools">
-            <md-button ng-click="toggleSideNav('left')" class="md-icon-button" hide-gt-md aria-label="Settings">
+            <md-button ng-click="toggleSideNav('left')" class="md-icon-button" hide-gt-md aria-label="Menu">
                 <ng-md-icon icon="menu"></ng-md-icon>
             </md-button>
             <h2 class="md-title">
                 @ViewBag.Title
             </h2>
+            <span flex></span>
+            <md-button ng-click="toggleSideNav('right')" class="md-icon-button" aria-label="Settings">
+                <ng-md-icon icon="more_vert"></ng-md-icon>
+            </md-button>
         </div>
     </md-toolbar>
 
-    <md-content flex class="md-body-1" layout-padding layout="column">
+    <md-content style="overflow-x: hidden" flex class="md-body-1" layout-padding layout="column">
         @RenderBody()
     </md-content>
 
