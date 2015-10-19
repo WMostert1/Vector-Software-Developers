@@ -47,11 +47,10 @@ import vsd.co.za.sambugapp.ScoutTripActivity;
  */
 public class WebAPI {
     private static final String HOST = "sambug.azurewebsites.net";
-    //private static final String HOST = "localhost:53249/";
     private static final String AUTHENTICATION_URL = "http://"+HOST+"/api/authentication/login";
     private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/Synchronization";
     private static final String CLASSIFICATION_URL= "http://"+HOST+"/api/apiSpeciesClassification";
-    private static final int SOCKET_TIMEOUT_MS = 1000000; //10 seconds
+    private static final int SOCKET_TIMEOUT_MS = 100000; //10 seconds
 
 
     private WebAPI() {
@@ -149,7 +148,6 @@ public class WebAPI {
         private CacheSyncDTO getCachedScoutingDTO() {
             ScoutBugDAO scoutBugDAO = new ScoutBugDAO(context);
             ScoutStopDAO scoutStopDAO = new ScoutStopDAO(context);
-            String err;
             try {
                 scoutBugDAO.open();
                 scoutStopDAO.open();
@@ -158,8 +156,7 @@ public class WebAPI {
 
 
             } catch (SQLException e) {
-                err = e.getMessage();
-                Log.e("hey",e.getMessage());
+                e.printStackTrace();
                 return new CacheSyncDTO();
             }
         }
@@ -185,12 +182,13 @@ public class WebAPI {
             }
 
             String jsonString = classificationRequest.toString();
-            System.out.println(jsonString);
+            //System.out.println(jsonString);
             JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,CLASSIFICATION_URL,classificationRequest,new Response.Listener<JSONObject>(){
                 @Override
                 public void onResponse(JSONObject response) {
                     final Gson gson = new Gson();
                     ClassificationResultDTO result = gson.fromJson(response.toString(), ClassificationResultDTO.class);
+                    Toast.makeText(context,result.SpeciesName+ " " +result.Lifestage+" "+result.SpeciesID,Toast.LENGTH_SHORT).show();
                     ((IdentificationActivity)context).changeEntrySelection(result);
 
                 }

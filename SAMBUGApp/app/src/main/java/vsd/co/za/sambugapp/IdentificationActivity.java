@@ -74,7 +74,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         byte[] byteArray = stream.toByteArray();
 
         classifyTask = WebAPI.attemptAPIClassification(byteArray, this);
@@ -143,7 +143,7 @@ public class IdentificationActivity extends AppCompatActivity {
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v,
                                         int position, long id) {
-                    changeEntrySelection(position + 1);
+                    changeEntrySelection(position+1);
                 }
             });
 
