@@ -51,7 +51,11 @@ namespace BugWeb
 
             bundles
                 .Add(new ScriptBundle("~/bundles/app")
-                    .Include("~/App/app.js", "~/App/Controllers/appCtrl.js"));
+                    .Include("~/App/app.js", 
+                    "~/App/Controllers/registerDialogCtrl.js",
+                    "~/App/Controllers/loginDialogCtrl.js",
+                    "~/App/Controllers/appCtrl.js"
+                    ));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/typeahead", cdnJsTypeAhead)
@@ -60,6 +64,10 @@ namespace BugWeb
             bundles
                 .Add(new ScriptBundle("~/bundles/bootstrap-tagsinput")
                     .Include("~/Scripts/bootstrap-tagsinput.js"));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/vendor/xdate")
+                    .Include("~/Scripts/xdate.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/reporting/common")

@@ -16,11 +16,6 @@ namespace BugWeb.Controllers
             return View();
         }
 
-        /*public ActionResult Index(bool login)
-        {
-            return View(login);
-        }*/
-
         public ActionResult BlockEdit()
         {
             if (!SecurityProvider.isGrower(Session)) 

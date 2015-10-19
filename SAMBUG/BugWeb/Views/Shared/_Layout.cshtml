@@ -85,23 +85,23 @@
                 @ViewBag.Title
             </h2>
             <span flex></span>
-            <md-button ng-click="toggleSideNav('right')" class="md-icon-button" aria-label="Settings">
+            <md-button ng-click="toggleSideNav('right')" class="md-icon-button" aria-label="Settings" ng-if="@ViewBag.Reporting">
                 <ng-md-icon icon="more_vert"></ng-md-icon>
             </md-button>
         </div>
     </md-toolbar>
 
-    <md-content style="overflow-x: hidden" flex class="md-body-1" layout-padding layout="column">
+    <md-content flex class="bodyContent md-body-1" layout-padding layout="column">
         @RenderBody()
     </md-content>
 
 </div>
 
+@*todo wrap vendor scripts in Angular Modules. Look at lazy loading using RequireJS.*@
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
 @Scripts.Render("~/bundles/angular")
 @Scripts.Render("~/bundles/angular-icons")
-@Scripts.Render("~/Scripts/xdate.js")
 @Scripts.Render("~/bundles/app")
 
 <script type="text/javascript">
@@ -110,7 +110,8 @@
         return {
             isLoggedIn: @Json.Encode(SecurityProvider.isLoggedIn(Session)),
             isGrower: @Json.Encode(SecurityProvider.isGrower(Session)),
-            isAdmin: @Json.Encode(SecurityProvider.isAdmin(Session))
+            isAdmin: @Json.Encode(SecurityProvider.isAdmin(Session)),
+            returnUrl: "@ViewBag.ReturnUrl"
         };
     });
     
@@ -118,7 +119,7 @@
     /*todo remove the patch below when Angular Material prevents browser default invalid messages*/
     document.addEventListener("invalid", (function() {
         return function(e) {
-            e.preventDefault();
+            e.defaultPrevented();
         };
     })(), true);
 

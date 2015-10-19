@@ -9,7 +9,7 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-dialog-content flex layout="column">
+        <md-content flex layout="column" layout-padding>
             <md-input-container>
                 <label>Email</label>
                 <input required type="email" ng-model="user.email" name="username" minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-autofocus />
@@ -27,16 +27,19 @@
                 </div>
             </md-input-container>
             <div class="errorMessageContainer" flex layout="row" layout-align="center center">
-                {{errorMessage}}
+                <div ng-messages="errorMessage" role="alert">
+                    <div ng-message="incorrectCredentials">The email or password you entered is incorrect.</div>
+                    <div ng-message="connectionError">Trouble contacting server. Please try again.</div>
+                </div>
             </div>
-        </md-dialog-content>
+        </md-content>
         <div class="md-actions" layout="row">
             <div class="loaderContainer" layout="row" layout-align="center center">
                 <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="15px"></md-progress-circular>
             </div>
             <span flex></span>
             <md-button type="submit" class="md-primary">
-                Login
+                Log In
             </md-button>
             <md-button type="button" class="md-primary">
                 Forgot Password?

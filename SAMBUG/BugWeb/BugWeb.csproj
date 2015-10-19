@@ -182,12 +182,15 @@
     <Content Include="App\app.js" />
     <Content Include="App\Controllers\appCtrl.js" />
     <Content Include="App\Controllers\chartsCtrl.js" />
+    <Content Include="App\Controllers\loginDialogCtrl.js" />
     <Content Include="App\Controllers\mapCtrl.js" />
+    <Content Include="App\Controllers\registerDialogCtrl.js" />
     <Content Include="App\Controllers\tablesCtrl.js" />
     <Content Include="App\Services\chartService.js" />
     <Content Include="App\Services\mapService.js" />
-    <Content Include="App\Services\reportingDataService.js" />
+    <Content Include="App\Services\commonReportingService.js" />
     <Content Include="App\Services\tableService.js" />
+    <Content Include="App\Vendor\xdate.js" />
     <Content Include="App\Views\loginDialog.html" />
     <Content Include="App\Views\registerDialog.html" />
     <Content Include="Content\angular-material-icons.css" />

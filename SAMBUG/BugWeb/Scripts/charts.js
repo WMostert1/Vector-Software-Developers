@@ -23,163 +23,10 @@ var scoutStops;
 var treatments;
 
 
-
-/*
-    Bind event handlers that interchange "collapse and expand icons"
-*/
-$("#collapsibleTable").on("show.bs.collapse", function() {
-    $("#collapseIcon").attr("class", "glyphicon glyphicon-collapse-down");
-});
-
-$("#collapsibleTable").on("hide.bs.collapse", function() {
-    $("#collapseIcon").attr("class", "glyphicon glyphicon-expand");
-});
-
-
-/*
-    Bind event handler that resets constraints to defaults
-*/
-$("#resetIcon").on("click", resetConstraints);
-
-
-/*
-    Bind event handlers that respond to changes made in chart controls/constraints
-*/
-$("#view").change(saveAggregateType);
-$("#constraintTreesLower").change(verifyTreesUpper);
-$("#constraintTreesUpper").change(verifyTreesLower);
-$("#constraintDateFrom").change(verifyToDate);
-$("#constraintDateTo").change(verifyFromDate);
-$("#constraintTreesUpper, #constraintTreesLower").keypress(verifyTreesInput);
-$(".chartControl").change(updateChartSettings);
-
-
-/*
-    Initialisations
-*/
-initFromDate();
-initToDate();
-loadPests();
-loadDataRecords();
-
-
 /*
     Function Definitions
 */
-function loadPests() {
-    $.get(pestsUrl, function(data, status) {
 
-        if (status === "error" || status === "timeout") {
-            alert("Some information couldn't be retrieved from the server. Please check your connection and try again.");
-            return;
-        }
-
-        species = $.map(data.Species, function(s) {
-            s.Lifestage = mapSpeciesLifeStage(s.Lifestage);
-            return s;
-        });
-
-        var speciesNames = getUniqueEntries("SpeciesName", data.Species);
-        initSuggestions("constraintSpecies", speciesNames);
-
-        //initialise suggestions to be all available lifestages
-        updateSuggestions("constraintSpecies", "constraintLifeStage", species, "SpeciesName", "Lifestage");
-
-        $("#constraintSpecies").change(function() {
-            updateSuggestions("constraintSpecies", "constraintLifeStage", species, "SpeciesName", "Lifestage");
-        });
-
-    }, "Json");
-}
-
-function loadDataRecords() {
-    $.get(recordsUrl, function(data, status) {
-
-        if (status === "error" || status === "timeout") {
-            alert("Some information couldn't be retrieved from the server. Please check your connection and try again.");
-            return;
-        }
-
-        treatments = flattenTreatments(data.Treatments);
-        scoutStops = flattenScoutStops(data.ScoutStops);
-
-        var farmNames = getUniqueEntries("farmName", scoutStops.concat(treatments));
-
-        initSuggestions("constraintFarms", farmNames);
-
-        //initialise suggestions to be all available blocks
-        updateSuggestions("constraintFarms", "constraintBlocks", scoutStops.concat(treatments), "farmName", "blockName");
-        
-        $("#constraintFarms").change(function() {
-            updateSuggestions("constraintFarms", "constraintBlocks", scoutStops.concat(treatments), "farmName", "blockName");
-        });
-
-        //disable loader, update chart settings, finally plot 
-        initChart();
-
-    }, "Json");
-}
-
-function mapSpeciesLifeStage(code) {
-    if (code === "0") {
-        return "Adult";
-    } else {
-        return "Instar " + code;
-    }
-}
-
-function getUniqueEntries(uniqueFor, data) {
-    var result = [];
-   $.each(data, function (index, object) {
-        if ($.grep(result, function(d) {
-            return object[uniqueFor].valueOf() === d.valueOf();
-        }).length === 0)
-            result.push(object[uniqueFor]);
-    });
-
-    return result;
-}
-
-function flattenTreatments(data) {
-    var timelessDate;
-
-    return $.map(data, function (treatment) {
-        timelessDate = new Date(treatment.Date);
-        timelessDate.setHours(0, 0, 0, 0);
-
-        return {
-            farmName: treatment.BlockFarmFarmName,
-            blockName: treatment.BlockBlockName,
-            comments: treatment.Comments,
-            date: timelessDate
-        };
-    });
-}
-
-function flattenScoutStops(data) {
-    var result = [];
-    var timelessDate;
-
-    $.each(data, function(index, scoutStop) {
-        result = result.concat($.map(scoutStop.ScoutBugs, function(b) {
-            timelessDate = new Date(scoutStop.Date);
-            timelessDate.setHours(0, 0, 0, 0);
-
-            return {
-                farmName: scoutStop.BlockFarmFarmName,
-                blockName: scoutStop.BlockBlockName,
-                date: timelessDate,
-                numberOfTrees: parseInt(scoutStop.NumberOfTrees),
-                speciesName: b.SpeciesSpeciesName,
-                lifeStage: mapSpeciesLifeStage(b.SpeciesLifestage),
-                numberOfBugs: parseInt(b.NumberOfBugs),
-                comments: b.Comments
-            };
-        }));
-    });
-
-    return result;
-}
 
 function filterScoutStops(stops, settings) {
     var taggedFarmNames = settings.constraintFarms.split(",");
@@ -259,15 +106,6 @@ function updateChartTitle() {
     $("#chartTitle h1").text(
         chartSettings.aggregateType + " " + chartSettings.view + " vs " + chartSettings.against
     );
-}
-
-function initFromDate() {
-    $("#constraintDateFrom")
-        .val(new XDate().addMonths(-6, true).toString("yyyy-MM-dd"));
-};
-
-function initToDate() {
-    $("#constraintDateTo").val(new XDate().toString("yyyy-MM-dd"));
 }
 
 function updateChart(settings) {
@@ -709,24 +547,6 @@ function updateChartSettings() {
     if (scoutStops !== null) {
         updateChart(chartSettings);
     }
-}
-
-function resetConstraints() {
-    initFromDate();
-    initToDate();
-    $("#constraintShowTreatments").prop("checked", false);
-    $("#constraintDateAny").prop("checked", false);
-    $("#constraintDateAny").change();
-    $("#constraintFarms").tagsinput("removeAll");
-    $("#constraintBlocks").tagsinput("removeAll");
-    $("#constraintSpecies").tagsinput("removeAll");
-    $("#constraintLifeStage").tagsinput("removeAll");
-    $("#constraintTreesLower").val("1");
-    $("#constraintTreesLower").change();
-    $("#constraintTreesUpper").val("10");
-    $("#constraintTreesUpper").change();
-    $("#constraintTreesAny").prop("checked", true);
-    $("#constraintTreesAny").change();
 }
 
 function updateSuggestions(determinantId, subjectId, candidates, candidateMemberName, subject) {

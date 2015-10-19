@@ -1,21 +1,4 @@
-﻿//TODO: Validate input
-//TODO: Extract common between charts and tables and maps
-//TODO: show abrie all plugins and look at changing the order stuff of columns
-//TODO: test whirly loader with slow database
-
-
-//------------------Set all input to defualt values, initially and throughout execution------------------------
-function setFromDate() {
-    var date = new XDate();
-    var newDate = date.addMonths(-6, true);
-    $(".dateFrom").val(newDate.toString("yyyy-MM-dd"));
-};
-
-function setToDate() {
-    var date = new XDate();
-    $(".dateTo").val(date.toString("yyyy-MM-dd"));
-};
-
+﻿//------------------Set all input to defualt values, initially and throughout execution------------------------
 function setFarms() {
     var uniqueArray = flattenDataArray("farmName", scoutStopObjects);
     for (var x = 0; x < uniqueArray.length; x++) {
@@ -266,7 +249,7 @@ function initMap() {
 }
 
 function generateMap(stops) {
-    map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById("map"), {
         zoom: 13,
        
         center: { lat: stops[0].Latitude, lng: stops[0].Longitude },
@@ -296,78 +279,41 @@ function getPoints(stops) {
 }
 
 
-//function toggleHeatmap() {
- //   heatmap.setMap(heatmap.getMap() ? null : map);
-//}
-
 function changeGradient() {
     var gradient = [
-      'rgba(0, 255, 255, 0)',
-      'rgba(0, 255, 255, 1)',
-      'rgba(0, 191, 255, 1)',
-      'rgba(0, 127, 255, 1)',
-      'rgba(0, 63, 255, 1)',
+        "rgba(0, 255, 255, 0)",
+        "rgba(0, 255, 255, 1)",
+        "rgba(0, 191, 255, 1)",
+        "rgba(0, 127, 255, 1)",
+        "rgba(0, 63, 255, 1)",
+        "rgba(0, 0, 255, 1)",
+        "rgba(0, 0, 223, 1)",
+        "rgba(0, 0, 191, 1)",
+        "rgba(0, 0, 159, 1)",
+        "rgba(0, 0, 127, 1)",
+        "rgba(63, 0, 91, 1)",
+        "rgba(127, 0, 63, 1)",
+        "rgba(191, 0, 31, 1)",
+        "rgba(255, 0, 0, 1)"
+    ];
 
-      'rgba(0, 0, 255, 1)',
-      'rgba(0, 0, 223, 1)',
-      'rgba(0, 0, 191, 1)',
-      'rgba(0, 0, 159, 1)',
-      'rgba(0, 0, 127, 1)',
-
-      'rgba(63, 0, 91, 1)',
-      'rgba(127, 0, 63, 1)',
-      'rgba(191, 0, 31, 1)',
-      'rgba(255, 0, 0, 1)'
-    ]
-
-    heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+    heatmap.set("gradient", heatmap.get("gradient") ? null : gradient);
   
 }
 
-function changeGradientRGB(r, g, b) {
-
-    gradient = [
-        'rgba(' + r + ',' + g + ',' + b + ', 0)',
-        'rgba(' + r + ',' + g + ',' + b + ', 0.8)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-        'rgba(' + r + ',' + g + ',' + b + ', 1)',
-    ];
-
-   
-    if (heatmap.get('gradient'))
-        heatmap.set('gradient', null);
-    heatmap.set('gradient', gradient);
-}
-
-$(".colour").change(function () {
-    var r = $("#r1").val();
-    var g = $("#g1").val();
-    var b = $("#b1").val();
-    changeGradientRGB(r,g,b);
-});
-
-
 function changeRadius(radius) {
-    if (heatmap.get('radius'))
-        heatmap.set('radius',null);
+    if (heatmap.get("radius"))
+        heatmap.set("radius",null);
 
-    heatmap.set('radius', radius);
+    heatmap.set("radius", radius);
 }
 
 
-$("#radius_slider").change(function () {
+/*$("#radius_slider").change(function () {
  
     $("#radius_label").text("Radius : " + $(this).val());
     changeRadius($(this).val());
-});
+});*/
 
 
 

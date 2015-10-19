@@ -1,5 +1,5 @@
 ﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Register" ng-cloak>
-    <form ng-submit="post($event)" flex action="/authentication/register" layout="column" name="registerForm">
+    <form ng-submit="post($event)" action="/authentication/register" layout="column" name="registerForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 class="md-title">Register</h2>
@@ -9,9 +9,8 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-dialog-content flex layout="column">
-            <div layout="column">
-                <md-input-container flex>
+        <md-content flex layout=column layout-padding>
+            <md-input-container>
                     <label>Email</label>
                     <input required type="email" ng-model="user.email" name="email" minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-autofocus />
                     <div ng-messages="registerForm.email.$error" role="alert">
@@ -20,8 +19,7 @@
                         <div ng-message="pattern">You must enter a valid email address</div>
                     </div>
                 </md-input-container>
-                <span flex="15"></span>
-                <md-input-container flex>
+                <md-input-container>
                     <label>Confirm Email</label>
                     <input required type="email" ng-model="user.emailConfirmation" name="usernameConfirmation" minlength="10" maxlength="100" pattern="{{user.email}}" />
                     <div ng-messages="registerForm.usernameConfirmation.$error" role="alert">
@@ -30,17 +28,14 @@
                         <div ng-message="pattern">Please ensure this address matches the above</div>
                     </div>
                 </md-input-container>
-            </div>
-            <div layout="column">
-                <md-input-container flex>
+                <md-input-container>
                     <label>Password</label>
                     <input required type="password" ng-model="user.password" name="password" />
                     <div ng-messages="registerForm.password.$error" role="alert">
                         <div ng-message="required">Please enter your password</div>
                     </div>
                 </md-input-container>
-                <span flex="15"></span>
-                <md-input-container flex>
+                <md-input-container>
                     <label>Confirm Password</label>
                     <input required type="password" ng-model="user.passwordConfirmation" name="passwordConfirmation" pattern="{{user.password}}" />
                     <div ng-messages="registerForm.passwordConfirmation.$error" role="alert">
@@ -48,11 +43,14 @@
                         <div ng-message="pattern">Please ensure this password matches the above</div>
                     </div>
                 </md-input-container>
-            </div>
             <div class="errorMessageContainer" flex layout="row" layout-align="center center">
-                {{errorMessage}}
+                <div ng-messages="errorMessage" role="alert">
+                    <div ng-message="alreadyRegistered">This email address is already registered</div>
+                    <div ng-message="incorrectCredentials">The details you have entered are incorrect</div>
+                    <div ng-message="connectionError">Trouble contacting server. Please try again.</div>
+                </div>
             </div>
-        </md-dialog-content>
+        </md-content>
         <div class="md-actions" layout="row">
             <div class="loaderContainer" layout="row" layout-align="center center">
                 <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="15px"></md-progress-circular>

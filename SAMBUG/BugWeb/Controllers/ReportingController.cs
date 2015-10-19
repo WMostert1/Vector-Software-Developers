@@ -12,19 +12,20 @@ namespace BugWeb.Controllers
     public class ReportingController : Controller
     {
        // GET: reporting/tables
+        [Authenticate(Roles = "1, 2", Alternate = true)]
         public ActionResult Tables()
         {
             return View(new ReportingViewModel(Session));
         }
 
         // GET: reporting/charts
-        //todo this is just a demo of the new authentication functionality
-        //[Authenticate(Roles = "1, 2", Alternate = true)]
+        [Authenticate(Roles = "1, 2", Alternate = true)]
         public ActionResult Charts()
         {
             return View(new ReportingViewModel(Session));
 		}
 
+        // GET: reporting/map
         [Authenticate(Roles = "1, 2", Alternate = true)]
         public ActionResult Map()
         {

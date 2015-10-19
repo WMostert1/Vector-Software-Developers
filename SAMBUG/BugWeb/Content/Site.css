@@ -16,6 +16,14 @@ body {
     overflow: hidden !important;
 }
 
+.bodyContent {
+    overflow-x: hidden;    
+}
+
+.settingsNavContent {
+    overflow-x: hidden;
+}
+
 .errorMessageContainer {
     height: 15px;
 }
