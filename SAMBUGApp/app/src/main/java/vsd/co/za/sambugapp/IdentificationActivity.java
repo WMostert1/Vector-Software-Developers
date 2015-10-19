@@ -296,6 +296,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 })
                 .show();
         np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+        np.setMinValue(0);
         np.setMaxValue(100);
         np.setWrapSelectorWheel(false);
     }
