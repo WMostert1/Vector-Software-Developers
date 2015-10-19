@@ -1,4 +1,4 @@
-﻿var app = angular.module("appMain", ["ngMaterial", "ngMdIcons", "ngMessages"])
+﻿angular.module("appMain", ["ngMaterial", "ngMdIcons", "ngMessages"])
 /*
     Angular App configuration
 */

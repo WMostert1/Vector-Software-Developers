@@ -22,7 +22,19 @@ namespace BugWeb.Controllers
             _farmManagement = farmManagement;
         }
 
-        // POST: FarmManagement/Create
+        [Authenticate(Roles = "1", Alternate = false)]
+        public ActionResult SprayData()
+        {
+            return View();
+        }
+
+        [Authenticate(Roles = "1", Alternate = false)]
+        public ActionResult EditFarms()
+        {
+            return View();
+        }
+
+       /* // POST: FarmManagement/Create
         [HttpPost]
         public ActionResult AddBlock(BlockViewModel blockViewModel)
         {
@@ -182,6 +194,6 @@ namespace BugWeb.Controllers
             {
                 return RedirectToAction("Error", "Home");
             }
-        }
+        }*/
     }
 }

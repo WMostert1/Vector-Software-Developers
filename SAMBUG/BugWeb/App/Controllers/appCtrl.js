@@ -34,6 +34,14 @@
                 window.location = "/reporting/tables";
             };
 
+            function navigateToEditFarms(event) {
+                window.location = "/farmmanagement/editfarms";
+            }
+
+            function navigateToTreatments(event) {
+                window.location = "/farmmanagement/spraydata";
+            }
+
             function showLoginDialog(event) {
                 $scope.showDialog("login", event);
             };
@@ -220,7 +228,9 @@
                     toggleCollapseIcon: toggleCollapseIcon,
                     navigateToMap: navigateToMap,
                     navigateToCharts: navigateToCharts,
-                    navigateToTables: navigateToTables
+                    navigateToTables: navigateToTables,
+                    navigateToEditFarms: navigateToEditFarms,
+                    navigateToTreatments: navigateToTreatments
                 },
                 items: [
                 {
@@ -257,8 +267,14 @@
                     collapseTargetId: "farmManagementSubMenu",
                     title: "Farm Management",
                     subList: [
-                            { title: "Farms & Blocks" },
-                            { title: "Spray Data" }
+                        {
+                            actionName: "navigateToEditFarms",
+                            title: "Farms & Blocks"
+                        },
+                        {
+                            actionName: "navigateToTreatments",
+                            title: "Spray Data"
+                        }
                         ]
                 }]
             };

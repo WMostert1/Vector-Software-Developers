@@ -1,0 +1,23 @@
+﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Delete Block" ng-cloak>
+ <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="md-title">Delete Block</h2>
+                <span flex></span>
+                <md-button type="button" class="md-icon-button" ng-click="cancel()">
+                    <ng-md-icon icon="close" aria-label="Close Dialog"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content layout-padding flex layout="column">
+            <h2>
+                Are you sure you want to delete {{blockName}}?
+            </h2>
+            <p>All data ssociated with this block will be deleted</p>
+        </md-content>
+        <div class="md-actions" layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()" class="md-primary" aria-label="Reject Delete Block">No</md-button>
+            <md-button ng-click="post($event)"  class="md-primary" aria-label="Confirm Delete Block">Yes</md-button>
+        </div>
+</md-dialog>
+
