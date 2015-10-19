@@ -275,6 +275,7 @@ public class ScoutTripActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ScoutStopViewHolder scoutStopViewHolder, int i) {
             if (hasStops) {
+                Log.d("BLAH", "HASSTOPS");
                 ScoutStop stop = scoutStops.get(scoutStopViewHolder.getAdapterPosition());
                 scoutStopViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
                 for (ScoutBug bug : stop.getScoutBugs()) {
@@ -287,6 +288,9 @@ public class ScoutTripActivity extends AppCompatActivity {
                 }
                 scoutStopViewHolder.tvTreeCount.setText(stop.getNumberOfTrees() + "");
                 scoutStopViewHolder.tvTreeCount.setTextSize(36);
+
+                scoutStopViewHolder.llDraggedMenu.setVisibility(View.VISIBLE);
+                scoutStopViewHolder.ivSwipeIcon.setVisibility(View.VISIBLE);
 
                 scoutStopViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -304,11 +308,13 @@ public class ScoutTripActivity extends AppCompatActivity {
 
                 scoutStopViewHolder.slScoutStop.setShowMode(SwipeLayout.ShowMode.LayDown);
                 scoutStopViewHolder.slScoutStop.addDrag(SwipeLayout.DragEdge.Right, scoutStopViewHolder.llDraggedMenu);
+                scoutStopViewHolder.slScoutStop.setSwipeEnabled(true);
             } else {
+                Log.d("BLAH", "NOT LOG HASSTOPS");
                 scoutStopViewHolder.tvBlockName.setText("No stops added yet. Click '+'");
                 scoutStopViewHolder.tvTreeCount.setText("");
                 scoutStopViewHolder.llBugInfo.removeAllViews();
-                scoutStopViewHolder.llDraggedMenu.removeAllViews();
+                scoutStopViewHolder.llDraggedMenu.setVisibility(View.INVISIBLE);
                 scoutStopViewHolder.ivSwipeIcon.setVisibility(View.INVISIBLE);
                 scoutStopViewHolder.tvTreeCount.setTextSize(0);
                 scoutStopViewHolder.slScoutStop.setSwipeEnabled(false);

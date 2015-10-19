@@ -31,29 +31,16 @@
         android:id="@+id/fabAddBug"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_black_24dp"
+        android:src="@drawable/ic_add_icon"
         android:onClick="addStopActivityStart"
         android:layout_gravity="right"></android.support.design.widget.FloatingActionButton>
 
-    <RelativeLayout
+    <CheckedTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1">
-
-        <CheckedTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Block Name"/>
-
-        <CheckedTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tree Count"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
-
-    </RelativeLayout>
+        android:textStyle="bold"
+        android:text="Stops"
+        android:gravity="center_horizontal"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvScoutStops"
@@ -62,10 +49,10 @@
         android:layout_marginBottom="15dp"></android.support.v7.widget.RecyclerView>
 
     <CheckedTextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Pests Per Tree"
-        android:layout_gravity="left"
+        android:gravity="center_horizontal"
         android:textStyle="bold"/>
 
     <android.support.v7.widget.RecyclerView

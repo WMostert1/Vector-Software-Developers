@@ -5,53 +5,47 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:context=".enterDataActivity">
+    tools:context=".enterDataActivity"
+    android:padding="26dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
         <CheckedTextView
             android:id="@+id/txtBlock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="10dp"
+            android:layout_gravity="center_horizontal"
             android:textSize="24sp"
-            android:text="Block"/>
+            android:text="Block"
+            android:textStyle="bold"/>
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/spnBlocks"
-            android:layout_gravity="right"/>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"/>
 
         <CheckedTextView
+            android:layout_marginTop="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Number of Trees"
             android:id="@+id/tvNumberOfTrees"
             android:textSize="24sp"
-            android:layout_centerVertical="true"/>
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"/>
 
         <NumberPicker
             android:layout_height="wrap_content"
             android:id="@+id/npNumTrees"
             android:layout_width="100dp"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
+            android:layout_gravity="center_horizontal"/>
 
     <Button
         android:id="@+id/btnCollapse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
         android:text="Add Bugs"/>
 </LinearLayout>

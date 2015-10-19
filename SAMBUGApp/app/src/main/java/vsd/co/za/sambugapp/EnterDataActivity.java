@@ -382,15 +382,19 @@ public class EnterDataActivity extends AppCompatActivity {
             LinearLayout llDraggedMenu;
             ImageView ivAddedBugPic;
             CheckedTextView tvAddedBugSpecies;
+            CheckedTextView tvAddedBugStage;
             CheckedTextView tvAddedBugCount;
+            ImageView ivSwipeIcon;
 
             AddedBugViewHolder(View itemView) {
                 super(itemView);
                 slAddedBug = (SwipeLayout) itemView.findViewById(R.id.swiper);
                 llDraggedMenu = (LinearLayout) itemView.findViewById(R.id.draggedMenu);
                 tvAddedBugSpecies = (CheckedTextView) itemView.findViewById(R.id.tvAddedBugSpecies);
+                tvAddedBugStage = (CheckedTextView) itemView.findViewById(R.id.tvAddedBugStage);
                 tvAddedBugCount = (CheckedTextView) itemView.findViewById(R.id.tvAddedBugCount);
                 ivAddedBugPic = (ImageView) itemView.findViewById(R.id.ivAddedBugPic);
+                ivSwipeIcon = (ImageView) itemView.findViewById(R.id.ivSwipeIcon);
             }
         }
 
@@ -412,7 +416,12 @@ public class EnterDataActivity extends AppCompatActivity {
                 ScoutBug bug = bugs.get(addedBugViewHolder.getAdapterPosition());
                 Bitmap bm = Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length), 88, 88, true);
                 addedBugViewHolder.ivAddedBugPic.setImageBitmap(bm);
-                addedBugViewHolder.tvAddedBugSpecies.setText(bug.getSpecies().getSpeciesName() + " Instar " + bug.getSpecies().getLifestage());
+                addedBugViewHolder.tvAddedBugSpecies.setText(bug.getSpecies().getSpeciesName());
+                int lifeStage = bug.getSpecies().getLifestage();
+                if (lifeStage == 0)
+                    addedBugViewHolder.tvAddedBugStage.setText("Adult");
+                else
+                    addedBugViewHolder.tvAddedBugStage.setText("Instar " + lifeStage);
                 addedBugViewHolder.tvAddedBugCount.setText(bug.getNumberOfBugs() + "");
 
                 addedBugViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
@@ -425,6 +434,9 @@ public class EnterDataActivity extends AppCompatActivity {
                             hasBugs = false;
                             addDefaultBug();
                         }
+
+                        addedBugViewHolder.llDraggedMenu.setVisibility(View.VISIBLE);
+                        addedBugViewHolder.ivSwipeIcon.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -435,6 +447,8 @@ public class EnterDataActivity extends AppCompatActivity {
                 addedBugViewHolder.tvAddedBugSpecies.setText("No bugs added yet. Click '+' to add.");
                 addedBugViewHolder.tvAddedBugCount.setText("");
                 addedBugViewHolder.slAddedBug.setSwipeEnabled(false);
+                addedBugViewHolder.llDraggedMenu.setVisibility(View.INVISIBLE);
+                addedBugViewHolder.ivSwipeIcon.setVisibility(View.INVISIBLE);
             }
         }
 

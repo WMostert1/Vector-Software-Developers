@@ -40,29 +40,65 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@color/colorAccent">
+                android:background="@color/colorAccent"
+                android:weightSum="10"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="2">
+
+                    <ImageView
+                        android:id="@+id/ivAddedBugPic"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/cletus0"/>
+
+                    <CheckedTextView
+                        android:layout_gravity="center_horizontal"
+                        android:id="@+id/tvAddedBugCount"
+                        android:gravity="center_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_vertical">
+
+                    <CheckedTextView
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/tvAddedBugSpecies"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textStyle="bold"/>
+
+                    <CheckedTextView
+                        android:layout_gravity="center_horizontal"
+                        android:id="@+id/tvAddedBugStage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"/>
+
+                </LinearLayout>
 
                 <ImageView
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:id="@+id/ivAddedBugPic"
+                    android:id="@+id/ivSwipeIcon"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <CheckedTextView
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_chevron_left"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="32dp"
-                    android:id="@+id/tvAddedBugSpecies"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_weight="2"/>
 
-                <CheckedTextView
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_marginLeft="32dp"
-                    android:id="@+id/tvAddedBugCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
             </LinearLayout>
 
         </com.daimajia.swipe.SwipeLayout>
