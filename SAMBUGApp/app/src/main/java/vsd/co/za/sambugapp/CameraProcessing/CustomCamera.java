@@ -122,6 +122,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
                 parameters.setJpegQuality(100);
                 if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
                     parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 mCamera.setParameters(parameters);
 
                 cameraConfigured=true;
@@ -398,7 +399,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
         Bundle b = new Bundle();
         b.putSerializable(CAMERA, p);
         intent.putExtras(b);
-        startActivityForResult(intent,0);
+        startActivity(intent);
     }
 
     @Override
