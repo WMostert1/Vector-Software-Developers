@@ -86,6 +86,20 @@ namespace BugWeb
                     .Include("~/App/Services/mapService.js", "~/App/Controllers/mapCtrl.js"));
 
             bundles
+                .Add(new ScriptBundle("~/bundles/farmmanagement/editFarms")
+                    .Include("~/App/Controllers/editBlockDialogCtrl.js",
+                    "~/App/Controllers/deleteBlockDialogCtrl.js",
+                    "~/App/Controllers/deleteFarmDialogCtrl.js",
+                        "~/App/Controllers/addBlockDialogCtrl.js",
+                        "~/App/Controllers/addFarmDialogCtrl.js",
+                        "~/App/Controllers/editFarmsCtrl.js"));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/farmmanagement/spraydata")
+                    .Include("~/App/Controllers/addTreatmentDialogCtrl.js",
+                    "~/App/Controllers/sprayDataCtrl.js"));
+
+            bundles
                 .Add(new ScriptBundle("~/bundles/chartist", cdnJsChartist)
                     .Include("~/Scripts/chartist.js"));
 

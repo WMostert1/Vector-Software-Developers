@@ -106,7 +106,7 @@
 
 <script type="text/javascript">
 
-    angular.module("appMain").factory("userDetails", function() {
+   angular.module("appMain").factory("userDetails", function() {
         return {
             isLoggedIn: @Json.Encode(SecurityProvider.isLoggedIn(Session)),
             isGrower: @Json.Encode(SecurityProvider.isGrower(Session)),

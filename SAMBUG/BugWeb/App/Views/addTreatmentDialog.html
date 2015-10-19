@@ -1,0 +1,34 @@
+﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Add Spray" ng-cloak>
+    <form ng-submit="post($event)" action="#" flex layout="column" name="addSprayForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="md-title">Add Spray Data</h2>
+                <span flex></span>
+                <md-button type="button" class="md-icon-button" ng-click="cancel()">
+                    <ng-md-icon icon="close" aria-label="Close Dialog"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content layout-padding flex layout="column">
+            <md-input-container>
+                <md-datepicker ng-model="date" aria-label="Pick Date" md-autofocus></md-datepicker>
+                <!-- <div ng-messages="addBlockForm.blockName.$error" role="alert">
+                <div ng-message="required">Please enter a block name</div>
+                <div ng-message="minlength, maxlength">The block name must be between 1 and 50 characters</div>
+            </div>-->
+            </md-input-container>
+            <md-input-container>
+                <label>Comments</label>
+                <textarea ng-model="comments" name="comments" aria-label="Comments"></textarea>
+
+            </md-input-container>
+        </md-content>
+        <div class="md-actions" layout="row">
+            <span flex></span>
+            <md-button type="submit" class="md-icon-button md-primary" aria-label="Add Block">
+                <ng-md-icon icon="check"></ng-md-icon>
+            </md-button>
+        </div>
+    </form>
+</md-dialog>
+

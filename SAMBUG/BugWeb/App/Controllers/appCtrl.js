@@ -36,6 +36,14 @@
                 window.location = "/reporting/tables";
             };
 
+            function navigateToEditFarms(event) {
+                window.location = "/farmmanagement/editfarms";
+            }
+
+            function navigateToTreatments(event) {
+                window.location = "/farmmanagement/spraydata";
+            }
+
             function showLoginDialog(event) {
                 $scope.showDialog("login", event, "LoginDialogCtrl", function(status) {
                     $scope.user.isLoggedIn = status.user.isLoggedIn;
@@ -122,7 +130,9 @@
                     toggleCollapseIcon: toggleCollapseIcon,
                     navigateToMap: navigateToMap,
                     navigateToCharts: navigateToCharts,
-                    navigateToTables: navigateToTables
+                    navigateToTables: navigateToTables,
+                    navigateToEditFarms: navigateToEditFarms,
+                    navigateToTreatments: navigateToTreatments
                 },
                 items: [
                     {
@@ -153,14 +163,20 @@
                         actionName: "toggleCollapseIcon",
                         mustShow: function() {
                             return $scope.user.isGrower;
-                        },
-                        icon: "nature",
-                        collapseIcon: "expand_more",
-                        collapseTargetId: "farmManagementSubMenu",
-                        title: "Farm Management",
-                        subList: [
-                            { title: "Farms & Blocks" },
-                            { title: "Spray Data" }
+                        },                        
+                    	icon: "nature",
+                   	 	collapseIcon: "expand_more",
+                    	collapseTargetId: "farmManagementSubMenu",
+                    	title: "Farm Management",
+                    	subList: [
+                        	{
+                            	actionName: "navigateToEditFarms",
+                            	title: "Farms & Blocks"
+                        	},
+                        	{
+                            	actionName: "navigateToTreatments",
+                            	title: "Spray Data"
+                        	}
                         ]
                     }
                 ]

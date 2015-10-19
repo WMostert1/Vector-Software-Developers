@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Spray Data";
+}
+
+<div layout-fill ng-controller="SprayDataCtrl" layout="row" layout-align="center start">
+    <div layout="column" flex="70">
+        <div flex layout-padding layout="column" ng-repeat="farm in farms">
+            <md-toolbar class="md-hue-1">
+                <div class="md-toolbar-tools">
+                    <h2>
+                        <span>{{farm.farmName}}</span>
+                    </h2>
+                    <span flex></span>
+                    <md-button ng-click="toggleCollapseIcon(farm)" class="md-icon-button" aria-label="Expand Constraints" data-toggle="collapse" data-target="{{'#'+ farm.farmId}}">
+                        <ng-md-icon icon="{{farm.collapseIcon}}"></ng-md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-content flex class="md-hue-1 collapse" id="{{farm.farmId}}">
+                <div layout="row" layout-align="center center">
+                    <h3 flex="25">Block Name</h3>
+                    <h3 flex="30">Latest Pests Per Tree</h3>
+                    <h3 flex="20">Last Spray</h3>
+                    <span flex></span>
+                    <md-divider></md-divider>
+                </div>
+                <md-list>
+                    <div ng-repeat="block in farm.blocks">
+                        <md-list-item layout="row" flex>
+                            <md-item-content layout="row" flex>
+                                <div flex="25">
+                                    <p>{{block.name}}</p>
+                                </div>
+                                <div flex="30">
+                                    <p>{{block.pestsPerTree}}</p>
+                                </div>
+                                <div flex="20">
+                                    <p>{{block.lastSpray}} weeks ago</p>
+                                </div>
+                                <span flex></span>
+                                <md-button ng-click="showAddTreatmentDialog($event, 'AddTreatmentDialogCtrl', $index, farm)" class="md-fab md-mini md-primary" aria-label="Add Spray Data">
+                                    <ng-md-icon icon="add"></ng-md-icon>
+                                    <md-tooltip>
+                                        Spray this block
+                                    </md-tooltip>
+                                </md-button>
+                                <md-button ng-click="" class="md-fab md-mini md-primary" aria-label="Spray history">
+                                    <ng-md-icon icon="history"></ng-md-icon>
+                                    <md-tooltip>
+                                        View History
+                                    </md-tooltip>
+                                </md-button>
+                                <span flex></span>
+                            </md-item-content>
+                        </md-list-item>
+                        <md-divider></md-divider>
+                    </div>
+                </md-list>
+            </md-content>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/farmmanagement/spraydata")
+}
+
+
+
+
+@*@using BugBusiness.Interface.BugSecurity.DTO
+                @model List<List<BugWeb.Models.TreatmentViewModel>>
+                @{
+                    ViewBag.Title = "Spray Data";
+                    UserDTO user = (UserDTO)Session["UserInfo"];
+                    int farmNum = -1;
+                    int blockNum = -1;
+                }
+
+
+                <div>
+                    <br />
+                    @foreach (var item in user.Farms)
+                    {
+                        farmNum += 1;
+                        blockNum = -1;
+                        <div class="row">
+                            <div class="col-sm-8" style="font-size: 20pt;text-align:center;margin-bottom:5px">@Html.DisplayFor(modelItem => item.FarmName)</div>
+                        </div>
+                        <div class="col-sm-11 farm-table">
+                            <div class="row farm-table-head">
+                                <div style="font-size: 12pt;font-weight:bold;text-align:center" class="col-sm-3">Block Name</div>
+                                <div style="font-size: 12pt;font-weight:bold;text-align:center" class="col-sm-3">Pests Per Tree</div>
+                                <div style="font-size: 12pt;font-weight:bold;text-align:center" class="col-sm-2">Last Treatment</div>
+                            </div>
+                            @foreach (var block in item.Blocks)
+                            {
+                                <!--Add Treatment-->
+                                <div id="@Html.Raw("add" + block.BlockID)" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">Add Treatment</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Please enter the treatment of the date and any comments about the treatment</p>
+                                                <form id="form_@block.BlockID" method="POST" action="./AddTreatment" style="align-content:center">
+                                                    <input type="number" value="@block.BlockID" name="BlockID" hidden />
+                                                    <label for="TreatmentDate">Date</label>
+                                                    <input type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")" name="TreatmentDate" id="TreatmentDate"/><br/>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <label for="TreatmentComments">Comments</label>
+                                                            <textarea rows="5" cols="30" id="TreatmentComments" name="TreatmentComments" placeholder="Enter comments here"></textarea>
+                                                        </span>
+                                                    </div>
+                                                    <input type="Submit" value="Add" />
+                                                </form>
+                                                <br />
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                blockNum += 1;
+                                <div class="row">
+                                    <div class="col-sm-3">@Html.DisplayFor(modelItem => block.BlockName)</div>
+                                    @{string ppt = Model[farmNum][blockNum].PestsPerTree > -1 ? Model[farmNum][blockNum].PestsPerTree.ToString() : "N/A";}
+                                    <div class="col-sm-3">@ppt</div>
+                                    <div class="col-sm-2">@Html.DisplayFor(modelItem => Model[farmNum][blockNum].LastTreatment)</div>
+                                    <div class="col-sm-3">
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("add" + block.BlockID)">Add Treatment</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("history" + block.BlockID)">History</button>
+                                    </div>
+                                </div>
+                                <br />
+                            }
+                        </div>
+                    }
+                </div>*@
+

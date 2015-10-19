@@ -90,7 +90,7 @@ namespace BugBusiness.Tests
             //Arrange
             _autoMock
                .Mock<IDbBugSecurity>()
-               .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "321", "Farm1"))
+               .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "321"))
                .Returns(true);
 
             var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
@@ -102,7 +102,6 @@ namespace BugBusiness.Tests
                 UsernameConfirmation = "TestEmail@TestHost.com",
                 Password = "321",
                 PasswordConfirmation = "321",
-                FarmName = "Farm1"
             });
 
             //Assert - Expect No Service Exceptions
@@ -115,7 +114,7 @@ namespace BugBusiness.Tests
             //Arrange
             _autoMock
                .Mock<IDbBugSecurity>()
-               .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "54321", "Farm1"))
+               .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "54321"))
                .Returns(false);
 
             var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
@@ -127,7 +126,6 @@ namespace BugBusiness.Tests
                 UsernameConfirmation = "TestEmail@TestHost.com",
                 Password = "54321",
                 PasswordConfirmation = "54321",
-                FarmName = "Farm1"
             });
 
             //Assert - Expect UserExistsException
@@ -164,8 +162,7 @@ namespace BugBusiness.Tests
                         Username = email,
                         UsernameConfirmation = email,
                         Password = "54321",
-                        PasswordConfirmation = "54321",
-                        FarmName = "Farm1"
+                        PasswordConfirmation = "54321"
                     });
                 }
                 catch (InvalidInputException)
@@ -185,7 +182,7 @@ namespace BugBusiness.Tests
             //Arrange
             _autoMock
                .Mock<IDbBugSecurity>()
-               .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "54321", "Farm1"))
+               .Setup(dbAuthentication => dbAuthentication.InsertNewUser("TestEmail@TestHost.com", "54321"))
                .Returns(true);
 
             var bugSecurity = _autoMock.Create<BugSecurity.BugSecurity>();
@@ -197,7 +194,6 @@ namespace BugBusiness.Tests
                 UsernameConfirmation = "different@differentHost.com",
                 Password = "54321",
                 PasswordConfirmation = "54321",
-                FarmName = "Farm1"
             });
 
             //Assert - Expect InvalidInputException
