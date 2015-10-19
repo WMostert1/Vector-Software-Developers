@@ -1,5 +1,5 @@
 ﻿angular.module("appMain")
-    .controller("MapCtrl", ["$scope", "commonReportingService", "reportingUrlService", function ($scope, commonReportingService, reportingUrlService) {
+    .controller("MapCtrl", ["$scope", "commonReportingService", "reportingUrlService", "mapService", function ($scope, commonReportingService, reportingUrlService, mapService) {
         $scope.options = {
             radius: 10
         }
