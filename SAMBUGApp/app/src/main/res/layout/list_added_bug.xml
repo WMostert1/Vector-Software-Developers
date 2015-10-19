@@ -55,8 +55,7 @@
                         android:id="@+id/ivAddedBugPic"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@drawable/cletus0"/>
+                        android:layout_gravity="center_horizontal"/>
 
                     <CheckedTextView
                         android:layout_gravity="center_horizontal"

@@ -442,6 +442,7 @@ public class EnterDataActivity extends AppCompatActivity {
 
                 addedBugViewHolder.slAddedBug.setShowMode(SwipeLayout.ShowMode.LayDown);
                 addedBugViewHolder.slAddedBug.addDrag(SwipeLayout.DragEdge.Right, addedBugViewHolder.llDraggedMenu);
+                addedBugViewHolder.slAddedBug.setSwipeEnabled(true);
             } else {
                 addedBugViewHolder.ivAddedBugPic.setImageBitmap(null);
                 addedBugViewHolder.tvAddedBugSpecies.setText("No bugs added yet. Click '+' to add.");
