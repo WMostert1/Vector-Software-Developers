@@ -4,7 +4,8 @@
     ViewBag.Title = "Map";
     ViewBag.Reporting = "true";
 }
-<div layout-fill layout="column" ng-controller="MapCtrl">
+<div flex layout-fill layout="column" ng-controller="MapCtrl">
+    <div flex layout-fill id="map"></div>
     <md-sidenav layout="column" class="md-sidenav-right md-whiteframe-z2" md-component-id="right" ng-cloak>
         <md-toolbar class="md-primary md-hue-1 md-whiteframe-z1">
             <md-toolbar-tools layout="row" flex layout-align="center center">
@@ -68,13 +69,13 @@
         });
     </script>
 
+    <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=visualization"></script>
+
     @Scripts.Render("~/bundles/vendor/xdate")
     @Scripts.Render("~/bundles/reporting/common")
     @Scripts.Render("~/bundles/reporting/map")
 
-    <script async defer
-            src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=visualization&callback=initMap">
-    </script>
+    
 }
 
 

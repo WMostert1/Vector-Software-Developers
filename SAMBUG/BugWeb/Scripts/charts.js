@@ -23,11 +23,6 @@ var scoutStops;
 var treatments;
 
 
-/*
-    Function Definitions
-*/
-
-
 function filterScoutStops(stops, settings) {
     var taggedFarmNames = settings.constraintFarms.split(",");
     var taggedBlockNames = settings.constraintBlocks.split(",");

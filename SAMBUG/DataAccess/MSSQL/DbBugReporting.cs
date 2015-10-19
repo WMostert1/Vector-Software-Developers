@@ -30,7 +30,7 @@ namespace DataAccess.MSSQL
         {
             var db = new BugDBEntities();
 
-            List<Species> species = db.Species.Where(sp => sp.IsPest).ToList();
+            List<Species> species = db.Species.Select(sp => sp).ToList();
 
             return species;
         }
