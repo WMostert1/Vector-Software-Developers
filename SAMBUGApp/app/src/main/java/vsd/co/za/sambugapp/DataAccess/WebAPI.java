@@ -48,7 +48,7 @@ import vsd.co.za.sambugapp.ScoutTripActivity;
 public class WebAPI {
     private static final String HOST = "sambug.azurewebsites.net";
     private static final String AUTHENTICATION_URL = "http://"+HOST+"/api/authentication/login";
-    private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/Synchronization";
+    private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/synchronization";
     private static final String CLASSIFICATION_URL= "http://"+HOST+"/api/apiSpeciesClassification";
     private static final int SOCKET_TIMEOUT_MS = 100000; //10 seconds
     private static final int MAX_RETRIES = 3;
@@ -99,7 +99,6 @@ public class WebAPI {
             JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, SYNC_SERVICE_URL, jsonDTO, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
                     Toast.makeText(context, "Server contacted.", Toast.LENGTH_SHORT).show();
 
                     Toast.makeText(context, "Scout data successfully pushed to server", Toast.LENGTH_SHORT).show();
@@ -120,7 +119,6 @@ public class WebAPI {
                             } catch (SQLException e) {
                                 Log.e("Deletion", e.toString());
                             }
-
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -133,6 +131,7 @@ public class WebAPI {
                             .show();*/
                     Toast.makeText(context, "Error connecting to server.", Toast.LENGTH_SHORT).show();
                     Log.e("NetworkingError:", error.toString());
+                    error.printStackTrace();
                 }
             });
 

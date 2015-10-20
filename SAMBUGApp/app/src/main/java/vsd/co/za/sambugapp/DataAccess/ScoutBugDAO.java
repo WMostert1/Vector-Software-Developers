@@ -50,7 +50,7 @@ public class ScoutBugDAO extends DataSourceAdapter {
     public long insert(ScoutBug scoutBug) {
         ContentValues values = new ContentValues();
         values.put(DBHelper.COLUMN_SCOUT_STOP_ID,scoutBug.getScoutStopID());
-        values.put(DBHelper.COLUMN_SPECIES_ID, scoutBug.getSpeciesID());
+        values.put(DBHelper.COLUMN_SPECIES_ID, scoutBug.getSpecies().getSpeciesID());
         values.put(DBHelper.COLUMN_NUMBER_OF_BUGS, scoutBug.getNumberOfBugs());
         values.put(DBHelper.COLUMN_FIELD_PICTURE, scoutBug.getFieldPicture());
         values.put(DBHelper.COLUMN_COMMENTS, scoutBug.getComments());
