@@ -88,6 +88,7 @@
     <Compile Include="BugReporting\IBugReporting.cs" />
     <Compile Include="BugScouting\DTO\ScoutBugDTO.cs" />
     <Compile Include="BugScouting\DTO\ScoutStopDTO.cs" />
+    <Compile Include="BugScouting\DTO\SyncResult.cs" />
     <Compile Include="BugScouting\Exceptions\PersistScoutStopException.cs" />
     <Compile Include="BugScouting\Exceptions\PersistScoutBugException.cs" />
     <Compile Include="BugScouting\IBugScouting.cs" />

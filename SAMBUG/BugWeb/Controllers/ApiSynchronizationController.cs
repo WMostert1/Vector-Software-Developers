@@ -31,18 +31,18 @@ namespace BugWeb.Controllers
 
         [HttpPost]
         [Route("")]
-         public HttpResponseMessage PersistCachedData([FromBody] SyncRequest request)
+         public SyncResult PersistCachedData([FromBody] SyncRequest request)
         {
             try
             {
                     _bugScouting.persistScoutingData(request);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
+                return new SyncResult { success = false };
             }
 
-            return new HttpResponseMessage(HttpStatusCode.Created);
+            return new SyncResult { success = true };
 
         }
 
