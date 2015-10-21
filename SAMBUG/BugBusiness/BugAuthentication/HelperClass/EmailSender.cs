@@ -29,6 +29,7 @@ namespace BugCentral.HelperClass
         }
 
         public Boolean sendEmail(){
+
             var smtp = new SmtpClient
             {
                 Host = "smtp.gmail.com",
@@ -43,8 +44,11 @@ namespace BugCentral.HelperClass
                 Subject = subject,
                 Body = body
             })
-            
-                try { smtp.Send(message); }
+                
+       
+                try {
+                    message.IsBodyHtml = true;
+                    smtp.Send(message); }
                 catch(Exception)
                 {
                     return false;

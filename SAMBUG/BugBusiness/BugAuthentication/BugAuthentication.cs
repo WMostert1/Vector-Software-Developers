@@ -9,6 +9,7 @@ using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugAuthentication;
 using BugBusiness.Interface.BugAuthentication.DTO;
 using BugBusiness.Interface.BugAuthentication.Exceptions;
+using System.Net.Mail;
 
 namespace BugBusiness.BugAuthentication
 {
@@ -30,8 +31,11 @@ namespace BugBusiness.BugAuthentication
 
         public RecoverAccountResult RecoverAccount(RecoverAccountRequest recoverAccountRequest)
         {
-            EmailSender _Email = new EmailSender(recoverAccountRequest.From,recoverAccountRequest.FromPassword, recoverAccountRequest.EmailTo);
-            _Email.setEmail("Recover Password", recoverAccountRequest.Link);
+        
+      
+
+              EmailSender _Email = new EmailSender(recoverAccountRequest.From,recoverAccountRequest.FromPassword, recoverAccountRequest.EmailTo);
+             _Email.setEmail("Recover Password", recoverAccountRequest.Link);
 
 
             if (_Email.sendEmail() == false)

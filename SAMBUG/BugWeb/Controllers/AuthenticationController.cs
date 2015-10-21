@@ -17,7 +17,7 @@ using BugWeb.Security;
 using BugBusiness.Interface.BugAuthentication;
 using BugBusiness.Interface.BugAuthentication.DTO;
 using BugBusiness.Interface.FarmManagement.DTO;
-
+using System.Net.Mail;
 
 namespace BugWeb.Controllers
 {
@@ -132,7 +132,8 @@ namespace BugWeb.Controllers
        // [HttpPost]
         public ActionResult RecoverAccount(RecoverAccountModel recoverAccountModel)
         {
-            recoverAccountModel.Link = "http://localhost:53249/Home/ChangePassword";
+            String ipAddress = "http://localhost:53249/Home/ChangePassword";
+            recoverAccountModel.Link = string.Format("Click <a href='{0}'>here</a> to recover account", ipAddress);
             BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest recoverAccountRequest = new BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest()
             {
                 From = "do.not.reply.sambug.vsd@gmail.com",
