@@ -132,11 +132,12 @@ namespace BugWeb.Controllers
        // [HttpPost]
         public ActionResult RecoverAccount(RecoverAccountModel recoverAccountModel)
         {
-            recoverAccountModel.Link = "http://localhost:53249/Home/ChangePassword";
+            String ipAddressChangeAddress = "http://localhost:53249/Home/ChangePassword"; 
+            //recoverAccountModel.Link = "<a href=\"http://localhost:53249/Home/ChangePassword\"> Click </a>";
             BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest recoverAccountRequest = new BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest()
             {
-                From = "kaleabtessera@gmail.com",
-                FromPassword = "27ATEHBruKal1129",
+                From = "do.not.reply.sambug.vsd@gmail.com",
+                FromPassword = "SambugVSD4321",
                 EmailTo = recoverAccountModel.EmailTo,
                 Link = recoverAccountModel.Link
             };
