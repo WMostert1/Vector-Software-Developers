@@ -100,6 +100,11 @@ namespace BugWeb
                     "~/App/Controllers/sprayDataCtrl.js"));
 
             bundles
+                .Add(new ScriptBundle("~/bundles/authentication/edituserroles")
+                    .Include("~/App/Controllers/editUserRolesDialogCtrl.js",
+                    "~/App/Controllers/userManagementCtrl.js"));
+
+            bundles
                 .Add(new ScriptBundle("~/bundles/chartist", cdnJsChartist)
                     .Include("~/Scripts/chartist.js"));
 

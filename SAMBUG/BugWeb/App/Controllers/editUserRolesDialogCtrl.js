@@ -1,27 +1,39 @@
 ﻿angular.module("appMain")
-    .controller("AddTreatmentDialogCtrl", [
-                "$scope", "$mdDialog", "$mdToast", "$http", function ($scope, $mdDialog, $mdToast, $http) {
-                    $scope.newDate = new Date();
+    .controller("EditUserRolesDialogCtrl", [
+                "$scope", "$rootScope", "$mdDialog", "$mdToast", "$http", function ($scope, $rootScope, $mdDialog, $mdToast, $http) {
+                    $scope.userName = $rootScope.userEmail;
+                    $scope.roles = $rootScope.roles;
+                    var grower = false;
+                     var admin = false;
+
+                    for (var x = 0; x < $scope.roles.length; x++) {
+                        if ($scope.roles[x].id === "1") {
+                            grower = true;
+                        }
+                        if ($scope.roles[x].id === "2") {
+                            admin = true;
+                        }
+                    }
+
+                    $scope.userGrower = grower;
+                    $scope.userAdmin = admin;
+
                     $scope.cancel = function () {
                         $mdDialog.cancel();
                     };
 
                     $scope.post = function (event) {
                         event.preventDefault();
+
                         $scope.errorMessage = "";
 
-                        if ($scope.newDate == null || $scope.newDate === "" || Object.prototype.toString.call($scope.newDate) !== '[object Date]') {
-                            console.log("Empty");
-                            return false;
-                        }
-
-                        $scope.loading = true;
                         if (!event.target.checkValidity) {
                             return false;
                         }
+                        $scope.loading = true;
 
                         //delete when talking to server
-                        $mdDialog.hide($scope.newDate);
+                        $mdDialog.hide();
 
                         /*$http.post(event.target.action, {
                             
