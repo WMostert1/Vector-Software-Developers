@@ -91,13 +91,15 @@
         </div>
     </md-toolbar>
 
-    <md-content flex class="bodyContent md-body-1" layout-padding layout="column">
+    <md-content flex class="bodyContent md-body-1" layout="column">
         @RenderBody()
     </md-content>
 
 </div>
 
 @*todo wrap vendor scripts in Angular Modules. Look at lazy loading using RequireJS.*@
+
+@Scripts.Render("~/bundles/linqjs")
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
 @Scripts.Render("~/bundles/angular")

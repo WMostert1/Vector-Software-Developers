@@ -39,6 +39,10 @@ namespace BugWeb
                 .Add(new ScriptBundle("~/bundles/jqueryval")
                     .Include("~/Scripts/jquery.validate*"));
 
+            bundles
+               .Add(new ScriptBundle("~/bundles/linqjs")
+                   .Include("~/Scripts/linq.js"));
+
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles
@@ -71,7 +75,7 @@ namespace BugWeb
 
             bundles
                 .Add(new ScriptBundle("~/bundles/reporting/common")
-                    .Include("~/App/Services/reportingDataService.js"));
+                    .Include("~/App/Services/commonReportingService.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/reporting/tables")
