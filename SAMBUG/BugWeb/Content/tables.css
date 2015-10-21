@@ -1,20 +1,4 @@
-﻿body {
-}
-
-.tableDiv {
-    margin-top: 100px;
-}
-
-#collapseIconScout, #collapseIconTreatment {
-    cursor: pointer;
-}
-
-#resetIconScout, #resetIconTreatment {
-    cursor: pointer;
-}
-
-
-div.dt-button, a.dt-button {
+﻿div.dt-button, a.dt-button {
     font-size: 20px !important;
     color: green !important;
     height: 50px;
@@ -40,17 +24,3 @@ div.dt-button, a.dt-button {
     background: url("Images/printer.svg")       
     no-repeat center !important; 
 }
-
-.myTable { 
-     border-top: none !important; 
- }
-
-.whirly-loader {
-    top: 100%;
-    left: 50%;
-}
-
-/*
-span {
-    background-color: red;
-}*/

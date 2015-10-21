@@ -1,158 +1,88 @@
 ﻿@model BugWeb.Models.ReportingViewModel
+
 @{
-    ViewBag.Title = "Tabular";
+    ViewBag.Title = "Tables";
     ViewBag.Reporting = "true";
 }
-@section scripts
-{
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3/datatables.min.css"/>
 
-    <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3/datatables.min.js"></script>
-    <script src="~/Scripts/table.js"></script>
-    <script src="~/Scripts/tableScout.js"></script>
-    <script src="~/Scripts/tableTreatment.js"></script>
-}
 @section styles
 {
-    @Styles.Render("~/Content/table.css")
+    @Styles.Render("~/Content/css/reporting/dataTables")
+    @Styles.Render("~/Content/css/reporting/tables")
 }
 
-<script type="application/javascript">
-        var recordsUrl = "@Url.Content("~/api/records/" + @Model.RecordsUrlSuffix)";
-        var speciesUrl = "@Url.Content("~/api/species")";
-</script>
+<div flex layout-fill layout="column" ng-controller="TablesCtrl">
+    <div flex layout="column" layout-fill layout-align="center center">
+        <div flex layout="column" layout-fill id="table" layout-align="center center"></div>
+        <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="70px"></md-progress-circular>
 
-<div class="container">
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#Scout_Data">Scouting Data</a>
-        </li>
-        <li>
-            <a href="#Treatment_Data">Treatment Data</a>
-        </li>
-    </ul>
-
-<div class="tab-content">
-    
-    <div id="Scout_Data" class="tab-pane fade in active">
-
-        <div id="constraintsDivScout" class="panel-group">
-            <div class="panel panel-default  " style="padding: 0px">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                        <span id="collapseIconScout" data-toggle="collapse" data-target="#collapsibleTableScout" class="glyphicon glyphicon-collapse-down"></span>
-                        <span id="resetIconScout" class="glyphicon glyphicon-refresh pull-right"></span>
-                        <strong> Constraints</strong>
-                    </h1>
+    </div>
+    <md-sidenav layout="column" class="md-sidenav-right md-whiteframe-z2" md-component-id="right" ng-cloak>
+        <md-toolbar class="md-primary md-hue-1 md-whiteframe-z1">
+            <md-toolbar-tools layout="row" flex layout-align="center center">
+                <h2 offset="5" class="md-title">Table Settings</h2>
+                <span flex></span>
+                <md-button ng-click="defaultSettings()" class="md-icon-button" aria-label="Setting Defaults">
+                    <ng-md-icon icon="refresh"></ng-md-icon>
+                </md-button>
+            </md-toolbar-tools>
+        </md-toolbar>
+        <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1">
+            <md-input-container class="md-hue-1" ng-repeat="constraint in constraints.misc">
+                <label>{{constraint.title}}</label>
+                <md-select ng-model="constraint.value" ng-disabled="loading">
+                    <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item === constraint.list[0]">
+                        {{item}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+            <div layout="row">
+                <div layout="column">
+                    <div layout="row">
+                        <h5 flex="15">Since</h5>
+                        <md-datepicker class="md-hue-1" ng-model="constraints.dates.from" md-max-date="constraints.dates.to" ng-disabled="constraints.dates.all || loading"></md-datepicker>
+                    </div>
+                    <div layout="row">
+                        <h5 flex="15">Until</h5>
+                        <md-datepicker class="md-hue-1" ng-model="constraints.dates.to" md-min-date="constraints.dates.from" ng-disabled="constraints.dates.all || loading"></md-datepicker>
+                    </div>
                 </div>
-                <div id="collapsibleTableScout" class="panel-collapse collapse in">
-                    <table class="table myTable">
-                        <tbody>
-                            <tr>
-                                <th class="myTable">Farm</th>
-                                <td class="myTable">
-                                    <select id="farmScout" class="form-control farms">
-                                        <option value="all">All Farms</option>
-                                    </select>
-                                </td>
-                                <th class="myTable">Date</th>
-                                <td class="myTable" rowspan="3">
-                                    <label for="timeFromScout">From:</label>
-                                    <input type="date" id="timeFromScout" class="form-control constraintScout dateFrom">
-
-                                    <label for="timeToScout">To:</label>
-                                    <input type="date" id="timeToScout" class="form-control constraintScout dateTo"><br />
-                                    <input class="constraintScout" id="dateAnyScout" type="checkbox" checked> Any
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="myTable">Blocks</th>
-                                <td class="myTable">
-                                    <select id="blocksScout" class="form-control constraintScout">
-                                        <option value="all">All Blocks</option>
-                                    </select>
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <th class="myTable">Species</th>
-                                <td class="myTable">
-                                    <select id="speciesScout" class="form-control">
-                                        <option value="all">All Species</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="myTable">Species instars</th>
-                                <td class="myTable">
-                                    <select id="speciesStageScout" class="form-control constraintScout">
-                                        <option value="all">All Instars</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div layout="row" layout-align="end center">
+                    <md-checkbox class="md-primary" aria-label="All Dates Checkbox" ng-model="constraints.dates.all" ng-disabled="loading">
+                        <h5>All</h5>
+                    </md-checkbox>
                 </div>
             </div>
-        </div>
-
-        <div class="tableDiv whirly-loader" id="scoutTableDiv"></div>
-
-    </div>
-
-    <div id="Treatment_Data" class="tab-pane fade">
-        <div id="constraintsDivTreatment" class="panel-group">
-            <div class="panel panel-default" style="padding: 0px">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                        <span id="collapseIconTreatment" data-toggle="collapse" data-target="#collapsibleTableTreatment" class="glyphicon glyphicon-collapse-down"></span>
-                        <span id="resetIconTreatment" class="glyphicon glyphicon-refresh pull-right"></span>
-                        <strong> Constraints</strong>
-                    </h1>
-                </div>
-                <div id="collapsibleTableTreatment" class="panel-collapse collapse in">
-                    <table class="table mytable">
-                        <tbody>
-                            <tr>
-                                <th class="myTable">Farm</th>
-                                <td class="myTable">
-                                    <select id="farmTreatment" class="form-control farms">
-                                        <option value="all">All Farms</option>
-                                    </select>
-                                </td>
-                                <th class="myTable">Date</th>
-                                <td class="myTable" rowspan="3">
-                                    <label for="timeFromTreatment">From:</label>
-                                    <input type="date" id="timeFromTreatment" class="form-control constraintTreatment dateFrom">
-
-                                    <label for="timeToTreatment">To:</label>
-                                    <input type="date" id="timeToTreatment" class="form-control constraintTreatment dateTo"><br />
-                                    <input class="constraintTreatment" id="dateAnyTreatment" type="checkbox" checked> Any
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="myTable">Blocks</th>
-                                <td class="myTable">
-                                    <select id="blocksTreatment" class="form-control constraintTreatment">
-                                        <option value="all">All Blocks</option>
-                                    </select>
-                                </td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <md-divider></md-divider>
+            <div layout="row">
+                <md-switch class="md-primary" aria-label="Blue Colour Gradient Switch" ng-model="options.blueColourGradient" ng-disabled="loading">
+                    <h5 offset="15">Blue Colour Gradient</h5>
+                </md-switch>
             </div>
-            <div class="tableDiv whirly-loader" id="treatmentTableDiv"></div>
-        </div>
-    </div>
-
-    </div>
-
-</div> 
-
-
-
+            <div layout="row">
+                <md-slider offset="10" flex="40" ng-model="options.radius" min="0.001" max="0.3" step="0.0001" aria-label="Radius" class="md-primary" ng-disabled="loading"></md-slider>
+                <span flex="10"></span>
+                <h5>Heat Radius {{options.radius}}</h5>
+            </div>
+        </md-content>
+    </md-sidenav>
+</div>
 
 
+@section scripts
+{
+    <script type="application/javascript">
+        angular.module("appMain").factory("reportingUrlService", function(){
+            return {
+                recordsUrl: "@Url.Content("~/api/records/" + Model.RecordsUrlSuffix)",
+                speciesUrl: "@Url.Content("~/api/species")"
+            };
+        });
+    </script>
 
+    @Scripts.Render("~/bundles/vendor/xdate")
+    @Scripts.Render("~/bundles/reporting/common")
+    @Scripts.Render("~/bundles/reporting/dataTables")
+    @Scripts.Render("~/bundles/reporting/tables")
+
+}

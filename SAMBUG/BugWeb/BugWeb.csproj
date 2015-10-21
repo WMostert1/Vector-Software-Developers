@@ -223,7 +223,7 @@
     <Content Include="Content\Images\printer.svg" />
     <Content Include="Content\Images\two_spot_inst_4.jpg" />
     <Content Include="Content\Images\yellow_edged_inst_4.jpg" />
-    <Content Include="Content\table.css" />
+    <Content Include="Content\tables.css" />
     <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
