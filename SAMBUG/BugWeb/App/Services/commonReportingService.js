@@ -138,6 +138,9 @@
                         .Select(function (b) {
                             return b.blockName;
                         })
+                        .Select(function(s) {
+                            return s;
+                        })
                         .ToArray()
                 }
             }).ToArray();
@@ -199,20 +202,45 @@
             return Enumerable.From(lifeStages).Distinct().ToArray();
         }
 
-        this.getScoutStops = function() {
-            return scoutStops;
+        var constructDataFilter = function () {
+            return {
+                farms: [$scope.constraints.misc.farm.value],
+                blocks: [$scope.constraints.misc.block.value],
+                species: [$scope.constraints.misc.species.value],
+                lifeStages: [$scope.constraints.misc.lifeStage.value],
+                dates: {
+                    from: $scope.constraints.dates.from,
+                    to: $scope.constraints.dates.to
+                }
+            }
         }
 
-        this.getTreatments = function() {
-            return treatments;
+        this.getScoutStops = function (filter) {
+            return Enumerable.From(scoutStops)
+                .Where(function(s) {
+                    return Enumerable.From(filter.farms).Any(function (f) {
+                            return f === s.farmName || f === "All Farms";
+                        }) &&
+                        Enumerable.From(filter.blocks).Any(function(b) {
+                            return b === s.blockName || b === "All Blocks";
+                        }) &&
+                        Enumerable.From(filter.species).Any(function(p) {
+                            return p === s.speciesName || p === "All Species";
+                        }) &&
+                        Enumerable.From(filter.lifeStages).Any(function(l) {
+                            return l === s.lifeStage || l === "All Life Stages";
+                        }) &&
+                        (filter.dates.all || (filter.dates.from.valueOf() <= s.date.valueOf() &&
+                        filter.dates.to.valueOf() >= s.date.valueOf()));
+                })
+                .Select(function(s) {
+                    return s;
+                })
+                .ToArray();
         }
 
-       /* this.getTreatments = function(filter) {
-            
+        this.getTreatments = function(filter) {
+               
         }
-
-        this.getScoutStops = function(filter) {
-            
-        }*/
         
     }]);
