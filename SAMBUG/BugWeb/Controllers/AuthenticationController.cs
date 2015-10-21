@@ -132,8 +132,7 @@ namespace BugWeb.Controllers
        // [HttpPost]
         public ActionResult RecoverAccount(RecoverAccountModel recoverAccountModel)
         {
-            String ipAddressChangeAddress = "http://localhost:53249/Home/ChangePassword"; 
-            //recoverAccountModel.Link = "<a href=\"http://localhost:53249/Home/ChangePassword\"> Click </a>";
+            recoverAccountModel.Link = "http://localhost:53249/Home/ChangePassword";
             BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest recoverAccountRequest = new BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest()
             {
                 From = "do.not.reply.sambug.vsd@gmail.com",
