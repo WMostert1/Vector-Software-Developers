@@ -20,6 +20,10 @@
                 window.location = "/";
             };
 
+            function navigateToEditUserRoles(event) {
+                window.location = "/authentication/edituserroles";
+            };
+
             function navigateToLogout(event) {
                 window.location = "/authentication/logout";
             };
@@ -132,7 +136,8 @@
                     navigateToCharts: navigateToCharts,
                     navigateToTables: navigateToTables,
                     navigateToEditFarms: navigateToEditFarms,
-                    navigateToTreatments: navigateToTreatments
+                    navigateToTreatments: navigateToTreatments,
+                    navigateToEditUserRoles: navigateToEditUserRoles
                 },
                 items: [
                     {
@@ -179,7 +184,12 @@
                         	}
                         ]
                     }
-                ]
+                ],
+                userManagement: {
+                    actionName: "navigateToEditUserRoles",
+                    icon: "people",
+                    title: "User Management"
+                }
             };
 
             $scope.showDialog = function(type, event, ctrl, hiddenCallback, cancelCallback) {

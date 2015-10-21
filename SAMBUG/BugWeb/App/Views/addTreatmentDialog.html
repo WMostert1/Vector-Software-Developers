@@ -10,18 +10,14 @@
             </div>
         </md-toolbar>
         <md-content layout-padding flex layout="column">
-            <md-input-container>
-                <md-datepicker ng-model="date" aria-label="Pick Date" md-autofocus></md-datepicker>
-                <!-- <div ng-messages="addBlockForm.blockName.$error" role="alert">
-                <div ng-message="required">Please enter a block name</div>
-                <div ng-message="minlength, maxlength">The block name must be between 1 and 50 characters</div>
-            </div>-->
-            </md-input-container>
-            <md-input-container>
-                <label>Comments</label>
-                <textarea ng-model="comments" name="comments" aria-label="Comments"></textarea>
-
-            </md-input-container>
+                <md-datepicker required name="newDate" ng-model="newDate" aria-label="Pick Date"></md-datepicker>
+            <div ng-messages="addSprayForm.newDate.$error" role="alert">
+                <div class="customErrorMessage" ng-message="required">Please select a date</div>
+            </div>
+                <md-input-container>
+                    <label>Comments</label>
+                    <textarea ng-model="comments" name="comments" aria-label="Comments"></textarea>
+                </md-input-container>
         </md-content>
         <div class="md-actions" layout="row">
             <span flex></span>

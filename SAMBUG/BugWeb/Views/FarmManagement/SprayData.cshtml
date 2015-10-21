@@ -18,9 +18,10 @@
             </md-toolbar>
             <md-content flex class="md-hue-1 collapse" id="{{farm.farmId}}">
                 <div layout="row" layout-align="center center">
-                    <h3 flex="25">Block Name</h3>
-                    <h3 flex="30">Latest Pests Per Tree</h3>
+                    <h3 flex="20">Block Name</h3>
+                    <h3 flex="25">Latest Pests Per Tree</h3>
                     <h3 flex="20">Last Spray</h3>
+                    <h3 flex="20">Next Spray</h3>
                     <span flex></span>
                     <md-divider></md-divider>
                 </div>
@@ -28,14 +29,19 @@
                     <div ng-repeat="block in farm.blocks">
                         <md-list-item layout="row" flex>
                             <md-item-content layout="row" flex>
-                                <div flex="25">
+                                <div flex="20">
                                     <p>{{block.name}}</p>
                                 </div>
-                                <div flex="30">
+                                <div flex="25">
                                     <p>{{block.pestsPerTree}}</p>
                                 </div>
                                 <div flex="20">
-                                    <p>{{block.lastSpray}} weeks ago</p>
+                                    <p ng-if="block.lastSpray === '-'">-</p>
+                                    <p ng-if="block.lastSpray !== '-'">{{block.lastSpray}} week(s) ago</p>
+                                </div>
+                                <div flex="20">
+                                    <p ng-if="block.nextSpray === '-'">-</p>
+                                    <p ng-if="block.nextSpray !== '-'"> In {{block.nextSpray}} week(s)</p>
                                 </div>
                                 <span flex></span>
                                 <md-button ng-click="showAddTreatmentDialog($event, 'AddTreatmentDialogCtrl', $index, farm)" class="md-fab md-mini md-primary" aria-label="Add Spray Data">
@@ -63,9 +69,12 @@
 
 
 @section scripts
-    {
+{
     @Scripts.Render("~/bundles/farmmanagement/spraydata")
+    @Scripts.Render("~/bundles/vendor/xdate")
 }
+
+
 
 
 

@@ -55,10 +55,10 @@
                 </div>
             </div>
 
-            <md-list-item ng-if="user.isLoggedIn && user.isAdmin"  flex ng-click="">
+            <md-list-item ng-if="user.isLoggedIn && user.isAdmin" flex ng-click="managementMenu.actions[managementMenu.userManagement.actionName]($event)">
                 <md-item-content flex layout="row">
-                    <ng-md-icon icon="people"></ng-md-icon>
-                    <h1 flex offset="10" class="md-body-2">User Management</h1>
+                    <ng-md-icon icon="{{managementMenu.userManagement.icon}}"></ng-md-icon>
+                    <h1 flex offset="10" class="md-body-2">{{managementMenu.userManagement.title}}</h1>
                 </md-item-content>
             </md-list-item>
 

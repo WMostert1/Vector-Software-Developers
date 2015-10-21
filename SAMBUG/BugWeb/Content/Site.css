@@ -56,6 +56,10 @@ md-list-item a{
  color: inherit !important;   
 }
 
+.customErrorMessage{
+    color: rgb(244,67,54); !important;
+}
+
 /*todo: the below code was meant for bootstrap it seems, just make sure before completely removing*/
 /*html, body{
     height : 100%;
