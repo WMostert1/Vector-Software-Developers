@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,10 +22,11 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.daimajia.swipe.SwipeLayout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -76,10 +79,25 @@ public class ScoutTripActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
         Spinner spinner = (Spinner) toolbar.findViewById(R.id.spnFarms);
 
+       /* ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int pos = viewHolder.getAdapterPosition();
+                scoutTrip.getStopList().remove(pos);
+                rvScoutStops.getAdapter().notifyItemRemoved(pos);
+            }
+        };
+        ItemTouchHelper swipeHelper = new ItemTouchHelper(callback);*/
+
         rvScoutStops = (RecyclerView) findViewById(R.id.rvScoutStops);
         rvScoutStops.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         rvScoutStops.setAdapter(new RVScoutStopAdapter(scoutTrip.getStopList()));
         rvScoutStops.setHasFixedSize(true);
+        //swipeHelper.attachToRecyclerView(rvScoutStops);
 
         rvPestsPerTree = (RecyclerView) findViewById(R.id.rvPestsPerTree);
         rvPestsPerTree.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -87,12 +105,7 @@ public class ScoutTripActivity extends AppCompatActivity {
         rvPestsPerTree.setHasFixedSize(true);
 
         if (!hasStops && scoutTrip.getNumStops() == 0) {
-            ScoutStop tempStop = new ScoutStop();
-            Block tempBlock = new Block();
-            tempBlock.setBlockName("No stops added yet. Click '+'");
-            tempStop.setBlock(tempBlock);
-            scoutTrip.addStop(tempStop);
-            rvScoutStops.getAdapter().notifyDataSetChanged();
+            addDefaultStop();
         }
 
         acceptFarms(getIntent());
@@ -107,7 +120,7 @@ public class ScoutTripActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(UPDATE_INDEX, updateIndex);
         savedInstanceState.putBoolean(HAS_STOPS, hasStops);
-        savedInstanceState.putSerializable(SCOUT_STOP_LIST,scoutTrip);
+        savedInstanceState.putSerializable(SCOUT_STOP_LIST, scoutTrip);
     }
 
     /**
@@ -115,27 +128,30 @@ public class ScoutTripActivity extends AppCompatActivity {
      * @param v Button view that is clicked
      */
     public void addStopActivityStart(View v){
-        Intent intent=new Intent(this,enterDataActivity.class);
+        Intent intent=new Intent(this,EnterDataActivity.class);
         Bundle b = new Bundle();
-        b.putSerializable(SCOUT_STOP,null);
         b.putSerializable(USER_FARM, (Farm) spnFarms.getSelectedItem());
         intent.putExtras(b);
         startActivityForResult(intent, NEW_STOP);
     }
 
     public void addStop(ScoutStop stop){
-        if (!hasStops)
-            scoutTrip.getStopList().clear();
-        scoutTrip.addStop(stop);
+        if (!hasStops) {
+            scoutTrip.getStopList().remove(0);
+            rvScoutStops.getAdapter().notifyItemRemoved(0);
+            rvPestsPerTree.getAdapter().notifyItemRemoved(0);
+        }
+        scoutTrip.getStopList().add(0, stop);
         hasStops = true;
+        int pos = 0;
+        rvScoutStops.getAdapter().notifyItemInserted(pos);
+        rvPestsPerTree.getAdapter().notifyItemInserted(pos);
     }
 
-    /**
-     * Update ScoutStop object.
-     * @param scoutStop ScoutStop object to update list.
-     */
-    public void updateStop(ScoutStop scoutStop) {
-        scoutTrip.getStopList().set(updateIndex, scoutStop);
+    public void addDefaultStop() {
+        scoutTrip.getStopList().add(0, null);
+        rvScoutStops.getAdapter().notifyItemInserted(0);
+        rvPestsPerTree.getAdapter().notifyItemInserted(0);
     }
 
     /**
@@ -144,7 +160,11 @@ public class ScoutTripActivity extends AppCompatActivity {
      */
     public void acceptFarms(Intent intent) {
         Bundle b=intent.getExtras();
-        farms = new ArrayList<>((HashSet<Farm>) b.getSerializable(LoginActivity.USER_FARMS));
+        try {
+            farms = new ArrayList<>((HashSet<Farm>) b.getSerializable(LoginActivity.USER_FARMS));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -163,7 +183,7 @@ public class ScoutTripActivity extends AppCompatActivity {
      */
     public boolean persistData(){
         ScoutStopDAO scoutStopDAO=new ScoutStopDAO(getApplicationContext());
-       // ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
+        // ScoutBugDAO scoutBugDAO=new ScoutBugDAO(getApplicationContext());
         try{
             scoutStopDAO.open();
             //persist each scout stop
@@ -190,17 +210,15 @@ public class ScoutTripActivity extends AppCompatActivity {
             ScoutStop stop = (ScoutStop) bundle.get(SCOUT_STOP);
             if (requestCode == NEW_STOP) { //add new stop
                 addStop(stop);
-                Log.d(TAG, "Added");
+                Log.d("ADDING", rvScoutStops.getChildCount() + "");
             }
-            rvScoutStops.getAdapter().notifyDataSetChanged();
-            rvPestsPerTree.getAdapter().notifyDataSetChanged();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_scout_trip, menu);
+        getMenuInflater().inflate(R.menu.menu_activity, menu);
         return true;
     }
 
@@ -212,7 +230,7 @@ public class ScoutTripActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_about) {
             return true;
         }
 
@@ -228,17 +246,21 @@ public class ScoutTripActivity extends AppCompatActivity {
         }
 
         public class ScoutStopViewHolder extends RecyclerView.ViewHolder {
-            CardView cvScoutStop;
+            SwipeLayout slScoutStop;
+            LinearLayout llDraggedMenu;
             LinearLayout llBugInfo;
             CheckedTextView tvBlockName;
             CheckedTextView tvTreeCount;
+            ImageView ivSwipeIcon;
 
             ScoutStopViewHolder(View itemView) {
                 super(itemView);
-                cvScoutStop = (CardView) itemView.findViewById(R.id.cvScoutStop);
+                slScoutStop = (SwipeLayout) itemView.findViewById(R.id.swiper);
+                llDraggedMenu = (LinearLayout) itemView.findViewById(R.id.draggedMenu);
                 tvBlockName = (CheckedTextView) itemView.findViewById(R.id.tvBlockName);
                 tvTreeCount = (CheckedTextView) itemView.findViewById(R.id.tvTreeCount);
                 llBugInfo = (LinearLayout) itemView.findViewById(R.id.llBugInfo);
+                ivSwipeIcon = (ImageView) itemView.findViewById(R.id.swipeIcon);
             }
         }
 
@@ -250,14 +272,14 @@ public class ScoutTripActivity extends AppCompatActivity {
         @Override
         public ScoutStopViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_scout_stop, viewGroup, false);
-            ScoutStopViewHolder scoutStopViewHolder = new ScoutStopViewHolder(v);
-            return scoutStopViewHolder;
+            return new ScoutStopViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(ScoutStopViewHolder scoutStopViewHolder, int i) {
-            if (scoutStops.size() - 1 == i) {
-                ScoutStop stop = scoutStops.get(i);
+        public void onBindViewHolder(final ScoutStopViewHolder scoutStopViewHolder, int i) {
+            if (hasStops) {
+                Log.d("BLAH", "HASSTOPS");
+                ScoutStop stop = scoutStops.get(scoutStopViewHolder.getAdapterPosition());
                 scoutStopViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
                 for (ScoutBug bug : stop.getScoutBugs()) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length);
@@ -267,13 +289,38 @@ public class ScoutTripActivity extends AppCompatActivity {
                     ((TextView) view.findViewById(R.id.bugInfoText)).setText(bug.getNumberOfBugs() + "");
                     scoutStopViewHolder.llBugInfo.addView(view);
                 }
-                if (hasStops) {
-                    scoutStopViewHolder.tvTreeCount.setText(stop.getNumberOfTrees() + "");
-                    scoutStopViewHolder.tvTreeCount.setTextSize(36);
-                } else {
-                    scoutStopViewHolder.tvTreeCount.setText("");
-                    scoutStopViewHolder.tvTreeCount.setTextSize(0);
-                }
+                scoutStopViewHolder.tvTreeCount.setText(stop.getNumberOfTrees() + "");
+                scoutStopViewHolder.tvTreeCount.setTextSize(36);
+
+                scoutStopViewHolder.llDraggedMenu.setVisibility(View.VISIBLE);
+                scoutStopViewHolder.ivSwipeIcon.setVisibility(View.VISIBLE);
+
+                scoutStopViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = scoutStopViewHolder.getAdapterPosition();
+                        scoutStops.remove(pos);
+                        rvScoutStops.getAdapter().notifyItemRemoved(pos);
+                        rvPestsPerTree.getAdapter().notifyItemRemoved(pos);
+                        if (scoutStops.size() == 0) {
+                            hasStops = false;
+                            addDefaultStop();
+                        }
+                    }
+                });
+
+                scoutStopViewHolder.slScoutStop.setShowMode(SwipeLayout.ShowMode.LayDown);
+                scoutStopViewHolder.slScoutStop.addDrag(SwipeLayout.DragEdge.Right, scoutStopViewHolder.llDraggedMenu);
+                scoutStopViewHolder.slScoutStop.setSwipeEnabled(true);
+            } else {
+                Log.d("BLAH", "NOT LOG HASSTOPS");
+                scoutStopViewHolder.tvBlockName.setText("No stops added yet. Click '+'");
+                scoutStopViewHolder.tvTreeCount.setText("");
+                scoutStopViewHolder.llBugInfo.removeAllViews();
+                scoutStopViewHolder.llDraggedMenu.setVisibility(View.INVISIBLE);
+                scoutStopViewHolder.ivSwipeIcon.setVisibility(View.INVISIBLE);
+                scoutStopViewHolder.tvTreeCount.setTextSize(0);
+                scoutStopViewHolder.slScoutStop.setSwipeEnabled(false);
             }
         }
     }
@@ -305,16 +352,18 @@ public class ScoutTripActivity extends AppCompatActivity {
         @Override
         public PestsPerTreeViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_pests_per_tree, viewGroup, false);
-            PestsPerTreeViewHolder pestsPerTreeViewHolder = new PestsPerTreeViewHolder(v);
-            return pestsPerTreeViewHolder;
+            return new PestsPerTreeViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(PestsPerTreeViewHolder pestsPerTreeViewHolder, int i) {
-            if (scoutStops.size() - 1 == i) {
+            if (hasStops) {
                 ScoutStop stop = scoutStops.get(i);
                 pestsPerTreeViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
-                pestsPerTreeViewHolder.tvPestsPerTree.setText(hasStops ? stop.getPestsPerTree() + "" : "");
+                pestsPerTreeViewHolder.tvPestsPerTree.setText(hasStops ? String.format("%.2f", stop.getPestsPerTree()) : "");
+            } else {
+                pestsPerTreeViewHolder.tvBlockName.setText("No stops added yet. Click '+'");
+                pestsPerTreeViewHolder.tvPestsPerTree.setText("");
             }
         }
     }

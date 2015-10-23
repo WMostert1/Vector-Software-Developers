@@ -25,14 +25,14 @@ namespace BugBusiness.BugScouting
            {
                if (stop.ScoutBugs == null)
                   stop.ScoutBugs = new List<ScoutBugDTO>();
-
+            
                foreach (var bug in request.scoutBugs)
                {
                    if (bug.ScoutStopID == stop.ScoutStopID)
                    {
                        if(bug.ScoutStop != null)
                        bug.ScoutStop = stop;
-
+                      
                        stop.ScoutBugs.Add(bug);
                    }
                }

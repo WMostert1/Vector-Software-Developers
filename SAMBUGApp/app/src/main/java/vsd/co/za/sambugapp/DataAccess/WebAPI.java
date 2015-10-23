@@ -6,8 +6,11 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.GravityEnum;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -32,6 +35,7 @@ import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
 import vsd.co.za.sambugapp.DomainModels.Species;
 import vsd.co.za.sambugapp.DomainModels.User;
+import vsd.co.za.sambugapp.HomeScreenActivity;
 import vsd.co.za.sambugapp.IdentificationActivity;
 import vsd.co.za.sambugapp.LoginActivity;
 import vsd.co.za.sambugapp.R;
@@ -42,19 +46,20 @@ import vsd.co.za.sambugapp.ScoutTripActivity;
  *
  */
 public class WebAPI {
-    private static final String AUTHENTICATION_URL = "http://sambug.apphb.com/api/authentication/login";
-    private static final String SYNC_SERVICE_URL = "http://sambug.apphb.com/api/Synchronization/persistcacheddata";
-    private static final String CLASSIFICATION_URL= "http://sambug.apphb.com/api/classification";
-    private static final int SOCKET_TIMEOUT_MS = 10000; //10 seconds
+    private static final String HOST = "sambug.azurewebsites.net";
+    private static final String AUTHENTICATION_URL = "http://"+HOST+"/api/authentication/login";
+    private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/Synchronization";
+    private static final String CLASSIFICATION_URL= "http://"+HOST+"/api/apiSpeciesClassification";
+    private static final int SOCKET_TIMEOUT_MS = 100000; //10 seconds
 
 
     private WebAPI() {
     }
 
-    public static void attemptAPIClassification(byte [] pictureData,Context context){
+    public static AsyncTask attemptAPIClassification(byte[] pictureData, Context context) {
         ClassificationRequestDTO request = new ClassificationRequestDTO();
         request.FieldPicture = pictureData;
-        new ClassificationTask(context).execute(request);
+        return new ClassificationTask(context).execute(request);
     }
 
     public static void attemptSyncCachedScoutingData(Context context) {
@@ -120,6 +125,12 @@ public class WebAPI {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    /*MaterialDialog dialog = new MaterialDialog.Builder(context)
+                            .title("Number of Bugs")
+                            .content(error.getMessage())
+                            .positiveText("Finish")
+                            .titleGravity(GravityEnum.CENTER)
+                            .show();*/
                     Toast.makeText(context, "Error connecting to server.", Toast.LENGTH_SHORT).show();
                     Log.e("NetworkingError:", error.toString());
                 }
@@ -171,12 +182,13 @@ public class WebAPI {
             }
 
             String jsonString = classificationRequest.toString();
-            System.out.println(jsonString);
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,AUTHENTICATION_URL,classificationRequest,new Response.Listener<JSONObject>(){
+            //System.out.println(jsonString);
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,CLASSIFICATION_URL,classificationRequest,new Response.Listener<JSONObject>(){
                 @Override
                 public void onResponse(JSONObject response) {
                     final Gson gson = new Gson();
                     ClassificationResultDTO result = gson.fromJson(response.toString(), ClassificationResultDTO.class);
+                    Toast.makeText(context,result.SpeciesName+ " " +result.Lifestage+" "+result.SpeciesID,Toast.LENGTH_SHORT).show();
                     ((IdentificationActivity)context).changeEntrySelection(result);
 
                 }
@@ -231,7 +243,7 @@ public class WebAPI {
                     editor.putString(context.getString(R.string.logged_in_user), response.toString());
                     editor.commit();
 
-                    Intent intent = new Intent(context,ScoutTripActivity.class);
+                    Intent intent = new Intent(context, HomeScreenActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Bundle bundle=new Bundle();
                     HashSet<Farm> activeFarms = user.getFarms();
@@ -242,7 +254,7 @@ public class WebAPI {
             },new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    error.printStackTrace();
                     Intent intent = new Intent(context,LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);

@@ -23,6 +23,8 @@ namespace DataAccess.Models
         public long UserID { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string LastModifiedID { get; set; }
+        public System.DateTime TMStamp { get; set; }
     
         public virtual ICollection<Farm> Farms { get; set; }
         public virtual ICollection<Role> Roles { get; set; }

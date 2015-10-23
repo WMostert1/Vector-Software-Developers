@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DomainModels.Species;
+import vsd.co.za.sambugapp.ImageAdapter;
 import vsd.co.za.sambugapp.R;
 
 
@@ -25,6 +27,7 @@ import vsd.co.za.sambugapp.R;
  * Created by Aeolus on 2015-07-13.
  */
 public class SpeciesDAO extends DataSourceAdapter {
+
 
     public SpeciesDAO(Context context) {
         super(context);
@@ -45,7 +48,69 @@ public class SpeciesDAO extends DataSourceAdapter {
      */
     public void loadPresets() throws Resources.NotFoundException {
         //These strings story the species name
-        String[] speciesNames = {"Coconut Bug", "Green Vegetable Bug", "Two Spotted Bug", "Yellow Edged Bug"};
+        Integer[] mThumbIds = {
+                R.drawable.anolcuscampestris0,
+                R.drawable.cletus0,
+                R.drawable.coconutbug0,
+                R.drawable.coconutbug1,
+                R.drawable.coconutbug2,
+                R.drawable.coconutbug3,
+                R.drawable.coconutbug4,
+                R.drawable.coconutbug5,
+                R.drawable.greenvegbug0,
+                R.drawable.pseudatelusraptoria0,
+                R.drawable.pseudatelusraptoria5,
+                R.drawable.twospottedbug0,
+                R.drawable.twospottedbug2,
+                R.drawable.twospottedbug3,
+                R.drawable.twospottedbug4,
+                R.drawable.twospottedbug5,
+                R.drawable.yellowedgedbug0,
+                R.drawable.yellowedgedbug4
+        };
+
+        String [] names = {
+                "Anolcus Campestris",
+                "Cletus",
+                "Coconut Bug",
+                "Coconut Bug",
+                "Coconut Bug",
+                "Coconut Bug",
+                "Coconut Bug",
+                "Coconut Bug",
+                "Green Vegetable Bug",
+                "Pseudatelus Raptoria",
+                "Pseudatelus Raptoria",
+                "Two Spotted Bug",
+                "Two Spotted Bug",
+                "Two Spotted Bug",
+                "Two Spotted Bug",
+                "Two Spotted Bug",
+                "Yellow Edged Bug",
+                "Yellow Edged Bug"
+        };
+
+        Integer [] lifestages = {0,0,0,1,2,3,4,5,0,5,0,0,2,3,4,5,0,4};
+
+        for(int i = 0; i < mThumbIds.length; i++){
+            Species speciesEntry = new Species();
+            speciesEntry.setSpeciesName(names[i]);
+            speciesEntry.setLifestage(lifestages[i]);
+
+            Bitmap bitmap = ImageAdapter.decodeSampledBitmapFromResource(context.getResources(), mThumbIds[i], 60, 60);
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            speciesEntry.setIdealPicture(stream.toByteArray());
+
+            speciesEntry.setIsPest(true);
+            speciesEntry.setLifestage(lifestages[i]);
+            insert(speciesEntry);
+        }
+
+
+
+        /*String[] speciesNames = {"Coconut Bug", "Green Vegetable Bug", "Two Spotted Bug", "Yellow Edged Bug"};
 
         //These array lists hold the integers that reference the drawable images
         ArrayList<Integer> cRef = new ArrayList<>();
@@ -100,6 +165,7 @@ public class SpeciesDAO extends DataSourceAdapter {
                 insert(speciesEntry);
             }
         }
+        */
 
     }
 

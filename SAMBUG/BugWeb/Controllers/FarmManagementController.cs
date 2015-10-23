@@ -53,7 +53,38 @@ namespace BugWeb.Controllers
                 user.Farms.RemoveAll(farm => farm.FarmID.Equals(addblockRequest.FarmID));
                 FarmDTO updatedFarm=_farmManagement.GetFarmByID(new GetFarmByIDRequest(){FarmID=addblockRequest.FarmID}).Farm;
                 user.Farms.Add(updatedFarm);
-                return RedirectToAction("EditBlocks", "FarmManagement");
+                return RedirectToAction("EditFarms","FarmManagement");
+            }
+            catch (InvalidInputException)
+            {
+                return RedirectToAction("index", "home");
+            }
+            catch (BlockExistsException)
+            {
+                return RedirectToAction("login", "authentication");
+            }
+        }
+
+        // POST: FarmManagement/EditFarms/AddFarm
+        [HttpPost]
+        public ActionResult AddFarm(FarmViewModel farmviewModel)
+        {
+            if (!SecurityProvider.isGrower(Session))
+                return View("~/Views/Shared/Error.cshtml");
+            UserDTO user = (UserDTO)Session["UserInfo"];
+            AddFarmRequest addfarmRequest = new AddFarmRequest()
+            {
+                UserID =  user.UserID,
+                FarmName = farmviewModel.FarmName
+            };
+
+            try
+            {
+                AddFarmResult addfarmResult = _farmManagement.AddFarm(addfarmRequest);
+                FarmDTO farm = _farmManagement.GetFarmByID(new GetFarmByIDRequest() { FarmID = addfarmResult.FarmID }).Farm;
+                user.Farms.Add(farm);
+                
+                return RedirectToAction("EditFarms", "FarmManagement");
             }
             catch (InvalidInputException)
             {
@@ -76,6 +107,15 @@ namespace BugWeb.Controllers
             return View(user.Farms);
         }
 
+        [HttpGet]
+        public ActionResult EditFarms()
+        {
+            if (!SecurityProvider.isGrower(Session))
+                return View("~/Views/Shared/Error.cshtml");
+            UserDTO user = (UserDTO)Session["UserInfo"];
+            return View(user.Farms);
+        }
+
         // POST: FarmManagement/Edit/5
         [HttpPost]
         public ActionResult EditBlock(BlockViewModel blockViewModel)
@@ -90,17 +130,45 @@ namespace BugWeb.Controllers
             };
             try
             {
-                UpdateBlockByIDResult updateblockbyidResult=_farmManagement.UpdateBlockByID(updateblockbyidRequest);
+                UpdateBlockByIDResult updateblockbyidResult = _farmManagement.UpdateBlockByID(updateblockbyidRequest);
                 user.Farms.RemoveAll(farm => farm.FarmID.Equals(updateblockbyidResult.FarmID));
                 FarmDTO updatedFarm = _farmManagement.GetFarmByID(new GetFarmByIDRequest() { FarmID = updateblockbyidResult.FarmID }).Farm;
                 user.Farms.Add(updatedFarm);
-                return RedirectToAction("EditBlocks", "FarmManagement");
+                return RedirectToAction("EditFarms", "FarmManagement");
             }
             catch (InvalidInputException)
             {
                 return RedirectToAction("index", "home");
             }
             catch (CouldNotUpdateException)
+            {
+                return RedirectToAction("login", "authentication");
+            }
+        }
+
+        // POST: FarmManagement/EditFarms/DeleteFarm
+        [HttpPost]
+        public ActionResult DeleteFarm(FarmViewModel farmViewModel)
+        {
+            if (!SecurityProvider.isGrower(Session))
+                return View("~/Views/Shared/Error.cshtml");
+            UserDTO user = (UserDTO)Session["UserInfo"];
+            DeleteFarmByIDRequest deletefarmbyidRequest = new DeleteFarmByIDRequest()
+            {
+                FarmID = farmViewModel.FarmID
+            };
+
+            try
+            {
+                DeleteFarmByIDResult deletefarmbyidResult = _farmManagement.DeleteFarmByID(deletefarmbyidRequest);
+                user.Farms.RemoveAll(farm => farm.FarmID.Equals(farmViewModel.FarmID));
+                return RedirectToAction("EditFarms", "FarmManagement");
+            }
+            catch (InvalidInputException)
+            {
+                return RedirectToAction("index", "home");
+            }
+            catch (CouldNotDeleteBlockException)
             {
                 return RedirectToAction("login", "authentication");
             }
@@ -124,7 +192,7 @@ namespace BugWeb.Controllers
                 user.Farms.RemoveAll(farm => farm.FarmID.Equals(blockViewModel.FarmID));
                 FarmDTO updatedFarm = _farmManagement.GetFarmByID(new GetFarmByIDRequest() { FarmID = blockViewModel.FarmID }).Farm;
                 user.Farms.Add(updatedFarm);
-                return RedirectToAction("EditBlocks", "FarmManagement");
+                return RedirectToAction("EditFarms", "FarmManagement");
             }
             catch (InvalidInputException)
             {

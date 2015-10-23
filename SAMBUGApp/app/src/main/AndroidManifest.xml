@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <!-- To manually use the camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -25,30 +30,48 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".enterDataActivity"
+            android:name=".EnterDataActivity"
             android:exported="true"
-            android:label="@string/title_activity_enter_data" >
+            android:label="@string/title_activity_enter_data"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ScoutTripActivity"
-            android:label="SAMBUGApp" >
+            android:label="SAMBUGApp"
+            >
         </activity>
         <activity
             android:name=".IdentificationActivity"
             android:exported="true"
             android:label="@string/title_activity_identification"
-            android:parentActivityName=".enterDataActivity" >
+            android:screenOrientation="portrait"
+            android:parentActivityName=".EnterDataActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="vsd.co.za.sambugapp.enterDataActivity" />
+                android:value=".EnterDataActivity"/>
+        </activity>
+        <activity
+            android:name=".CameraProcessing.ImagePreview"
+            android:label="@string/title_activity_image_preview"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity
+            android:name=".CameraProcessing.CustomCamera"
+            android:exported="true"
+            android:label="@string/title_activity_cam"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/title_activity_splash_screen"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -58,8 +81,12 @@
         <activity
             android:name=".HomeScreenActivity"
             android:label="@string/title_activity_home_screen"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
         </activity>
+
+
+
     </application>
 
 </manifest>

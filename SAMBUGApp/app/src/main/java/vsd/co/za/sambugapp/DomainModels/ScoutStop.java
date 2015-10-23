@@ -1,6 +1,7 @@
 package vsd.co.za.sambugapp.DomainModels;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -16,17 +17,17 @@ public class ScoutStop implements Serializable {
     public float Latitude;
     public float Longitude;
 
-    public java.util.Date Date;
+    public java.sql.Date Date;
 
     public Block Block;
-    public HashSet<ScoutBug> ScoutBugs;
+    public ArrayList<ScoutBug> ScoutBugs;
 
     public ScoutStop() {
         NumberOfTrees = 0;
         Latitude = 0;
         Longitude = 0;
         Block = new Block();
-        ScoutBugs = new HashSet<>();
+        ScoutBugs = new ArrayList<>();
     }
 
     public double getPestsPerTree() {
@@ -88,11 +89,11 @@ public class ScoutStop implements Serializable {
         Longitude = longitude;
     }
 
-    public java.util.Date getDate() {
+    public java.sql.Date getDate() {
         return Date;
     }
 
-    public void setDate(java.util.Date date) {
+    public void setDate(java.sql.Date date) {
         Date = date;
     }
 
@@ -104,11 +105,11 @@ public class ScoutStop implements Serializable {
         Block = block;
     }
 
-    public HashSet<ScoutBug> getScoutBugs() {
+    public ArrayList<ScoutBug> getScoutBugs() {
         return ScoutBugs;
     }
 
-    public void setScoutBugs(HashSet<ScoutBug> scoutBugs) {
+    public void setScoutBugs(ArrayList<ScoutBug> scoutBugs) {
         ScoutBugs = scoutBugs;
     }
 }

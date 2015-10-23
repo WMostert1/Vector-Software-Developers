@@ -32,6 +32,16 @@
     <string name="title_activity_test">test</string>
     <string name="numBugs">Number of Bugs</string>
     <string name="bugType">Bug Type</string>
+    <string name="title_activity_image_processing">ImageProcessing</string>
+    <string name="btnCrop">Crop</string>
+    <string name="btnDone" >Done</string>
+    <string name="title_activity_make_photo">MakePhoto</string>
+    <string name="title_activity_camera">Camera</string>
+    <string name="title_activity_image_preview">ImagePreview</string>
+    <string name="sCancel">Cancel</string>
+    <string name="sOk">Ok</string>
+    <string name="title_activity_cam">cam</string>
+    <string name="title_activity_camera3">Camera3</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="title_activity_home_screen">HomeScreen</string>
 </resources>

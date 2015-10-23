@@ -8,6 +8,28 @@ namespace DataAccess.MSSQL
 {
     public class DbFarmManagement : IDbFarmManagement
     {
+        public long InsertNewFarm(long id, string farmname)
+        {
+            var db = new BugDBEntities();
+
+            var check = db.Farms.SingleOrDefault(frm => frm.UserID.Equals(id) && frm.FarmName.Equals(farmname));
+            if (check != default(Farm))
+            {
+                return -1;
+            }
+
+            var farm = new Farm()
+            {
+                UserID = id,
+                FarmName = farmname
+            };
+
+            db.Farms.Add(farm);
+            db.SaveChanges();
+            db.Entry(farm).GetDatabaseValues();
+            return farm.FarmID;
+        }
+
         //TODO: Remove magic number => 1
         public bool InsertNewBlock(long id,string blockname)
         {
@@ -98,6 +120,22 @@ namespace DataAccess.MSSQL
             }
 
             return -1;
+        }
+
+        public bool DeleteFarm(long id)
+        {
+            var db = new BugDBEntities();
+
+            var farm = db.Farms.SingleOrDefault(frm => frm.FarmID.Equals(id));
+
+            if (farm != null)
+            {
+                db.Farms.Remove(farm);
+                db.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
 
         public bool DeleteBlock(long id)

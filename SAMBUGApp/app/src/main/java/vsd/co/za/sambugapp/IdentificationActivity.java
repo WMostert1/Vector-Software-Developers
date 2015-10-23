@@ -5,16 +5,21 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Matrix;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import com.afollestad.materialdialogs.GravityEnum;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -23,19 +28,21 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
-
-
+import java.io.File;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-
-import vsd.co.za.sambugapp.DataAccess.DTO.ClassificationResultDTO;
+import vsd.co.za.sambugapp.CameraProcessing.CustomCamera;
 import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
 import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.Species;
-
+import vsd.co.za.sambugapp.DataAccess.DTO.ClassificationResultDTO;
 /**
  * This activity class is the third viewable screen when interacting with the App in order
  * to capture scouting data.
@@ -46,7 +53,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     public static final int REQUEST_TAKE_PHOTO = 89;
     private static final String FIRST_TIME_INDEX = "za.co.vsd.firs_activity";
-    private static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
+    public static final String FIELD_BITMAP = "za.co.vsd.field_bitmap";
     public static final String IDENTIFICATION_SPECIES="za.co.vsd.identification_species";
     public static final String BUG_COUNT = "za.co.vsd.bug_count";
     public static final String CLASSIFICATION_RESULT = "za.co.vsd.classification_result";
@@ -54,7 +61,10 @@ public class IdentificationActivity extends AppCompatActivity {
     private Bitmap bitmap = null;
     private Species currentEntry = null;
     private int createCounter = 0;
+    private String fullPathName;
     private boolean isClassified = false;
+    private AsyncTask classifyTask;
+
 
 
     public void doAutomaticClassification(View view) {
@@ -64,11 +74,11 @@ public class IdentificationActivity extends AppCompatActivity {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         byte[] byteArray = stream.toByteArray();
 
-        WebAPI.attemptAPIClassification(byteArray, getApplicationContext());
-        Toast.makeText(getApplicationContext(), "Starting classification...", Toast.LENGTH_SHORT).show();
+        classifyTask = WebAPI.attemptAPIClassification(byteArray, this);
+        Toast.makeText(this, "Starting classification...", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -78,9 +88,11 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
+
         //createCounter is used to only start the camera once
         savedInstanceState.putInt(FIRST_TIME_INDEX, createCounter);
         savedInstanceState.putParcelable(FIELD_BITMAP, bitmap);
+
         savedInstanceState.putBoolean(CLASSIFICATION_RESULT, isClassified);
     }
 
@@ -100,9 +112,8 @@ public class IdentificationActivity extends AppCompatActivity {
                 bitmap = savedInstanceState.getParcelable(FIELD_BITMAP);
                 createCounter = savedInstanceState.getInt(FIRST_TIME_INDEX);
                 isClassified = savedInstanceState.getBoolean(CLASSIFICATION_RESULT);
-            }
-
-
+        } else {
+            dispatchTakePictureIntent();
 
         //Checks/loads species data into the Species table of the database
             if (createCounter == 0) {
@@ -119,12 +130,11 @@ public class IdentificationActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                dispatchTakePictureIntent();
+                //dispatchTakePictureIntent();
             }
             if (createCounter == 0) createCounter++;
 
             setContentView(R.layout.activity_identification);
-
 
 
             GridView gridview = (GridView) findViewById(R.id.gvIdentification_gallery);
@@ -138,17 +148,22 @@ public class IdentificationActivity extends AppCompatActivity {
             });
 
             mImageView = (ImageView) findViewById(R.id.ivFieldPicture);
-            if (bitmap != null){
+            if (bitmap != null) {
                 mImageView.setImageBitmap(bitmap);
-                if(!isClassified)
-                doAutomaticClassification(null);
+                if (!isClassified)
+                    doAutomaticClassification(null);
             }
+
+            if (bitmap != null) mImageView.setImageBitmap(bitmap);
+            //
+        }
     }
 
     public void changeEntrySelection(ClassificationResultDTO currentEntry){
         isClassified = true;
         //Possibly validate that ID's are correct in future
-        changeEntrySelection(currentEntry.SpeciesID);
+        Toast.makeText(getApplicationContext(),"Species Identified!",Toast.LENGTH_SHORT).show();
+        changeEntrySelection(currentEntry.SpeciesID+1);
     }
 
     public void changeEntrySelection(int id){
@@ -156,7 +171,7 @@ public class IdentificationActivity extends AppCompatActivity {
         try {
             speciesDAO.open();
             currentEntry = speciesDAO.getSpeciesByID(id);
-            Toast.makeText(getApplicationContext(), "You chose " + currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
             ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompareImage);
             byte[] imgData = currentEntry.getIdealPicture();
             comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0, imgData.length));
@@ -174,7 +189,7 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_identification, menu);
+        getMenuInflater().inflate(R.menu.menu_activity, menu);
         return true;
     }
 
@@ -186,13 +201,23 @@ public class IdentificationActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_about) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Called when a new intent is received from the ImagePreview Class
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);//must store the new intent unless getIntent() will return the old one
+        getPicture(getIntent());
+    }
 
     public Bitmap rotateBitmap(Bitmap source, float angle)
     {
@@ -202,15 +227,13 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     /**
-     * The case where the photo is returned from the external camera app is handled here
-     * @param requestCode The identification code of a specific
-     * @param resultCode The code indicating the outcome of the request
-     * @param data Data received from another activity
+     * Called when a new intent is received from the ImagePreview Class
+     * @param data
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         InputStream stream = null;
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
 
             try {
                 //Recycle unused bitmaps
@@ -229,10 +252,12 @@ public class IdentificationActivity extends AppCompatActivity {
                 options.inJustDecodeBounds = false;
                 stream = getContentResolver().openInputStream(data.getData());
                 bitmap = BitmapFactory.decodeStream(stream, null, options);
-                final float angle = (float)-90.0; //Turns it upright
-                bitmap = rotateBitmap(bitmap,angle);
+
+                //TODO: Rotate the image
 
                 mImageView.setImageBitmap(bitmap);
+                if(!isClassified)
+                    doAutomaticClassification(null);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -244,21 +269,15 @@ public class IdentificationActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
             }
-        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_CANCELED) {
-            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sambug_logo);
-            mImageView.setImageBitmap(bitmap);
         }
-    }
 
     /**
-     * Starts a new intent to take a picture with the device's camera
+     * Starts a new intent to take a picture with the Custom Camera
      */
     private void dispatchTakePictureIntent(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-        }
-
+        classifyTask = null;
+        Intent takePictureIntent = new Intent(this,CustomCamera.class);
+        startActivityForResult(takePictureIntent, 0);
     }
 
     public void showDialogNumberOfBugs(View v) {
@@ -277,12 +296,15 @@ public class IdentificationActivity extends AppCompatActivity {
                 })
                 .show();
         np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+        np.setMinValue(0);
         np.setMaxValue(100);
+        np.setWrapSelectorWheel(false);
     }
 
     /**
      * This function puts the current Species entry as well as the field picture taken
-     * into a bundle which is then returned to the enterDataActivity
+     * into a bundle which is then returned to the EnterDataActivity
+     *
      */
     public void sendResultBack(int numBugs) {
         Intent output = new Intent();
@@ -296,14 +318,135 @@ public class IdentificationActivity extends AppCompatActivity {
         }
         Bitmap currentPicture = bitmap;
         currentPicture = Bitmap.createScaledBitmap(currentPicture, 50, 50, true);
-        bundle.putParcelable("Image", currentPicture);
+        bundle.putParcelable(FIELD_BITMAP, currentPicture);
         bundle.putInt(BUG_COUNT, numBugs);
         output.putExtras(bundle);
         setResult(RESULT_OK, output);
-
+        if (classifyTask != null) {
+            classifyTask.cancel(true);
+        }
         finish();
     }
 
+    /**
+     * Getting the image and displaying it.
+     * @param intent
+     */
+    public void getPicture(Intent intent){
+        Bundle b=intent.getExtras();
+        fullPathName= (String)b.get(CustomCamera.CAMERA);
+        File imgFile = new File(fullPathName);
+
+        if(imgFile.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            bitmap = rotateBitmap(fullPathName,myBitmap);
+            mImageView.setImageBitmap(bitmap);
+        }
+    }
+
+    /**
+     * Rotates the image accordingly.
+     * @param src
+     * @param bitmap
+     * @return
+     */
+    public static Bitmap rotateBitmap(String src, Bitmap bitmap) {
+        try {
+            int orientation = getExifOrientation(src);
+
+            if (orientation == 1) {
+                return bitmap;
+            }
+
+            Matrix matrix = new Matrix();
+            switch (orientation) {
+                case 2:
+                    matrix.setScale(-1, 1);
+                    break;
+                case 3:
+                    matrix.setRotate(180);
+                    break;
+                case 4:
+                    matrix.setRotate(180);
+                    matrix.postScale(-1, 1);
+                    break;
+                case 5:
+                    matrix.setRotate(90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case 6:
+                    matrix.setRotate(90);
+                    break;
+                case 7:
+                    matrix.setRotate(-90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case 8:
+                    matrix.setRotate(-90);
+                    break;
+                default:
+                    return bitmap;
+            }
+
+            try {
+                Bitmap oriented = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                bitmap.recycle();
+                return oriented;
+            } catch (OutOfMemoryError e) {
+                e.printStackTrace();
+                return bitmap;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+    }
+
+    /**
+     * Read images orientation.
+     * @param src
+     * @return
+     * @throws IOException
+     */
+    private static int getExifOrientation(String src) throws IOException {
+        int orientation = 1;
+
+        try {
+            /**
+             * if your are targeting only api level >= 5
+             * ExifInterface exif = new ExifInterface(src);
+             * orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+             */
+            if (Build.VERSION.SDK_INT >= 5) {
+                Class<?> exifClass = Class.forName("android.media.ExifInterface");
+                Constructor<?> exifConstructor = exifClass.getConstructor(new Class[] { String.class });
+                Object exifInstance = exifConstructor.newInstance(new Object[] { src });
+                Method getAttributeInt = exifClass.getMethod("getAttributeInt", new Class[] { String.class, int.class });
+                Field tagOrientationField = exifClass.getField("TAG_ORIENTATION");
+                String tagOrientation = (String) tagOrientationField.get(null);
+                orientation = (Integer) getAttributeInt.invoke(exifInstance, new Object[] { tagOrientation, 1});
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        return orientation;
+    }
 
 
 }

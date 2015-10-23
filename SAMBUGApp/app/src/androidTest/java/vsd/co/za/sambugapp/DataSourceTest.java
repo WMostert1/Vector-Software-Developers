@@ -51,7 +51,7 @@ public class DataSourceTest extends AndroidTestCase {
         ScoutStopDAO scoutStopDAO = new ScoutStopDAO(context);
         scoutStopDAO.open();
         ScoutStop scoutStop = new ScoutStop();
-        scoutStop.setDate(new Date());
+        scoutStop.setDate(new java.sql.Date(new Date().getTime()));
 
 
         int id = (int)scoutStopDAO.insert(scoutStop);
@@ -64,7 +64,7 @@ public class DataSourceTest extends AndroidTestCase {
         assertEquals(scoutStop.getScoutStopID(), returnedBug.getScoutStopID());
 
         ScoutStop newScoutStop = new ScoutStop();
-        newScoutStop.setDate(new Date());
+        newScoutStop.setDate(new java.sql.Date(new Date().getTime()));
 
         newScoutStop.setScoutStopID((int) scoutStopDAO.insert(newScoutStop));
 

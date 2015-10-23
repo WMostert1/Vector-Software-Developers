@@ -18,6 +18,8 @@ namespace DataAccess.Models
         public long BlockID { get; set; }
         public System.DateTime Date { get; set; }
         public string Comments { get; set; }
+        public string LastModifiedID { get; set; }
+        public System.DateTime TMStamp { get; set; }
     
         public virtual Block Block { get; set; }
     }

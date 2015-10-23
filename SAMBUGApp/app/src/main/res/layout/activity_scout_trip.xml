@@ -13,6 +13,13 @@
         android:background="@color/colorPrimary"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/sambug_logo"
+            android:layout_marginRight="32dp"
+            />
+
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,15 +31,16 @@
         android:id="@+id/fabAddBug"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_black_24dp"
+        android:src="@drawable/ic_add_icon"
         android:onClick="addStopActivityStart"
         android:layout_gravity="right"></android.support.design.widget.FloatingActionButton>
 
     <CheckedTextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="Stops"
-        android:textStyle="bold"/>
+        android:gravity="center_horizontal"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvScoutStops"
@@ -41,10 +49,10 @@
         android:layout_marginBottom="15dp"></android.support.v7.widget.RecyclerView>
 
     <CheckedTextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Pests Per Tree"
-        android:layout_gravity="left"
+        android:gravity="center_horizontal"
         android:textStyle="bold"/>
 
     <android.support.v7.widget.RecyclerView
