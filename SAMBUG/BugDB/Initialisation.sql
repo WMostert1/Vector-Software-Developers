@@ -43,12 +43,12 @@ VALUES	(1, 'Block A'), --1
 		(1, 'Block E'), --5
 		(1, 'Block F'), --6
 
-		(2, 'Test Z'), --7
-		(2, 'Test Y'), --8
+		(2, 'Test U'), --7
+		(2, 'Test V'), --8
 		(2, 'Test W'), --9
 		(2, 'Test X'), --10
-		(2, 'Test V'), --11
-		(2, 'Test V'), --12
+		(2, 'Test Y'), --11
+		(2, 'Test Z'), --12
 
 		(3, 'Piesang'), --13
 		(3, 'Lemoen'), --14
@@ -521,7 +521,7 @@ VALUES	(1, '2011-12-23', 'Parturient pretium, id neque, nonummy felis dui'),
 		(12, '2014-07-15', 'Amet turpis'),
 		(13, '2008-02-12', 'Metus faucibus, id integer dui, odio risus'),
 		(13, '2009-10-05', 'Purus sit eaque'),
-		(13, '2015-12-01', 'Parturient pretium, id neque, nonummy felis dui'),
+		(13, '2015-10-01', 'Parturient pretium, id neque, nonummy felis dui'),
 		(14, '2012-11-26', 'Neque curabitur risus, sodales tellus aenean, auctor tortor'),
 		(14, '2010-01-21', 'Maecenas id donec'),
 		(15, '2011-08-20', 'Parturient pretium, id neque, nonummy felis dui'),
@@ -537,7 +537,7 @@ VALUES	(1, '2011-12-23', 'Parturient pretium, id neque, nonummy felis dui'),
 		(20, '2014-05-06', 'Eget lacus, integer elit non'),
 		(20, '2013-10-17', 'Mauris hendrerit, elit scelerisque pretium'),
 		(20, '2015-04-21', 'Maecenas id donec'),
-		(21, '2015-12-04', 'Neque curabitur risus, sodales tellus aenean, auctor tortor'),
+		(21, '2015-07-04', 'Neque curabitur risus, sodales tellus aenean, auctor tortor'),
 		(21, '2009-09-01', 'Purus sit eaque'),
 		(21, '2014-10-23', 'Lacus convallis id, odio velit nunc, amet tenetur'),
 		(22, '2008-11-10', 'Venenatis massa, etiam augue vestibulum, curabitur nec sed'),
