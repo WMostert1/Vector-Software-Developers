@@ -7,16 +7,30 @@
 
 @section styles
 {
-    @Styles.Render("~/Content/css/reporting/dataTables")
+    @Styles.Render("~/Content/css/reporting/datatables")
+    <link rel="stylesheet" href="https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,b-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,r-1.0.7/datatables.min.css" />
     @Styles.Render("~/Content/css/reporting/tables")
 }
 
-<div flex layout-fill layout="column" ng-controller="TablesCtrl">
-    <div flex layout="column" layout-fill layout-align="center center">
-        <div flex layout="column" layout-fill id="table" layout-align="center center"></div>
-        <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="70px"></md-progress-circular>
-
+<div flex layout="column" layout-fill layout-align="start center" ng-controller="TablesCtrl">
+    <div flex layout-fill layout="column" layout-align="center center" ng-if="loading">
+        <md-progress-circular md-mode="indeterminate" md-diameter="70px"></md-progress-circular>
     </div>
+
+    <md-tabs flex layout-fill md-border-bottom md-selected="selectedTab" ng-show="!loading">
+        <md-tab layout-fill label="Scout Data">
+            <md-content layout-padding>
+                <table id="scoutTable" style="width: 100%" class="display"></table>
+            </md-content>
+        </md-tab>
+        <md-tab label="Spray Data">
+            <md-content layout-padding>
+                <table id="treatmentTable" style="width: 100%" class="display"></table>
+            </md-content>
+        </md-tab>
+    </md-tabs>
+
+
     <md-sidenav layout="column" class="md-sidenav-right md-whiteframe-z2" md-component-id="right" ng-cloak>
         <md-toolbar class="md-primary md-hue-1 md-whiteframe-z1">
             <md-toolbar-tools layout="row" flex layout-align="center center">
@@ -27,8 +41,8 @@
                 </md-button>
             </md-toolbar-tools>
         </md-toolbar>
-        <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1">
-            <md-input-container class="md-hue-1" ng-repeat="constraint in constraints.misc">
+        <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1" ng-show="showScoutConstraints">
+            <md-input-container class="md-hue-1" ng-repeat="constraint in scoutConstraints.misc">
                 <label>{{constraint.title}}</label>
                 <md-select ng-model="constraint.value" ng-disabled="loading">
                     <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item === constraint.list[0]">
@@ -40,29 +54,45 @@
                 <div layout="column">
                     <div layout="row">
                         <h5 flex="15">Since</h5>
-                        <md-datepicker class="md-hue-1" ng-model="constraints.dates.from" md-max-date="constraints.dates.to" ng-disabled="constraints.dates.all || loading"></md-datepicker>
+                        <md-datepicker class="md-hue-1" ng-model="scoutConstraints.dates.from" md-max-date="scoutConstraints.dates.to" ng-disabled="scoutConstraints.dates.all || loading"></md-datepicker>
                     </div>
                     <div layout="row">
                         <h5 flex="15">Until</h5>
-                        <md-datepicker class="md-hue-1" ng-model="constraints.dates.to" md-min-date="constraints.dates.from" ng-disabled="constraints.dates.all || loading"></md-datepicker>
+                        <md-datepicker class="md-hue-1" ng-model="scoutConstraints.dates.to" md-min-date="scoutConstraints.dates.from" ng-disabled="scoutConstraints.dates.all || loading"></md-datepicker>
                     </div>
                 </div>
                 <div layout="row" layout-align="end center">
-                    <md-checkbox class="md-primary" aria-label="All Dates Checkbox" ng-model="constraints.dates.all" ng-disabled="loading">
+                    <md-checkbox class="md-primary" aria-label="All Dates Checkbox" ng-model="scoutConstraints.dates.all" ng-disabled="loading">
                         <h5>All</h5>
                     </md-checkbox>
                 </div>
             </div>
-            <md-divider></md-divider>
+        </md-content>
+        <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1" ng-show="!showScoutConstraints">
+            <md-input-container class="md-hue-1" ng-repeat="constraint in treatmentConstraints.misc">
+                <label>{{constraint.title}}</label>
+                <md-select ng-model="constraint.value" ng-disabled="loading">
+                    <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item === constraint.list[0]">
+                        {{item}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
             <div layout="row">
-                <md-switch class="md-primary" aria-label="Blue Colour Gradient Switch" ng-model="options.blueColourGradient" ng-disabled="loading">
-                    <h5 offset="15">Blue Colour Gradient</h5>
-                </md-switch>
-            </div>
-            <div layout="row">
-                <md-slider offset="10" flex="40" ng-model="options.radius" min="0.001" max="0.3" step="0.0001" aria-label="Radius" class="md-primary" ng-disabled="loading"></md-slider>
-                <span flex="10"></span>
-                <h5>Heat Radius {{options.radius}}</h5>
+                <div layout="column">
+                    <div layout="row">
+                        <h5 flex="15">Since</h5>
+                        <md-datepicker class="md-hue-1" ng-model="treatmentConstraints.dates.from" md-max-date="treatmentConstraints.dates.to" ng-disabled="treatmentConstraints.dates.all || loading"></md-datepicker>
+                    </div>
+                    <div layout="row">
+                        <h5 flex="15">Until</h5>
+                        <md-datepicker class="md-hue-1" ng-model="treatmentConstraints.dates.to" md-min-date="treatmentConstraints.dates.from" ng-disabled="treatmentConstraints.dates.all || loading"></md-datepicker>
+                    </div>
+                </div>
+                <div layout="row" layout-align="end center">
+                    <md-checkbox class="md-primary" aria-label="All Dates Checkbox" ng-model="treatmentConstraints.dates.all" ng-disabled="loading">
+                        <h5>All</h5>
+                    </md-checkbox>
+                </div>
             </div>
         </md-content>
     </md-sidenav>
@@ -80,9 +110,12 @@
         });
     </script>
 
+    <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,r-1.0.7/datatables.min.js"></script>
+
     @Scripts.Render("~/bundles/vendor/xdate")
     @Scripts.Render("~/bundles/reporting/common")
     @Scripts.Render("~/bundles/reporting/dataTables")
     @Scripts.Render("~/bundles/reporting/tables")
+    @*todo angular-datatables*@
 
 }

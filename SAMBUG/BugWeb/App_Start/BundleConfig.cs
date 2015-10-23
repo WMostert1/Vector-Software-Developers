@@ -15,8 +15,8 @@ namespace BugWeb
                 cdnCssChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.css",
                 cdnJsTypeAhead = "https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.js",
                 cdnJsAngularIcons = "http://cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.6.0/angular-material-icons.min.js",
-                cdnJsDataTables = "https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3/datatables.min",
-                cdnCssDataTables = "https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3/datatables.min.css";
+                cdnJsDataTables = "https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,r-1.0.7/datatables.min.js",
+                cdnCssDataTables = "https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,r-1.0.7/datatables.min.css";
 
             bundles
                 .Add(new ScriptBundle("~/bundles/angular")
@@ -30,15 +30,20 @@ namespace BugWeb
 
             bundles
                 .Add(new ScriptBundle("~/bundles/angular-icons", cdnJsAngularIcons)
-                    .Include("~/Scripts/angular-material-icons.js", "~/Scripts/svg-morpheus.js"));
+                    .Include("~/Scripts/angular-material-icons.js"));
+
+            bundles
+                .Add(new ScriptBundle("~/bundles/angular-icons-morpheus")
+                    .Include("~/Scripts/svg-morpheus.js"));
+            
 
             bundles
                 .Add(new ScriptBundle("~/bundles/jquery")
                     .Include("~/Scripts/jquery-{version}.js"));
 
-            bundles
+            /*bundles
                 .Add(new ScriptBundle("~/bundles/jqueryval")
-                    .Include("~/Scripts/jquery.validate*"));
+                    .Include("~/Scripts/jquery.validate*"));*/
 
             bundles
                .Add(new ScriptBundle("~/bundles/linqjs")
@@ -83,7 +88,8 @@ namespace BugWeb
                     .Include("~/App/Services/tableService.js", "~/App/Controllers/tablesCtrl.js"));
 
             bundles
-                .Add(new ScriptBundle("~/bundles/reporting/dataTables", cdnJsDataTables));
+                .Add(new ScriptBundle("~/bundles/reporting/dataTables", cdnJsDataTables)
+                    .Include("~/Scripts/DataTables/jquery.dataTables.js", "~/Scripts/DataTables/.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/reporting/charts")
@@ -157,7 +163,8 @@ namespace BugWeb
                     .Include("~/Content/tables.css"));
 
             bundles
-                .Add(new StyleBundle("~/Content/css/reporting/dataTables", cdnCssDataTables));
+                .Add(new StyleBundle("~/Content/css/reporting/dataTables", cdnCssDataTables)
+                    .Include("~/Content/jquery.dataTables.css"));
 
             bundles
                 .Add(new StyleBundle("~/Content/css/typeahead")

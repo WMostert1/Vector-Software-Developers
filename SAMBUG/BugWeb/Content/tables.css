@@ -1,26 +1,44 @@
 ﻿div.dt-button, a.dt-button {
     font-size: 20px !important;
-    color: green !important;
     height: 50px;
     border: none !important;
-/*    background: center !important;*/
+}
+
+#table_wrapper {
+    width: 100%;
+}
+
+#table{
+    width: 100%
+}
+
+.dataTables_length select {
+    color: black;
+}
+
+.tableLengthSettings {
+    float: right;
+}
+
+.tableExportButtons {    
+    float: left;
 }
 
 /* see https://www.iconfinder.com/Jozef89 for excel icon used*/
 .buttons-excel {
     background-image: none !important;
-    background: url("Images/excel.svg")
+    background: url("Images/DataTables/excel.svg")
     no-repeat center !important; 
 }
 
 /*see https://www.iconfinder.com/Jozef89 for pdf icon used*/
 .buttons-pdf {
     background-image: none !important;
-    background: url("Images/pdf.svg")    no-repeat center !important; 
+    background: url("Images/DataTables/pdf.svg")    no-repeat center !important; 
 }
 
 .buttons-print {
     background-image: none !important;
-    background: url("Images/printer.svg")       
+    background: url("Images/DataTables/printer.svg")       
     no-repeat center !important; 
 }

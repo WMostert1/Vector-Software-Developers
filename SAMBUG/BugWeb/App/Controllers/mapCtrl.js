@@ -1,5 +1,5 @@
 ﻿angular.module("appMain")
-    .controller("MapCtrl", ["$scope", "commonReportingService", "mapService", function ($scope, commonReportingService, mapService) {
+    .controller("MapCtrl", ["$scope", "$mdSidenav", "commonReportingService", "mapService", function ($scope, $mdSidenav, commonReportingService, mapService) {
 
         $scope.loading = true;
         $scope.someScoutStops = true;
@@ -121,6 +121,7 @@
 
         var initMapControls = function () {
             mapService.initMap("map");
+            $mdSidenav("right").toggle();
             $scope.loading = false;
         }
 

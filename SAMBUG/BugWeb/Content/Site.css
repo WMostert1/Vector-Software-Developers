@@ -57,7 +57,7 @@ md-list-item a{
 }
 
 .customErrorMessage{
-    color: rgb(244,67,54); !important;
+    color: #F44336 !important;
 }
 
 /*todo: the below code was meant for bootstrap it seems, just make sure before completely removing*/
