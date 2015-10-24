@@ -81,7 +81,7 @@ namespace BugWeb.Controllers
                 //set up session
                 Session["UserInfo"] = loginResponse.User;
 
-                //todo factorise these Json object (define a DTO)
+                //todo: factorise these Json object (define a DTO)
                 return Json( new {
                     success = true,
                     invalidInputError = false,
@@ -146,8 +146,7 @@ namespace BugWeb.Controllers
        // [HttpPost]
         public ActionResult RecoverAccount(RecoverAccountModel recoverAccountModel)
         {
-            String ipAddressChangeAddress = "http://localhost:53249/Home/ChangePassword"; 
-            //recoverAccountModel.Link = "<a href=\"http://localhost:53249/Home/ChangePassword\"> Click </a>";
+            string ipAddressChangeAddress = "http://localhost:53249/Home/ChangePassword";             
             BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest recoverAccountRequest = new BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest()
             {
                 From = "do.not.reply.sambug.vsd@gmail.com",

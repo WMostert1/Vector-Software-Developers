@@ -13,46 +13,14 @@ namespace DataAccess.MSSQL
         {
             var db = new BugDBEntities();
 
-            var entityUser = db.Users.SingleOrDefault(usr => usr.Email.Equals(username) && usr.Password.Equals(password));
+            var user = db.Users.SingleOrDefault(usr => usr.Email.Equals(username) && usr.Password.Equals(password, StringComparison.InvariantCulture));
 
-            if (entityUser == default(User))
+            if (user == default(User))
             {
                 return null;
             }
 
-            //map EF Farm to Domain Farm
-            var farms = entityUser.Farms.Select(farm =>
-                new Farm()
-                {
-                    FarmID = farm.FarmID,
-                    FarmName = farm.FarmName,
-                    Blocks = farm.Blocks.Select(block =>
-                        new Block()
-                        {
-                            BlockID = block.BlockID,
-                            BlockName = block.BlockName,
-                            ScoutStops=block.ScoutStops
-                        }).ToList()
-                }).ToList();
-
-            //map EF Role to Domain Role
-            var roles = entityUser.Roles.Select(role =>
-            new Role()
-            {
-                RoleType = role.RoleType,
-                RoleDescription = role.RoleDescription,
-                RoleID = role.RoleID
-            }).ToList();
-
-            //map EF user to Domain User
-            var domainUser = new User()
-            {
-                UserID = entityUser.UserID,
-                Roles = roles,
-                Farms = farms
-            };
-
-            return domainUser;
+            return user;
 
         }
 
@@ -140,9 +108,10 @@ namespace DataAccess.MSSQL
         public bool ChangeUserPassword(string username, string password)
         {
             var db = new BugDBEntities();
-            try { 
-            User user = db.Users.SingleOrDefault(usr => usr.Email == username);
-            user.Password = password;
+            try
+            {
+                User user = db.Users.SingleOrDefault(usr => usr.Email == username);
+                user.Password = password;
             }
             catch (Exception)
             {
@@ -150,7 +119,6 @@ namespace DataAccess.MSSQL
             }
             db.SaveChanges();
             return true;
-            //return true;
         }
 
     }
