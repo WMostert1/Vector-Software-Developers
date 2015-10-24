@@ -1,8 +1,13 @@
 ﻿angular.module("appMain")
     .controller("TablesCtrl", ["$scope", "$mdSidenav", "commonReportingService", "tableService", function ($scope, $mdSidenav, commonReportingService, tableService) {
         $scope.loading = true;
-        
-        $scope.scoutConstraints = {
+
+        $scope.menu = {
+            title: "Scout Table Settings"
+        }
+
+        //--------constraints refer to scoutConstraints-------//
+        $scope.constraints = {
             misc: {
                 farm: {
                     title: "Farm"
@@ -44,14 +49,14 @@
 
         var constructScoutDataFilter = function () {
             return {
-                farms: [$scope.scoutConstraints.misc.farm.value],
-                blocks: [$scope.scoutConstraints.misc.block.value],
-                species: [$scope.scoutConstraints.misc.species.value],
-                lifeStages: [$scope.scoutConstraints.misc.lifeStage.value],
+                farms: [$scope.constraints.misc.farm.value],
+                blocks: [$scope.constraints.misc.block.value],
+                species: [$scope.constraints.misc.species.value],
+                lifeStages: [$scope.constraints.misc.lifeStage.value],
                 dates: {
-                    from: $scope.scoutConstraints.dates.from,
-                    to: $scope.scoutConstraints.dates.to,
-                    all: $scope.scoutConstraints.dates.all
+                    from: $scope.constraints.dates.from,
+                    to: $scope.constraints.dates.to,
+                    all: $scope.constraints.dates.all
                 }
             }
         }
@@ -77,45 +82,45 @@
         }
 
         $scope.defaultSettings = function () {
-            for (var i = 0; i < $scope.scoutConstraints.misc; i++) {
-                $scope.scoutConstraints.misc[i].value = $scope.scoutConstraints.misc[i].list[0];
+            for (var i = 0; i < $scope.constraints.misc; i++) {
+                $scope.constraints.misc[i].value = $scope.constraints.misc[i].list[0];
             }
-            $scope.scoutConstraints.dates.from = new Date((new XDate()).addWeeks(-2, true));
-            $scope.scoutConstraints.dates.to = new Date();
-            $scope.scoutConstraints.dates.all = false;
+            $scope.constraints.dates.from = new Date((new XDate()).addWeeks(-2, true));
+            $scope.constraints.dates.to = new Date();
+            $scope.constraints.dates.all = false;
         };
         //----------Watch for changes in scout constraints---------//
 
-        $scope.$watch("scoutConstraints.misc.farm.value", function (newValue) {
-            $scope.scoutConstraints.misc.block.list = commonReportingService.getBlocksForFarms([newValue]);
-            $scope.scoutConstraints.misc.block.value = $scope.scoutConstraints.misc.block.list[0];
+        $scope.$watch("constraints.misc.farm.value", function (newValue) {
+            $scope.constraints.misc.block.list = commonReportingService.getBlocksForFarms([newValue]);
+            $scope.constraints.misc.block.value = $scope.constraints.misc.block.list[0];
             updateScoutTable();
         });
                 
-        $scope.$watch("scoutConstraints.misc.block.value", function () {
+        $scope.$watch("constraints.misc.block.value", function () {
             updateScoutTable();
         });
 
-        $scope.$watch("scoutConstraints.misc.species.value", function (newValue) {
-            $scope.scoutConstraints.misc.lifeStage.list = commonReportingService.getLifeStagesForSpecies([newValue]);
-            $scope.scoutConstraints.misc.lifeStage.value = $scope.scoutConstraints.misc.lifeStage.list[0];
+        $scope.$watch("constraints.misc.species.value", function (newValue) {
+            $scope.constraints.misc.lifeStage.list = commonReportingService.getLifeStagesForSpecies([newValue]);
+            $scope.constraints.misc.lifeStage.value = $scope.constraints.misc.lifeStage.list[0];
             updateScoutTable();
         });
 
         
-        $scope.$watch("scoutConstraints.misc.lifeStage.value", function () {
+        $scope.$watch("constraints.misc.lifeStage.value", function () {
             updateScoutTable();
         });
 
-        $scope.$watch("scoutConstraints.dates.from", function () {
+        $scope.$watch("constraints.dates.from", function () {
             updateScoutTable();
         });
 
-        $scope.$watch("scoutConstraints.dates.to", function () {
+        $scope.$watch("constraints.dates.to", function () {
             updateScoutTable();
         });
 
-        $scope.$watch("scoutConstraints.dates.all", function () {
+        $scope.$watch("constraints.dates.all", function () {
             updateScoutTable();
         });
 
@@ -145,9 +150,11 @@
         $scope.$watch("selectedTab", function (newValue) {
             switch (newValue) {
                 case 0:
+                    $scope.menu.title = "Scout Table Settings";
                     $scope.showScoutConstraints = true;                    
                     break;
                 case 1:
+                    $scope.menu.title = "Spray Table Settings";
                     $scope.showScoutConstraints = false;
                     break;
             }
@@ -163,8 +170,8 @@
         }
 
        commonReportingService.init(function (farmNames) {
-            $scope.scoutConstraints.misc.farm.list = farmNames;
-            $scope.scoutConstraints.misc.farm.value = farmNames[0];
+            $scope.constraints.misc.farm.list = farmNames;
+            $scope.constraints.misc.farm.value = farmNames[0];
             $scope.treatmentConstraints.misc.farm.list = farmNames;
             $scope.treatmentConstraints.misc.farm.value = farmNames[0];
             commonReportingService.transformDataForTables();
@@ -176,8 +183,8 @@
             }
 
         }, function (speciesNames) {
-            $scope.scoutConstraints.misc.species.list = speciesNames;
-            $scope.scoutConstraints.misc.species.value = speciesNames[0];
+            $scope.constraints.misc.species.list = speciesNames;
+            $scope.constraints.misc.species.value = speciesNames[0];
 
             speciesDone = true;
 

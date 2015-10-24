@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+
+<md-input-container class="md-hue-1" ng-repeat="constraint in constraints.misc">
+    <label>{{constraint.title}}</label>
+    <md-select ng-model="constraint.value" ng-disabled="loading">
+        <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item === constraint.list[0]">
+            {{item}}
+        </md-option>
+    </md-select>
+</md-input-container>
+<div layout="row">
+    <div layout="column">
+        <div layout="row">
+            <h5 flex="15">Since</h5>
+            <md-datepicker class="md-hue-1" ng-model="constraints.dates.from" md-max-date="constraints.dates.to" ng-disabled="constraints.dates.all || loading"></md-datepicker>
+        </div>
+        <div layout="row">
+            <h5 flex="15">Until</h5>
+            <md-datepicker class="md-hue-1" ng-model="constraints.dates.to" md-min-date="constraints.dates.from" ng-disabled="constraints.dates.all || loading"></md-datepicker>
+        </div>
+    </div>
+    <div layout="row" layout-align="end center">
+        <md-checkbox class="md-primary" aria-label="All Dates Checkbox" ng-model="constraints.dates.all" ng-disabled="loading">
+            <h5>All</h5>
+        </md-checkbox>
+    </div>
+</div>

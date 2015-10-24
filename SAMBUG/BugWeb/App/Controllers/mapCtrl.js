@@ -3,6 +3,10 @@
 
         $scope.loading = true;
         $scope.someScoutStops = true;
+
+        $scope.menu = {
+            title: "Map Settings"
+        }
         
         $scope.options = {
             radius: 0.001,

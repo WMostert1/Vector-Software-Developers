@@ -76,7 +76,7 @@
             });
         }
 
-        function flattenTreatments(data) {
+        var flattenTreatments = function(data) {
             var timelessDate;
 
             return Enumerable.From(data).Select(
@@ -92,7 +92,7 @@
                 }).ToArray();
         }
 
-        function flattenScoutStops(data) {
+        var flattenScoutStops = function(data) {
             var result = [];
             var timelessDate;
 
@@ -122,7 +122,7 @@
             return result;
         }
 
-        function getFarmsBlocks(data) {
+        var getFarmsBlocks = function(data) {
             var farmGroups = Enumerable.From(data)
                 .GroupBy(function (d) {
                     return d.farmName;
@@ -147,7 +147,7 @@
             }).ToArray();
         }
 
-        function loadDataRecords(callback) {
+        var loadDataRecords = function(callback) {
             $http.get(reportingUrlService.recordsUrl, { cache: true }).then(function (response) {
                 treatments = flattenTreatments(response.data.Treatments);
                 scoutStops = flattenScoutStops(response.data.ScoutStops);

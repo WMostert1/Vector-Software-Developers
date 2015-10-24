@@ -210,6 +210,7 @@
     <Content Include="App\Views\editBlockDialog.html" />
     <Content Include="App\Views\editUserRolesDialog.html" />
     <Content Include="App\Views\loginDialog.html" />
+    <Content Include="App\Views\commonReportingMenu.html" />
     <Content Include="App\Views\registerDialog.html" />
     <Content Include="Content\angular-material-icons.css" />
     <Content Include="Content\angular-material.css" />
@@ -318,11 +319,12 @@
     <Content Include="Views\Authentication\CheckEmail.cshtml" />
     <Content Include="Views\Authentication\ChangePassword.cshtml" />
     <Content Include="Views\FarmManagement\SprayData.cshtml" />
+    <Content Include="Views\Shared\_ReportingMenuToolbar.cshtml" />
+    <Content Include="Views\Shared\_ReportingMenuBody.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\Directives\" />
     <Folder Include="App\Filters\" />
-    <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

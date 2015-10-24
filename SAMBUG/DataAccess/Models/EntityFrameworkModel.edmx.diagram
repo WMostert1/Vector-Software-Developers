@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="091156db2533456494eba528b5f0f703" Name="Diagram1">
+      <Diagram DiagramId="5cd33880400245f79890c8dfadee9b5c" Name="Diagram1">
         <EntityTypeShape EntityType="BugDBModel.Block" Width="1.5" PointX="7.5" PointY="2.875" IsExpanded="true" />
         <EntityTypeShape EntityType="BugDBModel.Farm" Width="1.5" PointX="5.25" PointY="3" IsExpanded="true" />
         <EntityTypeShape EntityType="BugDBModel.Role" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
