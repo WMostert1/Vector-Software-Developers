@@ -59,31 +59,36 @@
         }
 
         $scope.defaultSettings = function () {
-            for (var i = 0; i < $scope.constraints.misc; i++) {
-                $scope.constraints.misc[i].selected = [$scope.constraints.misc[i].list[0]];
-            }
+            $scope.constraints.misc.farms.selected = [];
+            $scope.constraints.misc.blocks.selected = [];
+            $scope.constraints.misc.species.selected = [];
+            $scope.constraints.misc.lifeStages.selected = [];
             $scope.constraints.dates.from = new Date((new XDate()).addWeeks(-2, true));
             $scope.constraints.dates.to = new Date();
             $scope.constraints.dates.all = false;
         };
 
-        $scope.$watch("constraints.misc.farms.selected", function (newValue) {
-            $scope.constraints.misc.blocks.list = commonReportingService.getBlocksForFarms(newValue);
-            $scope.constraints.misc.blocks.selected = [$scope.constraints.misc.blocks.list[0]];
+        $scope.$watchCollection("constraints.misc.farms.selected", function (newValue) {
+            if (newValue) {
+                $scope.constraints.misc.blocks.list = commonReportingService.getBlocksForFarms(newValue);
+                $scope.constraints.misc.blocks.selected = [];
+                updateChart();
+            }
+        });
+
+        $scope.$watchCollection("constraints.misc.blocks.selected", function () {
             updateChart();
         });
 
-        $scope.$watch("constraints.misc.blocks.selected", function () {
-            updateChart();
+        $scope.$watchCollection("constraints.misc.species.selected", function (newValue) {
+            if (newValue) {
+                $scope.constraints.misc.lifeStages.list = commonReportingService.getLifeStagesForSpecies(newValue);
+                $scope.constraints.misc.lifeStages.selected = [];
+                updateChart();
+            }
         });
 
-        $scope.$watch("constraints.misc.species.selected", function (newValue) {
-            $scope.constraints.misc.lifeStages.list = commonReportingService.getLifeStagesForSpecies(newValue);
-            $scope.constraints.misc.lifeStages.selected = [$scope.constraints.misc.lifeStages.list[0]];
-            updateChart();
-        });
-
-        $scope.$watch("constraints.misc.lifeStages.selected", function () {
+        $scope.$watchCollection("constraints.misc.lifeStages.selected", function () {
             updateChart();
         });
 
@@ -100,16 +105,20 @@
         });
 
 
-        $scope.filterSuggestions = function (list, searchText) {
-            return Enumerable.From(list).Where(function (i) {
-                return i.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
-            }).ToArray();
+        //todo incorporate suggestion engine (bloodhound.js?) to order the suggestions
+        $scope.filterSuggestions = function (list, selected, searchText) {
+            var excludingSelected = Enumerable.From(list).Except(selected).ToArray();
+            if (searchText) {
+                return Enumerable.From(excludingSelected).Where(function (i) {
+                    return i.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+                }).ToArray();
+            } else {
+                return excludingSelected;
+            }
         }
-
+        
         var scoutstopsDone = false;
         var speciesDone = false;
-
-        
 
         var initChartControls = function () {
             chartService.initChart("chart");
@@ -117,9 +126,9 @@
             $scope.loading = false;
         }
 
-        commonReportingService.init(function (farmNames) {
-            $scope.constraints.misc.farms.list = farmNames;
-            $scope.constraints.misc.farms.selected = [farmNames[0]];
+        commonReportingService.init(function (farms) {
+            $scope.constraints.misc.farms.list = farms;
+            $scope.constraints.misc.farms.selected = [];
 
             scoutstopsDone = true;
 
@@ -127,9 +136,9 @@
                 initChartControls();
             }
 
-        }, function (speciesNames) {
-            $scope.constraints.misc.species.list = speciesNames;
-            $scope.constraints.misc.species.selected = [speciesNames[0]];
+        }, function (species) {
+            $scope.constraints.misc.species.list = species;
+            $scope.constraints.misc.species.selected = [];
 
             speciesDone = true;
 

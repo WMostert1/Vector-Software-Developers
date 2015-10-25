@@ -2,33 +2,32 @@
     Layout = null;
 }
 
-
 <md-chips ng-repeat="constraint in constraints.misc" ng-model="constraint.selected" md-autocomplete-snap md-require-match="true">
-    <md-autocomplete md-search-text="constraint.searchText"
-                     md-items="item in filterSuggestions(constraint.list, constraint.searchText)"
-                     md-item-text="item"
+    <md-autocomplete md-min-length="0"
+                     md-no-cache="true"
+                     md-search-text="constraint.searchText"
+                     md-items="item in filterSuggestions(constraint.list, constraint.selected, constraint.searchText)"
+                     md-item-text="item.name"
                      placeholder="{{constraint.title}}"
-                     md-min-length="0">
+                     md-menu-class="reportingAutocompleteTemplate">
         <md-item-template>
-            <span md-highlight-text="constraint.searchText">{{item}}</span>
+            <span class="item-title">
+                @*<md-icon md-svg-icon="img/icons/octicon-repo.svg"></md-icon>*@
+               <span md-highlight-text="constraint.searchText"> {{item.name}}</span>
+            </span>
+            <span ng-if="item.owners.length > 0" ng-repeat="meta in item.owners" class="item-metadata">
+                <small>{{meta}}</small>
+            </span>
         </md-item-template>
         <md-not-found>
-            No matches found for "{{constraint.searchText}}".
+            No {{constraint.title}} Found
         </md-not-found>
     </md-autocomplete>
     <md-chip-template>
-        {{$chip}}
+        {{$chip.name}}
     </md-chip-template>
 </md-chips>
-
-@*<md-input-container class="md-hue-1" ng-repeat="constraint in constraints.misc">
-    <label>{{constraint.title}}</label>
-    <md-select ng-model="constraint.value" ng-disabled="loading">
-        <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item === constraint.list[0]">
-            {{item}}
-        </md-option>
-    </md-select>
-</md-input-container>*@
+<span flex="5"></span>
 <div layout="row">
     <div layout="column">
         <div layout="row">

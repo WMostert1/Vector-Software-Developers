@@ -4,6 +4,11 @@
     ViewBag.Title = "Map";
     ViewBag.Reporting = "true";
 }
+
+@section styles
+{
+    @Styles.Render("~/Content/css/reporting/common")
+}
 <div flex layout-fill layout="column" ng-controller="MapCtrl">
     <div flex layout="column" layout-fill layout-align="center center">
         <div flex layout="column" layout-fill id="map" layout-align="center center" ng-hide="!someScoutStops">
@@ -18,14 +23,15 @@
         @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuToolbar.cshtml"); }
         <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1">
             @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuBody.cshtml"); }
+            <span flex="5"></span>
             <md-divider></md-divider>
             <div layout="row">
                 <md-switch class="md-primary" aria-label="Blue Colour Gradient Switch" ng-model="options.blueColourGradient" ng-disabled="loading">
-                    <h5 offset="15">Blue Colour Gradient</h5>
+                    <h5 flex-offset="15">Blue Colour Gradient</h5>
                 </md-switch>
             </div>
             <div layout="row">
-                <md-slider offset="10" flex="40" ng-model="options.radius" min="0.001" max="0.07" step="0.0005" aria-label="Radius" class="md-primary" ng-disabled="loading"></md-slider>
+                <md-slider flex-offset="10" flex="40" ng-model="options.radius" min="0.001" max="0.07" step="0.0005" aria-label="Radius" class="md-primary" ng-disabled="loading"></md-slider>
                 <span flex="10"></span>
                 <h5>Heat Radius {{options.radius}}</h5>
             </div>

@@ -1,0 +1,28 @@
+﻿.reportingAutocompleteTemplate li {
+    border-bottom: 1px solid #ccc;
+    background-color: #424242;
+    height: 65px;
+    color: white;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    white-space: normal;
+}
+
+.reportingAutocompleteTemplate li:hover{
+    color: #424242;
+}
+
+.reportingAutocompleteTemplate li:last-child {
+    border-bottom-width: 0;
+}
+
+.reportingAutocompleteTemplate .item-title,
+.reportingAutocompleteTemplate .item-metadata {
+    display: block;
+    line-height: 1;
+}
+
+.reportingAutocompleteTemplate .item-metadata {
+    padding-top: 4px;
+    color: #bbb;
+}

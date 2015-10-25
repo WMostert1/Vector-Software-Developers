@@ -214,14 +214,14 @@
     <Content Include="App\Views\registerDialog.html" />
     <Content Include="Content\angular-material-icons.css" />
     <Content Include="Content\angular-material.css" />
+    <Content Include="Content\angular-material.layouts.css" />
+    <Content Include="Content\angular-material.layouts.min.css" />
     <Content Include="Content\angular-material.min.css" />
-    <Content Include="Content\bootstrap-tagsinput.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="App_Data\ANN\classes.txt" />
     <Content Include="App_Data\ANN\dictionary.xml" />
     <Content Include="Content\chartist.min.css" />
     <Content Include="Content\charts.css" />
-    <Content Include="Content\EditBlocks.css" />
     <Content Include="Content\Images\coconut_inst_4.jpg" />
     <Content Include="Content\Images\DataTables\sort_asc.png" />
     <Content Include="Content\Images\DataTables\sort_asc_disabled.png" />
@@ -236,8 +236,8 @@
     <Content Include="Content\Images\two_spot_inst_4.jpg" />
     <Content Include="Content\Images\yellow_edged_inst_4.jpg" />
     <Content Include="Content\jquery.dataTables.css" />
+    <Content Include="Content\reporting.css" />
     <Content Include="Content\tables.css" />
-    <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

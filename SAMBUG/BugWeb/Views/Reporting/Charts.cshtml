@@ -4,6 +4,13 @@
     ViewBag.Title = "Charts";
     ViewBag.Reporting = "true";
 }
+
+@section styles
+{
+    @Styles.Render("~/Content/css/reporting/common")
+    @Styles.Render("~/Content/css/reporting/vendor/chartist")
+    @Styles.Render("~/Content/css/reporting/charts")
+}
 <div flex layout-fill layout="column" ng-controller="ChartsCtrl">
     <div flex layout="column" layout-fill layout-align="center center">
         <div flex layout="column" layout-fill id="chart" layout-align="center center" ng-hide="!someScoutStops"></div>
@@ -17,6 +24,7 @@
         @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuToolbar.cshtml"); }
         <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1">
             @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuBody.cshtml"); }
+            <span flex="5"></span>
             <md-divider></md-divider>
         </md-content>
     </md-sidenav>
@@ -35,22 +43,15 @@
     </script>
 
     @Scripts.Render("~/bundles/vendor/xdate")
-    @Scripts.Render("~/bundles/chartist")
-    @Scripts.Render("~/bundles/chartist-plugins")
+    @Scripts.Render("~/bundles/reporting/vendor/chartist")
+    @Scripts.Render("~/bundles/reporting/vendor/chartist-plugins")
     @Scripts.Render("~/bundles/reporting/common")
     @Scripts.Render("~/bundles/reporting/charts")
 
-
 }
 
 
-@*@section styles
-{
-    @Styles.Render("~/Content/css/chartist")
-    @Styles.Render("~/Content/css/typeahead")
-    @Styles.Render("~/Content/css/bootstrap-tagsinput")
-    @Styles.Render("~/Content/css/reporting")
-}
+@*
 
 
 <div id="firstContentRow" class="row">

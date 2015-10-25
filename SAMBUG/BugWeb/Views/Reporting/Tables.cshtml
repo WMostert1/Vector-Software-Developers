@@ -7,7 +7,8 @@
 
 @section styles
 {
-    @Styles.Render("~/Content/css/reporting/datatables")
+    @Styles.Render("~/Content/css/reporting/common")
+    @Styles.Render("~/Content/css/reporting/vendor/datatables")
     <link rel="stylesheet" href="https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,b-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,r-1.0.7/datatables.min.css" />
     @Styles.Render("~/Content/css/reporting/tables")
 }
@@ -36,14 +37,32 @@
             @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuBody.cshtml"); }
         </md-content>
         <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1" ng-show="!showScoutConstraints">
-            <md-input-container class="md-hue-1" ng-repeat="constraint in treatmentConstraints.misc">
-                <label>{{constraint.title}}</label>
-                <md-select ng-model="constraint.value" ng-disabled="loading">
-                    <md-option ng-repeat="item in constraint.list" value="{{item}}" ng-selected="item === constraint.list[0]">
-                        {{item}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
+            <md-chips ng-repeat="constraint in treatmentConstraints.misc" ng-model="constraint.selected" md-autocomplete-snap md-require-match="true">
+                <md-autocomplete md-min-length="0"
+                                 md-no-cache="true"
+                                 md-search-text="constraint.searchText"
+                                 md-items="item in filterSuggestions(constraint.list, constraint.selected, constraint.searchText)"
+                                 md-item-text="item.name"
+                                 placeholder="{{constraint.title}}"
+                                 md-menu-class="reportingAutocompleteTemplate">
+                    <md-item-template>
+                        <span class="item-title">
+                            @*<md-icon md-svg-icon="img/icons/octicon-repo.svg"></md-icon>*@
+                            <span md-highlight-text="constraint.searchText"> {{item.name}}</span>
+                        </span>
+                        <span ng-if="item.owners.length > 0" ng-repeat="meta in item.owners" class="item-metadata">
+                            <small>{{meta}}</small>
+                        </span>
+                    </md-item-template>
+                    <md-not-found>
+                        No {{constraint.title}} Found
+                    </md-not-found>
+                </md-autocomplete>
+                <md-chip-template>
+                    {{$chip.name}}
+                </md-chip-template>
+            </md-chips>
+            <span flex="5"></span>
             <div layout="row">
                 <div layout="column">
                     <div layout="row">
@@ -80,7 +99,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.0.3,b-html5-1.0.3,b-print-1.0.3,cr-1.2.0,fh-3.0.0,r-1.0.7/datatables.min.js"></script>
 
     @Scripts.Render("~/bundles/vendor/xdate")
+    @Scripts.Render("~/bundles/reporting/vendor/dataTables")
     @Scripts.Render("~/bundles/reporting/common")
-    @Scripts.Render("~/bundles/reporting/dataTables")
     @Scripts.Render("~/bundles/reporting/tables")
 }
