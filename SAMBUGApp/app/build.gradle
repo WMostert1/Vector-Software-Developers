@@ -24,7 +24,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:support-v4:23.0.1'
@@ -34,7 +34,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:cardview-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
-    compile "com.daimajia.swipelayout:library:1.2.0@aar"
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     // the following is required to use Mockito and JUnit for your
     // instrumentation unit tests on the JVM
@@ -51,4 +51,5 @@ dependencies {
     compile('com.afollestad.material-dialogs:core:0.8.2.0@aar') {
         transitive = true
     }
+    compile project(':openCVLibrary2411')
 }

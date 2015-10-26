@@ -3,6 +3,7 @@ package vsd.co.za.sambugapp.DataAccess;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,9 +28,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import vsd.co.za.sambugapp.BugIntelligence.ANNClassifier;
 import vsd.co.za.sambugapp.DataAccess.DTO.CacheSyncDTO;
-import vsd.co.za.sambugapp.DataAccess.DTO.ClassificationRequestDTO;
-import vsd.co.za.sambugapp.DataAccess.DTO.ClassificationResultDTO;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
@@ -49,17 +49,15 @@ public class WebAPI {
     private static final String HOST = "sambug.azurewebsites.net";
     private static final String AUTHENTICATION_URL = "http://"+HOST+"/api/authentication/login";
     private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/Synchronization";
-    private static final String CLASSIFICATION_URL= "http://"+HOST+"/api/apiSpeciesClassification";
+
     private static final int SOCKET_TIMEOUT_MS = 100000; //10 seconds
 
 
     private WebAPI() {
     }
 
-    public static AsyncTask attemptAPIClassification(byte[] pictureData, Context context) {
-        ClassificationRequestDTO request = new ClassificationRequestDTO();
-        request.FieldPicture = pictureData;
-        return new ClassificationTask(context).execute(request);
+    public static AsyncTask attemptAPIClassification(Bitmap picture, Context context) {
+        return new ClassificationTask(context).execute(picture);
     }
 
     public static void attemptSyncCachedScoutingData(Context context) {
@@ -162,7 +160,7 @@ public class WebAPI {
         }
     }
 
-    private static class ClassificationTask extends AsyncTask<ClassificationRequestDTO,Void,Void>{
+    private static class ClassificationTask extends AsyncTask<Bitmap,Void,Species>{
 
         private Context context;
 
@@ -171,42 +169,17 @@ public class WebAPI {
         }
 
         @Override
-        protected Void doInBackground(ClassificationRequestDTO... classificationRequestDTOs) {
-            JSONObject classificationRequest = new JSONObject();
-            try{
-                classificationRequest = new JSONObject(new Gson().toJson(classificationRequestDTOs[0]));
-
-            }catch (JSONException e){
-                Toast.makeText(context, "A JSON conversion error occurred.", Toast.LENGTH_SHORT).show();
-                return null;
-            }
-
-            String jsonString = classificationRequest.toString();
-            //System.out.println(jsonString);
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,CLASSIFICATION_URL,classificationRequest,new Response.Listener<JSONObject>(){
-                @Override
-                public void onResponse(JSONObject response) {
-                    final Gson gson = new Gson();
-                    ClassificationResultDTO result = gson.fromJson(response.toString(), ClassificationResultDTO.class);
-                    Toast.makeText(context,result.SpeciesName+ " " +result.Lifestage+" "+result.SpeciesID,Toast.LENGTH_SHORT).show();
-                    ((IdentificationActivity)context).changeEntrySelection(result);
-
-                }
-            },new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context,"Could not contact server to classify bug.",Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    SOCKET_TIMEOUT_MS,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            VolleySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
-
+        protected Species doInBackground(Bitmap... bitmaps) {
+            Bitmap bitmap = (new ANNClassifier()).doGrabCut(bitmaps[0]);
+            
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Species species) {
+            super.onPostExecute(species);
+
+            ((IdentificationActivity)context).changeEntrySelection(species);
         }
     }
 

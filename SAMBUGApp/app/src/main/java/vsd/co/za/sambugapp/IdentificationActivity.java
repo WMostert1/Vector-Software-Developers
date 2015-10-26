@@ -38,11 +38,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import vsd.co.za.sambugapp.BugIntelligence.ANNClassifier;
 import vsd.co.za.sambugapp.CameraProcessing.CustomCamera;
 import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
 import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.Species;
-import vsd.co.za.sambugapp.DataAccess.DTO.ClassificationResultDTO;
+
 /**
  * This activity class is the third viewable screen when interacting with the App in order
  * to capture scouting data.
@@ -72,12 +73,7 @@ public class IdentificationActivity extends AppCompatActivity {
         findViewById(R.id.ivCompareImage).setVisibility(View.GONE);
         findViewById(R.id.pbClassifier).setVisibility(View.VISIBLE);
 
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-        byte[] byteArray = stream.toByteArray();
-
-        classifyTask = WebAPI.attemptAPIClassification(byteArray, this);
+        classifyTask = WebAPI.attemptAPIClassification(bitmap, this);
         Toast.makeText(this, "Starting classification...", Toast.LENGTH_SHORT).show();
     }
 
@@ -159,7 +155,7 @@ public class IdentificationActivity extends AppCompatActivity {
         }
     }
 
-    public void changeEntrySelection(ClassificationResultDTO currentEntry){
+    public void changeEntrySelection(Species currentEntry){
         isClassified = true;
         //Possibly validate that ID's are correct in future
         Toast.makeText(getApplicationContext(),"Species Identified!",Toast.LENGTH_SHORT).show();
@@ -340,7 +336,11 @@ public class IdentificationActivity extends AppCompatActivity {
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             bitmap = rotateBitmap(fullPathName,myBitmap);
+
+            bitmap = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth()/5,bitmap.getHeight()/5,true);
+
             mImageView.setImageBitmap(bitmap);
+            doAutomaticClassification(null);
         }
     }
 
