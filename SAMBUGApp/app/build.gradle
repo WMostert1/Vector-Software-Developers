@@ -52,4 +52,6 @@ dependencies {
         transitive = true
     }
     compile project(':openCVLibrary2411')
+    compile 'com.thoughtworks.xstream:xstream:1.4.8'
+    compile 'com.googlecode.javacpp:javacpp:0.7'
 }

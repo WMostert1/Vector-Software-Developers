@@ -170,8 +170,8 @@ public class WebAPI {
 
         @Override
         protected Species doInBackground(Bitmap... bitmaps) {
-            Bitmap bitmap = (new ANNClassifier()).doGrabCut(bitmaps[0]);
-            
+            Bitmap bitmap = ANNClassifier.getInstance(context).doGrabCut(bitmaps[0]);
+
             return null;
         }
 
