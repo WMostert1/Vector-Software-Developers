@@ -37,6 +37,7 @@
                 farms: $scope.constraints.misc.farms.selected,
                 blocks: $scope.constraints.misc.blocks.selected,
                 species: $scope.constraints.misc.species.selected,
+                isPest: [true],
                 lifeStages: $scope.constraints.misc.lifeStages.selected,
                 dates: {
                     from: $scope.constraints.dates.from,
@@ -54,7 +55,6 @@
                 chartService.updateChart(filteredScoutStops);
             } else
                 $scope.someScoutStops = false;
-
 
         }
 

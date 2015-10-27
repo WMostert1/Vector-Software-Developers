@@ -51,6 +51,7 @@
             return {
                 farms: $scope.constraints.misc.farms.selected,
                 blocks: $scope.constraints.misc.blocks.selected,
+                isPest: [],
                 species: $scope.constraints.misc.species.selected,
                 lifeStages: $scope.constraints.misc.lifeStages.selected,
                 dates: {

@@ -228,6 +228,9 @@
                         (Enumerable.From(filter.lifeStages).Any(function (l) {
                             return l.name === s.lifeStage ;
                         }) || filter.lifeStages.length === 0) &&
+                        (Enumerable.From(filter.isPest).Any(function (i) {
+                            return i === s.isPest;
+                        }) || filter.isPest.length === 0) &&
                         (filter.dates.all || (filter.dates.from.valueOf() <= milliDate.valueOf() &&
                         filter.dates.to.valueOf() >= milliDate.valueOf()));
                 })
