@@ -3,6 +3,10 @@
 
         $scope.loading = true;
         $scope.someScoutStops = true;
+
+        $scope.menu = {
+            title: "Map Settings"
+        }
         
         $scope.options = {
             radius: 0.001,
@@ -11,16 +15,16 @@
 
         $scope.constraints = {
             misc: {
-                farm: {
+                farms: {
                     title: "Farm"
                 },
-                block: {
+                blocks: {
                     title: "Block"
                 },
                 species: {
                     title: "Species"
                 },
-                lifeStage: {
+                lifeStages: {
                     title: "Life Stage"
                 }
             },
@@ -35,10 +39,10 @@
 
         var constructDataFilter = function() {
             return {
-                farms: [$scope.constraints.misc.farm.value],
-                blocks: [$scope.constraints.misc.block.value],
-                species: [$scope.constraints.misc.species.value],
-                lifeStages: [$scope.constraints.misc.lifeStage.value],
+                farms: $scope.constraints.misc.farms.selected,
+                blocks: $scope.constraints.misc.blocks.selected,
+                species: $scope.constraints.misc.species.selected,
+                lifeStages: $scope.constraints.misc.lifeStages.selected,
                 dates: {
                     from: $scope.constraints.dates.from,
                     to: $scope.constraints.dates.to,
@@ -60,9 +64,10 @@
         }
 
         $scope.defaultSettings = function() {
-            for (var i = 0; i < $scope.constraints.misc; i++) {
-                $scope.constraints.misc[i].value = $scope.constraints.misc[i].list[0];
-            }
+            $scope.constraints.misc.farms.selected = [];
+            $scope.constraints.misc.blocks.selected = [];
+            $scope.constraints.misc.species.selected = [];
+            $scope.constraints.misc.lifeStages.selected = [];
             $scope.constraints.dates.from = new Date((new XDate()).addWeeks(-2, true));
             $scope.constraints.dates.to = new Date();
             $scope.constraints.dates.all = false;
@@ -70,23 +75,27 @@
             $scope.options.blueColourGradient = false;
         };
 
-        $scope.$watch("constraints.misc.farm.value", function (newValue) {
-            $scope.constraints.misc.block.list = commonReportingService.getBlocksForFarms([newValue]);
-            $scope.constraints.misc.block.value = $scope.constraints.misc.block.list[0];
+        $scope.$watchCollection("constraints.misc.farms.selected", function (newValue) {
+            if (newValue) {
+                $scope.constraints.misc.blocks.list = commonReportingService.getBlocksForFarms(newValue);
+                $scope.constraints.misc.blocks.selected = [];
+                updateMap();
+            }
+        });
+
+        $scope.$watchCollection("constraints.misc.blocks.selected", function () {
             updateMap();
         });
 
-        $scope.$watch("constraints.misc.block.value", function () {
-            updateMap();
+        $scope.$watchCollection("constraints.misc.species.selected", function (newValue) {
+            if (newValue) {
+                $scope.constraints.misc.lifeStages.list = commonReportingService.getLifeStagesForSpecies(newValue);
+                $scope.constraints.misc.lifeStages.selected = [];
+                updateMap();
+            }
         });
 
-        $scope.$watch("constraints.misc.species.value", function (newValue) {
-            $scope.constraints.misc.lifeStage.list = commonReportingService.getLifeStagesForSpecies([newValue]);
-            $scope.constraints.misc.lifeStage.value = $scope.constraints.misc.lifeStage.list[0];
-            updateMap();
-        });
-
-        $scope.$watch("constraints.misc.lifeStage.value", function () {
+        $scope.$watchCollection("constraints.misc.lifeStages.selected", function () {
             updateMap();
         });
 
@@ -116,6 +125,18 @@
             }
         );
 
+        //todo incorporate suggestion engine (bloodhound.js?) to order the suggestions
+        $scope.filterSuggestions = function (list, selected, searchText) {
+            var excludingSelected = Enumerable.From(list).Except(selected).ToArray();
+            if (searchText) {
+                return Enumerable.From(excludingSelected).Where(function (i) {
+                    return i.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+                }).ToArray();
+            } else {
+                return excludingSelected;
+            }
+        }
+
         var scoutstopsDone = false;
         var speciesDone = false;
 
@@ -125,9 +146,9 @@
             $scope.loading = false;
         }
 
-        commonReportingService.init(function (farmNames) {
-            $scope.constraints.misc.farm.list = farmNames;
-            $scope.constraints.misc.farm.value = farmNames[0];
+        commonReportingService.init(function (farms) {
+            $scope.constraints.misc.farms.list = farms;
+            $scope.constraints.misc.farms.selected = [];
 
             scoutstopsDone = true;
 
@@ -135,9 +156,9 @@
                 initMapControls();
             }
 
-        }, function (speciesNames) {
-            $scope.constraints.misc.species.list = speciesNames;
-            $scope.constraints.misc.species.value = speciesNames[0];
+        }, function (species) {
+            $scope.constraints.misc.species.list = species;
+            $scope.constraints.misc.species.selected = [];
 
             speciesDone = true;
 

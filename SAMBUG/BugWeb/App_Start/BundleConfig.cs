@@ -10,7 +10,7 @@ namespace BugWeb
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.UseCdn = true;
-            
+
             const string cdnJsChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.js",
                 cdnCssChartist = "https://cdnjs.cloudflare.com/ajax/libs/chartist/0.9.4/chartist.min.css",
                 cdnJsTypeAhead = "https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.js",
@@ -35,7 +35,7 @@ namespace BugWeb
             bundles
                 .Add(new ScriptBundle("~/bundles/angular-icons-morpheus")
                     .Include("~/Scripts/svg-morpheus.js"));
-            
+
 
             bundles
                 .Add(new ScriptBundle("~/bundles/jquery")
@@ -61,19 +61,11 @@ namespace BugWeb
 
             bundles
                 .Add(new ScriptBundle("~/bundles/app")
-                    .Include("~/App/app.js", 
+                    .Include("~/App/app.js",
                     "~/App/Controllers/registerDialogCtrl.js",
                     "~/App/Controllers/loginDialogCtrl.js",
                     "~/App/Controllers/appCtrl.js"
                     ));
-
-            bundles
-                .Add(new ScriptBundle("~/bundles/typeahead", cdnJsTypeAhead)
-                    .Include("~/Scripts/typeahead.bundle.js"));
-
-            bundles
-                .Add(new ScriptBundle("~/bundles/bootstrap-tagsinput")
-                    .Include("~/Scripts/bootstrap-tagsinput.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/vendor/xdate")
@@ -88,13 +80,13 @@ namespace BugWeb
                     .Include("~/App/Services/tableService.js", "~/App/Controllers/tablesCtrl.js"));
 
             bundles
-                .Add(new ScriptBundle("~/bundles/reporting/dataTables", cdnJsDataTables)
+                .Add(new ScriptBundle("~/bundles/reporting/vendor/dataTables", cdnJsDataTables)
                     .Include("~/Scripts/DataTables/jquery.dataTables.js", "~/Scripts/DataTables/.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/reporting/charts")
                     .Include("~/App/Services/chartService.js", "~/App/Controllers/chartsCtrl.js"));
-                
+
             bundles
                 .Add(new ScriptBundle("~/bundles/reporting/map")
                     .Include("~/App/Services/mapService.js", "~/App/Controllers/mapCtrl.js"));
@@ -120,18 +112,19 @@ namespace BugWeb
                     "~/App/Controllers/userManagementCtrl.js"));
 
             bundles
-                .Add(new ScriptBundle("~/bundles/chartist", cdnJsChartist)
+                .Add(new ScriptBundle("~/bundles/reporting/vendor/chartist", cdnJsChartist)
                     .Include("~/Scripts/chartist.js"));
 
             bundles
-                .Add(new ScriptBundle("~/bundles/chartist-plugins")
+                .Add(new ScriptBundle("~/bundles/reporting/vendor/chartist-plugins")
                     .Include("~/Scripts/chartist-plugin-vertical-line.js",
                         "~/Scripts/chartist-plugin-tooltip.js",
                         "~/Scripts/chartist-plugin-axistitle.js"));
 
             bundles
                 .Add(new StyleBundle("~/Content/css/angular")
-                    .Include("~/Content/angular-material.css"));
+                    .Include("~/Content/angular-material.css",
+                        "~/Content/angular-material.layouts.css"));
 
             bundles
                 .Add(new StyleBundle("~/Content/css/angular-icons")
@@ -146,17 +139,15 @@ namespace BugWeb
                     .Include("~/Content/bootstrap.css"));
 
             bundles
-                .Add(new StyleBundle("~/Content/css/bootstrap-tagsinput")
-                    .Include("~/Content/bootstrap-tagsinput.css"));
-
-
-            //TODO: this style bundle must include all styles needed by tables and charts, rename as needed
+                .Add(new StyleBundle("~/Content/css/reporting/common")
+                    .Include("~/Content/reporting.css"));
+            
             bundles
                 .Add(new StyleBundle("~/Content/css/reporting/charts")
-                    .Include("~/Content/chartist.min.css", "~/Content/charts.css"));
+                    .Include("~/Content/charts.css"));
 
             bundles
-                .Add(new StyleBundle("~/Content/css/reporting/chartist", cdnCssChartist)
+                .Add(new StyleBundle("~/Content/css/reporting/vendor/chartist", cdnCssChartist)
                     .Include("~/Content/chartist.min.css"));
 
             bundles
@@ -164,12 +155,8 @@ namespace BugWeb
                     .Include("~/Content/tables.css"));
 
             bundles
-                .Add(new StyleBundle("~/Content/css/reporting/dataTables", cdnCssDataTables)
+                .Add(new StyleBundle("~/Content/css/reporting/vendor/dataTables", cdnCssDataTables)
                     .Include("~/Content/jquery.dataTables.css"));
-
-            bundles
-                .Add(new StyleBundle("~/Content/css/typeahead")
-                    .Include("~/Content/typeahead.css"));
         }
     }
 }

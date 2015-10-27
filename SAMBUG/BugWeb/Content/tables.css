@@ -8,8 +8,12 @@
     width: 100%;
 }
 
-#table{
-    width: 100%
+#treatmentTable {
+    width: 100%;
+}
+
+#scoutTable{
+    width: 100%;
 }
 
 .dataTables_length select {

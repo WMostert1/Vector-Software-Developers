@@ -1,19 +1,24 @@
 ﻿angular.module("appMain")
     .controller("TablesCtrl", ["$scope", "$mdSidenav", "commonReportingService", "tableService", function ($scope, $mdSidenav, commonReportingService, tableService) {
         $scope.loading = true;
-        
-        $scope.scoutConstraints = {
+
+        $scope.menu = {
+            title: "Scout Table Settings"
+        }
+
+        //--------constraints refer to scoutConstraints-------//
+        $scope.constraints = {
             misc: {
-                farm: {
+                farms: {
                     title: "Farm"
                 },
-                block: {
+                blocks: {
                     title: "Block"
                 },
                 species: {
                     title: "Species"
                 },
-                lifeStage: {
+                lifeStages: {
                     title: "Life Stage"
                 }
             },
@@ -28,10 +33,10 @@
 
         $scope.treatmentConstraints = {
             misc: {
-                farm: {
+                farms: {
                     title: "Farm"
                 },
-                block: {
+                blocks: {
                     title: "Block"
                 }                
             },
@@ -44,22 +49,22 @@
 
         var constructScoutDataFilter = function () {
             return {
-                farms: [$scope.scoutConstraints.misc.farm.value],
-                blocks: [$scope.scoutConstraints.misc.block.value],
-                species: [$scope.scoutConstraints.misc.species.value],
-                lifeStages: [$scope.scoutConstraints.misc.lifeStage.value],
+                farms: $scope.constraints.misc.farms.selected,
+                blocks: $scope.constraints.misc.blocks.selected,
+                species: $scope.constraints.misc.species.selected,
+                lifeStages: $scope.constraints.misc.lifeStages.selected,
                 dates: {
-                    from: $scope.scoutConstraints.dates.from,
-                    to: $scope.scoutConstraints.dates.to,
-                    all: $scope.scoutConstraints.dates.all
+                    from: $scope.constraints.dates.from,
+                    to: $scope.constraints.dates.to,
+                    all: $scope.constraints.dates.all
                 }
             }
         }
 
         var constructTreatmentDataFilter = function () {
             return {
-                farms: [$scope.treatmentConstraints.misc.farm.value],
-                blocks: [$scope.treatmentConstraints.misc.block.value],                
+                farms: $scope.treatmentConstraints.misc.farms.selected,
+                blocks: $scope.treatmentConstraints.misc.blocks.selected,                
                 dates: {
                     from: $scope.treatmentConstraints.dates.from,
                     to: $scope.treatmentConstraints.dates.to,
@@ -77,56 +82,65 @@
         }
 
         $scope.defaultSettings = function () {
-            for (var i = 0; i < $scope.scoutConstraints.misc; i++) {
-                $scope.scoutConstraints.misc[i].value = $scope.scoutConstraints.misc[i].list[0];
+            if ($scope.showScoutConstraints) {
+                $scope.constraints.misc.farms.selected = [];
+                $scope.constraints.misc.blocks.selected = [];
+                $scope.constraints.misc.species.selected = [];
+                $scope.constraints.misc.lifeStages.selected = [];
+                $scope.constraints.dates.from = new Date((new XDate()).addWeeks(-2, true));
+                $scope.constraints.dates.to = new Date();
+                $scope.constraints.dates.all = false;
+            } else {
+                $scope.treatmentConstraints.misc.farms.selected = [];
+                $scope.treatmentConstraints.misc.blocks.selected = [];
+                $scope.treatmentConstraints.dates.from = new Date((new XDate()).addWeeks(-2, true));
+                $scope.treatmentConstraints.dates.to = new Date();
+                $scope.treatmentConstraints.dates.all = false;
             }
-            $scope.scoutConstraints.dates.from = new Date((new XDate()).addWeeks(-2, true));
-            $scope.scoutConstraints.dates.to = new Date();
-            $scope.scoutConstraints.dates.all = false;
         };
         //----------Watch for changes in scout constraints---------//
 
-        $scope.$watch("scoutConstraints.misc.farm.value", function (newValue) {
-            $scope.scoutConstraints.misc.block.list = commonReportingService.getBlocksForFarms([newValue]);
-            $scope.scoutConstraints.misc.block.value = $scope.scoutConstraints.misc.block.list[0];
+        $scope.$watchCollection("constraints.misc.farms.selected", function (newValue) {
+            $scope.constraints.misc.blocks.list = commonReportingService.getBlocksForFarms(newValue);
+            $scope.constraints.misc.blocks.selected = [];
             updateScoutTable();
         });
                 
-        $scope.$watch("scoutConstraints.misc.block.value", function () {
+        $scope.$watchCollection("constraints.misc.blocks.selected", function () {
             updateScoutTable();
         });
 
-        $scope.$watch("scoutConstraints.misc.species.value", function (newValue) {
-            $scope.scoutConstraints.misc.lifeStage.list = commonReportingService.getLifeStagesForSpecies([newValue]);
-            $scope.scoutConstraints.misc.lifeStage.value = $scope.scoutConstraints.misc.lifeStage.list[0];
+        $scope.$watchCollection("constraints.misc.species.selected", function (newValue) {
+            $scope.constraints.misc.lifeStages.list = commonReportingService.getLifeStagesForSpecies(newValue);
+            $scope.constraints.misc.lifeStages.selected = [];
             updateScoutTable();
         });
 
         
-        $scope.$watch("scoutConstraints.misc.lifeStage.value", function () {
+        $scope.$watchCollection("constraints.misc.lifeStages.selected", function () {
             updateScoutTable();
         });
 
-        $scope.$watch("scoutConstraints.dates.from", function () {
+        $scope.$watch("constraints.dates.from", function () {
             updateScoutTable();
         });
 
-        $scope.$watch("scoutConstraints.dates.to", function () {
+        $scope.$watch("constraints.dates.to", function () {
             updateScoutTable();
         });
 
-        $scope.$watch("scoutConstraints.dates.all", function () {
+        $scope.$watch("constraints.dates.all", function () {
             updateScoutTable();
         });
 
         //----------Watch for changes in treatment constraints---------//
-        $scope.$watch("treatmentConstraints.misc.farm.value", function (newValue) {
-            $scope.treatmentConstraints.misc.block.list = commonReportingService.getBlocksForFarms([newValue]);
-            $scope.treatmentConstraints.misc.block.value = $scope.treatmentConstraints.misc.block.list[0];
+        $scope.$watchCollection("treatmentConstraints.misc.farms.selected", function (newValue) {
+            $scope.treatmentConstraints.misc.blocks.list = commonReportingService.getBlocksForFarms(newValue);
+            $scope.treatmentConstraints.misc.blocks.selected = [];
             updateTreatmentTable();
         });
 
-        $scope.$watch("treatmentConstraints.misc.block.value", function () {
+        $scope.$watchCollection("treatmentConstraints.misc.blocks.selected", function () {
             updateTreatmentTable();
         });
 
@@ -145,13 +159,27 @@
         $scope.$watch("selectedTab", function (newValue) {
             switch (newValue) {
                 case 0:
+                    $scope.menu.title = "Scout Table Settings";
                     $scope.showScoutConstraints = true;                    
                     break;
                 case 1:
+                    $scope.menu.title = "Spray Table Settings";
                     $scope.showScoutConstraints = false;
                     break;
             }
         });
+
+        //todo incorporate suggestion engine (bloodhound.js?) to order the suggestions
+        $scope.filterSuggestions = function (list, selected, searchText) {
+            var excludingSelected = Enumerable.From(list).Except(selected).ToArray();
+            if (searchText) {
+                return Enumerable.From(excludingSelected).Where(function (i) {
+                    return i.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+                }).ToArray();
+            } else {
+                return excludingSelected;
+            }
+        }
 
         var scoutstopsDone = false;
         var speciesDone = false;
@@ -162,11 +190,11 @@
             tableService.initTables("#scoutTable", "#treatmentTable");
         }
 
-       commonReportingService.init(function (farmNames) {
-            $scope.scoutConstraints.misc.farm.list = farmNames;
-            $scope.scoutConstraints.misc.farm.value = farmNames[0];
-            $scope.treatmentConstraints.misc.farm.list = farmNames;
-            $scope.treatmentConstraints.misc.farm.value = farmNames[0];
+        commonReportingService.init(function (farms) {
+            $scope.constraints.misc.farms.list = farms;
+            $scope.constraints.misc.farms.selected = [];
+            $scope.treatmentConstraints.misc.farms.list = farms;
+            $scope.treatmentConstraints.misc.farms.selected = [];
             commonReportingService.transformDataForTables();
 
             scoutstopsDone = true;
@@ -175,9 +203,9 @@
                 initTablesControls();
             }
 
-        }, function (speciesNames) {
-            $scope.scoutConstraints.misc.species.list = speciesNames;
-            $scope.scoutConstraints.misc.species.value = speciesNames[0];
+        }, function (species) {
+            $scope.constraints.misc.species.list = species;
+            $scope.constraints.misc.species.selected = [];
 
             speciesDone = true;
 

@@ -29,7 +29,7 @@
             <md-list-item flex ng-repeat="item in navMenu.items | filter: onlyApplicableItems" ng-click="$parent.navMenu.actions[item.actionName]($event)">
                     <md-item-content flex layout="row">
                         <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
-                        <h1 flex offset="10" class="md-body-2">{{item.title}}</h1>
+                        <h1 flex flex-offset="10" class="md-body-2">{{item.title}}</h1>
                     </md-item-content>
             </md-list-item>
 
@@ -39,7 +39,7 @@
                 <md-list-item ng-click="$parent.managementMenu.actions[item.actionName](item)" data-toggle="collapse" data-target="{{'#'+ item.collapseTargetId}}">
                     <md-item-content flex layout="row">
                         <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
-                        <h1 flex offset="10" class="md-body-2">{{item.title}}</h1>
+                        <h1 flex flex-offset="10" class="md-body-2">{{item.title}}</h1>
                         <ng-md-icon icon="{{item.collapseIcon}}"></ng-md-icon>
                     </md-item-content>
                 </md-list-item>
@@ -48,7 +48,7 @@
                     <md-list flex layout-fill>
                         <md-list-item ng-repeat="subItem in item.subList" ng-click="$parent.managementMenu.actions[subItem.actionName]($event)">
                             <md-item-content flex layout="row">
-                                <h1 flex offset="10" class="md-body-1">{{subItem.title}}</h1>
+                                <h1 flex flex-offset="10" class="md-body-1">{{subItem.title}}</h1>
                             </md-item-content>
                         </md-list-item>
                     </md-list>
@@ -58,7 +58,7 @@
             <md-list-item ng-if="user.isLoggedIn && user.isAdmin" flex ng-click="managementMenu.actions[managementMenu.userManagement.actionName]($event)">
                 <md-item-content flex layout="row">
                     <ng-md-icon icon="{{managementMenu.userManagement.icon}}"></ng-md-icon>
-                    <h1 flex offset="10" class="md-body-2">{{managementMenu.userManagement.title}}</h1>
+                    <h1 flex flex-offset="10" class="md-body-2">{{managementMenu.userManagement.title}}</h1>
                 </md-item-content>
             </md-list-item>
 
@@ -67,7 +67,7 @@
             <md-list-item flex ng-click="">
                 <md-item-content flex layout="row">
                     <ng-md-icon icon="info_outline"></ng-md-icon>
-                    <h1 flex offset="10" class="md-body-2">About Us</h1>
+                    <h1 flex flex-offset="10" class="md-body-2">About Us</h1>
                 </md-item-content>
             </md-list-item>
         </md-list>

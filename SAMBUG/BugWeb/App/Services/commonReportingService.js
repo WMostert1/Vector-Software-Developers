@@ -15,6 +15,17 @@
         }
 
         var getSpeciesLifeStage = function (data) {
+            var lifeStagesOwners = {};
+
+            Enumerable.From(data).ForEach(function (d) {
+                lifeStagesOwners[d.lifeStage] = lifeStagesOwners[d.lifeStage] || [];
+                lifeStagesOwners[d.lifeStage] = lifeStagesOwners[d.lifeStage].concat([d.speciesName]);
+            });
+
+            for (var l in lifeStagesOwners) {
+                lifeStagesOwners[l] = Enumerable.From(lifeStagesOwners[l]).Distinct().ToArray();
+            }
+
             var speciesGroups = Enumerable.From(data)
                 .GroupBy(function (d) {
                     return d.speciesName;
@@ -24,39 +35,22 @@
             return Enumerable.From(speciesGroups)
                 .Select(function (s) {
                     return {
-                        speciesName: s.Key(),
+                        name: s.Key(),
                         isPest: s.source[0].isPest,
                         lifeStages: Enumerable.From(s.source)
-                            .Select(function (i) {
+                            .Distinct(function (i) {
                                 return i.lifeStage;
+                            })
+                            .Select(function (i) {
+                                return {
+                                    name: i.lifeStage,
+                                    owners: lifeStagesOwners[i.lifeStage]
+                                };
                             })
                             .ToArray()
                     }
                 }).ToArray();
         }
-
-        var getFarmNames = function () {
-            var farmNames = ["All Farms"];
-            return farmNames.concat(
-                    Enumerable.From(farms)
-                    .Select(function (f) {
-                        return f.farmName;
-                    })
-                    .ToArray()
-            );
-        }
-
-        var getSpeciesNames = function () {
-            var speciesNames = ["All Species"];
-            return speciesNames.concat(
-                    Enumerable.From(speciesLifeStages)
-                    .Select(function (s) {
-                        return s.speciesName;
-                    })
-                    .ToArray()
-            );
-        }
-
 
         var loadSpecies = function (callback) {
             $http.get(reportingUrlService.speciesUrl, { cache: true }).then(function (response) {
@@ -72,11 +66,11 @@
                     )
                     .ToArray();
                 speciesLifeStages = getSpeciesLifeStage(species);
-                callback(getSpeciesNames());
+                callback(speciesLifeStages);
             });
         }
 
-        function flattenTreatments(data) {
+        var flattenTreatments = function (data) {
             var timelessDate;
 
             return Enumerable.From(data).Select(
@@ -92,7 +86,7 @@
                 }).ToArray();
         }
 
-        function flattenScoutStops(data) {
+        var flattenScoutStops = function (data) {
             var result = [];
             var timelessDate;
 
@@ -122,37 +116,48 @@
             return result;
         }
 
-        function getFarmsBlocks(data) {
+        var getFarmsBlocks = function (data) {
+            var blocksOwners = {};
+
+            Enumerable.From(data).ForEach(function (d) {
+                blocksOwners[d.blockName] = blocksOwners[d.blockName] || [];
+                blocksOwners[d.blockName] = blocksOwners[d.blockName].concat([d.farmName]);
+            });
+
+            for (var b in blocksOwners) {
+                blocksOwners[b] = Enumerable.From(blocksOwners[b]).Distinct().ToArray();
+            }
+
             var farmGroups = Enumerable.From(data)
                 .GroupBy(function (d) {
                     return d.farmName;
                 })
                 .ToArray();
 
-            return Enumerable.From(farmGroups).Select(function (f) {
+            return farms = Enumerable.From(farmGroups).Select(function (f) {
                 return {
-                    farmName: f.Key(),
-                    blockNames: Enumerable.From(f.source)
+                    name: f.Key(),
+                    blocks: Enumerable.From(f.source)
                         .Distinct(function (b) {
                             return b.blockName;
                         })
                         .Select(function (b) {
-                            return b.blockName;
-                        })
-                        .Select(function (s) {
-                            return s;
+                            return {
+                                name:b.blockName,
+                                owners: blocksOwners[b.blockName]
+                            };
                         })
                         .ToArray()
                 }
             }).ToArray();
         }
 
-        function loadDataRecords(callback) {
+        var loadDataRecords = function (callback) {
             $http.get(reportingUrlService.recordsUrl, { cache: true }).then(function (response) {
                 treatments = flattenTreatments(response.data.Treatments);
                 scoutStops = flattenScoutStops(response.data.ScoutStops);
                 farms = getFarmsBlocks(scoutStops.concat(treatments));
-                callback(getFarmNames());
+                callback(farms);
             });
         }
 
@@ -165,42 +170,44 @@
             return speciesLifeStages;
         }
 
-        this.getBlocksForFarms = function (farmNames) {
-            var blockNames = ["All Blocks"];
+        this.getFarms = function() {
+            return farms;
+        }
+
+        this.getBlocksForFarms = function (selectedFarms) {
+            var blocks = [];
             Enumerable.From(farms)
                 .Where(function (f) {
-                    return farmNames.length === 0 ||
-                        Enumerable.From(farmNames).Any(function (n) {
-                            return n === f.farmName;
-                        }) ||
-                        Enumerable.From(farmNames).Any(function (n) {
-                            return n === "All Farms";
+                    return selectedFarms.length === 0 ||
+                        Enumerable.From(selectedFarms).Any(function (n) {
+                            return n.name === f.name;
                         });
                 })
                 .ForEach(function (f) {
-                    blockNames = blockNames.concat(f.blockNames);
+                    blocks = blocks.concat(f.blocks);
                 });
 
-            return Enumerable.From(blockNames).Distinct().ToArray();
+            return Enumerable.From(blocks).Distinct(function(b) {
+                return b.name;
+            }).ToArray();
         }
 
-        this.getLifeStagesForSpecies = function (speciesNames) {
-            var lifeStages = ["All Life Stages"];
+        this.getLifeStagesForSpecies = function (selectedSpecies) {
+            var lifeStages = [];
             Enumerable.From(speciesLifeStages)
                 .Where(function (s) {
-                    return speciesNames.length === 0 ||
-                        Enumerable.From(speciesNames).Any(function (n) {
-                            return n === s.speciesName;
-                        }) ||
-                        Enumerable.From(speciesNames).Any(function (n) {
-                            return n === "All Species";
+                    return selectedSpecies.length === 0 ||
+                        Enumerable.From(selectedSpecies).Any(function (n) {
+                            return n.name === s.name;
                         });
                 })
                 .ForEach(function (s) {
                     lifeStages = lifeStages.concat(s.lifeStages);
                 });
 
-            return Enumerable.From(lifeStages).Distinct().ToArray();
+            return Enumerable.From(lifeStages).Distinct(function(l) {
+                return l.name;
+            }).ToArray();
         }
 
         this.getScoutStops = function (filter) {
@@ -209,18 +216,18 @@
             return Enumerable.From(scoutStops)
                 .Where(function (s) {
                     milliDate = (new XDate(s.date)).valueOf();
-                    return Enumerable.From(filter.farms).Any(function (f) {
-                        return f === s.farmName || f === "All Farms";
-                    }) &&
-                        Enumerable.From(filter.blocks).Any(function (b) {
-                            return b === s.blockName || b === "All Blocks";
-                        }) &&
-                        Enumerable.From(filter.species).Any(function (p) {
-                            return p === s.speciesName || p === "All Species";
-                        }) &&
-                        Enumerable.From(filter.lifeStages).Any(function (l) {
-                            return l === s.lifeStage || l === "All Life Stages";
-                        }) &&
+                    return (Enumerable.From(filter.farms).Any(function (f) {
+                                return f.name === s.farmName;
+                            }) || filter.farms.length === 0) &&
+                        (Enumerable.From(filter.blocks).Any(function (b) {
+                            return b.name === s.blockName;
+                        }) || filter.blocks.length === 0) &&
+                        (Enumerable.From(filter.species).Any(function (p) {
+                            return p.name === s.speciesName;
+                        }) || filter.species.length === 0) &&
+                        (Enumerable.From(filter.lifeStages).Any(function (l) {
+                            return l.name === s.lifeStage ;
+                        }) || filter.lifeStages.length === 0) &&
                         (filter.dates.all || (filter.dates.from.valueOf() <= milliDate.valueOf() &&
                         filter.dates.to.valueOf() >= milliDate.valueOf()));
                 })
@@ -236,12 +243,12 @@
             return Enumerable.From(treatments)
              .Where(function (t) {
                  milliDate = (new XDate(t.date)).valueOf();
-                 return Enumerable.From(filter.farms).Any(function (f) {
-                     return f === t.farmName || f === "All Farms";
-                 }) &&
-                     Enumerable.From(filter.blocks).Any(function (b) {
-                         return b === t.blockName || b === "All Blocks";
-                     }) &&
+                 return (Enumerable.From(filter.farms).Any(function (f) {
+                     return f.name === t.farmName;
+                 }) || filter.farms.length === 0) &&
+                     (Enumerable.From(filter.blocks).Any(function (b) {
+                         return b.name === t.blockName;
+                     }) || filter.blocks.length === 0) &&
                      (filter.dates.all || (filter.dates.from.valueOf() <= milliDate.valueOf() &&
                      filter.dates.to.valueOf() >= milliDate.valueOf()));
              })

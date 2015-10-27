@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.2
+ * v1.0.0-rc1
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -10,7 +10,7 @@
 (function(){
 "use strict";
 
-angular.module('ngMaterial', ["ng","ngAnimate","ngAria","material.core","material.core.gestures","material.core.layout","material.core.theming.palette","material.core.theming","material.core.animate","material.components.autocomplete","material.components.backdrop","material.components.bottomSheet","material.components.button","material.components.card","material.components.chips","material.components.checkbox","material.components.content","material.components.datepicker","material.components.dialog","material.components.divider","material.components.fabActions","material.components.fabShared","material.components.fabSpeedDial","material.components.fabToolbar","material.components.gridList","material.components.fabTrigger","material.components.icon","material.components.list","material.components.input","material.components.menu","material.components.menuBar","material.components.progressCircular","material.components.progressLinear","material.components.radioButton","material.components.select","material.components.sidenav","material.components.slider","material.components.subheader","material.components.swipe","material.components.switch","material.components.tabs","material.components.sticky","material.components.toast","material.components.toolbar","material.components.tooltip","material.components.virtualRepeat","material.components.whiteframe"]);
+angular.module('ngMaterial', ["ng","ngAnimate","ngAria","material.core","material.core.gestures","material.core.layout","material.core.theming.palette","material.core.theming","material.core.animate","material.components.autocomplete","material.components.bottomSheet","material.components.backdrop","material.components.button","material.components.card","material.components.checkbox","material.components.chips","material.components.content","material.components.datepicker","material.components.dialog","material.components.divider","material.components.fabActions","material.components.fabToolbar","material.components.fabShared","material.components.fabSpeedDial","material.components.fabTrigger","material.components.gridList","material.components.icon","material.components.list","material.components.input","material.components.menu","material.components.menuBar","material.components.progressCircular","material.components.progressLinear","material.components.radioButton","material.components.select","material.components.sidenav","material.components.slider","material.components.sticky","material.components.subheader","material.components.swipe","material.components.switch","material.components.tabs","material.components.toast","material.components.toolbar","material.components.tooltip","material.components.virtualRepeat","material.components.whiteframe"]);
 })();
 (function(){
 "use strict";
@@ -508,18 +508,17 @@ function mdMediaFactory($mdConstant, $rootScope, $window) {
     var unwatchFns = [];
     attrNames.forEach(function(attrName) {
       var normalizedName = getNormalizedName(attrs, attrName);
-      if (attrs[normalizedName]) {
+      if (angular.isDefined(attrs[normalizedName])) {
         unwatchFns.push(
             attrs.$observe(normalizedName, angular.bind(void 0, watchFn, null)));
       }
 
       for (var mediaName in $mdConstant.MEDIA) {
         normalizedName = getNormalizedName(attrs, attrName + '-' + mediaName);
-        if (!attrs[normalizedName]) {
-          return;
+        if (angular.isDefined(attrs[normalizedName])) {
+          unwatchFns.push(
+              attrs.$observe(normalizedName, angular.bind(void 0, watchFn, mediaName)));
         }
-
-        unwatchFns.push(attrs.$observe(normalizedName, angular.bind(void 0, watchFn, mediaName)));
       }
     });
 
@@ -1406,7 +1405,7 @@ function mdCompilerService($q, $http, $injector, $compile, $controller, $templat
     return $q.all(resolve).then(function(locals) {
 
       var compiledData;
-      var template = transformTemplate(locals.$template);
+      var template = transformTemplate(locals.$template, options);
       var element = options.element || angular.element('<div>').html(template.trim()).contents();
       var linkFn = $compile(element);
 
@@ -1448,648 +1447,706 @@ mdCompilerService.$inject = ["$q", "$http", "$injector", "$compile", "$controlle
 (function(){
 "use strict";
 
-  var HANDLERS = {};
-  /* The state of the current 'pointer'
-   * The pointer represents the state of the current touch.
-   * It contains normalized x and y coordinates from DOM events,
-   * as well as other information abstracted from the DOM.
+var HANDLERS = {};
+
+/* The state of the current 'pointer'
+ * The pointer represents the state of the current touch.
+ * It contains normalized x and y coordinates from DOM events,
+ * as well as other information abstracted from the DOM.
+ */
+ 
+var pointer, lastPointer, forceSkipClickHijack = false;
+
+/**
+ * The position of the most recent click if that click was on a label element.
+ * @type {{x: number, y: number}?}
+ */
+var lastLabelClickPos = null;
+
+// Used to attach event listeners once when multiple ng-apps are running.
+var isInitialized = false;
+
+angular
+  .module('material.core.gestures', [ ])
+  .provider('$mdGesture', MdGestureProvider)
+  .factory('$$MdGestureHandler', MdGestureHandler)
+  .run( attachToDocument );
+
+/**
+   * @ngdoc service
+   * @name $mdGestureProvider
+   * @module material.core.gestures
+   *
+   * @description
+   * In some scenarios on Mobile devices (without jQuery), the click events should NOT be hijacked.
+   * `$mdGestureProvider` is used to configure the Gesture module to ignore or skip click hijacking on mobile
+   * devices.
+   *
+   * <hljs lang="js">
+   *   app.config(function($mdGestureProvider) {
+   *
+   *     // For mobile devices without jQuery loaded, do not
+   *     // intercept click events during the capture phase.
+   *     $mdGestureProvider.skipClickHijack();
+   *
+   *   });
+   * </hljs>
+   *
    */
-  var pointer, lastPointer, forceSkipClickHijack = false;
+function MdGestureProvider() { }
+
+MdGestureProvider.prototype = {
+
+  // Publish access to setter to configure a variable  BEFORE the
+  // $mdGesture service is instantiated...
+  skipClickHijack: function() {
+    return forceSkipClickHijack = true;
+  },
 
   /**
-   * The position of the most recent click if that click was on a label element.
-   * @type {{x: number, y: number}?}
+   * $get is used to build an instance of $mdGesture
+   * @ngInject
    */
-  var lastLabelClickPos = null;
+  $get : ["$$MdGestureHandler", "$$rAF", "$timeout", function($$MdGestureHandler, $$rAF, $timeout) {
+       return new MdGesture($$MdGestureHandler, $$rAF, $timeout);
+  }]
+};
 
-  // Used to attach event listeners once when multiple ng-apps are running.
-  var isInitialized = false;
-  
-  angular
-    .module('material.core.gestures', [ ])
-    .provider('$mdGesture', MdGestureProvider)
-    .factory('$$MdGestureHandler', MdGestureHandler)
-    .run( attachToDocument );
 
-  /**
-     * @ngdoc service
-     * @name $mdGestureProvider
-     * @module material.core.gestures
-     *
-     * @description
-     * In some scenarios on Mobile devices (without jQuery), the click events should NOT be hijacked.
-     * `$mdGestureProvider` is used to configure the Gesture module to ignore or skip click hijacking on mobile
-     * devices.
-     *
-     * <hljs lang="js">
-     *   app.config(function($mdGestureProvider) {
-     *
-     *     // For mobile devices without jQuery loaded, do not
-     *     // intercept click events during the capture phase.
-     *     $mdGestureProvider.skipClickHijack();
-     *
-     *   });
-     * </hljs>
-     *
-     */
-  function MdGestureProvider() { }
 
-  MdGestureProvider.prototype = {
+/**
+ * MdGesture factory construction function
+ * @ngInject
+ */
+function MdGesture($$MdGestureHandler, $$rAF, $timeout) {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  var isIos = userAgent.match(/ipad|iphone|ipod/i);
+  var isAndroid = userAgent.match(/android/i);
+  var hasJQuery =  (typeof window.jQuery !== 'undefined') && (angular.element === window.jQuery);
 
-    // Publish access to setter to configure a variable  BEFORE the
-    // $mdGesture service is instantiated...
-    skipClickHijack: function() {
-      return forceSkipClickHijack = true;
-    },
-
-    /**
-     * $get is used to build an instance of $mdGesture
-     * @ngInject
-     */
-    $get : ["$$MdGestureHandler", "$$rAF", "$timeout", function($$MdGestureHandler, $$rAF, $timeout) {
-         return new MdGesture($$MdGestureHandler, $$rAF, $timeout);
-    }]
+  var self = {
+    handler: addHandler,
+    register: register,
+    // On mobile w/out jQuery, we normally intercept clicks. Should we skip that?
+    isHijackingClicks: (isIos || isAndroid) && !hasJQuery && !forceSkipClickHijack
   };
 
-
-
-  /**
-   * MdGesture factory construction function
-   * @ngInject
-   */
-  function MdGesture($$MdGestureHandler, $$rAF, $timeout) {
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    var isIos = userAgent.match(/ipad|iphone|ipod/i);
-    var isAndroid = userAgent.match(/android/i);
-    var hasJQuery =  (typeof window.jQuery !== 'undefined') && (angular.element === window.jQuery);
-
-    var self = {
-      handler: addHandler,
-      register: register,
-      // On mobile w/out jQuery, we normally intercept clicks. Should we skip that?
-      isHijackingClicks: (isIos || isAndroid) && !hasJQuery && !forceSkipClickHijack
-    };
-
-    if (self.isHijackingClicks) {
-      self.handler('click', {
-        options: {
-          maxDistance: 6
-        },
-        onEnd: function (ev, pointer) {
-          if (pointer.distance < this.state.options.maxDistance) {
-            this.dispatchEvent(ev, 'click');
-          }
-        }
-      });
-    }
-
-    /*
-     * Register an element to listen for a handler.
-     * This allows an element to override the default options for a handler.
-     * Additionally, some handlers like drag and hold only dispatch events if
-     * the domEvent happens inside an element that's registered to listen for these events.
-     *
-     * @see GestureHandler for how overriding of default options works.
-     * @example $mdGesture.register(myElement, 'drag', { minDistance: 20, horziontal: false })
-     */
-    function register(element, handlerName, options) {
-      var handler = HANDLERS[handlerName.replace(/^\$md./, '')];
-      if (!handler) {
-        throw new Error('Failed to register element with handler ' + handlerName + '. ' +
-        'Available handlers: ' + Object.keys(HANDLERS).join(', '));
-      }
-      return handler.registerElement(element, options);
-    }
-
-    /*
-     * add a handler to $mdGesture. see below.
-     */
-    function addHandler(name, definition) {
-      var handler = new $$MdGestureHandler(name);
-      angular.extend(handler, definition);
-      HANDLERS[name] = handler;
-
-      return self;
-    }
-
-    /*
-     * Register handlers. These listen to touch/start/move events, interpret them,
-     * and dispatch gesture events depending on options & conditions. These are all
-     * instances of GestureHandler.
-     * @see GestureHandler 
-     */
-    return self
-      /*
-       * The press handler dispatches an event on touchdown/touchend.
-       * It's a simple abstraction of touch/mouse/pointer start and end.
-       */
-      .handler('press', {
-        onStart: function (ev, pointer) {
-          this.dispatchEvent(ev, '$md.pressdown');
-        },
-        onEnd: function (ev, pointer) {
-          this.dispatchEvent(ev, '$md.pressup');
-        }
-      })
-
-      /*
-       * The hold handler dispatches an event if the user keeps their finger within
-       * the same <maxDistance> area for <delay> ms.
-       * The hold handler will only run if a parent of the touch target is registered
-       * to listen for hold events through $mdGesture.register()
-       */
-      .handler('hold', {
-        options: {
-          maxDistance: 6,
-          delay: 500
-        },
-        onCancel: function () {
-          $timeout.cancel(this.state.timeout);
-        },
-        onStart: function (ev, pointer) {
-          // For hold, require a parent to be registered with $mdGesture.register()
-          // Because we prevent scroll events, this is necessary.
-          if (!this.state.registeredParent) return this.cancel();
-
-          this.state.pos = {x: pointer.x, y: pointer.y};
-          this.state.timeout = $timeout(angular.bind(this, function holdDelayFn() {
-            this.dispatchEvent(ev, '$md.hold');
-            this.cancel(); //we're done!
-          }), this.state.options.delay, false);
-        },
-        onMove: function (ev, pointer) {
-          // Don't scroll while waiting for hold.
-          // If we don't preventDefault touchmove events here, Android will assume we don't
-          // want to listen to anymore touch events. It will start scrolling and stop sending
-          // touchmove events.
-          ev.preventDefault();
-
-          // If the user moves greater than <maxDistance> pixels, stop the hold timer
-          // set in onStart
-          var dx = this.state.pos.x - pointer.x;
-          var dy = this.state.pos.y - pointer.y;
-          if (Math.sqrt(dx * dx + dy * dy) > this.options.maxDistance) {
-            this.cancel();
-          }
-        },
-        onEnd: function () {
-          this.onCancel();
-        }
-      })
-
-      /*
-       * The drag handler dispatches a drag event if the user holds and moves his finger greater than
-       * <minDistance> px in the x or y direction, depending on options.horizontal.
-       * The drag will be cancelled if the user moves his finger greater than <minDistance>*<cancelMultiplier> in
-       * the perpindicular direction. Eg if the drag is horizontal and the user moves his finger <minDistance>*<cancelMultiplier>
-       * pixels vertically, this handler won't consider the move part of a drag.
-       */
-      .handler('drag', {
-        options: {
-          minDistance: 6,
-          horizontal: true,
-          cancelMultiplier: 1.5
-        },
-        onStart: function (ev) {
-          // For drag, require a parent to be registered with $mdGesture.register()
-          if (!this.state.registeredParent) this.cancel();
-        },
-        onMove: function (ev, pointer) {
-          var shouldStartDrag, shouldCancel;
-          // Don't scroll while deciding if this touchmove qualifies as a drag event.
-          // If we don't preventDefault touchmove events here, Android will assume we don't
-          // want to listen to anymore touch events. It will start scrolling and stop sending
-          // touchmove events.
-          ev.preventDefault();
-
-          if (!this.state.dragPointer) {
-            if (this.state.options.horizontal) {
-              shouldStartDrag = Math.abs(pointer.distanceX) > this.state.options.minDistance;
-              shouldCancel = Math.abs(pointer.distanceY) > this.state.options.minDistance * this.state.options.cancelMultiplier;
-            } else {
-              shouldStartDrag = Math.abs(pointer.distanceY) > this.state.options.minDistance;
-              shouldCancel = Math.abs(pointer.distanceX) > this.state.options.minDistance * this.state.options.cancelMultiplier;
-            }
-
-            if (shouldStartDrag) {
-              // Create a new pointer representing this drag, starting at this point where the drag started.
-              this.state.dragPointer = makeStartPointer(ev);
-              updatePointerState(ev, this.state.dragPointer);
-              this.dispatchEvent(ev, '$md.dragstart', this.state.dragPointer);
-
-            } else if (shouldCancel) {
-              this.cancel();
-            }
-          } else {
-            this.dispatchDragMove(ev);
-          }
-        },
-        // Only dispatch dragmove events every frame; any more is unnecessray
-        dispatchDragMove: $$rAF.throttle(function (ev) {
-          // Make sure the drag didn't stop while waiting for the next frame
-          if (this.state.isRunning) {
-            updatePointerState(ev, this.state.dragPointer);
-            this.dispatchEvent(ev, '$md.drag', this.state.dragPointer);
-          }
-        }),
-        onEnd: function (ev, pointer) {
-          if (this.state.dragPointer) {
-            updatePointerState(ev, this.state.dragPointer);
-            this.dispatchEvent(ev, '$md.dragend', this.state.dragPointer);
-          }
-        }
-      })
-
-      /*
-       * The swipe handler will dispatch a swipe event if, on the end of a touch,
-       * the velocity and distance were high enough.
-       * TODO: add vertical swiping with a `horizontal` option similar to the drag handler.
-       */
-      .handler('swipe', {
-        options: {
-          minVelocity: 0.65,
-          minDistance: 10
-        },
-        onEnd: function (ev, pointer) {
-          if (Math.abs(pointer.velocityX) > this.state.options.minVelocity &&
-            Math.abs(pointer.distanceX) > this.state.options.minDistance) {
-            var eventType = pointer.directionX == 'left' ? '$md.swipeleft' : '$md.swiperight';
-            this.dispatchEvent(ev, eventType);
-          }
-        }
-      });
-
-  }
-  MdGesture.$inject = ["$$MdGestureHandler", "$$rAF", "$timeout"];
-
-  /**
-   * MdGestureHandler
-   * A GestureHandler is an object which is able to dispatch custom dom events
-   * based on native dom {touch,pointer,mouse}{start,move,end} events.
-   *
-   * A gesture will manage its lifecycle through the start,move,end, and cancel
-   * functions, which are called by native dom events.
-   *
-   * A gesture has the concept of 'options' (eg a swipe's required velocity), which can be
-   * overridden by elements registering through $mdGesture.register()
-   */
-  function GestureHandler (name) {
-    this.name = name;
-    this.state = {};
-  }
-
-  function MdGestureHandler() {
-    var hasJQuery =  (typeof window.jQuery !== 'undefined') && (angular.element === window.jQuery);
-
-    GestureHandler.prototype = {
-      options: {},
-      // jQuery listeners don't work with custom DOMEvents, so we have to dispatch events
-      // differently when jQuery is loaded
-      dispatchEvent: hasJQuery ?  jQueryDispatchEvent : nativeDispatchEvent,
-
-      // These are overridden by the registered handler
-      onStart: angular.noop,
-      onMove: angular.noop,
-      onEnd: angular.noop,
-      onCancel: angular.noop,
-
-      // onStart sets up a new state for the handler, which includes options from the
-      // nearest registered parent element of ev.target.
-      start: function (ev, pointer) {
-        if (this.state.isRunning) return;
-        var parentTarget = this.getNearestParent(ev.target);
-        // Get the options from the nearest registered parent
-        var parentTargetOptions = parentTarget && parentTarget.$mdGesture[this.name] || {};
-
-        this.state = {
-          isRunning: true,
-          // Override the default options with the nearest registered parent's options
-          options: angular.extend({}, this.options, parentTargetOptions),
-          // Pass in the registered parent node to the state so the onStart listener can use
-          registeredParent: parentTarget
-        };
-        this.onStart(ev, pointer);
+  if (self.isHijackingClicks) {
+    var maxClickDistance = 6;
+    self.handler('click', {
+      options: {
+        maxDistance: maxClickDistance
       },
-      move: function (ev, pointer) {
-        if (!this.state.isRunning) return;
-        this.onMove(ev, pointer);
-      },
-      end: function (ev, pointer) {
-        if (!this.state.isRunning) return;
-        this.onEnd(ev, pointer);
-        this.state.isRunning = false;
-      },
-      cancel: function (ev, pointer) {
-        this.onCancel(ev, pointer);
-        this.state = {};
-      },
-
-      // Find and return the nearest parent element that has been registered to
-      // listen for this handler via $mdGesture.register(element, 'handlerName').
-      getNearestParent: function (node) {
-        var current = node;
-        while (current) {
-          if ((current.$mdGesture || {})[this.name]) {
-            return current;
-          }
-          current = current.parentNode;
-        }
-        return null;
-      },
-
-      // Called from $mdGesture.register when an element reigsters itself with a handler.
-      // Store the options the user gave on the DOMElement itself. These options will
-      // be retrieved with getNearestParent when the handler starts.
-      registerElement: function (element, options) {
-        var self = this;
-        element[0].$mdGesture = element[0].$mdGesture || {};
-        element[0].$mdGesture[this.name] = options || {};
-        element.on('$destroy', onDestroy);
-
-        return onDestroy;
-
-        function onDestroy() {
-          delete element[0].$mdGesture[self.name];
-          element.off('$destroy', onDestroy);
-        }
-      }
-    };
-
-    return GestureHandler;
-
-    /*
-     * Dispatch an event with jQuery
-     * TODO: Make sure this sends bubbling events
-     *
-     * @param srcEvent the original DOM touch event that started this.
-     * @param eventType the name of the custom event to send (eg 'click' or '$md.drag')
-     * @param eventPointer the pointer object that matches this event.
-     */
-    function jQueryDispatchEvent(srcEvent, eventType, eventPointer) {
-      eventPointer = eventPointer || pointer;
-      var eventObj = new angular.element.Event(eventType);
-
-      eventObj.$material = true;
-      eventObj.pointer = eventPointer;
-      eventObj.srcEvent = srcEvent;
-
-      angular.extend(eventObj, {
-        clientX: eventPointer.x,
-        clientY: eventPointer.y,
-        screenX: eventPointer.x,
-        screenY: eventPointer.y,
-        pageX: eventPointer.x,
-        pageY: eventPointer.y,
-        ctrlKey: srcEvent.ctrlKey,
-        altKey: srcEvent.altKey,
-        shiftKey: srcEvent.shiftKey,
-        metaKey: srcEvent.metaKey
-      });
-      angular.element(eventPointer.target).trigger(eventObj);
-    }
-
-    /*
-     * NOTE: nativeDispatchEvent is very performance sensitive.
-     * @param srcEvent the original DOM touch event that started this.
-     * @param eventType the name of the custom event to send (eg 'click' or '$md.drag')
-     * @param eventPointer the pointer object that matches this event.
-     */
-    function nativeDispatchEvent(srcEvent, eventType, eventPointer) {
-      eventPointer = eventPointer || pointer;
-      var eventObj;
-
-      if (eventType === 'click') {
-        eventObj = document.createEvent('MouseEvents');
-        eventObj.initMouseEvent(
-          'click', true, true, window, srcEvent.detail,
-          eventPointer.x, eventPointer.y, eventPointer.x, eventPointer.y,
-          srcEvent.ctrlKey, srcEvent.altKey, srcEvent.shiftKey, srcEvent.metaKey,
-          srcEvent.button, srcEvent.relatedTarget || null
-        );
-
-      } else {
-        eventObj = document.createEvent('CustomEvent');
-        eventObj.initCustomEvent(eventType, true, true, {});
-      }
-      eventObj.$material = true;
-      eventObj.pointer = eventPointer;
-      eventObj.srcEvent = srcEvent;
-      eventPointer.target.dispatchEvent(eventObj);
-    }
-
-  }
-
-  /**
-   * Attach Gestures: hook document and check shouldHijack clicks
-   * @ngInject
-   */
-  function attachToDocument( $mdGesture, $$MdGestureHandler ) {
-
-    // Polyfill document.contains for IE11.
-    // TODO: move to util
-    document.contains || (document.contains = function (node) {
-      return document.body.contains(node);
+      onEnd: checkDistanceAndEmit('click')
     });
 
-    if (!isInitialized && $mdGesture.isHijackingClicks ) {
-      /*
-       * If hijack clicks is true, we preventDefault any click that wasn't
-       * sent by ngMaterial. This is because on older Android & iOS, a false, or 'ghost',
-       * click event will be sent ~400ms after a touchend event happens.
-       * The only way to know if this click is real is to prevent any normal
-       * click events, and add a flag to events sent by material so we know not to prevent those.
-       * 
-       * Two exceptions to click events that should be prevented are:
-       *  - click events sent by the keyboard (eg form submit)
-       *  - events that originate from an Ionic app
-       */
-      document.addEventListener('click', function clickHijacker(ev) {
-        var isKeyClick = ev.clientX === 0 && ev.clientY === 0;
-        if (!isKeyClick && !ev.$material && !ev.isIonicTap
-            && !isInputEventFromLabelClick(ev)) {
-          ev.preventDefault();
-          ev.stopPropagation();
-          lastLabelClickPos = null;
-        } else {
-          lastLabelClickPos = null;
-          if (ev.target.tagName.toLowerCase() == 'label') {
-            lastLabelClickPos = {x: ev.x, y: ev.y};
+    self.handler('focus', {
+      options: {
+        maxDistance: maxClickDistance
+      },
+      onEnd: function(ev, pointer) {
+        if (pointer.distance < this.state.options.maxDistance) {
+          if (canFocus(ev.target)) {
+            this.dispatchEvent(ev, 'focus', pointer);
+            ev.target.focus();
           }
         }
-      }, true);
-      
-      isInitialized = true;
-    }
 
-    // Listen to all events to cover all platforms.
-    var START_EVENTS = 'mousedown touchstart pointerdown';
-    var MOVE_EVENTS = 'mousemove touchmove pointermove';
-    var END_EVENTS = 'mouseup mouseleave touchend touchcancel pointerup pointercancel';
+        function canFocus(element) {
+          var focusableElements = ['INPUT', 'SELECT', 'BUTTON', 'TEXTAREA', 'VIDEO', 'AUDIO'];
 
-    angular.element(document)
-      .on(START_EVENTS, gestureStart)
-      .on(MOVE_EVENTS, gestureMove)
-      .on(END_EVENTS, gestureEnd)
-      // For testing
-      .on('$$mdGestureReset', function gestureClearCache () {
-        lastPointer = pointer = null;
-      });
-
-    /*
-     * When a DOM event happens, run all registered gesture handlers' lifecycle
-     * methods which match the DOM event.
-     * Eg when a 'touchstart' event happens, runHandlers('start') will call and
-     * run `handler.cancel()` and `handler.start()` on all registered handlers.
-     */
-    function runHandlers(handlerEvent, event) {
-      var handler;
-      for (var name in HANDLERS) {
-        handler = HANDLERS[name];
-        if( handler instanceof $$MdGestureHandler ) {
-
-          if (handlerEvent === 'start') {
-            // Run cancel to reset any handlers' state
-            handler.cancel();
-          }
-          handler[handlerEvent](event, pointer);
-
+          return (element.getAttribute('tabindex') != '-1') &&
+              !element.hasAttribute('DISABLED') &&
+              (element.hasAttribute('tabindex') || element.hasAttribute('href') ||
+              (focusableElements.indexOf(element.nodeName) != -1));
         }
       }
-    }
+    });
 
-    /*
-     * gestureStart vets if a start event is legitimate (and not part of a 'ghost click' from iOS/Android)
-     * If it is legitimate, we initiate the pointer state and mark the current pointer's type
-     * For example, for a touchstart event, mark the current pointer as a 'touch' pointer, so mouse events
-     * won't effect it.
-     */
-    function gestureStart(ev) {
-      // If we're already touched down, abort
-      if (pointer) return;
+    self.handler('mouseup', {
+      options: {
+        maxDistance: maxClickDistance
+      },
+      onEnd: checkDistanceAndEmit('mouseup')
+    });
 
-      var now = +Date.now();
-
-      // iOS & old android bug: after a touch event, a click event is sent 350 ms later.
-      // If <400ms have passed, don't allow an event of a different type than the previous event
-      if (lastPointer && !typesMatch(ev, lastPointer) && (now - lastPointer.endTime < 1500)) {
-        return;
+    self.handler('mousedown', {
+      onStart: function(ev) {
+        this.dispatchEvent(ev, 'mousedown');
       }
-
-      pointer = makeStartPointer(ev);
-
-      runHandlers('start', ev);
-    }
-    /*
-     * If a move event happens of the right type, update the pointer and run all the move handlers.
-     * "of the right type": if a mousemove happens but our pointer started with a touch event, do nothing.
-     */
-    function gestureMove(ev) {
-      if (!pointer || !typesMatch(ev, pointer)) return;
-
-      updatePointerState(ev, pointer);
-      runHandlers('move', ev);
-    }
-    /*
-     * If an end event happens of the right type, update the pointer, run endHandlers, and save the pointer as 'lastPointer'
-     */
-    function gestureEnd(ev) {
-      if (!pointer || !typesMatch(ev, pointer)) return;
-
-      updatePointerState(ev, pointer);
-      pointer.endTime = +Date.now();
-
-      runHandlers('end', ev);
-
-      lastPointer = pointer;
-      pointer = null;
-    }
-
+    });
   }
-  attachToDocument.$inject = ["$mdGesture", "$$MdGestureHandler"];
 
-  // ********************
-  // Module Functions
-  // ********************
-
-  /*
-   * Initiate the pointer. x, y, and the pointer's type.
-   */
-  function makeStartPointer(ev) {
-    var point = getEventPoint(ev);
-    var startPointer = {
-      startTime: +Date.now(),
-      target: ev.target,
-      // 'p' for pointer events, 'm' for mouse, 't' for touch
-      type: ev.type.charAt(0)
+  function checkDistanceAndEmit(eventName) {
+    return function(ev, pointer) {
+      if (pointer.distance < this.state.options.maxDistance) {
+        this.dispatchEvent(ev, eventName, pointer);
+      }
     };
-    startPointer.startX = startPointer.x = point.pageX;
-    startPointer.startY = startPointer.y = point.pageY;
-    return startPointer;
   }
 
   /*
-   * return whether the pointer's type matches the event's type.
-   * Eg if a touch event happens but the pointer has a mouse type, return false.
+   * Register an element to listen for a handler.
+   * This allows an element to override the default options for a handler.
+   * Additionally, some handlers like drag and hold only dispatch events if
+   * the domEvent happens inside an element that's registered to listen for these events.
+   *
+   * @see GestureHandler for how overriding of default options works.
+   * @example $mdGesture.register(myElement, 'drag', { minDistance: 20, horziontal: false })
    */
-  function typesMatch(ev, pointer) {
-    return ev && pointer && ev.type.charAt(0) === pointer.type;
-  }
-
-  /**
-   * Gets whether the given event is an input event that was caused by clicking on an
-   * associated label element.
-   *
-   * This is necessary because the browser will, upon clicking on a label element, fire an
-   * *extra* click event on its associated input (if any). mdGesture is able to flag the label
-   * click as with `$material` correctly, but not the second input click.
-   *
-   * In order to determine whether an input event is from a label click, we compare the (x, y) for
-   * the event to the (x, y) for the most recent label click (which is cleared whenever a non-label
-   * click occurs). Unfortunately, there are no event properties that tie the input and the label
-   * together (such as relatedTarget).
-   *
-   * @param {MouseEvent} event
-   * @returns {boolean}
-   */
-  function isInputEventFromLabelClick(event) {
-    return lastLabelClickPos
-        && lastLabelClickPos.x == event.x
-        && lastLabelClickPos.y == event.y;
+  function register(element, handlerName, options) {
+    var handler = HANDLERS[handlerName.replace(/^\$md./, '')];
+    if (!handler) {
+      throw new Error('Failed to register element with handler ' + handlerName + '. ' +
+      'Available handlers: ' + Object.keys(HANDLERS).join(', '));
+    }
+    return handler.registerElement(element, options);
   }
 
   /*
-   * Update the given pointer based upon the given DOMEvent.
-   * Distance, velocity, direction, duration, etc
+   * add a handler to $mdGesture. see below.
    */
-  function updatePointerState(ev, pointer) {
-    var point = getEventPoint(ev);
-    var x = pointer.x = point.pageX;
-    var y = pointer.y = point.pageY;
+  function addHandler(name, definition) {
+    var handler = new $$MdGestureHandler(name);
+    angular.extend(handler, definition);
+    HANDLERS[name] = handler;
 
-    pointer.distanceX = x - pointer.startX;
-    pointer.distanceY = y - pointer.startY;
-    pointer.distance = Math.sqrt(
-      pointer.distanceX * pointer.distanceX + pointer.distanceY * pointer.distanceY
-    );
-
-    pointer.directionX = pointer.distanceX > 0 ? 'right' : pointer.distanceX < 0 ? 'left' : '';
-    pointer.directionY = pointer.distanceY > 0 ? 'up' : pointer.distanceY < 0 ? 'down' : '';
-
-    pointer.duration = +Date.now() - pointer.startTime;
-    pointer.velocityX = pointer.distanceX / pointer.duration;
-    pointer.velocityY = pointer.distanceY / pointer.duration;
+    return self;
   }
 
   /*
-   * Normalize the point where the DOM event happened whether it's touch or mouse.
-   * @returns point event obj with pageX and pageY on it.
+   * Register handlers. These listen to touch/start/move events, interpret them,
+   * and dispatch gesture events depending on options & conditions. These are all
+   * instances of GestureHandler.
+   * @see GestureHandler 
    */
-  function getEventPoint(ev) {
-    ev = ev.originalEvent || ev; // support jQuery events
-    return (ev.touches && ev.touches[0]) ||
-      (ev.changedTouches && ev.changedTouches[0]) ||
-      ev;
+  return self
+    /*
+     * The press handler dispatches an event on touchdown/touchend.
+     * It's a simple abstraction of touch/mouse/pointer start and end.
+     */
+    .handler('press', {
+      onStart: function (ev, pointer) {
+        this.dispatchEvent(ev, '$md.pressdown');
+      },
+      onEnd: function (ev, pointer) {
+        this.dispatchEvent(ev, '$md.pressup');
+      }
+    })
+
+    /*
+     * The hold handler dispatches an event if the user keeps their finger within
+     * the same <maxDistance> area for <delay> ms.
+     * The hold handler will only run if a parent of the touch target is registered
+     * to listen for hold events through $mdGesture.register()
+     */
+    .handler('hold', {
+      options: {
+        maxDistance: 6,
+        delay: 500
+      },
+      onCancel: function () {
+        $timeout.cancel(this.state.timeout);
+      },
+      onStart: function (ev, pointer) {
+        // For hold, require a parent to be registered with $mdGesture.register()
+        // Because we prevent scroll events, this is necessary.
+        if (!this.state.registeredParent) return this.cancel();
+
+        this.state.pos = {x: pointer.x, y: pointer.y};
+        this.state.timeout = $timeout(angular.bind(this, function holdDelayFn() {
+          this.dispatchEvent(ev, '$md.hold');
+          this.cancel(); //we're done!
+        }), this.state.options.delay, false);
+      },
+      onMove: function (ev, pointer) {
+        // Don't scroll while waiting for hold.
+        // If we don't preventDefault touchmove events here, Android will assume we don't
+        // want to listen to anymore touch events. It will start scrolling and stop sending
+        // touchmove events.
+        ev.preventDefault();
+
+        // If the user moves greater than <maxDistance> pixels, stop the hold timer
+        // set in onStart
+        var dx = this.state.pos.x - pointer.x;
+        var dy = this.state.pos.y - pointer.y;
+        if (Math.sqrt(dx * dx + dy * dy) > this.options.maxDistance) {
+          this.cancel();
+        }
+      },
+      onEnd: function () {
+        this.onCancel();
+      }
+    })
+
+    /*
+     * The drag handler dispatches a drag event if the user holds and moves his finger greater than
+     * <minDistance> px in the x or y direction, depending on options.horizontal.
+     * The drag will be cancelled if the user moves his finger greater than <minDistance>*<cancelMultiplier> in
+     * the perpindicular direction. Eg if the drag is horizontal and the user moves his finger <minDistance>*<cancelMultiplier>
+     * pixels vertically, this handler won't consider the move part of a drag.
+     */
+    .handler('drag', {
+      options: {
+        minDistance: 6,
+        horizontal: true,
+        cancelMultiplier: 1.5
+      },
+      onStart: function (ev) {
+        // For drag, require a parent to be registered with $mdGesture.register()
+        if (!this.state.registeredParent) this.cancel();
+      },
+      onMove: function (ev, pointer) {
+        var shouldStartDrag, shouldCancel;
+        // Don't scroll while deciding if this touchmove qualifies as a drag event.
+        // If we don't preventDefault touchmove events here, Android will assume we don't
+        // want to listen to anymore touch events. It will start scrolling and stop sending
+        // touchmove events.
+        ev.preventDefault();
+
+        if (!this.state.dragPointer) {
+          if (this.state.options.horizontal) {
+            shouldStartDrag = Math.abs(pointer.distanceX) > this.state.options.minDistance;
+            shouldCancel = Math.abs(pointer.distanceY) > this.state.options.minDistance * this.state.options.cancelMultiplier;
+          } else {
+            shouldStartDrag = Math.abs(pointer.distanceY) > this.state.options.minDistance;
+            shouldCancel = Math.abs(pointer.distanceX) > this.state.options.minDistance * this.state.options.cancelMultiplier;
+          }
+
+          if (shouldStartDrag) {
+            // Create a new pointer representing this drag, starting at this point where the drag started.
+            this.state.dragPointer = makeStartPointer(ev);
+            updatePointerState(ev, this.state.dragPointer);
+            this.dispatchEvent(ev, '$md.dragstart', this.state.dragPointer);
+
+          } else if (shouldCancel) {
+            this.cancel();
+          }
+        } else {
+          this.dispatchDragMove(ev);
+        }
+      },
+      // Only dispatch dragmove events every frame; any more is unnecessray
+      dispatchDragMove: $$rAF.throttle(function (ev) {
+        // Make sure the drag didn't stop while waiting for the next frame
+        if (this.state.isRunning) {
+          updatePointerState(ev, this.state.dragPointer);
+          this.dispatchEvent(ev, '$md.drag', this.state.dragPointer);
+        }
+      }),
+      onEnd: function (ev, pointer) {
+        if (this.state.dragPointer) {
+          updatePointerState(ev, this.state.dragPointer);
+          this.dispatchEvent(ev, '$md.dragend', this.state.dragPointer);
+        }
+      }
+    })
+
+    /*
+     * The swipe handler will dispatch a swipe event if, on the end of a touch,
+     * the velocity and distance were high enough.
+     * TODO: add vertical swiping with a `horizontal` option similar to the drag handler.
+     */
+    .handler('swipe', {
+      options: {
+        minVelocity: 0.65,
+        minDistance: 10
+      },
+      onEnd: function (ev, pointer) {
+        if (Math.abs(pointer.velocityX) > this.state.options.minVelocity &&
+          Math.abs(pointer.distanceX) > this.state.options.minDistance) {
+          var eventType = pointer.directionX == 'left' ? '$md.swipeleft' : '$md.swiperight';
+          this.dispatchEvent(ev, eventType);
+        }
+      }
+    });
+
+}
+MdGesture.$inject = ["$$MdGestureHandler", "$$rAF", "$timeout"];
+
+/**
+ * MdGestureHandler
+ * A GestureHandler is an object which is able to dispatch custom dom events
+ * based on native dom {touch,pointer,mouse}{start,move,end} events.
+ *
+ * A gesture will manage its lifecycle through the start,move,end, and cancel
+ * functions, which are called by native dom events.
+ *
+ * A gesture has the concept of 'options' (eg a swipe's required velocity), which can be
+ * overridden by elements registering through $mdGesture.register()
+ */
+function GestureHandler (name) {
+  this.name = name;
+  this.state = {};
+}
+
+function MdGestureHandler() {
+  var hasJQuery =  (typeof window.jQuery !== 'undefined') && (angular.element === window.jQuery);
+
+  GestureHandler.prototype = {
+    options: {},
+    // jQuery listeners don't work with custom DOMEvents, so we have to dispatch events
+    // differently when jQuery is loaded
+    dispatchEvent: hasJQuery ?  jQueryDispatchEvent : nativeDispatchEvent,
+
+    // These are overridden by the registered handler
+    onStart: angular.noop,
+    onMove: angular.noop,
+    onEnd: angular.noop,
+    onCancel: angular.noop,
+
+    // onStart sets up a new state for the handler, which includes options from the
+    // nearest registered parent element of ev.target.
+    start: function (ev, pointer) {
+      if (this.state.isRunning) return;
+      var parentTarget = this.getNearestParent(ev.target);
+      // Get the options from the nearest registered parent
+      var parentTargetOptions = parentTarget && parentTarget.$mdGesture[this.name] || {};
+
+      this.state = {
+        isRunning: true,
+        // Override the default options with the nearest registered parent's options
+        options: angular.extend({}, this.options, parentTargetOptions),
+        // Pass in the registered parent node to the state so the onStart listener can use
+        registeredParent: parentTarget
+      };
+      this.onStart(ev, pointer);
+    },
+    move: function (ev, pointer) {
+      if (!this.state.isRunning) return;
+      this.onMove(ev, pointer);
+    },
+    end: function (ev, pointer) {
+      if (!this.state.isRunning) return;
+      this.onEnd(ev, pointer);
+      this.state.isRunning = false;
+    },
+    cancel: function (ev, pointer) {
+      this.onCancel(ev, pointer);
+      this.state = {};
+    },
+
+    // Find and return the nearest parent element that has been registered to
+    // listen for this handler via $mdGesture.register(element, 'handlerName').
+    getNearestParent: function (node) {
+      var current = node;
+      while (current) {
+        if ((current.$mdGesture || {})[this.name]) {
+          return current;
+        }
+        current = current.parentNode;
+      }
+      return null;
+    },
+
+    // Called from $mdGesture.register when an element reigsters itself with a handler.
+    // Store the options the user gave on the DOMElement itself. These options will
+    // be retrieved with getNearestParent when the handler starts.
+    registerElement: function (element, options) {
+      var self = this;
+      element[0].$mdGesture = element[0].$mdGesture || {};
+      element[0].$mdGesture[this.name] = options || {};
+      element.on('$destroy', onDestroy);
+
+      return onDestroy;
+
+      function onDestroy() {
+        delete element[0].$mdGesture[self.name];
+        element.off('$destroy', onDestroy);
+      }
+    }
+  };
+
+  return GestureHandler;
+
+  /*
+   * Dispatch an event with jQuery
+   * TODO: Make sure this sends bubbling events
+   *
+   * @param srcEvent the original DOM touch event that started this.
+   * @param eventType the name of the custom event to send (eg 'click' or '$md.drag')
+   * @param eventPointer the pointer object that matches this event.
+   */
+  function jQueryDispatchEvent(srcEvent, eventType, eventPointer) {
+    eventPointer = eventPointer || pointer;
+    var eventObj = new angular.element.Event(eventType);
+
+    eventObj.$material = true;
+    eventObj.pointer = eventPointer;
+    eventObj.srcEvent = srcEvent;
+
+    angular.extend(eventObj, {
+      clientX: eventPointer.x,
+      clientY: eventPointer.y,
+      screenX: eventPointer.x,
+      screenY: eventPointer.y,
+      pageX: eventPointer.x,
+      pageY: eventPointer.y,
+      ctrlKey: srcEvent.ctrlKey,
+      altKey: srcEvent.altKey,
+      shiftKey: srcEvent.shiftKey,
+      metaKey: srcEvent.metaKey
+    });
+    angular.element(eventPointer.target).trigger(eventObj);
   }
+
+  /*
+   * NOTE: nativeDispatchEvent is very performance sensitive.
+   * @param srcEvent the original DOM touch event that started this.
+   * @param eventType the name of the custom event to send (eg 'click' or '$md.drag')
+   * @param eventPointer the pointer object that matches this event.
+   */
+  function nativeDispatchEvent(srcEvent, eventType, eventPointer) {
+    eventPointer = eventPointer || pointer;
+    var eventObj;
+
+    if (eventType === 'click' || eventType == 'mouseup' || eventType == 'mousedown' ) {
+      eventObj = document.createEvent('MouseEvents');
+      eventObj.initMouseEvent(
+        eventType, true, true, window, srcEvent.detail,
+        eventPointer.x, eventPointer.y, eventPointer.x, eventPointer.y,
+        srcEvent.ctrlKey, srcEvent.altKey, srcEvent.shiftKey, srcEvent.metaKey,
+        srcEvent.button, srcEvent.relatedTarget || null
+      );
+
+    } else {
+      eventObj = document.createEvent('CustomEvent');
+      eventObj.initCustomEvent(eventType, true, true, {});
+    }
+    eventObj.$material = true;
+    eventObj.pointer = eventPointer;
+    eventObj.srcEvent = srcEvent;
+    eventPointer.target.dispatchEvent(eventObj);
+  }
+
+}
+
+/**
+ * Attach Gestures: hook document and check shouldHijack clicks
+ * @ngInject
+ */
+function attachToDocument( $mdGesture, $$MdGestureHandler ) {
+
+  // Polyfill document.contains for IE11.
+  // TODO: move to util
+  document.contains || (document.contains = function (node) {
+    return document.body.contains(node);
+  });
+
+  if (!isInitialized && $mdGesture.isHijackingClicks ) {
+    /*
+     * If hijack clicks is true, we preventDefault any click that wasn't
+     * sent by ngMaterial. This is because on older Android & iOS, a false, or 'ghost',
+     * click event will be sent ~400ms after a touchend event happens.
+     * The only way to know if this click is real is to prevent any normal
+     * click events, and add a flag to events sent by material so we know not to prevent those.
+     * 
+     * Two exceptions to click events that should be prevented are:
+     *  - click events sent by the keyboard (eg form submit)
+     *  - events that originate from an Ionic app
+     */
+    document.addEventListener('click'    , clickHijacker     , true);
+    document.addEventListener('mouseup'  , mouseInputHijacker, true);
+    document.addEventListener('mousedown', mouseInputHijacker, true);
+    document.addEventListener('focus'    , mouseInputHijacker, true);
+
+    isInitialized = true;
+  }
+
+  function mouseInputHijacker(ev) {
+    var isKeyClick = !ev.clientX && !ev.clientY;
+    if (!isKeyClick && !ev.$material && !ev.isIonicTap
+      && !isInputEventFromLabelClick(ev)) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
+  }
+
+  function clickHijacker(ev) {
+    var isKeyClick = ev.clientX === 0 && ev.clientY === 0;
+    if (!isKeyClick && !ev.$material && !ev.isIonicTap
+      && !isInputEventFromLabelClick(ev)) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      lastLabelClickPos = null;
+    } else {
+      lastLabelClickPos = null;
+      if (ev.target.tagName.toLowerCase() == 'label') {
+        lastLabelClickPos = {x: ev.x, y: ev.y};
+      }
+    }
+  }
+
+
+  // Listen to all events to cover all platforms.
+  var START_EVENTS = 'mousedown touchstart pointerdown';
+  var MOVE_EVENTS = 'mousemove touchmove pointermove';
+  var END_EVENTS = 'mouseup mouseleave touchend touchcancel pointerup pointercancel';
+
+  angular.element(document)
+    .on(START_EVENTS, gestureStart)
+    .on(MOVE_EVENTS, gestureMove)
+    .on(END_EVENTS, gestureEnd)
+    // For testing
+    .on('$$mdGestureReset', function gestureClearCache () {
+      lastPointer = pointer = null;
+    });
+
+  /*
+   * When a DOM event happens, run all registered gesture handlers' lifecycle
+   * methods which match the DOM event.
+   * Eg when a 'touchstart' event happens, runHandlers('start') will call and
+   * run `handler.cancel()` and `handler.start()` on all registered handlers.
+   */
+  function runHandlers(handlerEvent, event) {
+    var handler;
+    for (var name in HANDLERS) {
+      handler = HANDLERS[name];
+      if( handler instanceof $$MdGestureHandler ) {
+
+        if (handlerEvent === 'start') {
+          // Run cancel to reset any handlers' state
+          handler.cancel();
+        }
+        handler[handlerEvent](event, pointer);
+
+      }
+    }
+  }
+
+  /*
+   * gestureStart vets if a start event is legitimate (and not part of a 'ghost click' from iOS/Android)
+   * If it is legitimate, we initiate the pointer state and mark the current pointer's type
+   * For example, for a touchstart event, mark the current pointer as a 'touch' pointer, so mouse events
+   * won't effect it.
+   */
+  function gestureStart(ev) {
+    // If we're already touched down, abort
+    if (pointer) return;
+
+    var now = +Date.now();
+
+    // iOS & old android bug: after a touch event, a click event is sent 350 ms later.
+    // If <400ms have passed, don't allow an event of a different type than the previous event
+    if (lastPointer && !typesMatch(ev, lastPointer) && (now - lastPointer.endTime < 1500)) {
+      return;
+    }
+
+    pointer = makeStartPointer(ev);
+
+    runHandlers('start', ev);
+  }
+  /*
+   * If a move event happens of the right type, update the pointer and run all the move handlers.
+   * "of the right type": if a mousemove happens but our pointer started with a touch event, do nothing.
+   */
+  function gestureMove(ev) {
+    if (!pointer || !typesMatch(ev, pointer)) return;
+
+    updatePointerState(ev, pointer);
+    runHandlers('move', ev);
+  }
+  /*
+   * If an end event happens of the right type, update the pointer, run endHandlers, and save the pointer as 'lastPointer'
+   */
+  function gestureEnd(ev) {
+    if (!pointer || !typesMatch(ev, pointer)) return;
+
+    updatePointerState(ev, pointer);
+    pointer.endTime = +Date.now();
+
+    runHandlers('end', ev);
+
+    lastPointer = pointer;
+    pointer = null;
+  }
+
+}
+attachToDocument.$inject = ["$mdGesture", "$$MdGestureHandler"];
+
+// ********************
+// Module Functions
+// ********************
+
+/*
+ * Initiate the pointer. x, y, and the pointer's type.
+ */
+function makeStartPointer(ev) {
+  var point = getEventPoint(ev);
+  var startPointer = {
+    startTime: +Date.now(),
+    target: ev.target,
+    // 'p' for pointer events, 'm' for mouse, 't' for touch
+    type: ev.type.charAt(0)
+  };
+  startPointer.startX = startPointer.x = point.pageX;
+  startPointer.startY = startPointer.y = point.pageY;
+  return startPointer;
+}
+
+/*
+ * return whether the pointer's type matches the event's type.
+ * Eg if a touch event happens but the pointer has a mouse type, return false.
+ */
+function typesMatch(ev, pointer) {
+  return ev && pointer && ev.type.charAt(0) === pointer.type;
+}
+
+/**
+ * Gets whether the given event is an input event that was caused by clicking on an
+ * associated label element.
+ *
+ * This is necessary because the browser will, upon clicking on a label element, fire an
+ * *extra* click event on its associated input (if any). mdGesture is able to flag the label
+ * click as with `$material` correctly, but not the second input click.
+ *
+ * In order to determine whether an input event is from a label click, we compare the (x, y) for
+ * the event to the (x, y) for the most recent label click (which is cleared whenever a non-label
+ * click occurs). Unfortunately, there are no event properties that tie the input and the label
+ * together (such as relatedTarget).
+ *
+ * @param {MouseEvent} event
+ * @returns {boolean}
+ */
+function isInputEventFromLabelClick(event) {
+  return lastLabelClickPos
+      && lastLabelClickPos.x == event.x
+      && lastLabelClickPos.y == event.y;
+}
+
+/*
+ * Update the given pointer based upon the given DOMEvent.
+ * Distance, velocity, direction, duration, etc
+ */
+function updatePointerState(ev, pointer) {
+  var point = getEventPoint(ev);
+  var x = pointer.x = point.pageX;
+  var y = pointer.y = point.pageY;
+
+  pointer.distanceX = x - pointer.startX;
+  pointer.distanceY = y - pointer.startY;
+  pointer.distance = Math.sqrt(
+    pointer.distanceX * pointer.distanceX + pointer.distanceY * pointer.distanceY
+  );
+
+  pointer.directionX = pointer.distanceX > 0 ? 'right' : pointer.distanceX < 0 ? 'left' : '';
+  pointer.directionY = pointer.distanceY > 0 ? 'up' : pointer.distanceY < 0 ? 'down' : '';
+
+  pointer.duration = +Date.now() - pointer.startTime;
+  pointer.velocityX = pointer.distanceX / pointer.duration;
+  pointer.velocityY = pointer.distanceY / pointer.duration;
+}
+
+/*
+ * Normalize the point where the DOM event happened whether it's touch or mouse.
+ * @returns point event obj with pageX and pageY on it.
+ */
+function getEventPoint(ev) {
+  ev = ev.originalEvent || ev; // support jQuery events
+  return (ev.touches && ev.touches[0]) ||
+    (ev.changedTouches && ev.changedTouches[0]) ||
+    ev;
+}
 
 })();
 (function(){
@@ -2343,7 +2400,6 @@ function InterimElementProvider() {
                                  $mdUtil, $mdCompiler, $mdTheming, $log ) {
     return function createInterimElementService() {
       var SHOW_CANCELLED = false;
-      var SHOW_CLOSED = true;
 
       /*
        * @ngdoc service
@@ -2417,7 +2473,7 @@ function InterimElementProvider() {
        *
        */
       function hide(reason, options) {
-        if ( !stack.length ) return $q.when(reason || SHOW_CLOSED);
+        if ( !stack.length ) return $q.when(reason);
         options = options || {};
 
         if (options.closeAll) {
@@ -2433,7 +2489,7 @@ function InterimElementProvider() {
 
         function closeElement(interim) {
           interim
-            .remove(reason || SHOW_CLOSED, false, options || { })
+            .remove(reason, false, options || { })
             .catch(function( reason ) {
               //$log.error("InterimElement.hide() error: " + reason );
               return reason;
@@ -2456,10 +2512,10 @@ function InterimElementProvider() {
        */
       function cancel(reason, options) {
         var interim = stack.shift();
-        if ( !interim ) return $q.when(reason || SHOW_CANCELLED);
+        if ( !interim ) return $q.when(reason);
 
         interim
-          .remove(reason || SHOW_CANCELLED, true, options || { })
+          .remove(reason, true, options || { })
           .catch(function( reason ) {
             //$log.error("InterimElement.cancel() error: " + reason );
             return reason;
@@ -2695,11 +2751,14 @@ function InterimElementProvider() {
          * optional auto-Hide
          */
         function showElement(element, options, controller) {
+          // Trigger onShowing callback before the `show()` starts
+          var notifyShowing = options.onShowing || angular.noop;
           // Trigger onComplete callback when the `show()` finishes
           var notifyComplete = options.onComplete || angular.noop;
 
           return $q(function (resolve, reject) {
             try {
+              notifyShowing(options.scope, element, options);
 
               // Start transitionIn
               $q.when(options.onShow(options.scope, element, options, controller))
@@ -2759,6 +2818,448 @@ function InterimElementProvider() {
   }
 
 }
+
+})();
+(function(){
+"use strict";
+
+(function() {
+  'use strict';
+
+  var $mdUtil, $interpolate;
+
+  var SUFFIXES = /(-gt)?-(sm|md|lg)/g;
+  var WHITESPACE = /\s+/g;
+
+  var FLEX_OPTIONS = ['grow', 'initial', 'auto', 'none'];
+  var LAYOUT_OPTIONS = ['row', 'column'];
+  var ALIGNMENT_OPTIONS = [
+        "start start", "start center", "start end",
+        "center", "center center", "center start", "center end",
+        "end", "end center", "end start", "end end",
+        "space-around", "space-around center", "space-around start", "space-around end",
+        "space-between", "space-between center", "space-between start", "space-between end"
+      ];
+
+
+  var config = {
+    /**
+     * Enable directive attribute-to-class conversions
+     */
+    enabled: true,
+
+    /**
+     * After translation to classname equivalents, remove the
+     * original Layout attribute
+     */
+    removeAttributes : true,
+
+    /**
+     * List of mediaQuery breakpoints and associated suffixes
+     *
+     *   [
+     *    { suffix: "sm", mediaQuery: "screen and (max-width: 599px)" },
+     *    { suffix: "md", mediaQuery: "screen and (min-width: 600px) and (max-width: 959px)" }
+     *   ]
+     */
+    breakpoints: []
+  };
+
+  /**
+   *   The original ngMaterial Layout solution used attribute selectors and CSS.
+   *
+   *  ```html
+   *  <div layout="column"> My Content </div>
+   *  ```
+   *
+   *  ```css
+   *  [layout] {
+     *    box-sizing: border-box;
+     *    display:flex;
+     *  }
+   *  [layout=column] {
+     *    flex-direction : column
+     *  }
+   *  ```
+   *
+   *  Use of attribute selectors creates significant performance impacts in some
+   *  browsers... mainly IE.
+   *
+   *  This module registers directives that allow the same layout attributes to be
+   *  interpreted and converted to class selectors. The directive will add equivalent classes to each element that
+   *  contains a Layout directive.
+   *
+   * ```html
+   *   <div layout="column" class="layout layout-column"> My Content </div>
+   *```
+   *
+   *  ```css
+   *  .layout {
+     *    box-sizing: border-box;
+     *    display:flex;
+     *  }
+   *  .layout-column {
+     *    flex-direction : column
+     *  }
+   *  ```
+   */
+  angular.module('material.core.layout', ['ng'])
+
+    .directive('mdLayoutCss', disableLayoutDirective )
+
+    .directive('layout', attributeWithObserve('layout'))
+    .directive('layoutSm', attributeWithObserve('layout-sm'))
+    .directive('layoutGtSm', attributeWithObserve('layout-gt-sm'))
+    .directive('layoutMd', attributeWithObserve('layout-md'))
+    .directive('layoutGtMd', attributeWithObserve('layout-gt-md'))
+    .directive('layoutLg', attributeWithObserve('layout-lg'))
+    .directive('layoutGtLg', attributeWithObserve('layout-gt-lg'))
+
+    .directive('flex', attributeWithObserve('flex'))
+    .directive('flexSm', attributeWithObserve('flex-sm'))
+    .directive('flexGtSm', attributeWithObserve('flex-gt-sm'))
+    .directive('flexMd', attributeWithObserve('flex-md'))
+    .directive('flexGtMd', attributeWithObserve('flex-gt-md'))
+    .directive('flexLg', attributeWithObserve('flex-lg'))
+    .directive('flexGtLg', attributeWithObserve('flex-gt-lg'))
+
+    .directive('flexOrder', attributeWithObserve('flex-order'))
+    .directive('flexOrderSm', attributeWithObserve('flex-order-sm'))
+    .directive('flexOrderGtSm', attributeWithObserve('flex-order-gt-sm'))
+    .directive('flexOrderMd', attributeWithObserve('flex-order-md'))
+    .directive('flexOrderGtMd', attributeWithObserve('flex-order-gt-md'))
+    .directive('flexOrderLg', attributeWithObserve('flex-order-lg'))
+    .directive('flexOrderGtLg', attributeWithObserve('flex-order-gt-lg'))
+
+    .directive('flexOffset', attributeWithObserve('flex-offset'))
+    .directive('flexOffsetSm', attributeWithObserve('flex-offset-sm'))
+    .directive('flexOffsetGtSm', attributeWithObserve('flex-offset-gt-sm'))
+    .directive('flexOffsetMd', attributeWithObserve('flex-offset-md'))
+    .directive('flexOffsetGtMd', attributeWithObserve('flex-offset-gt-md'))
+    .directive('flexOffsetLg', attributeWithObserve('flex-offset-lg'))
+    .directive('flexOffsetGtLg', attributeWithObserve('flex-offset-gt-lg'))
+
+    .directive('layoutAlign', attributeWithObserve('layout-align'))
+    .directive('layoutAlignSm', attributeWithObserve('layout-align-sm'))
+    .directive('layoutAlignGtSm', attributeWithObserve('layout-align-gt-sm'))
+    .directive('layoutAlignMd', attributeWithObserve('layout-align-md'))
+    .directive('layoutAlignGtMd', attributeWithObserve('layout-align-gt-md'))
+    .directive('layoutAlignLg', attributeWithObserve('layout-align-lg'))
+    .directive('layoutAlignGtLg', attributeWithObserve('layout-align-gt-lg'))
+
+    // Attribute directives with no value(s)
+
+    .directive('hide', attributeWithoutValue('hide'))
+    .directive('hideSm', attributeWithoutValue('hide-sm'))
+    .directive('hideGtSm', attributeWithoutValue('hide-gt-sm'))
+    .directive('hideMd', attributeWithoutValue('hide-md'))
+    .directive('hideGtMd', attributeWithoutValue('hide-gt-md'))
+    .directive('hideLg', attributeWithoutValue('hide-lg'))
+    .directive('hideGtLg', attributeWithoutValue('hide-gt-lg'))
+    .directive('show', attributeWithoutValue('show'))
+    .directive('showSm', attributeWithoutValue('show-sm'))
+    .directive('showGtSm', attributeWithoutValue('show-gt-sm'))
+    .directive('showMd', attributeWithoutValue('show-md'))
+    .directive('showGtMd', attributeWithoutValue('show-gt-md'))
+    .directive('showLg', attributeWithoutValue('show-lg'))
+    .directive('showGtLg', attributeWithoutValue('show-gt-lg'))
+
+    // Attribute directives with no value(s) and NO breakpoints
+
+    .directive('layoutMargin', attributeWithoutValue('layout-margin'))
+    .directive('layoutPadding', attributeWithoutValue('layout-padding'))
+    .directive('layoutWrap', attributeWithoutValue('layout-wrap'))
+    .directive('layoutNoWrap', attributeWithoutValue('layout-no-wrap'))
+    .directive('layoutFill', attributeWithoutValue('layout-fill'))
+
+    // !! Deprecated attributes: use the `-lt` (aka less-than) notations
+
+    .directive('layoutLtMd', warnAttrNotSupported('layout-lt-md', true))
+    .directive('layoutLtLg', warnAttrNotSupported('layout-lt-lg', true))
+    .directive('flexLtMd', warnAttrNotSupported('flex-lt-md', true))
+    .directive('flexLtLg', warnAttrNotSupported('flex-lt-lg', true))
+
+    .directive('layoutAlignLtMd', warnAttrNotSupported('layout-align-lt-md'))
+    .directive('layoutAlignLtLg', warnAttrNotSupported('layout-align-lt-lg'))
+    .directive('flexOrderLtMd', warnAttrNotSupported('flex-order-lt-md'))
+    .directive('flexOrderLtLg', warnAttrNotSupported('flex-order-lt-lg'))
+    .directive('offsetLtMd', warnAttrNotSupported('flex-offset-lt-md'))
+    .directive('offsetLtLg', warnAttrNotSupported('flex-offset-lt-lg'))
+
+    .directive('hideLtMd', warnAttrNotSupported('hide-lt-md'))
+    .directive('hideLtLg', warnAttrNotSupported('hide-lt-lg'))
+    .directive('showLtMd', warnAttrNotSupported('show-lt-md'))
+    .directive('showLtLg', warnAttrNotSupported('show-lt-lg'));
+
+  /**
+   * Special directive that will disable ALL Layout conversions of layout
+   * attribute(s) to classname(s).
+   *
+   * <link rel="stylesheet" href="angular-material.min.css">
+   * <link rel="stylesheet" href="angular-material.layout.css">
+   *
+   * <body md-layout-css>
+   *  ...
+   * </body>
+   *
+   * Note: Using md-layout-css directive requires the developer to load the Material
+   * Layout Attribute stylesheet (which only uses attribute selectors):
+   *
+   *       `angular-material.layout.css`
+   *
+   * Another option is to use the LayoutProvider to configure and disable the attribute
+   * conversions; this would obviate the use of the `md-layout-css` directive
+   *
+   */
+  function disableLayoutDirective() {
+    return {
+      restrict : 'A',
+      priority : '900',
+      compile  : function(element, attr) {
+        config.enabled = false;
+        return angular.noop;
+      }
+    };
+  }
+
+  // *********************************************************************************
+  //
+  // These functions create registration functions for ngMaterial Layout attribute directives
+  // This provides easy translation to switch ngMaterial attribute selectors to
+  // CLASS selectors and directives; which has huge performance implications
+  // for IE Browsers
+  //
+  // *********************************************************************************
+
+
+  /**
+   * Creates a directive registration function where a possible dynamic attribute
+   * value will be observed/watched.
+   * @param {string} className attribute name; eg `layout-gt-md` with value ="row"
+   */
+  function attributeWithObserve(className) {
+
+    return ['$mdUtil', '$interpolate', function(_$mdUtil_, _$interpolate_) {
+      $mdUtil = _$mdUtil_;
+      $interpolate = _$interpolate_;
+
+      return {
+        restrict: 'A',
+        compile: function(element, attr) {
+          var linkFn;
+          if (config.enabled) {
+            // immediately replace static (non-interpolated) invalid values...
+
+            validateAttributeValue( className,
+              getNormalizedAttrValue(className, attr, ""),
+              buildUpdateFn(element, className, attr)
+            );
+
+            linkFn = translateWithValueToCssClass;
+          }
+
+          // Use for postLink to account for transforms after ng-transclude.
+          return linkFn || angular.noop;
+        }
+      };
+    }];
+
+    /**
+     * Add as transformed class selector(s), then
+     * remove the deprecated attribute selector
+     */
+    function translateWithValueToCssClass(scope, element, attrs) {
+      var updateFn = updateClassWithValue(element, className, attrs);
+      var unwatch = attrs.$observe(attrs.$normalize(className), updateFn);
+
+      updateFn(getNormalizedAttrValue(className, attrs, ""));
+      scope.$on("$destroy", function() { unwatch() });
+
+      if (config.removeAttributes) element.removeAttr(className);
+    }
+  }
+
+  /**
+   * Creates a registration function for ngMaterial Layout attribute directive.
+   * This is a `simple` transpose of attribute usage to class usage; where we ignore
+   * any attribute value
+   */
+  function attributeWithoutValue(className) {
+    return ['$interpolate', function(_$interpolate_) {
+      $interpolate = _$interpolate_;
+
+      return {
+        restrict: 'A',
+        compile: function(element, attr) {
+          var linkFn;
+          if (config.enabled) {
+            // immediately replace static (non-interpolated) invalid values...
+
+            validateAttributeValue( className,
+              getNormalizedAttrValue(className, attr, ""),
+              buildUpdateFn(element, className, attr)
+            );
+
+            translateToCssClass(null, element);
+
+            // Use for postLink to account for transforms after ng-transclude.
+            linkFn = translateToCssClass;
+          }
+
+          return linkFn || angular.noop;
+        }
+      };
+    }];
+
+    /**
+     * Add as transformed class selector, then
+     * remove the deprecated attribute selector
+     */
+    function translateToCssClass(scope, element) {
+      element.addClass(className);
+
+      if (config.removeAttributes) {
+        // After link-phase, remove deprecated layout attribute selector
+        element.removeAttr(className);
+      }
+    }
+  }
+
+
+
+  /**
+   * After link-phase, do NOT remove deprecated layout attribute selector.
+   * Instead watch the attribute so interpolated data-bindings to layout
+   * selectors will continue to be supported.
+   *
+   * $observe() the className and update with new class (after removing the last one)
+   *
+   * e.g. `layout="{{layoutDemo.direction}}"` will update...
+   *
+   * NOTE: The value must match one of the specified styles in the CSS.
+   * For example `flex-gt-md="{{size}}`  where `scope.size == 47` will NOT work since
+   * only breakpoints for 0, 5, 10, 15... 100, 33, 34, 66, 67 are defined.
+   *
+   */
+  function updateClassWithValue(element, className) {
+    var lastClass;
+
+    return function updateClassFn(newValue) {
+      var value = validateAttributeValue(className, newValue || "");
+      if ( angular.isDefined(value) ) {
+        if (lastClass) { 
+          element.removeClass(lastClass);
+        }
+        lastClass = !value ? className : className + "-" + value.replace(WHITESPACE, "-");
+        element.addClass(lastClass);
+      }
+    };
+  }
+
+  /**
+   * Provide console warning that this layout attribute has been deprecated
+   *
+   */
+  function warnAttrNotSupported(className) {
+    var parts = className.split("-");
+    return ["$log", function($log) {
+      $log.warn(className + "has been deprecated. Please use a `" + parts[0] + "-gt-<xxx>` variant.");
+      return angular.noop;
+    }];
+  }
+
+  /**
+   * For the Layout attribute value, validate or replace with default
+   * fallback value
+   */
+  function validateAttributeValue(className, value, updateFn) {
+    var origValue = value;
+
+    if (!needsInterpolation(value)) {
+      switch (className.replace(SUFFIXES,"")) {
+        case 'layout'        :
+          if ( !findIn(value, LAYOUT_OPTIONS) ) {
+            value = LAYOUT_OPTIONS[0];    // 'row';
+          }
+          break;
+
+        case 'flex'          :
+          if (!findIn(value, FLEX_OPTIONS)) {
+            if (isNaN(value)) {
+              value = '';
+            }
+          }
+          break;
+
+        case 'flex-offset' :
+        case 'flex-order'    :
+          if (!value || isNaN(+value)) {
+            value = '0';
+          }
+          break;
+
+        case 'layout-align'  :
+          if (!findIn(value, ALIGNMENT_OPTIONS, "-")) {
+            value = ALIGNMENT_OPTIONS[0];   // 'start-start';
+          }
+          break;
+
+        case 'layout-padding' :
+        case 'layout-margin'  :
+        case 'layout-fill'    :
+        case 'layout-wrap'    :
+        case 'layout-no-wrap' :
+          value = '';
+          break;
+      }
+
+      if (value != origValue) {
+        (updateFn || angular.noop)(value);
+      }
+    }
+
+    return value;
+  }
+
+  /**
+   * Replace current attribute value with fallback value
+   */
+  function buildUpdateFn(element, className, attrs) {
+    return function updateAttrValue(fallback) {
+      if (!needsInterpolation(fallback)) {
+        element.attr(className, fallback);
+        attrs[attrs.$normalize(className)] = fallback;
+      }
+    };
+  }
+
+  /**
+   * See if the original value has interpolation symbols:
+   * e.g.  flex-gt-md="{{triggerPoint}}"
+   */
+  function needsInterpolation(value) {
+    return (value || "").indexOf($interpolate.startSymbol()) > -1;
+  }
+
+  function getNormalizedAttrValue(className, attrs, defaultVal) {
+    var normalizedAttr = attrs.$normalize(className);
+    return attrs[normalizedAttr] ? attrs[normalizedAttr].replace(WHITESPACE, "-") : defaultVal || null;
+  }
+
+  function findIn(item, list, replaceWith) {
+    item = replaceWith && item ? item.replace(WHITESPACE, replaceWith) : item;
+
+    var found = false;
+    if (item) {
+      list.forEach(function(it) {
+        it = replaceWith ? it.replace(WHITESPACE, replaceWith) : it;
+        found = found || (it === item);
+      });
+    }
+    return found;
+  }
+
+})();
 
 })();
 (function(){
@@ -2884,330 +3385,6 @@ function InterimElementProvider() {
 
   }
   ComponentRegistry.$inject = ["$log", "$q"];
-
-})();
-(function(){
-"use strict";
-
-(function () {
-  'use strict';
-
-  var $mdUtil, $$mdLayout, $parse, $interpolate;
-
-    /**
-     *
-     *   The original ngMaterial Layout solution used attribute selectors and CSS.
-     *
-     *  ```html
-     *  <div layout="column"> My Content </div>
-     *  ```
-     *
-     *  ```css
-     *  [layout] {
-     *    box-sizing: border-box;
-     *    display:flex;
-     *  }
-     *  [layout=column] {
-     *    flex-direction : column
-     *  }
-     *  ```
-     *
-     *  Use of attribute selectors creates significant performance impacts in some
-     *  browsers... mainly IE.
-     *
-     *  This module registers directives that allow the same layout attributes to be
-     *  interpreted and converted to class selectors. The directive will add equivalent classes to each element that
-     *  contains a Layout directive.
-     *
-     * ```html
-     *   <div layout="column" class="layout layout-column"> My Content </div>
-     *```
-     *
-     *  ```css
-     *  .layout {
-     *    box-sizing: border-box;
-     *    display:flex;
-     *  }
-     *  .layout-column {
-     *    flex-direction : column
-     *  }
-     *  ```
-     */
-    angular.module('material.core.layout', [ 'ng' ])
-
-      /**
-       * Model of flags used by the Layout directives
-       * Allows changes while running tests or runtime app changes
-       */
-      .factory("$$mdLayout", function() {
-        return {
-          removeAttributes : true
-
-        };
-      })
-
-      // Attribute directives with optional value(s)
-
-      .directive('layout'              , attributeWithObserve('layout'      )  )
-      .directive('layoutSm'            , attributeWithObserve('layout-sm'   )  )
-      .directive('layoutGtSm'          , attributeWithObserve('layout-gt-sm')  )
-      .directive('layoutMd'            , attributeWithObserve('layout-md'   )  )
-      .directive('layoutGtMd'          , attributeWithObserve('layout-gt-md')  )
-      .directive('layoutLg'            , attributeWithObserve('layout-lg'   )  )
-      .directive('layoutGtLg'          , attributeWithObserve('layout-gt-lg')  )
-
-      .directive('flex'                , attributeWithObserve('flex'        )  )
-      .directive('flexSm'              , attributeWithObserve('flex-sm'     )  )
-      .directive('flexGtSm'            , attributeWithObserve('flex-gt-sm'  )  )
-      .directive('flexMd'              , attributeWithObserve('flex-md'     )  )
-      .directive('flexGtMd'            , attributeWithObserve('flex-gt-md'  )  )
-      .directive('flexLg'              , attributeWithObserve('flex-lg'     )  )
-      .directive('flexGtLg'            , attributeWithObserve('flex-gt-lg'  )  )
-
-      // Attribute directives with optional value(s) but directiveName is NOT added as a class
-
-      .directive('layoutAlign'         , attributeWithObserve('layout-align')        )
-      .directive('layoutAlignSm'       , attributeWithObserve('layout-align-sm')     )
-      .directive('layoutAlignGtSm'     , attributeWithObserve('layout-align-gt-sm')  )
-      .directive('layoutAlignMd'       , attributeWithObserve('layout-align-md')     )
-      .directive('layoutAlignGtMd'     , attributeWithObserve('layout-align-gt-md')  )
-      .directive('layoutAlignLg'       , attributeWithObserve('layout-align-lg')     )
-      .directive('layoutAlignGtLg'     , attributeWithObserve('layout-align-gt-lg')  )
-
-      .directive('flexOrder'           , attributeWithObserve('flex-order')          )
-      .directive('flexOrderSm'         , attributeWithObserve('flex-order-sm')       )
-      .directive('flexOrderGtSm'       , attributeWithObserve('flex-order-gt-sm')    )
-      .directive('flexOrderMd'         , attributeWithObserve('flex-order-md')       )
-      .directive('flexOrderGtMd'       , attributeWithObserve('flex-order-gt-md')    )
-      .directive('flexOrderLg'         , attributeWithObserve('flex-order-lg')       )
-      .directive('flexOrderGtLg'       , attributeWithObserve('flex-order-gt-lg')    )
-
-      .directive('offset'              , attributeWithObserve('offset')              )
-      .directive('offsetSm'            , attributeWithObserve('offset-sm')           )
-      .directive('offsetGtSm'          , attributeWithObserve('offset-gt-sm')        )
-      .directive('offsetMd'            , attributeWithObserve('offset-md')           )
-      .directive('offsetGtMd'          , attributeWithObserve('offset-gt-md')        )
-      .directive('offsetLg'            , attributeWithObserve('offset-lg')           )
-      .directive('offsetGtLg'          , attributeWithObserve('offset-gt-lg')        )
-
-      // Attribute directives with no value(s)
-
-      .directive('layoutMargin'        , attributeWithoutValue('layout-margin')      )
-      .directive('layoutPadding'       , attributeWithoutValue('layout-padding')     )
-      .directive('layoutWrap'          , attributeWithoutValue('layout-wrap')        )
-      .directive('layoutFill'          , attributeWithoutValue('layout-fill')        )
-
-      .directive('hide'                , attributeWithoutValue('hide')               )
-      .directive('hideSm'              , attributeWithoutValue('hide-sm')            )
-      .directive('hideGtSm'            , attributeWithoutValue('hide-gt-sm')         )
-      .directive('hideMd'              , attributeWithoutValue('hide-md')            )
-      .directive('hideGtMd'            , attributeWithoutValue('hide-gt-md')         )
-      .directive('hideLg'              , attributeWithoutValue('hide-lg')            )
-      .directive('hideGtLg'            , attributeWithoutValue('hide-gt-lg')         )
-      .directive('show'                , attributeWithoutValue('show')               )
-      .directive('showSm'              , attributeWithoutValue('show-sm')            )
-      .directive('showGtSm'            , attributeWithoutValue('show-gt-sm')         )
-      .directive('showMd'              , attributeWithoutValue('show-md')            )
-      .directive('showGtMd'            , attributeWithoutValue('show-gt-md')         )
-      .directive('showLg'              , attributeWithoutValue('show-lg')            )
-      .directive('showGtLg'            , attributeWithoutValue('show-gt-lg')         )
-
-      // !! Deprecated attributes: use the `-lt` (aka less-than) notations
-
-      .directive('layoutLtMd'          , warnAttrNotSupported('layout-lt-md',true)   )
-      .directive('layoutLtLg'          , warnAttrNotSupported('layout-lt-lg',true)   )
-      .directive('flexLtMd'            , warnAttrNotSupported('flex-lt-md'  ,true)   )
-      .directive('flexLtLg'            , warnAttrNotSupported('flex-lt-lg'  ,true)   )
-
-      .directive('layoutAlignLtMd'     , warnAttrNotSupported('layout-align-lt-md')  )
-      .directive('layoutAlignLtLg'     , warnAttrNotSupported('layout-align-lt-lg')  )
-      .directive('flexOrderLtMd'       , warnAttrNotSupported('flex-order-lt-md')    )
-      .directive('flexOrderLtLg'       , warnAttrNotSupported('flex-order-lt-lg')    )
-      .directive('offsetLtMd'          , warnAttrNotSupported('offset-lt-md')        )
-      .directive('offsetLtLg'          , warnAttrNotSupported('offset-lt-lg')        )
-
-      .directive('hideLtMd'            , warnAttrNotSupported ('hide-lt-md')         )
-      .directive('hideLtLg'            , warnAttrNotSupported ('hide-lt-lg')         )
-      .directive('showLtMd'            , warnAttrNotSupported ('show-lt-md')         )
-      .directive('showLtLg'            , warnAttrNotSupported ('show-lt-lg')         );
-
-    /**
-     * These functions create registration functions for ngMaterial Layout attribute directives
-     * This provides easy translation to switch ngMaterial attribute selectors to
-     * CLASS selectors and directives; which has huge performance implications
-     * for IE Browsers
-     */
-
-    /**
-     * Creates a directive registration function where a possbile dynamic attribute value will
-     * be observed/watched.
-     * @param {string} className attribute name; eg `md-layout-gt-md` with value ="row"
-     */
-    function attributeWithObserve(className) {
-
-      return ['$mdUtil', '$$mdLayout', '$document', '$parse', '$interpolate', function(_$mdUtil_, _$$mdLayout_, $document, _$parse_, _$interpolate_) {
-        $mdUtil = _$mdUtil_;
-        $$mdLayout = _$$mdLayout_;
-        $parse = _$parse_;
-        $interpolate = _$interpolate_;
-
-        return {
-            restrict : 'A',
-            compile: function(element, attr) {
-              // Use for postLink to account for transforms after ng-transclude.
-
-              if ( !injectLayoutSpecifier(element, attr) ) {
-                attributeValueToClass(null, element, attr);
-                return attributeValueToClass;
-              }
-
-              return angular.noop;
-            }
-        };
-      }];
-
-      /**
-       * To avoid large sets of CSS rules
-       * for layout-gt-md-row, layout-sm-column, etc...
-       *
-       * Instead create either a md-layout-row or md-layout-column
-       * class that acts as a generic specifier.
-       *
-       */
-      function injectLayoutSpecifier(element, attrs) {
-        var injected = false;
-        var breakpoints = ['','-sm','-gt-sm','-md','-gt-md','-lg','-gt-lg'];
-        angular.forEach(breakpoints, function(it){
-          if ( className === "layout"+it ) {
-
-            var updateClassFn = updateClassWithValue(element,"md-layout"+it, attrs);
-            var normalizedAttr = attrs.$normalize(className);
-            var attrValue = attrs[normalizedAttr] ? attrs[normalizedAttr].replace(/\s+/g, "-") : "row";
-            var addImmediate = attrValue ? !needsInterpolation(attrValue) : false;
-            var watchValue   = needsInterpolation(attrValue);
-
-
-            // Add special layout class: either '.md-layout-row' or '.md-layout-column'
-            if ( addImmediate ) element.addClass( $mdUtil.supplant('md-layout{0}-{1}',[it,attrValue]) );
-            if ( watchValue ) attrs.$observe( normalizedAttr, updateClassFn );
-            if ( $$mdLayout.removeAttributes ) element.removeAttr(className);
-
-            injected = true;
-          }
-        });
-
-        return injected;
-      }
-
-      /**
-       * Add as transformed class selector(s), then
-       * remove the deprecated attribute selector
-       */
-      function attributeValueToClass(scope, element, attrs) {
-        var updateClassFn = updateClassWithValue(element,className, attrs);
-        var normalizedAttr = attrs.$normalize(className);
-        var attrValue = attrs[normalizedAttr] ? attrs[normalizedAttr].replace(/\s+/g, "-") : null;
-        var addImmediate = attrValue ? !needsInterpolation(attrValue) : false;
-        var watchValue   = needsInterpolation(attrValue);
-
-        // Add transformed class selector(s)
-
-        if ( addImmediate ) element.addClass(className + "-" + attrValue);
-        if ( watchValue ) attrs.$observe( normalizedAttr, updateClassFn );
-        if ( !addImmediate && !watchValue )  element.addClass(className);
-
-        if ( $$mdLayout.removeAttributes ) element.removeAttr(className);
-      }
-
-    }
-
-    /**
-     * See if the original value has interpolation symbols:
-     * e.g.  flex-gt-md="{{triggerPoint}}"
-     */
-    function needsInterpolation(value) {
-      return (value ||"").indexOf($interpolate.startSymbol()) > -1;
-    }
-
-    /**
-     * After link-phase, do NOT remove deprecated layout attribute selector.
-     * Instead watch the attribute so interpolated data-bindings to layout
-     * selectors will continue to be supported.
-     *
-     * $observe() the className and update with new class (after removing the last one)
-     *
-     * e.g. `layout="{{layoutDemo.direction}}"` will update...
-     *
-     * NOTE: The value must match one of the specified styles in the CSS.
-     * For example `flex-gt-md="{{size}}`  where `scope.size == 47` will NOT work since
-     * only breakpoints for 0, 5, 10, 15... 100, 33, 34, 66, 67 are defined.
-     *
-     */
-    function updateClassWithValue(element, className, attr) {
-      var lastClass;
-
-      return function updateClassWithValue(newValue) {
-        var value = String(newValue || "").replace(/\s+/g, "-");
-
-        element.removeClass(lastClass);
-        lastClass = !value ? className : className + "-" + value;
-        element.addClass(lastClass);
-
-        // Conditionally remove the attribute selector in case the browser attempts to
-        // read it and suffers a performance downgrade (IE).
-
-        if ( $$mdLayout.removeAttributes ) element.removeAttr(className);
-      };
-    }
-
-    /**
-     * Creates a registration function with for ngMaterial Layout attribute directive.
-     * This is a `simple` transpose of attribute usage to class usage
-     */
-    function attributeWithoutValue(className) {
-      return ['$$mdLayout', '$document', function(_$$mdLayout_, $document) {
-        $$mdLayout = _$$mdLayout_;
-        return {
-          restrict : 'A',
-          compile: function(element, attrs) {
-
-            attributeToClass(null, element);
-
-            // Use for postLink to account for transforms after ng-transclude.
-            return attributeToClass;
-          }
-        };
-      }];
-
-      /**
-       * Add as transformed class selector, then
-       * remove the deprecated attribute selector
-       */
-      function attributeToClass(scope, element) {
-        element.addClass(className);
-
-        if ( $$mdLayout.removeAttributes ) {
-          // After link-phase, remove deprecated layout attribute selector
-          element.removeAttr(className);
-        }
-      }
-    }
-
-    /**
-     * Provide console warning that this layout attribute has been deprecated
-     *
-     */
-    function warnAttrNotSupported(className) {
-      var parts = className.split("-");
-
-      return ["$log", function($log) {
-        $log.warn( className + "has been deprecated. Please use a `" + parts[0] + "-gt-<xxx>` variant.");
-        return angular.noop;
-      }];
-
-    }
-
-})();
 
 })();
 (function(){
@@ -3401,11 +3578,14 @@ function InkRippleCtrl ($scope, $element, rippleOptions, $window, $timeout, $mdU
   this.lastRipple = null;
 
   $mdUtil.valueOnUse(this, 'container', this.createContainer);
-  $mdUtil.valueOnUse(this, 'color', this.getColor, 1);
   $mdUtil.valueOnUse(this, 'background', this.getColor, 0.5);
+
+  this.color = this.getColor(1);
+  this.$element.addClass('md-ink-ripple');
 
   // attach method for unit tests
   ($element.controller('mdInkRipple') || {}).createRipple = angular.bind(this, this.createRipple);
+  ($element.controller('mdInkRipple') || {}).setColor = angular.bind(this, this.setColor);
 
   this.bindEvents();
 }
@@ -3415,10 +3595,9 @@ InkRippleCtrl.$inject = ["$scope", "$element", "rippleOptions", "$window", "$tim
  * Returns the color that the ripple should be (either based on CSS or hard-coded)
  * @returns {string}
  */
-InkRippleCtrl.prototype.getColor = function (multiplier) {
-  multiplier = multiplier || 1;
-  return parseColor(this.$element.attr('md-ink-ripple'))
-      || parseColor(getElementColor.call(this));
+InkRippleCtrl.prototype.getColor = function () {
+  return this._parseColor(this.$element.attr('md-ink-ripple'))
+      || this._parseColor(getElementColor.call(this));
 
   /**
    * Finds the color element and returns its text color for use as default ripple color
@@ -3429,46 +3608,48 @@ InkRippleCtrl.prototype.getColor = function (multiplier) {
     colorElement     = colorElement || this.$element[ 0 ];
     return colorElement ? this.$window.getComputedStyle(colorElement).color : 'rgb(0,0,0)';
   }
+};
+/**
+ * Takes a string color and converts it to RGBA format
+ * @param color {string}
+ * @param [multiplier] {int}
+ * @returns {string}
+ */
+
+InkRippleCtrl.prototype._parseColor = function parseColor (color, multiplier) {
+  multiplier = multiplier || 1;
+
+  if (!color) return;
+  if (color.indexOf('rgba') === 0) return color.replace(/\d?\.?\d*\s*\)\s*$/, (0.1 * multiplier).toString() + ')');
+  if (color.indexOf('rgb') === 0) return rgbToRGBA(color);
+  if (color.indexOf('#') === 0) return hexToRGBA(color);
 
   /**
-   * Takes a string color and converts it to RGBA format
+   * Converts hex value to RGBA string
    * @param color {string}
    * @returns {string}
    */
-  function parseColor (color) {
-    if (!color) return;
-    if (color.indexOf('rgba') === 0) return color.replace(/\d?\.?\d*\s*\)\s*$/, (0.1 * multiplier).toString() + ')');
-    if (color.indexOf('rgb') === 0) return rgbToRGBA(color);
-    if (color.indexOf('#') === 0) return hexToRGBA(color);
-
-    /**
-     * Converts hex value to RGBA string
-     * @param color {string}
-     * @returns {string}
-     */
-    function hexToRGBA (color) {
-      var hex   = color[ 0 ] === '#' ? color.substr(1) : color,
-          dig   = hex.length / 3,
-          red   = hex.substr(0, dig),
-          green = hex.substr(dig, dig),
-          blue  = hex.substr(dig * 2);
-      if (dig === 1) {
-        red += red;
-        green += green;
-        blue += blue;
-      }
-      return 'rgba(' + parseInt(red, 16) + ',' + parseInt(green, 16) + ',' + parseInt(blue, 16) + ',0.1)';
+  function hexToRGBA (color) {
+    var hex   = color[ 0 ] === '#' ? color.substr(1) : color,
+      dig   = hex.length / 3,
+      red   = hex.substr(0, dig),
+      green = hex.substr(dig, dig),
+      blue  = hex.substr(dig * 2);
+    if (dig === 1) {
+      red += red;
+      green += green;
+      blue += blue;
     }
+    return 'rgba(' + parseInt(red, 16) + ',' + parseInt(green, 16) + ',' + parseInt(blue, 16) + ',0.1)';
+  }
 
-    /**
-     * Converts an RGB color to RGBA
-     * @param color {string}
-     * @returns {string}
-     */
-    function rgbToRGBA (color) {
-      return color.replace(')', ', 0.1)').replace('(', 'a(');
-    }
-
+  /**
+   * Converts an RGB color to RGBA
+   * @param color {string}
+   * @returns {string}
+   */
+  function rgbToRGBA (color) {
+    return color.replace(')', ', 0.1)').replace('(', 'a(');
   }
 
 };
@@ -3489,6 +3670,8 @@ InkRippleCtrl.prototype.bindEvents = function () {
 InkRippleCtrl.prototype.handleMousedown = function (event) {
   if ( this.mousedown ) return;
 
+  this.setColor(window.getComputedStyle(this.$element[0])['color']);
+
   // When jQuery is loaded, we have to get the original event
   if (event.hasOwnProperty('originalEvent')) event = event.originalEvent;
   this.mousedown = true;
@@ -3497,7 +3680,6 @@ InkRippleCtrl.prototype.handleMousedown = function (event) {
   } else {
     this.createRipple(event.layerX, event.layerY);
   }
-
 };
 
 /**
@@ -3609,6 +3791,10 @@ InkRippleCtrl.prototype.createRipple = function (left, top) {
         ? Math.max(x, y)
         : Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
   }
+};
+
+InkRippleCtrl.prototype.setColor = function (color) {
+  this.color = this._parseColor(color);
 };
 
 /**
@@ -4396,15 +4582,16 @@ function ThemingProvider($mdColorPalette) {
       var attrThemeValue = el.attr('md-theme-watch');
       if ( (alwaysWatchTheme || angular.isDefined(attrThemeValue)) && attrThemeValue != 'false') {
         var deregisterWatch = $rootScope.$watch(function() {
-          return ctrl && ctrl.$mdTheme || defaultTheme;
+          return ctrl && ctrl.$mdTheme || (defaultTheme == 'default' ? '' : defaultTheme);
         }, changeTheme);
         el.on('$destroy', deregisterWatch);
       } else {
-        var theme = ctrl && ctrl.$mdTheme || defaultTheme;
+        var theme = ctrl && ctrl.$mdTheme || (defaultTheme == 'default' ? '' : defaultTheme);
         changeTheme(theme);
       }
 
       function changeTheme(theme) {
+        if (!theme) return;
         if (!registered(theme)) {
           $log.warn('Attempted to use unregistered theme \'' + theme + '\'. ' +
                     'Register it with $mdThemingProvider.theme().');
@@ -4515,7 +4702,10 @@ function parseRules(theme, colorType, rules) {
     // Don't apply a selector rule to the default theme, making it easier to override
     // styles of the base-component
     if (theme.name == 'default') {
-      newRule = newRule.replace(/\.md-default-theme/g, '');
+      var themeRuleRegex = /((?:(?:(?: |>|\.|\w|-|:|\(|\)|\[|\]|"|'|=)+) )?)((?:(?:\w|\.|-)+)?)\.md-default-theme((?: |>|\.|\w|-|:|\(|\)|\[|\]|"|'|=)*)/g;
+      newRule = newRule.replace(themeRuleRegex, function(match, prefix, target, suffix) {
+        return match + ', ' + prefix + target + suffix;
+      });
     }
     generatedRules.push(newRule);
   });
@@ -4807,12 +4997,13 @@ function AnimateDomUtils($mdUtil, $q, $timeout, $mdConstant, $animateCss) {
      */
     calculateZoomToOrigin: function (element, originator) {
       var origin = originator.element;
+      var bounds = originator.bounds;
       var zoomTemplate = "translate3d( {centerX}px, {centerY}px, 0 ) scale( {scaleX}, {scaleY} )";
       var buildZoom = angular.bind(null, $mdUtil.supplant, zoomTemplate);
       var zoomStyle = buildZoom({centerX: 0, centerY: 0, scaleX: 0.5, scaleY: 0.5});
 
-      if (origin) {
-        var originBnds = self.clientRect(origin) || self.copyRect(originator.bounds);
+      if (origin || bounds) {
+        var originBnds = origin ? self.clientRect(origin) : self.copyRect(bounds);
         var dialogRect = self.copyRect(element[0].getBoundingClientRect());
         var dialogCenterPt = self.centerPointFor(dialogRect);
         var originCenterPt = self.centerPointFor(originBnds);
@@ -5356,74 +5547,6 @@ angular.module('material.components.autocomplete', [
 (function(){
 "use strict";
 
-/*
- * @ngdoc module
- * @name material.components.backdrop
- * @description Backdrop
- */
-
-/**
- * @ngdoc directive
- * @name mdBackdrop
- * @module material.components.backdrop
- *
- * @restrict E
- *
- * @description
- * `<md-backdrop>` is a backdrop element used by other components, such as dialog and bottom sheet.
- * Apply class `opaque` to make the backdrop use the theme backdrop color.
- *
- */
-
-angular
-  .module('material.components.backdrop', ['material.core'])
-  .directive('mdBackdrop', ["$mdTheming", "$animate", "$rootElement", "$window", "$log", "$$rAF", "$document", function BackdropDirective($mdTheming, $animate, $rootElement, $window, $log, $$rAF, $document) {
-    var ERROR_CSS_POSITION = "<md-backdrop> may not work properly in a scrolled, static-positioned parent container.";
-
-    return {
-      restrict: 'E',
-      link: postLink
-    };
-
-    function postLink(scope, element, attrs) {
-
-      // If body scrolling has been disabled using mdUtil.disableBodyScroll(),
-      // adjust the 'backdrop' height to account for the fixed 'body' top offset
-      var body = $window.getComputedStyle($document[0].body);
-      if (body.position == 'fixed') {
-        var hViewport = parseInt(body.height, 10) + Math.abs(parseInt(body.top, 10));
-        element.css({
-          height: hViewport + 'px'
-        });
-      }
-
-      // backdrop may be outside the $rootElement, tell ngAnimate to animate regardless
-      if ($animate.pin) $animate.pin(element, $rootElement);
-
-      $$rAF(function () {
-
-        // Often $animate.enter() is used to append the backDrop element
-        // so let's wait until $animate is done...
-        var parent = element.parent()[0];
-        if (parent) {
-          var styles = $window.getComputedStyle(parent);
-          if (styles.position == 'static') {
-            // backdrop uses position:absolute and will not work properly with parent position:static (default)
-            $log.warn(ERROR_CSS_POSITION);
-          }
-        }
-
-        $mdTheming.inherit(element, element.parent());
-      });
-
-    }
-
-  }]);
-
-})();
-(function(){
-"use strict";
-
 /**
  * @ngdoc module
  * @name material.components.bottomSheet
@@ -5510,9 +5633,10 @@ MdBottomSheetDirective.$inject = ["$mdBottomSheet"];
  *   be used as names of values to inject into the controller. For example,
  *   `locals: {three: 3}` would inject `three` into the controller with the value
  *   of 3.
- *   - `targetEvent` - `{DOMClickEvent=}`: A click's event object. When passed in as an option,
- *   the location of the click will be used as the starting point for the opening animation
- *   of the the dialog.
+ *   - `clickOutsideToClose` - `{boolean=}`: Whether the user can click outside the bottom sheet to
+ *     close it. Default true.
+ *   - `escapeToClose` - `{boolean=}`: Whether the user can press escape to close the bottom sheet.
+ *     Default true.
  *   - `resolve` - `{object=}`: Similar to locals, except it takes promises as values
  *   and the bottom sheet will not open until the promises resolve.
  *   - `controllerAs` - `{string=}`: An alias to assign the controller to on the scope.
@@ -5558,7 +5682,7 @@ function MdBottomSheetProvider($$interimElementProvider) {
   bottomSheetDefaults.$inject = ["$animate", "$mdConstant", "$mdUtil", "$mdTheming", "$mdBottomSheet", "$rootElement", "$mdGesture"];
   return $$interimElementProvider('$mdBottomSheet')
     .setDefaults({
-      methods: ['disableParentScroll', 'escapeToClose', 'targetEvent'],
+      methods: ['disableParentScroll', 'escapeToClose', 'clickOutsideToClose'],
       options: bottomSheetDefaults
     });
 
@@ -5568,10 +5692,10 @@ function MdBottomSheetProvider($$interimElementProvider) {
 
     return {
       themable: true,
-      targetEvent: null,
       onShow: onShow,
       onRemove: onRemove,
       escapeToClose: true,
+      clickOutsideToClose: true,
       disableParentScroll: true
     };
 
@@ -5582,9 +5706,13 @@ function MdBottomSheetProvider($$interimElementProvider) {
 
       // Add a backdrop that will close on click
       backdrop = $mdUtil.createBackdrop(scope, "md-bottom-sheet-backdrop md-opaque");
-      backdrop.on('click', function() {
-        $mdUtil.nextTick($mdBottomSheet.cancel,true);
-      });
+
+      if (options.clickOutsideToClose) {
+        backdrop.on('click', function() {
+          $mdUtil.nextTick($mdBottomSheet.cancel,true);
+        });
+      }
+
       $mdTheming.inherit(backdrop, options.parent);
 
       $animate.enter(backdrop, options.parent, null);
@@ -5592,8 +5720,6 @@ function MdBottomSheetProvider($$interimElementProvider) {
       var bottomSheet = new BottomSheet(element, options.parent);
       options.bottomSheet = bottomSheet;
 
-      // Give up focus on calling item
-      options.targetEvent && angular.element(options.targetEvent.target).blur();
       $mdTheming.inherit(bottomSheet.element, options.parent);
 
       if (options.disableParentScroll) {
@@ -5633,9 +5759,6 @@ function MdBottomSheetProvider($$interimElementProvider) {
         }
 
         bottomSheet.cleanup();
-
-        // Restore focus
-        options.targetEvent && angular.element(options.targetEvent.target).focus();
       });
     }
 
@@ -5690,6 +5813,74 @@ function MdBottomSheetProvider($$interimElementProvider) {
 
 }
 MdBottomSheetProvider.$inject = ["$$interimElementProvider"];
+
+})();
+(function(){
+"use strict";
+
+/*
+ * @ngdoc module
+ * @name material.components.backdrop
+ * @description Backdrop
+ */
+
+/**
+ * @ngdoc directive
+ * @name mdBackdrop
+ * @module material.components.backdrop
+ *
+ * @restrict E
+ *
+ * @description
+ * `<md-backdrop>` is a backdrop element used by other components, such as dialog and bottom sheet.
+ * Apply class `opaque` to make the backdrop use the theme backdrop color.
+ *
+ */
+
+angular
+  .module('material.components.backdrop', ['material.core'])
+  .directive('mdBackdrop', ["$mdTheming", "$animate", "$rootElement", "$window", "$log", "$$rAF", "$document", function BackdropDirective($mdTheming, $animate, $rootElement, $window, $log, $$rAF, $document) {
+    var ERROR_CSS_POSITION = "<md-backdrop> may not work properly in a scrolled, static-positioned parent container.";
+
+    return {
+      restrict: 'E',
+      link: postLink
+    };
+
+    function postLink(scope, element, attrs) {
+
+      // If body scrolling has been disabled using mdUtil.disableBodyScroll(),
+      // adjust the 'backdrop' height to account for the fixed 'body' top offset
+      var body = $window.getComputedStyle($document[0].body);
+      if (body.position == 'fixed') {
+        var hViewport = parseInt(body.height, 10) + Math.abs(parseInt(body.top, 10));
+        element.css({
+          height: hViewport + 'px'
+        });
+      }
+
+      // backdrop may be outside the $rootElement, tell ngAnimate to animate regardless
+      if ($animate.pin) $animate.pin(element, $rootElement);
+
+      $$rAF(function () {
+
+        // Often $animate.enter() is used to append the backDrop element
+        // so let's wait until $animate is done...
+        var parent = element.parent()[0];
+        if (parent) {
+          var styles = $window.getComputedStyle(parent);
+          if (styles.position == 'static') {
+            // backdrop uses position:absolute and will not work properly with parent position:static (default)
+            $log.warn(ERROR_CSS_POSITION);
+          }
+        }
+
+        $mdTheming.inherit(element, element.parent());
+      });
+
+    }
+
+  }]);
 
 })();
 (function(){
@@ -5864,7 +6055,7 @@ angular.module('material.components.card', [
  * fit within a single view on a platform, but it can temporarily expand as needed.
  *
  * @usage
- * ###Card with optional footer
+ * ### Card with optional footer
  * <hljs lang="html">
  * <md-card>
  *  <img src="card-image.png" class="md-card-image" alt="image caption">
@@ -5878,7 +6069,7 @@ angular.module('material.components.card', [
  * </md-card>
  * </hljs>
  *
- * ###Card with actions
+ * ### Card with actions
  * <hljs lang="html">
  * <md-card>
  *  <img src="card-image.png" class="md-card-image" alt="image caption">
@@ -5903,22 +6094,6 @@ function mdCardDirective($mdTheming) {
   };
 }
 mdCardDirective.$inject = ["$mdTheming"];
-
-})();
-(function(){
-"use strict";
-
-/**
- * @ngdoc module
- * @name material.components.chips
- */
-/*
- * @see js folder for chips implementation
- */
-angular.module('material.components.chips', [
-  'material.core',
-  'material.components.autocomplete'
-]);
 
 })();
 (function(){
@@ -6100,6 +6275,22 @@ function MdCheckboxDirective(inputDirective, $mdAria, $mdConstant, $mdTheming, $
   }
 }
 MdCheckboxDirective.$inject = ["inputDirective", "$mdAria", "$mdConstant", "$mdTheming", "$mdUtil", "$timeout"];
+
+})();
+(function(){
+"use strict";
+
+/**
+ * @ngdoc module
+ * @name material.components.chips
+ */
+/*
+ * @see js folder for chips implementation
+ */
+angular.module('material.components.chips', [
+  'material.core',
+  'material.components.autocomplete'
+]);
 
 })();
 (function(){
@@ -8132,6 +8323,9 @@ MdDialogDirective.$inject = ["$$rAF", "$mdTheming", "$mdDialog"];
  * - Complex dialogs can be sized with `flex="percentage"`, i.e. `flex="66"`.
  * - Default max-width is 80% of the `rootElement` or `parent`.
  *
+ * ## Css
+ * - `.md-dialog-content` - class that sets the padding on the content as the spec file
+ *
  * @usage
  * <hljs lang="html">
  * <div  ng-app="demoApp" ng-controller="EmployeeController">
@@ -8396,9 +8590,18 @@ MdDialogDirective.$inject = ["$$rAF", "$mdTheming", "$mdDialog"];
  *   - `templateUrl` - `{string=}`: The url of a template that will be used as the content
  *   of the dialog.
  *   - `template` - `{string=}`: Same as templateUrl, except this is an actual template string.
+ *   - `autoWrap` - `{boolean=}`: Whether or not to automatically wrap the template with a
+ *     `<md-dialog>` tag if one is not provided. Defaults to true. Can be disabled if you provide a
+ *     custom dialog directive.
  *   - `targetEvent` - `{DOMClickEvent=}`: A click's event object. When passed in as an option,
  *     the location of the click will be used as the starting point for the opening animation
  *     of the the dialog.
+ *   - `openFrom` - `{string|Element|object}`: The query selector, DOM element or the Rect object
+ *     that is used to determine the bounds (top, left, height, width) from which the Dialog will
+ *     originate.
+ *   - `closeTo` - `{string|Element|object}`: The query selector, DOM element or the Rect object
+ *     that is used to determine the bounds (top, left, height, width) to which the Dialog will
+ *     target.
  *   - `scope` - `{object=}`: the scope to link the template / controller to. If none is specified,
  *     it will create a new isolate scope.
  *     This scope will be destroyed when the dialog is removed unless `preserveScope` is set to true.
@@ -8427,9 +8630,11 @@ MdDialogDirective.$inject = ["$$rAF", "$mdTheming", "$mdDialog"];
  *   - `controllerAs` - `{string=}`: An alias to assign the controller to on the scope.
  *   - `parent` - `{element=}`: The element to append the dialog to. Defaults to appending
  *     to the root element of the application.
+ *   - `onShowing` `{function=} Callback function used to announce the show() action is
+ *     starting.
  *   - `onComplete` `{function=}`: Callback function used to announce when the show() action is
  *     finished.
- *   - `onRemoving` `{function=} Callback function used to announce the close/hide() action is
+ *   - `onRemoving` `{function=}`: Callback function used to announce the close/hide() action is
  *     starting. This allows developers to run custom animations in parallel the close animations.
  *
  * @returns {promise} A promise that can be resolved with `$mdDialog.hide()` or
@@ -8466,7 +8671,7 @@ function MdDialogProvider($$interimElementProvider) {
   dialogDefaultOptions.$inject = ["$mdDialog", "$mdAria", "$mdUtil", "$mdConstant", "$animate", "$document", "$window", "$rootElement"];
   return $$interimElementProvider('$mdDialog')
     .setDefaults({
-      methods: ['disableParentScroll', 'hasBackdrop', 'clickOutsideToClose', 'escapeToClose', 'targetEvent', 'parent'],
+      methods: ['disableParentScroll', 'hasBackdrop', 'clickOutsideToClose', 'escapeToClose', 'targetEvent', 'closeTo', 'openFrom', 'parent'],
       options: dialogDefaultOptions
     })
     .addPreset('alert', {
@@ -8482,8 +8687,8 @@ function MdDialogProvider($$interimElementProvider) {
   function advancedDialogOptions($mdDialog, $mdTheming) {
     return {
       template: [
-        '<md-dialog md-theme="{{ dialog.theme }}" aria-label="{{ dialog.ariaLabel }}" class="{{ dialog.css }}">',
-        ' <md-dialog-content role="document" tabIndex="-1">',
+        '<md-dialog md-theme="{{ dialog.theme }}" aria-label="{{ dialog.ariaLabel }}" ng-class="dialog.css">',
+        ' <md-dialog-content class="md-dialog-content" role="document" tabIndex="-1">',
         '   <h2 class="md-title">{{ dialog.title }}</h2>',
         '   <div class="md-dialog-content-body" md-template="::dialog.mdContent"></div>',
         ' </md-dialog-content>',
@@ -8522,17 +8727,23 @@ function MdDialogProvider($$interimElementProvider) {
       clickOutsideToClose: false,
       escapeToClose: true,
       targetEvent: null,
+      closeTo: null,
+      openFrom: null,
       focusOnOpen: true,
       disableParentScroll: true,
-      transformTemplate: function(template) {
+      autoWrap: true,
+      transformTemplate: function(template, options) {
         return '<div class="md-dialog-container">' + validatedTemplate(template) + '</div>';
 
         /**
          * The specified template should contain a <md-dialog> wrapper element....
          */
         function validatedTemplate(template) {
-          template || ""
-          return /<\/md-dialog>/g.test(template) ? template : "<md-dialog>" + template + "</md-dialog>";
+          if (options.autoWrap && !/<\/md-dialog>/g.test(template)) {
+            return '<md-dialog>' + (template || '') + '</md-dialog>';
+          } else {
+            return template || '';
+          }
         }
       }
     };
@@ -8545,7 +8756,7 @@ function MdDialogProvider($$interimElementProvider) {
 
       wrapSimpleContent();
 
-      captureSourceAndParent(element, options);
+      captureParentAndFromToElements(options);
       configureAria(element.find('md-dialog'), options);
       showBackdrop(scope, element, options);
 
@@ -8635,40 +8846,65 @@ function MdDialogProvider($$interimElementProvider) {
     }
 
     /**
-     * Capture originator/trigger element information (if available)
+     * Capture originator/trigger/from/to element information (if available)
      * and the parent container for the dialog; defaults to the $rootElement
      * unless overridden in the options.parent
      */
-    function captureSourceAndParent(element, options) {
-      options.origin = angular.extend({
-        element: null,
-        bounds: null,
-        focus: angular.noop
-      }, options.origin || {});
+    function captureParentAndFromToElements(options) {
+          options.origin = angular.extend({
+            element: null,
+            bounds: null,
+            focus: angular.noop
+          }, options.origin || {});
 
-      var source = angular.element((options.targetEvent || {}).target);
-      if (source && source.length) {
-        // Compute and save the target element's bounding rect, so that if the
-        // element is hidden when the dialog closes, we can shrink the dialog
-        // back to the same position it expanded from.
-        options.origin.element = source;
-        options.origin.bounds = source[0].getBoundingClientRect();
-        options.origin.focus = function() {
-          source.focus();
+          options.parent   = getDomElement(options.parent, $rootElement);
+          options.closeTo  = getBoundingClientRect(getDomElement(options.closeTo));
+          options.openFrom = getBoundingClientRect(getDomElement(options.openFrom));
+
+          if ( options.targetEvent ) {
+            options.origin   = getBoundingClientRect(options.targetEvent.target, options.origin);
+          }
+
+          /**
+           * Identify the bounding RECT for the target element
+           *
+           */
+          function getBoundingClientRect (element, orig) {
+            var source = angular.element((element || {}));
+            if (source && source.length) {
+              // Compute and save the target element's bounding rect, so that if the
+              // element is hidden when the dialog closes, we can shrink the dialog
+              // back to the same position it expanded from.
+              //
+              // Checking if the source is a rect object or a DOM element
+              var bounds = {top:0,left:0,height:0,width:0};
+              var hasFn = angular.isFunction(source[0].getBoundingClientRect);
+
+              return angular.extend(orig || {}, {
+                  element : hasFn ? source : undefined,
+                  bounds  : hasFn ? source[0].getBoundingClientRect() : angular.extend({}, bounds, source[0]),
+                  focus   : angular.bind(source, source.focus),
+              });
+            }
+          }
+
+          /**
+           * If the specifier is a simple string selector, then query for
+           * the DOM element.
+           */
+          function getDomElement(element, defaultElement) {
+            if (angular.isString(element)) {
+              var simpleSelector = element,
+                container = $document[0].querySelectorAll(simpleSelector);
+                element = container.length ? container[0] : null;
+            }
+
+            // If we have a reference to a raw dom element, always wrap it in jqLite
+            return angular.element(element || defaultElement);
+          }
+
+
         }
-      }
-
-      // If the parent specifier is a simple string selector, then query for
-      // the DOM element.
-      if ( angular.isString(options.parent) ) {
-        var simpleSelector = options.parent,
-            container = $document[0].querySelectorAll(simpleSelector);
-        options.parent = container.length ? container[0] : null;
-      }
-      // If we have a reference to a raw dom element, always wrap it in jqLite
-      options.parent = angular.element(options.parent || $rootElement);
-
-    }
 
     /**
      * Listen for escape keys and outside clicks to auto close
@@ -8698,25 +8934,37 @@ function MdDialogProvider($$interimElementProvider) {
           }
         };
 
-        // Add keyup listeners
-        element.on('keyup', keyHandlerFn);
-        target.on('keyup', keyHandlerFn);
+        // Add keydown listeners
+        element.on('keydown', keyHandlerFn);
+        target.on('keydown', keyHandlerFn);
         window.on('resize', onWindowResize);
 
         // Queue remove listeners function
         removeListeners.push(function() {
 
-          element.off('keyup', keyHandlerFn);
-          target.off('keyup', keyHandlerFn);
+          element.off('keydown', keyHandlerFn);
+          target.off('keydown', keyHandlerFn);
           window.off('resize', onWindowResize);
 
         });
       }
       if (options.clickOutsideToClose) {
         var target = element;
-        var clickHandler = function(ev) {
-          // Only close if we click the flex container outside on the backdrop
-          if (ev.target === target[0]) {
+        var sourceElem;
+
+        // Keep track of the element on which the mouse originally went down
+        // so that we can only close the backdrop when the 'click' started on it.
+        // A simple 'click' handler does not work,
+        // it sets the target object as the element the mouse went down on.
+        var mousedownHandler = function(ev) {
+          sourceElem = ev.target;
+        };
+
+        // We check if our original element and the target is the backdrop
+        // because if the original was the backdrop and the target was inside the dialog
+        // we don't want to dialog to close.
+        var mouseupHandler = function(ev) {
+          if (sourceElem === target[0] && ev.target === target[0]) {
             ev.stopPropagation();
             ev.preventDefault();
 
@@ -8724,12 +8972,14 @@ function MdDialogProvider($$interimElementProvider) {
           }
         };
 
-        // Add click listeners
-        target.on('click', clickHandler);
+        // Add listeners
+        target.on('mousedown', mousedownHandler);
+        target.on('mouseup', mouseupHandler);
 
         // Queue remove listeners function
         removeListeners.push(function() {
-          target.off('click', clickHandler);
+          target.off('mousedown', mousedownHandler);
+          target.off('mouseup', mouseupHandler);
         });
       }
 
@@ -8880,19 +9130,26 @@ function MdDialogProvider($$interimElementProvider) {
       var animator = $mdUtil.dom.animator;
       var buildTranslateToOrigin = animator.calculateZoomToOrigin;
       var translateOptions = {transitionInClass: 'md-transition-in', transitionOutClass: 'md-transition-out'};
-      var from = animator.toTransformCss(buildTranslateToOrigin(dialogEl, options.origin));
+      var from = animator.toTransformCss(buildTranslateToOrigin(dialogEl, options.openFrom || options.origin));
       var to = animator.toTransformCss("");  // defaults to center display (or parent or $rootElement)
 
       return animator
         .translate3d(dialogEl, from, to, translateOptions)
         .then(function(animateReversal) {
-
-
-
           // Build a reversal translate function synched to this translation...
           options.reverseAnimate = function() {
-
             delete options.reverseAnimate;
+
+            if (options.closeTo) {
+              // Using the opposite classes to create a close animation to the closeTo element
+              translateOptions = {transitionInClass: 'md-transition-out', transitionOutClass: 'md-transition-in'};
+              from = to;
+              to = animator.toTransformCss(buildTranslateToOrigin(dialogEl, options.closeTo));
+
+              return animator
+                .translate3d(dialogEl, from, to,translateOptions);
+            }
+
             return animateReversal(
               animator.toTransformCss(
                 // in case the origin element has moved or is hidden,
@@ -8990,7 +9247,7 @@ MdDividerDirective.$inject = ["$mdTheming"];
    *
    * @description
    * The `<md-fab-actions>` directive is used inside of a `<md-fab-speed-dial>` or
-   * `<md-fab-toolbar>` directive to mark the an element (or elements) as the actions and setup the
+   * `<md-fab-toolbar>` directive to mark an element (or elements) as the actions and setup the
    * proper event listeners.
    *
    * @usage
@@ -9031,10 +9288,210 @@ MdDividerDirective.$inject = ["$mdTheming"];
 (function() {
   'use strict';
 
+  /**
+   * @ngdoc module
+   * @name material.components.fabToolbar
+   */
+  angular
+    // Declare our module
+    .module('material.components.fabToolbar', [
+      'material.core',
+      'material.components.fabShared',
+      'material.components.fabTrigger',
+      'material.components.fabActions'
+    ])
+
+    // Register our directive
+    .directive('mdFabToolbar', MdFabToolbarDirective)
+
+    // Register our custom animations
+    .animation('.md-fab-toolbar', MdFabToolbarAnimation)
+
+    // Register a service for the animation so that we can easily inject it into unit tests
+    .service('mdFabToolbarAnimation', MdFabToolbarAnimation);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabToolbar
+   * @module material.components.fabToolbar
+   *
+   * @restrict E
+   *
+   * @description
+   *
+   * The `<md-fab-toolbar>` directive is used present a toolbar of elements (usually `<md-button>`s)
+   * for quick access to common actions when a floating action button is activated (via click or
+   * keyboard navigation).
+   *
+   * You may also easily position the trigger by applying one one of the following classes to the
+   * `<md-fab-toolbar>` element:
+   *  - `md-fab-top-left`
+   *  - `md-fab-top-right`
+   *  - `md-fab-bottom-left`
+   *  - `md-fab-bottom-right`
+   *
+   * These CSS classes use `position: absolute`, so you need to ensure that the container element
+   * also uses `position: absolute` or `position: relative` in order for them to work.
+   *
+   * @usage
+   *
+   * <hljs lang="html">
+   * <md-fab-toolbar md-direction='left'>
+   *   <md-fab-trigger>
+   *     <md-button aria-label="Add..."><md-icon icon="/img/icons/plus.svg"></md-icon></md-button>
+   *   </md-fab-trigger>
+   *
+   *   <md-fab-actions>
+   *     <md-button aria-label="Add User">
+   *       <md-icon icon="/img/icons/user.svg"></md-icon>
+   *     </md-button>
+   *
+   *     <md-button aria-label="Add Group">
+   *       <md-icon icon="/img/icons/group.svg"></md-icon>
+   *     </md-button>
+   *   </md-fab-actions>
+   * </md-fab-toolbar>
+   * </hljs>
+   *
+   * @param {string} md-direction From which direction you would like the toolbar items to appear
+   * relative to the trigger element. Supports `left` and `right` directions.
+   * @param {expression=} md-open Programmatically control whether or not the toolbar is visible.
+   */
+  function MdFabToolbarDirective() {
+    return {
+      restrict: 'E',
+      transclude: true,
+      template: '<div class="md-fab-toolbar-wrapper">' +
+      '  <div class="md-fab-toolbar-content" ng-transclude></div>' +
+      '</div>',
+
+      scope: {
+        direction: '@?mdDirection',
+        isOpen: '=?mdOpen'
+      },
+
+      bindToController: true,
+      controller: 'FabController',
+      controllerAs: 'vm',
+
+      link: link
+    };
+
+    function link(scope, element, attributes) {
+      // Add the base class for animations
+      element.addClass('md-fab-toolbar');
+
+      // Prepend the background element to the trigger's button
+      element.find('md-fab-trigger').find('button')
+        .prepend('<div class="md-fab-toolbar-background"></div>');
+    }
+  }
+
+  function MdFabToolbarAnimation() {
+
+    function runAnimation(element, className, done) {
+      // If no className was specified, don't do anything
+      if (!className) {
+        return;
+      }
+
+      var el = element[0];
+      var ctrl = element.controller('mdFabToolbar');
+
+      // Grab the relevant child elements
+      var backgroundElement = el.querySelector('.md-fab-toolbar-background');
+      var triggerElement = el.querySelector('md-fab-trigger button');
+      var toolbarElement = el.querySelector('md-toolbar');
+      var iconElement = el.querySelector('md-fab-trigger button md-icon');
+      var actions = element.find('md-fab-actions').children();
+
+      // If we have both elements, use them to position the new background
+      if (triggerElement && backgroundElement) {
+        // Get our variables
+        var color = window.getComputedStyle(triggerElement).getPropertyValue('background-color');
+        var width = el.offsetWidth;
+        var height = el.offsetHeight;
+
+        // Make it twice as big as it should be since we scale from the center
+        var scale = 2 * (width / triggerElement.offsetWidth);
+
+        // Set some basic styles no matter what animation we're doing
+        backgroundElement.style.backgroundColor = color;
+        backgroundElement.style.borderRadius = width + 'px';
+
+        // If we're open
+        if (ctrl.isOpen) {
+          // Turn on toolbar pointer events when closed
+          toolbarElement.style.pointerEvents = 'initial';
+
+          backgroundElement.style.width = triggerElement.offsetWidth + 'px';
+          backgroundElement.style.height = triggerElement.offsetHeight + 'px';
+          backgroundElement.style.transform = 'scale(' + scale + ')';
+
+          // Set the next close animation to have the proper delays
+          backgroundElement.style.transitionDelay = '0ms';
+          iconElement && (iconElement.style.transitionDelay = '.3s');
+
+          // Apply a transition delay to actions
+          angular.forEach(actions, function(action, index) {
+            action.style.transitionDelay = (actions.length - index) * 25 + 'ms';
+          });
+        } else {
+          // Turn off toolbar pointer events when closed
+          toolbarElement.style.pointerEvents = 'none';
+
+          // Scale it back down to the trigger's size
+          backgroundElement.style.transform = 'scale(1)';
+
+          // Reset the position
+          backgroundElement.style.top = '0';
+
+          if (element.hasClass('md-right')) {
+            backgroundElement.style.left = '0';
+            backgroundElement.style.right = null;
+          }
+
+          if (element.hasClass('md-left')) {
+            backgroundElement.style.right = '0';
+            backgroundElement.style.left = null;
+          }
+
+          // Set the next open animation to have the proper delays
+          backgroundElement.style.transitionDelay = '200ms';
+          iconElement && (iconElement.style.transitionDelay = '0ms');
+
+          // Apply a transition delay to actions
+          angular.forEach(actions, function(action, index) {
+            action.style.transitionDelay = 200 + (index * 25) + 'ms';
+          });
+        }
+      }
+    }
+
+    return {
+      addClass: function(element, className, done) {
+        runAnimation(element, className, done);
+        done();
+      },
+
+      removeClass: function(element, className, done) {
+        runAnimation(element, className, done);
+        done();
+      }
+    }
+  }
+})();
+})();
+(function(){
+"use strict";
+
+(function() {
+  'use strict';
+
   angular.module('material.components.fabShared', ['material.core'])
     .controller('FabController', FabController);
 
-  function FabController($scope, $element, $animate, $mdUtil, $mdConstant) {
+  function FabController($scope, $element, $animate, $mdUtil, $mdConstant, $timeout) {
     var vm = this;
 
     // NOTE: We use async evals below to avoid conflicts with any existing digest loops
@@ -9072,11 +9529,13 @@ MdDividerDirective.$inject = ["$mdTheming"];
       resetActionIndex();
     }
 
-    var events = [];
-
     function setupListeners() {
       var eventTypes = [
-        'mousedown', 'mouseup', 'click', 'touchstart', 'touchend', 'focusin', 'focusout'
+        '$md.pressdown',
+
+        'click', // Fired via keyboard ENTER
+
+        'focusin', 'focusout'
       ];
 
       // Add our listeners
@@ -9089,107 +9548,41 @@ MdDividerDirective.$inject = ["$mdTheming"];
         angular.forEach(eventTypes, function(eventType) {
           $element.off(eventType, parseEvents);
         });
+
         // remove any attached keyboard handlers in case element is removed while
         // speed dial is open
         disableKeyboard();
       });
     }
 
-    function resetEvents() {
-      events = [];
-    }
-
-    function equalsEvents(toCheck) {
-      var isEqual, strippedCheck, moreToCheck;
-
-      // Quick check to make sure we don't get stuck in an infinite loop
-      var numTests = 0;
-
-      do {
-        // Strip out the question mark
-        strippedCheck = toCheck.map(function(event) {
-          return event.replace('?', '')
-        });
-
-        // Check if they are equal
-        isEqual = angular.equals(events, strippedCheck);
-
-        // If not, check to see if removing an optional event makes them equal
-        if (!isEqual) {
-          toCheck = removeOptionalEvent(toCheck);
-          moreToCheck = (toCheck.length >= events.length && toCheck.length !== strippedCheck.length);
-        }
-      }
-      while (numTests < 10 && !isEqual && moreToCheck);
-
-      return isEqual;
-    }
-
-    function removeOptionalEvent(events) {
-      var foundOptional = false;
-
-      return events.filter(function(event) {
-        // If we have not found an optional one, keep searching
-        if (!foundOptional && event.indexOf('?') !== -1) {
-          foundOptional = true;
-
-          // If we find an optional one, remove only that one and keep going
-          return false;
-        }
-
-        return true;
-      });
-    }
-
-    function parseEvents(latestEvent) {
-      events.push(latestEvent.type);
-
-      // Handle desktop click
-      if (equalsEvents(['mousedown', 'focusout?', 'focusin?', 'mouseup', 'click'])) {
-        handleItemClick(latestEvent);
-        resetEvents();
+    var recentEvent;
+    function parseEvents(event) {
+      // If we've had a recent press/click event, or material is sending us an additional event,
+      // ignore it
+      if (recentEvent && (isClick(recentEvent) || recentEvent.$material)) {
         return;
       }
 
-      // Handle mobile click/tap (and keyboard enter)
-      if (equalsEvents(['touchstart?', 'touchend?', 'click'])) {
-        handleItemClick(latestEvent);
-        resetEvents();
-        return;
-      }
+      // Otherwise, handle our events
+      if (isClick(event)) {
+        handleItemClick(event);
 
-      // Handle tab keys (focusin)
-      if (equalsEvents(['focusin'])) {
+        // Store our recent click event
+        recentEvent = event;
+      } else if (event.type == 'focusin') {
         vm.open();
-        resetEvents();
-        return;
-      }
-
-      // Handle tab keys (focusout)
-      if (equalsEvents(['focusout'])) {
+      } else if (event.type == 'focusout') {
         vm.close();
-        resetEvents();
-        return;
       }
 
-      eventUnhandled();
+      // Clear the recent event after all others have fired so we stop ignoring
+      $timeout(function() {
+        recentEvent = null;
+      }, 100, false);
     }
 
-    /*
-     * No event was handled, so setup a timeout to clear the events
-     *
-     * TODO: Use $mdUtil.debounce()?
-     */
-    var resetEventsTimeout;
-
-    function eventUnhandled() {
-      if (resetEventsTimeout) {
-        window.clearTimeout(resetEventsTimeout);
-      }
-
-      resetEventsTimeout = window.setTimeout(function() {
-        resetEvents();
-      }, 250);
+    function isClick(event) {
+      return event.type == '$md.pressdown' || event.type == 'click';
     }
 
     function resetActionIndex() {
@@ -9249,6 +9642,9 @@ MdDividerDirective.$inject = ["$mdTheming"];
 
     function enableKeyboard() {
       angular.element(document).on('keydown', keyPressed);
+
+      // TODO: On desktop, we should be able to reset the indexes so you cannot tab through
+      //resetActionTabIndexes();
     }
 
     function disableKeyboard() {
@@ -9275,13 +9671,7 @@ MdDividerDirective.$inject = ["$mdTheming"];
     }
 
     function focusAction(event, direction) {
-      // Grab all of the actions
-      var actions = getActionsElement()[0].querySelectorAll('.md-fab-action-item');
-
-      // Disable all other actions for tabbing
-      angular.forEach(actions, function(action) {
-        angular.element(angular.element(action).children()[0]).attr('tabindex', -1);
-      });
+      var actions = resetActionTabIndexes();
 
       // Increment/decrement the counter with restrictions
       vm.currentActionIndex = vm.currentActionIndex + direction;
@@ -9296,6 +9686,18 @@ MdDividerDirective.$inject = ["$mdTheming"];
       // Make sure the event doesn't bubble and cause something else
       event.preventDefault();
       event.stopImmediatePropagation();
+    }
+
+    function resetActionTabIndexes() {
+      // Grab all of the actions
+      var actions = getActionsElement()[0].querySelectorAll('.md-fab-action-item');
+
+      // Disable all other actions for tabbing
+      angular.forEach(actions, function(action) {
+        angular.element(angular.element(action).children()[0]).attr('tabindex', -1);
+      });
+
+      return actions;
     }
 
     function doKeyLeft(event) {
@@ -9356,7 +9758,7 @@ MdDividerDirective.$inject = ["$mdTheming"];
       return $element.find('md-fab-actions');
     }
   }
-  FabController.$inject = ["$scope", "$element", "$animate", "$mdUtil", "$mdConstant"];
+  FabController.$inject = ["$scope", "$element", "$animate", "$mdUtil", "$mdConstant", "$timeout"];
 })();
 
 })();
@@ -9418,6 +9820,11 @@ MdDividerDirective.$inject = ["$mdTheming"];
    * These CSS classes use `position: absolute`, so you need to ensure that the container element
    * also uses `position: absolute` or `position: relative` in order for them to work.
    *
+   * Additionally, you may use the standard `ng-mouseenter` and `ng-mouseleave` directives to
+   * open or close the speed dial. However, if you wish to allow users to hover over the empty
+   * space where the actions will appear, you must also add the `md-hover-full` class to the speed
+   * dial element. Without this, the hover effect will only occur on top of the trigger.
+   *
    * @usage
    * <hljs lang="html">
    * <md-fab-speed-dial md-direction="up" class="md-fling">
@@ -9437,7 +9844,7 @@ MdDividerDirective.$inject = ["$mdTheming"];
    * </md-fab-speed-dial>
    * </hljs>
    *
-   * @param {string=} md-direction From which direction you would like the speed dial to appear
+   * @param {string} md-direction From which direction you would like the speed dial to appear
    * relative to the trigger element.
    * @param {expression=} md-open Programmatically control whether or not the speed-dial is visible.
    */
@@ -9547,14 +9954,23 @@ MdDividerDirective.$inject = ["$mdTheming"];
       var ctrl = element.controller('mdFabSpeedDial');
       var items = el.querySelectorAll('.md-fab-action-item');
 
+      // Grab our element which stores CSS variables
+      var variablesElement = el.querySelector('.md-css-variables');
+
+      // Setup JS variables based on our CSS variables
+      var startZIndex = parseInt(window.getComputedStyle(variablesElement).zIndex);
+
       // Always reset the items to their natural position/state
       angular.forEach(items, function(item, index) {
         var styles = item.style,
           offsetDelay = index * delay;
 
         styles.opacity = ctrl.isOpen ? 1 : 0;
-        styles.transform = styles.webkitTransform = ctrl.isOpen ? 'scale(1)' : 'scale(0)';
+        styles.transform = styles.webkitTransform = ctrl.isOpen ? 'scale(1)' : 'scale(0.1)';
         styles.transitionDelay = (ctrl.isOpen ? offsetDelay : (items.length - offsetDelay)) + 'ms';
+
+        // Make the items closest to the trigger have the highest z-index
+        styles.zIndex = (items.length - index) + startZIndex;
       });
     }
 
@@ -9581,211 +9997,38 @@ MdDividerDirective.$inject = ["$mdTheming"];
 
   /**
    * @ngdoc module
-   * @name material.components.fabToolbar
+   * @name material.components.fabTrigger
    */
   angular
-    // Declare our module
-    .module('material.components.fabToolbar', [
-      'material.core',
-      'material.components.fabShared',
-      'material.components.fabTrigger',
-      'material.components.fabActions'
-    ])
-
-    // Register our directive
-    .directive('mdFabToolbar', MdFabToolbarDirective)
-
-    // Register our custom animations
-    .animation('.md-fab-toolbar', MdFabToolbarAnimation)
-
-    // Register a service for the animation so that we can easily inject it into unit tests
-    .service('mdFabToolbarAnimation', MdFabToolbarAnimation);
+    .module('material.components.fabTrigger', ['material.core'])
+    .directive('mdFabTrigger', MdFabTriggerDirective);
 
   /**
    * @ngdoc directive
-   * @name mdFabToolbar
-   * @module material.components.fabToolbar
+   * @name mdFabTrigger
+   * @module material.components.fabSpeedDial
    *
    * @restrict E
    *
    * @description
-   *
-   * The `<md-fab-toolbar>` directive is used present a toolbar of elements (usually `<md-button>`s)
-   * for quick access to common actions when a floating action button is activated (via click or
-   * keyboard navigation).
-   *
-   * You may also easily position the trigger by applying one one of the following classes to the
-   * `<md-fab-toolbar>` element:
-   *  - `md-fab-top-left`
-   *  - `md-fab-top-right`
-   *  - `md-fab-bottom-left`
-   *  - `md-fab-bottom-right`
-   *
-   * These CSS classes use `position: absolute`, so you need to ensure that the container element
-   * also uses `position: absolute` or `position: relative` in order for them to work.
+   * The `<md-fab-trigger>` directive is used inside of a `<md-fab-speed-dial>` or
+   * `<md-fab-toolbar>` directive to mark an element (or elements) as the trigger and setup the
+   * proper event listeners.
    *
    * @usage
-   *
-   * <hljs lang="html">
-   * <md-fab-toolbar md-direction='left'>
-   *   <md-fab-trigger>
-   *     <md-button aria-label="Add..."><md-icon icon="/img/icons/plus.svg"></md-icon></md-button>
-   *   </md-fab-trigger>
-   *
-   *   <md-fab-actions>
-   *     <md-button aria-label="Add User">
-   *       <md-icon icon="/img/icons/user.svg"></md-icon>
-   *     </md-button>
-   *
-   *     <md-button aria-label="Add Group">
-   *       <md-icon icon="/img/icons/group.svg"></md-icon>
-   *     </md-button>
-   *   </md-fab-actions>
-   * </md-fab-toolbar>
-   * </hljs>
-   *
-   * @param {string=} md-direction From which direction you would like the toolbar items to appear
-   * relative to the trigger element. Supports `left` and `right` directions.
-   * @param {expression=} md-open Programmatically control whether or not the toolbar is visible.
+   * See the `<md-fab-speed-dial>` or `<md-fab-toolbar>` directives for example usage.
    */
-  function MdFabToolbarDirective() {
+  function MdFabTriggerDirective() {
+    // TODO: Remove this completely?
     return {
       restrict: 'E',
-      transclude: true,
-      template: '<div class="md-fab-toolbar-wrapper">' +
-      '  <div class="md-fab-toolbar-content" ng-transclude></div>' +
-      '</div>',
 
-      scope: {
-        direction: '@?mdDirection',
-        isOpen: '=?mdOpen'
-      },
-
-      bindToController: true,
-      controller: 'FabController',
-      controllerAs: 'vm',
-
-      link: link
+      require: ['^?mdFabSpeedDial', '^?mdFabToolbar']
     };
-
-    function link(scope, element, attributes) {
-      // Add the base class for animations
-      element.addClass('md-fab-toolbar');
-
-      // Prepend the background element to the trigger's button
-      element.find('md-fab-trigger').find('button')
-        .prepend('<div class="md-fab-toolbar-background"></div>');
-    }
-  }
-
-  function MdFabToolbarAnimation() {
-
-    function runAnimation(element, className, done) {
-      // If no className was specified, don't do anything
-      if (!className) {
-        return;
-      }
-
-      var el = element[0];
-      var ctrl = element.controller('mdFabToolbar');
-
-      // Grab the relevant child elements
-      var backgroundElement = el.querySelector('.md-fab-toolbar-background');
-      var triggerElement = el.querySelector('md-fab-trigger button');
-      var toolbarElement = el.querySelector('md-toolbar');
-      var iconElement = el.querySelector('md-fab-trigger button md-icon');
-      var actions = element.find('md-fab-actions').children();
-
-      // If we have both elements, use them to position the new background
-      if (triggerElement && backgroundElement) {
-        // Get our variables
-        var color = window.getComputedStyle(triggerElement).getPropertyValue('background-color');
-        var width = el.offsetWidth;
-        var height = el.offsetHeight;
-
-        // Make a square
-        var scale = width * 2;
-
-        // Set some basic styles no matter what animation we're doing
-        backgroundElement.style.backgroundColor = color;
-        backgroundElement.style.borderRadius = width + 'px';
-
-        // If we're open
-        if (ctrl.isOpen) {
-          // Turn on toolbar pointer events when closed
-          toolbarElement.style.pointerEvents = 'initial';
-
-          // Set the width/height to take up the full toolbar width
-          backgroundElement.style.width = scale + 'px';
-          backgroundElement.style.height = scale + 'px';
-
-          // Set the top/left to move up/left (or right) by the scale width/height
-          backgroundElement.style.top = -(scale / 2) + 'px';
-
-          if (element.hasClass('md-right')) {
-            backgroundElement.style.left = -(scale / 2) + 'px';
-            backgroundElement.style.right = null;
-          }
-
-          if (element.hasClass('md-left')) {
-            backgroundElement.style.right = -(scale / 2) + 'px';
-            backgroundElement.style.left = null;
-          }
-
-          // Set the next close animation to have the proper delays
-          backgroundElement.style.transitionDelay = '0ms';
-          iconElement && (iconElement.style.transitionDelay = '.3s');
-
-          // Apply a transition delay to actions
-          angular.forEach(actions, function(action, index) {
-            action.style.transitionDelay = (actions.length - index) * 25 + 'ms';
-          });
-        } else {
-          // Turn off toolbar pointer events when closed
-          toolbarElement.style.pointerEvents = 'none';
-
-          // Otherwise, set the width/height to the trigger's width/height
-          backgroundElement.style.width = triggerElement.offsetWidth + 'px';
-          backgroundElement.style.height = triggerElement.offsetHeight + 'px';
-
-          // Reset the position
-          backgroundElement.style.top = '0px';
-
-          if (element.hasClass('md-right')) {
-            backgroundElement.style.left = '0px';
-            backgroundElement.style.right = null;
-          }
-
-          if (element.hasClass('md-left')) {
-            backgroundElement.style.right = '0px';
-            backgroundElement.style.left = null;
-          }
-
-          // Set the next open animation to have the proper delays
-          backgroundElement.style.transitionDelay = '200ms';
-          iconElement && (iconElement.style.transitionDelay = '0ms');
-
-          // Apply a transition delay to actions
-          angular.forEach(actions, function(action, index) {
-            action.style.transitionDelay = 200 + (index * 25) + 'ms';
-          });
-        }
-      }
-    }
-
-    return {
-      addClass: function(element, className, done) {
-        runAnimation(element, className, done);
-        done();
-      },
-
-      removeClass: function(element, className, done) {
-        runAnimation(element, className, done);
-        done();
-      }
-    }
   }
 })();
+
+
 })();
 (function(){
 "use strict";
@@ -9916,7 +10159,7 @@ function GridListDirective($interpolate, $mdConstant, $mdGridLayout, $mdMedia) {
             .addListener(invalidateLayout);
       }
       return $mdMedia.watchResponsiveAttributes(
-          ['md-cols', 'md-row-height'], attrs, layoutIfMediaMatch);
+          ['md-cols', 'md-row-height', 'md-gutter'], attrs, layoutIfMediaMatch);
     }
 
     function unwatchMedia() {
@@ -10111,14 +10354,12 @@ function GridListDirective($interpolate, $mdConstant, $mdGridLayout, $mdMedia) {
     }
 
     function getGridStyle(colCount, rowCount, gutter, rowMode, rowHeight) {
-      var style = {
-        height: '',
-        paddingBottom: ''
-      };
+      var style = {};
 
       switch(rowMode) {
         case 'fixed':
           style.height = DIMENSION({ unit: rowHeight, span: rowCount, gutter: gutter });
+          style.paddingBottom = '';
           break;
 
         case 'ratio':
@@ -10128,6 +10369,7 @@ function GridListDirective($interpolate, $mdConstant, $mdGridLayout, $mdMedia) {
               vShare = hShare * (1 / rowHeight),
               vUnit = UNIT({ share: vShare, gutterShare: hGutterShare, gutter: gutter });
 
+          style.height = '';
           style.paddingBottom = DIMENSION({ unit: vUnit, span: rowCount, gutter: gutter});
           break;
 
@@ -10141,7 +10383,7 @@ function GridListDirective($interpolate, $mdConstant, $mdGridLayout, $mdMedia) {
 
     function getTileElements() {
       return [].filter.call(element.children(), function(ele) {
-        return ele.tagName == 'MD-GRID-TILE';
+        return ele.tagName == 'MD-GRID-TILE' && !ele.$$mdDestroyed;
       });
     }
 
@@ -10518,6 +10760,9 @@ function GridTileDirective($mdMedia) {
     // Tile registration/deregistration
     gridCtrl.invalidateTiles();
     scope.$on('$destroy', function() {
+      // Mark the tile as destroyed so it is no longer considered in layout,
+      // even if the DOM element sticks around (like during a leave animation)
+      element[0].$$mdDestroyed = true;
       unwatchAttrs();
       gridCtrl.invalidateLayout();
     });
@@ -10542,47 +10787,6 @@ function GridTileCaptionDirective() {
     transclude: true
   };
 }
-
-})();
-(function(){
-"use strict";
-
-(function() {
-  'use strict';
-
-  /**
-   * @ngdoc module
-   * @name material.components.fabTrigger
-   */
-  angular
-    .module('material.components.fabTrigger', ['material.core'])
-    .directive('mdFabTrigger', MdFabTriggerDirective);
-
-  /**
-   * @ngdoc directive
-   * @name mdFabTrigger
-   * @module material.components.fabSpeedDial
-   *
-   * @restrict E
-   *
-   * @description
-   * The `<md-fab-trigger>` directive is used inside of a `<md-fab-speed-dial>` or
-   * `<md-fab-toolbar>` directive to mark the an element (or elements) as the trigger and setup the
-   * proper event listeners.
-   *
-   * @usage
-   * See the `<md-fab-speed-dial>` or `<md-fab-toolbar>` directives for example usage.
-   */
-  function MdFabTriggerDirective() {
-    // TODO: Remove this completely?
-    return {
-      restrict: 'E',
-
-      require: ['^?mdFabSpeedDial', '^?mdFabToolbar']
-    };
-  }
-})();
-
 
 })();
 (function(){
@@ -10659,15 +10863,31 @@ mdListDirective.$inject = ["$mdTheming"];
  * @description
  * The `<md-list-item>` directive is a container intended for row items in a `<md-list>` container.
  *
+ * ## CSS
+ * `.md-avatar` - class for image avatars
+ *
+ * `.md-avatar-icon` - class for icon avatars
+ *
+ * `.md-offset` - on content without an avatar
+ *
  * @usage
  * <hljs lang="html">
  *  <md-list>
  *    <md-list-item>
- *            Item content in list
+ *      <img class="md-avatar" ng-src="path/to/img"/>
+ *      <span>Item content in list</span>
+ *    </md-list-item>
+ *    <md-list-item>
+ *      <md-icon class="md-avatar-icon" md-svg-icon="communication:phone"></md-icon>
+ *      <span>Item content in list</span>
  *    </md-list-item>
  *  </md-list>
  * </hljs>
  *
+ * _**Note:** We automatically apply special styling when the inner contents are wrapped inside
+ * of a `<md-button>` tag. This styling is automatically ignored for `class="md-secondary"` buttons
+ * and you can include a class of `class="md-exclude"` if you need to use a non-secondary button
+ * that is inside the list, but does not wrap the contents._
  */
 function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
   var proxiedTypes = ['md-checkbox', 'md-switch'];
@@ -10682,7 +10902,9 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
 
       tEl[0].setAttribute('role', 'listitem');
 
-      if (!tAttrs.ngClick) {
+      if (tAttrs.ngClick || tAttrs.ngHref || tAttrs.href || tAttrs.uiSref || tAttrs.ngAttrUiSref) {
+        wrapIn('button');
+      } else {
         for (var i = 0, type; type = proxiedTypes[i]; ++i) {
           if (proxyElement = tEl[0].querySelector(type)) {
             hasProxiedElement = true;
@@ -10691,11 +10913,9 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
         }
         if (hasProxiedElement) {
           wrapIn('div');
-        } else if (!tEl[0].querySelector('md-button')) {
+        } else if (!tEl[0].querySelector('md-button:not(.md-secondary):not(.md-exclude)')) {
           tEl.addClass('md-no-proxy');
         }
-      } else {
-        wrapIn('button');
       }
       setupToggleAria();
 
@@ -10723,7 +10943,8 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
           tEl.addClass('md-proxy-focus');
         } else {
           container = angular.element('<md-button class="md-no-style"><div class="md-list-item-inner"></div></md-button>');
-          var copiedAttrs = ['ng-click', 'aria-label', 'ng-disabled'];
+          var copiedAttrs = ['ng-click', 'aria-label', 'ng-disabled', 
+            'ui-sref', 'href', 'ng-href', 'ng-attr-ui-sref'];
           angular.forEach(copiedAttrs, function(attr) {
             if (tEl[0].hasAttribute(attr)) {
               container[0].setAttribute(attr, tEl[0].getAttribute(attr));
@@ -10768,7 +10989,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
 
         var proxies    = [],
             firstChild = $element[0].firstElementChild,
-            hasClick   = firstChild && firstChild.hasAttribute('ng-click');
+            hasClick   = firstChild && hasClickEvent(firstChild);
 
         computeProxies();
         computeClickable();
@@ -10792,6 +11013,14 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
               });
             });
           });
+        }
+
+        function hasClickEvent (element) {
+          var attr = element.attributes;
+          for (var i = 0; i < attr.length; i++) {
+            if ($attr.$normalize(attr[i].name) === 'ngClick') return true;
+          }
+          return false;
         }
 
         function computeProxies() {
@@ -11001,6 +11230,7 @@ function labelDirective() {
  * @param {string=} placeholder An alternative approach to using aria-label when the label is not
  *   PRESENT. The placeholder text is copied to the aria-label attribute.
  * @param md-no-autogrow {boolean=} When present, textareas will not grow automatically.
+ * @param md-detect-hidden {boolean=} When present, textareas will be sized properly when they are revealed after being hidden. This is off by default for performance reasons because it guarantees a reflow every digest cycle.
  *
  * @usage
  * <hljs lang="html">
@@ -11216,6 +11446,31 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
         var height = node.offsetHeight + line;
         node.style.height = height + 'px';
       }
+
+      // Attach a watcher to detect when the textarea gets shown.
+      if (angular.isDefined(element.attr('md-detect-hidden'))) {
+
+        var handleHiddenChange = function() {
+          var wasHidden = false;
+
+          return function() {
+            var isHidden = node.offsetHeight === 0;
+
+            if (isHidden === false && wasHidden === true) {
+              growTextarea();
+            }
+
+            wasHidden = isHidden;
+          };
+        }();
+
+        // Check every digest cycle whether the visibility of the textarea has changed.
+        // Queue up to run after the digest cycle is complete.
+        scope.$watch(function() {
+          $mdUtil.nextTick(handleHiddenChange, false);
+          return true;
+        });
+      }
     }
   }
 }
@@ -11260,7 +11515,7 @@ function mdMaxlengthDirective($animate) {
 
     ngModelCtrl.$formatters.push(renderCharCount);
     ngModelCtrl.$viewChangeListeners.push(renderCharCount);
-    element.on('input keydown', function() {
+    element.on('input keydown keyup', function() {
       renderCharCount(); //make sure it's called with no args
     });
 
@@ -11284,7 +11539,9 @@ function mdMaxlengthDirective($animate) {
     };
 
     function renderCharCount(value) {
-      charCountEl.text(( element.val() || value || '' ).length + '/' + maxlength);
+      // Force the value into a string since it may be a number,
+      // which does not have a length property.
+      charCountEl.text(String(element.val() || value || '').length + '/' + maxlength);
       return value;
     }
   }
@@ -11303,14 +11560,15 @@ function placeholderDirective($log) {
     // If there is no input container, just return
     if (!inputContainer) return;
 
-    // Add a placeholder class so we can target it in the CSS
-    inputContainer.setHasPlaceholder(true);
-
     var label = inputContainer.element.find('label');
     var hasNoFloat = angular.isDefined(inputContainer.element.attr('md-no-float'));
 
     // If we have a label, or they specify the md-no-float attribute, just return
-    if ((label && label.length) || hasNoFloat) return;
+    if ((label && label.length) || hasNoFloat) {
+      // Add a placeholder class so we can target it in the CSS
+      inputContainer.setHasPlaceholder(true);
+      return;
+    }
 
     // Otherwise, grab/remove the placeholder
     var placeholderText = attr.placeholder;
@@ -12041,7 +12299,7 @@ mdRadioGroupDirective.$inject = ["$mdUtil", "$mdConstant", "$mdTheming", "$timeo
  * @param {string=} ngChange Angular expression to be executed when input changes due to user
  *    interaction with the input element.
  * @param {string} ngValue Angular expression which sets the value to which the expression should
- *    be set when selected.*
+ *    be set when selected.
  * @param {string} value The value to which the expression should be set when selected.
  * @param {string=} name Property name of the form under which the control is published.
  * @param {string=} aria-label Adds label to radio button for accessibility.
@@ -12223,11 +12481,12 @@ angular.module('material.components.select', [
  *
  * @param {expression} ng-model The model!
  * @param {boolean=} multiple Whether it's multiple.
- * @param {expression=} md-on-close expression to be evaluated when the select is closed
+ * @param {expression=} md-on-close Expression to be evaluated when the select is closed.
  * @param {string=} placeholder Placeholder hint text.
  * @param {string=} aria-label Optional label for accessibility. Only necessary if no placeholder or
- * @param {string=} md-container-class class list to get applied to the .md-select-menu-container element (for custom styling)
  * explicit label is present.
+ * @param {string=} md-container-class Class list to get applied to the `.md-select-menu-container`
+ * element (for custom styling).
  *
  * @usage
  * With a placeholder (label and aria-label are added dynamically)
@@ -12668,8 +12927,11 @@ function SelectMenuDirective($parse, $mdUtil, $mdTheming) {
     }, true);
 
     var deregisterCollectionWatch;
+    var defaultIsEmpty;
     self.setMultiple = function(isMultiple) {
       var ngModel = self.ngModel;
+      defaultIsEmpty = defaultIsEmpty || ngModel.$isEmpty;
+
       self.isMultiple = isMultiple;
       if (deregisterCollectionWatch) deregisterCollectionWatch();
 
@@ -12683,6 +12945,10 @@ function SelectMenuDirective($parse, $mdUtil, $mdTheming) {
           if (validateArray(value)) renderMultiple(value);
           self.ngModel.$setPristine();
         });
+
+        ngModel.$isEmpty = function(value) {
+          return !value || value.length === 0;
+        };
       } else {
         delete ngModel.$validators['md-multiple'];
         ngModel.$render = renderSingular;
@@ -14243,7 +14509,7 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
     }
     function stepValidator(value) {
       if (angular.isNumber(value)) {
-        var formattedValue = (Math.round(value / step) * step);
+        var formattedValue = (Math.round((value - min) / step) * step + min);
         // Format to 3 digits after the decimal point - fixes #2015.
         return (Math.round(formattedValue * 1000) / 1000);
       }
@@ -14253,12 +14519,13 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
      * @param percent 0-1
      */
     function setSliderPercent(percent) {
-      activeTrack.css('width', (percent * 100) + '%');
-      thumbContainer.css(
-        'left',
-        (percent * 100) + '%'
-      );
-      element.toggleClass('md-min', percent === 0);
+        var percentStr = (percent * 100) + '%';
+
+        activeTrack.css('width', percentStr);
+        thumbContainer.css('left',percentStr);
+
+        element.toggleClass('md-min', percent === 0);
+        element.toggleClass('md-max', percent === 1);
     }
 
 
@@ -14365,6 +14632,329 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
   }
 }
 SliderDirective.$inject = ["$$rAF", "$window", "$mdAria", "$mdUtil", "$mdConstant", "$mdTheming", "$mdGesture", "$parse", "$log"];
+
+})();
+(function(){
+"use strict";
+
+/**
+ * @ngdoc module
+ * @name material.components.sticky
+ * @description
+ * Sticky effects for md
+ *
+ */
+angular
+  .module('material.components.sticky', [
+    'material.core',
+    'material.components.content'
+  ])
+  .factory('$mdSticky', MdSticky);
+
+/**
+ * @ngdoc service
+ * @name $mdSticky
+ * @module material.components.sticky
+ *
+ * @description
+ * The `$mdSticky`service provides a mixin to make elements sticky.
+ *
+ * @returns A `$mdSticky` function that takes three arguments:
+ *   - `scope`
+ *   - `element`: The element that will be 'sticky'
+ *   - `elementClone`: A clone of the element, that will be shown
+ *     when the user starts scrolling past the original element.
+ *     If not provided, it will use the result of `element.clone()`.
+ */
+function MdSticky($document, $mdConstant, $$rAF, $mdUtil) {
+
+  var browserStickySupport = checkStickySupport();
+
+  /**
+   * Registers an element as sticky, used internally by directives to register themselves
+   */
+  return function registerStickyElement(scope, element, stickyClone) {
+    var contentCtrl = element.controller('mdContent');
+    if (!contentCtrl) return;
+
+    if (browserStickySupport) {
+      element.css({
+        position: browserStickySupport,
+        top: 0,
+        'z-index': 2
+      });
+    } else {
+      var $$sticky = contentCtrl.$element.data('$$sticky');
+      if (!$$sticky) {
+        $$sticky = setupSticky(contentCtrl);
+        contentCtrl.$element.data('$$sticky', $$sticky);
+      }
+
+      var deregister = $$sticky.add(element, stickyClone || element.clone());
+      scope.$on('$destroy', deregister);
+    }
+  };
+
+  function setupSticky(contentCtrl) {
+    var contentEl = contentCtrl.$element;
+
+    // Refresh elements is very expensive, so we use the debounced
+    // version when possible.
+    var debouncedRefreshElements = $$rAF.throttle(refreshElements);
+
+    // setupAugmentedScrollEvents gives us `$scrollstart` and `$scroll`,
+    // more reliable than `scroll` on android.
+    setupAugmentedScrollEvents(contentEl);
+    contentEl.on('$scrollstart', debouncedRefreshElements);
+    contentEl.on('$scroll', onScroll);
+
+    var self;
+    return self = {
+      prev: null,
+      current: null, //the currently stickied item
+      next: null,
+      items: [],
+      add: add,
+      refreshElements: refreshElements
+    };
+
+    /***************
+     * Public
+     ***************/
+    // Add an element and its sticky clone to this content's sticky collection
+    function add(element, stickyClone) {
+      stickyClone.addClass('md-sticky-clone');
+
+      var item = {
+        element: element,
+        clone: stickyClone
+      };
+      self.items.push(item);
+
+      $mdUtil.nextTick(function() {
+        contentEl.prepend(item.clone);
+      });
+
+      debouncedRefreshElements();
+
+      return function remove() {
+        self.items.forEach(function(item, index) {
+          if (item.element[0] === element[0]) {
+            self.items.splice(index, 1);
+            item.clone.remove();
+          }
+        });
+        debouncedRefreshElements();
+      };
+    }
+
+    function refreshElements() {
+      // Sort our collection of elements by their current position in the DOM.
+      // We need to do this because our elements' order of being added may not
+      // be the same as their order of display.
+      self.items.forEach(refreshPosition);
+      self.items = self.items.sort(function(a, b) {
+        return a.top < b.top ? -1 : 1;
+      });
+
+      // Find which item in the list should be active, 
+      // based upon the content's current scroll position
+      var item;
+      var currentScrollTop = contentEl.prop('scrollTop');
+      for (var i = self.items.length - 1; i >= 0; i--) {
+        if (currentScrollTop > self.items[i].top) {
+          item = self.items[i];
+          break;
+        }
+      }
+      setCurrentItem(item);
+    }
+
+    /***************
+     * Private
+     ***************/
+
+    // Find the `top` of an item relative to the content element,
+    // and also the height.
+    function refreshPosition(item) {
+      // Find the top of an item by adding to the offsetHeight until we reach the 
+      // content element.
+      var current = item.element[0];
+      item.top = 0;
+      item.left = 0;
+      while (current && current !== contentEl[0]) {
+        item.top += current.offsetTop;
+        item.left += current.offsetLeft;
+        current = current.offsetParent;
+      }
+      item.height = item.element.prop('offsetHeight');
+      item.clone.css('margin-left', item.left + 'px');
+      if ($mdUtil.floatingScrollbars()) {
+        item.clone.css('margin-right', '0');
+      }
+    }
+
+    // As we scroll, push in and select the correct sticky element.
+    function onScroll() {
+      var scrollTop = contentEl.prop('scrollTop');
+      var isScrollingDown = scrollTop > (onScroll.prevScrollTop || 0);
+
+      // Store the previous scroll so we know which direction we are scrolling
+      onScroll.prevScrollTop = scrollTop;
+
+      //
+      // AT TOP (not scrolling)
+      //
+      if (scrollTop === 0) {
+        // If we're at the top, just clear the current item and return
+        setCurrentItem(null);
+        return;
+      }
+
+      //
+      // SCROLLING DOWN (going towards the next item)
+      //
+      if (isScrollingDown) {
+
+        // If we've scrolled down past the next item's position, sticky it and return
+        if (self.next && self.next.top <= scrollTop) {
+          setCurrentItem(self.next);
+          return;
+        }
+
+        // If the next item is close to the current one, push the current one up out of the way
+        if (self.current && self.next && self.next.top - scrollTop <= self.next.height) {
+          translate(self.current, scrollTop + (self.next.top - self.next.height - scrollTop));
+          return;
+        }
+      }
+
+      //
+      // SCROLLING UP (not at the top & not scrolling down; must be scrolling up)
+      //
+      if (!isScrollingDown) {
+
+        // If we've scrolled up past the previous item's position, sticky it and return
+        if (self.current && self.prev && scrollTop < self.current.top) {
+          setCurrentItem(self.prev);
+          return;
+        }
+
+        // If the next item is close to the current one, pull the current one down into view
+        if (self.next && self.current && (scrollTop >= (self.next.top - self.current.height))) {
+          translate(self.current, scrollTop + (self.next.top - scrollTop - self.current.height));
+          return;
+        }
+      }
+
+      //
+      // Otherwise, just move the current item to the proper place (scrolling up or down)
+      //
+      if (self.current) {
+        translate(self.current, scrollTop);
+      }
+    }
+
+    function setCurrentItem(item) {
+      if (self.current === item) return;
+      // Deactivate currently active item
+      if (self.current) {
+        translate(self.current, null);
+        setStickyState(self.current, null);
+      }
+
+      // Activate new item if given
+      if (item) {
+        setStickyState(item, 'active');
+      }
+
+      self.current = item;
+      var index = self.items.indexOf(item);
+      // If index === -1, index + 1 = 0. It works out.
+      self.next = self.items[index + 1];
+      self.prev = self.items[index - 1];
+      setStickyState(self.next, 'next');
+      setStickyState(self.prev, 'prev');
+    }
+
+    function setStickyState(item, state) {
+      if (!item || item.state === state) return;
+      if (item.state) {
+        item.clone.attr('sticky-prev-state', item.state);
+        item.element.attr('sticky-prev-state', item.state);
+      }
+      item.clone.attr('sticky-state', state);
+      item.element.attr('sticky-state', state);
+      item.state = state;
+    }
+
+    function translate(item, amount) {
+      if (!item) return;
+      if (amount === null || amount === undefined) {
+        if (item.translateY) {
+          item.translateY = null;
+          item.clone.css($mdConstant.CSS.TRANSFORM, '');
+        }
+      } else {
+        item.translateY = amount;
+        item.clone.css(
+          $mdConstant.CSS.TRANSFORM,
+          'translate3d(' + item.left + 'px,' + amount + 'px,0)'
+        );
+      }
+    }
+  }
+
+  // Function to check for browser sticky support
+  function checkStickySupport($el) {
+    var stickyProp;
+    var testEl = angular.element('<div>');
+    $document[0].body.appendChild(testEl[0]);
+
+    var stickyProps = ['sticky', '-webkit-sticky'];
+    for (var i = 0; i < stickyProps.length; ++i) {
+      testEl.css({position: stickyProps[i], top: 0, 'z-index': 2});
+      if (testEl.css('position') == stickyProps[i]) {
+        stickyProp = stickyProps[i];
+        break;
+      }
+    }
+    testEl.remove();
+    return stickyProp;
+  }
+
+  // Android 4.4 don't accurately give scroll events.
+  // To fix this problem, we setup a fake scroll event. We say:
+  // > If a scroll or touchmove event has happened in the last DELAY milliseconds, 
+  //   then send a `$scroll` event every animationFrame.
+  // Additionally, we add $scrollstart and $scrollend events.
+  function setupAugmentedScrollEvents(element) {
+    var SCROLL_END_DELAY = 200;
+    var isScrolling;
+    var lastScrollTime;
+    element.on('scroll touchmove', function() {
+      if (!isScrolling) {
+        isScrolling = true;
+        $$rAF.throttle(loopScrollEvent);
+        element.triggerHandler('$scrollstart');
+      }
+      element.triggerHandler('$scroll');
+      lastScrollTime = +$mdUtil.now();
+    });
+
+    function loopScrollEvent() {
+      if (+$mdUtil.now() - lastScrollTime > SCROLL_END_DELAY) {
+        isScrolling = false;
+        element.triggerHandler('$scrollend');
+      } else {
+        element.triggerHandler('$scroll');
+        $$rAF.throttle(loopScrollEvent);
+      }
+    }
+  }
+
+}
+MdSticky.$inject = ["$document", "$mdConstant", "$$rAF", "$mdUtil"];
 
 })();
 (function(){
@@ -14737,329 +15327,6 @@ angular.module('material.components.tabs', [
 
 /**
  * @ngdoc module
- * @name material.components.sticky
- * @description
- * Sticky effects for md
- *
- */
-angular
-  .module('material.components.sticky', [
-    'material.core',
-    'material.components.content'
-  ])
-  .factory('$mdSticky', MdSticky);
-
-/**
- * @ngdoc service
- * @name $mdSticky
- * @module material.components.sticky
- *
- * @description
- * The `$mdSticky`service provides a mixin to make elements sticky.
- *
- * @returns A `$mdSticky` function that takes three arguments:
- *   - `scope`
- *   - `element`: The element that will be 'sticky'
- *   - `elementClone`: A clone of the element, that will be shown
- *     when the user starts scrolling past the original element.
- *     If not provided, it will use the result of `element.clone()`.
- */
-function MdSticky($document, $mdConstant, $$rAF, $mdUtil) {
-
-  var browserStickySupport = checkStickySupport();
-
-  /**
-   * Registers an element as sticky, used internally by directives to register themselves
-   */
-  return function registerStickyElement(scope, element, stickyClone) {
-    var contentCtrl = element.controller('mdContent');
-    if (!contentCtrl) return;
-
-    if (browserStickySupport) {
-      element.css({
-        position: browserStickySupport,
-        top: 0,
-        'z-index': 2
-      });
-    } else {
-      var $$sticky = contentCtrl.$element.data('$$sticky');
-      if (!$$sticky) {
-        $$sticky = setupSticky(contentCtrl);
-        contentCtrl.$element.data('$$sticky', $$sticky);
-      }
-
-      var deregister = $$sticky.add(element, stickyClone || element.clone());
-      scope.$on('$destroy', deregister);
-    }
-  };
-
-  function setupSticky(contentCtrl) {
-    var contentEl = contentCtrl.$element;
-
-    // Refresh elements is very expensive, so we use the debounced
-    // version when possible.
-    var debouncedRefreshElements = $$rAF.throttle(refreshElements);
-
-    // setupAugmentedScrollEvents gives us `$scrollstart` and `$scroll`,
-    // more reliable than `scroll` on android.
-    setupAugmentedScrollEvents(contentEl);
-    contentEl.on('$scrollstart', debouncedRefreshElements);
-    contentEl.on('$scroll', onScroll);
-
-    var self;
-    return self = {
-      prev: null,
-      current: null, //the currently stickied item
-      next: null,
-      items: [],
-      add: add,
-      refreshElements: refreshElements
-    };
-
-    /***************
-     * Public
-     ***************/
-    // Add an element and its sticky clone to this content's sticky collection
-    function add(element, stickyClone) {
-      stickyClone.addClass('md-sticky-clone');
-
-      var item = {
-        element: element,
-        clone: stickyClone
-      };
-      self.items.push(item);
-
-      $mdUtil.nextTick(function() {
-        contentEl.prepend(item.clone);
-      });
-
-      debouncedRefreshElements();
-
-      return function remove() {
-        self.items.forEach(function(item, index) {
-          if (item.element[0] === element[0]) {
-            self.items.splice(index, 1);
-            item.clone.remove();
-          }
-        });
-        debouncedRefreshElements();
-      };
-    }
-
-    function refreshElements() {
-      // Sort our collection of elements by their current position in the DOM.
-      // We need to do this because our elements' order of being added may not
-      // be the same as their order of display.
-      self.items.forEach(refreshPosition);
-      self.items = self.items.sort(function(a, b) {
-        return a.top < b.top ? -1 : 1;
-      });
-
-      // Find which item in the list should be active, 
-      // based upon the content's current scroll position
-      var item;
-      var currentScrollTop = contentEl.prop('scrollTop');
-      for (var i = self.items.length - 1; i >= 0; i--) {
-        if (currentScrollTop > self.items[i].top) {
-          item = self.items[i];
-          break;
-        }
-      }
-      setCurrentItem(item);
-    }
-
-    /***************
-     * Private
-     ***************/
-
-    // Find the `top` of an item relative to the content element,
-    // and also the height.
-    function refreshPosition(item) {
-      // Find the top of an item by adding to the offsetHeight until we reach the 
-      // content element.
-      var current = item.element[0];
-      item.top = 0;
-      item.left = 0;
-      while (current && current !== contentEl[0]) {
-        item.top += current.offsetTop;
-        item.left += current.offsetLeft;
-        current = current.offsetParent;
-      }
-      item.height = item.element.prop('offsetHeight');
-      item.clone.css('margin-left', item.left + 'px');
-      if ($mdUtil.floatingScrollbars()) {
-        item.clone.css('margin-right', '0');
-      }
-    }
-
-    // As we scroll, push in and select the correct sticky element.
-    function onScroll() {
-      var scrollTop = contentEl.prop('scrollTop');
-      var isScrollingDown = scrollTop > (onScroll.prevScrollTop || 0);
-
-      // Store the previous scroll so we know which direction we are scrolling
-      onScroll.prevScrollTop = scrollTop;
-
-      //
-      // AT TOP (not scrolling)
-      //
-      if (scrollTop === 0) {
-        // If we're at the top, just clear the current item and return
-        setCurrentItem(null);
-        return;
-      }
-
-      //
-      // SCROLLING DOWN (going towards the next item)
-      //
-      if (isScrollingDown) {
-
-        // If we've scrolled down past the next item's position, sticky it and return
-        if (self.next && self.next.top <= scrollTop) {
-          setCurrentItem(self.next);
-          return;
-        }
-
-        // If the next item is close to the current one, push the current one up out of the way
-        if (self.current && self.next && self.next.top - scrollTop <= self.next.height) {
-          translate(self.current, scrollTop + (self.next.top - self.next.height - scrollTop));
-          return;
-        }
-      }
-
-      //
-      // SCROLLING UP (not at the top & not scrolling down; must be scrolling up)
-      //
-      if (!isScrollingDown) {
-
-        // If we've scrolled up past the previous item's position, sticky it and return
-        if (self.current && self.prev && scrollTop < self.current.top) {
-          setCurrentItem(self.prev);
-          return;
-        }
-
-        // If the next item is close to the current one, pull the current one down into view
-        if (self.next && self.current && (scrollTop >= (self.next.top - self.current.height))) {
-          translate(self.current, scrollTop + (self.next.top - scrollTop - self.current.height));
-          return;
-        }
-      }
-
-      //
-      // Otherwise, just move the current item to the proper place (scrolling up or down)
-      //
-      if (self.current) {
-        translate(self.current, scrollTop);
-      }
-    }
-
-    function setCurrentItem(item) {
-      if (self.current === item) return;
-      // Deactivate currently active item
-      if (self.current) {
-        translate(self.current, null);
-        setStickyState(self.current, null);
-      }
-
-      // Activate new item if given
-      if (item) {
-        setStickyState(item, 'active');
-      }
-
-      self.current = item;
-      var index = self.items.indexOf(item);
-      // If index === -1, index + 1 = 0. It works out.
-      self.next = self.items[index + 1];
-      self.prev = self.items[index - 1];
-      setStickyState(self.next, 'next');
-      setStickyState(self.prev, 'prev');
-    }
-
-    function setStickyState(item, state) {
-      if (!item || item.state === state) return;
-      if (item.state) {
-        item.clone.attr('sticky-prev-state', item.state);
-        item.element.attr('sticky-prev-state', item.state);
-      }
-      item.clone.attr('sticky-state', state);
-      item.element.attr('sticky-state', state);
-      item.state = state;
-    }
-
-    function translate(item, amount) {
-      if (!item) return;
-      if (amount === null || amount === undefined) {
-        if (item.translateY) {
-          item.translateY = null;
-          item.clone.css($mdConstant.CSS.TRANSFORM, '');
-        }
-      } else {
-        item.translateY = amount;
-        item.clone.css(
-          $mdConstant.CSS.TRANSFORM,
-          'translate3d(' + item.left + 'px,' + amount + 'px,0)'
-        );
-      }
-    }
-  }
-
-  // Function to check for browser sticky support
-  function checkStickySupport($el) {
-    var stickyProp;
-    var testEl = angular.element('<div>');
-    $document[0].body.appendChild(testEl[0]);
-
-    var stickyProps = ['sticky', '-webkit-sticky'];
-    for (var i = 0; i < stickyProps.length; ++i) {
-      testEl.css({position: stickyProps[i], top: 0, 'z-index': 2});
-      if (testEl.css('position') == stickyProps[i]) {
-        stickyProp = stickyProps[i];
-        break;
-      }
-    }
-    testEl.remove();
-    return stickyProp;
-  }
-
-  // Android 4.4 don't accurately give scroll events.
-  // To fix this problem, we setup a fake scroll event. We say:
-  // > If a scroll or touchmove event has happened in the last DELAY milliseconds, 
-  //   then send a `$scroll` event every animationFrame.
-  // Additionally, we add $scrollstart and $scrollend events.
-  function setupAugmentedScrollEvents(element) {
-    var SCROLL_END_DELAY = 200;
-    var isScrolling;
-    var lastScrollTime;
-    element.on('scroll touchmove', function() {
-      if (!isScrolling) {
-        isScrolling = true;
-        $$rAF.throttle(loopScrollEvent);
-        element.triggerHandler('$scrollstart');
-      }
-      element.triggerHandler('$scroll');
-      lastScrollTime = +$mdUtil.now();
-    });
-
-    function loopScrollEvent() {
-      if (+$mdUtil.now() - lastScrollTime > SCROLL_END_DELAY) {
-        isScrolling = false;
-        element.triggerHandler('$scrollend');
-      } else {
-        element.triggerHandler('$scroll');
-        $$rAF.throttle(loopScrollEvent);
-      }
-    }
-  }
-
-}
-MdSticky.$inject = ["$document", "$mdConstant", "$$rAF", "$mdUtil"];
-
-})();
-(function(){
-"use strict";
-
-/**
- * @ngdoc module
  * @name material.components.toast
  * @description
  * Toast
@@ -15389,8 +15656,10 @@ angular.module('material.components.toolbar', [
  *
  * @param {boolean=} md-scroll-shrink Whether the header should shrink away as
  * the user scrolls down, and reveal itself as the user scrolls up.
+ *
  * _**Note (1):** for scrollShrink to work, the toolbar must be a sibling of a
  * `md-content` element, placed before it. See the scroll shrink demo._
+ *
  * _**Note (2):** The `md-scroll-shrink` attribute is only parsed on component
  * initialization, it does not watch for scope changes._
  *
@@ -15606,15 +15875,14 @@ angular
 function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdTheming, $rootElement,
                             $animate, $q) {
 
-  var TOOLTIP_SHOW_DELAY = 300;
+  var TOOLTIP_SHOW_DELAY = 0;
   var TOOLTIP_WINDOW_EDGE_SPACE = 8;
 
   return {
     restrict: 'E',
     transclude: true,
     priority:210, // Before ngAria
-    template: '<div class="md-background"></div>' +
-              '<div class="md-content" ng-transclude></div>',
+    template: '<div class="md-content" ng-transclude></div>',
     scope: {
       visible: '=?mdVisible',
       delay: '=?mdDelay',
@@ -15628,7 +15896,6 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
     $mdTheming(element);
 
     var parent        = getParentWithPointerEvents(),
-        background    = angular.element(element[0].getElementsByClassName('md-background')[0]),
         content       = angular.element(element[0].getElementsByClassName('md-content')[0]),
         direction     = attr.mdDirection,
         current       = getNearestContentElement(),
@@ -15643,9 +15910,19 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
     configureWatchers();
     addAriaLabel();
 
+    content.css('transform-origin', getTransformOrigin(direction));
 
     function setDefaults () {
       if (!angular.isDefined(attr.mdDelay)) scope.delay = TOOLTIP_SHOW_DELAY;
+    }
+
+    function getTransformOrigin (direction) {
+      switch (direction) {
+        case 'left': return 'right center';
+        case 'right': return 'left center';
+        case 'top': return 'center bottom';
+        case 'bottom': return 'center top';
+      }
     }
 
     function configureWatchers () {
@@ -15688,7 +15965,7 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
      function getNearestContentElement () {
        var current = element.parent()[0];
        // Look for the nearest parent md-content, stopping at the rootElement.
-       while (current && current !== $rootElement[0] && current !== document.body) {
+       while (current && current !== $rootElement[0] && current !== document.body && current.nodeName !== 'MD-CONTENT') {
          current = current.parentNode;
        }
        return current;
@@ -15780,14 +16057,14 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
       }
 
       positionTooltip();
-      angular.forEach([element, background, content], function (element) {
+      angular.forEach([element, content], function (element) {
         $animate.addClass(element, 'md-show');
       });
     }
 
     function hideTooltip() {
         var promises = [];
-        angular.forEach([element, background, content], function (it) {
+        angular.forEach([element, content], function (it) {
           if (it.parent() && it.hasClass('md-show')) {
             promises.push($animate.removeClass(it, 'md-show'));
           }
@@ -15813,24 +16090,6 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
       }
 
       element.css({top: newPosition.top + 'px', left: newPosition.left + 'px'});
-
-      positionBackground();
-
-      function positionBackground () {
-        var size = direction === 'left' || direction === 'right'
-              ? Math.sqrt(Math.pow(tipRect.width, 2) + Math.pow(tipRect.height / 2, 2)) * 2
-              : Math.sqrt(Math.pow(tipRect.width / 2, 2) + Math.pow(tipRect.height, 2)) * 2,
-            position = direction === 'left' ? { left: 100, top: 50 }
-              : direction === 'right' ? { left: 0, top: 50 }
-              : direction === 'top' ? { left: 50, top: 100 }
-              : { left: 50, top: 0 };
-        background.css({
-          width: size + 'px',
-          height: size + 'px',
-          left: position.left + '%',
-          top: position.top + '%'
-        });
-      }
 
       function fitInParent (pos) {
         var newPosition = { left: pos.left, top: pos.top };
@@ -15890,11 +16149,13 @@ angular.module('material.components.virtualRepeat', [
  * @usage
  * <hljs lang="html">
  *
- * <md-virtual-repeat-container>
+ * <md-virtual-repeat-container md-top-index="topIndex">
  *   <div md-virtual-repeat="i in items" md-item-size="20">Hello {{i}}!</div>
  * </md-virtual-repeat-container>
  * </hljs>
  *
+ * @param {number=} md-top-index Binds the index of the item that is at the top of the scroll
+ *     container to $scope. It can both read and set the scroll position.
  * @param {boolean=} md-orient-horizontal Whether the container should scroll horizontally
  *     (defaults to orientation and scrolling vertically).
  * @param {boolean=} md-auto-shrink When present, the container will shrink to fit
@@ -15943,7 +16204,7 @@ var MAX_ELEMENT_SIZE = 1533917;
 var NUM_EXTRA = 3;
 
 /** @ngInject */
-function VirtualRepeatContainerController($$rAF, $scope, $element, $attrs) {
+function VirtualRepeatContainerController($$rAF, $parse, $scope, $element, $attrs) {
   this.$scope = $scope;
   this.$element = $element;
   this.$attrs = $attrs;
@@ -15967,6 +16228,25 @@ function VirtualRepeatContainerController($$rAF, $scope, $element, $attrs) {
   /** @type {number} Amount to offset the total scroll size by. */
   this.offsetSize = parseInt(this.$attrs.mdOffsetSize, 10) || 0;
 
+  if (this.$attrs.mdTopIndex) {
+    /** @type {function(angular.Scope): number} Binds to topIndex on Angular scope */
+    this.bindTopIndex = $parse(this.$attrs.mdTopIndex);
+    /** @type {number} The index of the item that is at the top of the scroll container */
+    this.topIndex = this.bindTopIndex(this.$scope);
+
+    if (!angular.isDefined(this.topIndex)) {
+      this.topIndex = 0;
+      this.bindTopIndex.assign(this.$scope, 0);
+    }
+
+    this.$scope.$watch(this.bindTopIndex, angular.bind(this, function(newIndex) {
+      if (newIndex !== this.topIndex) {
+        this.scrollToIndex(newIndex);
+      }
+    }));
+  } else {
+    this.topIndex = 0;
+  }
 
   this.scroller = $element[0].getElementsByClassName('md-virtual-repeat-scroller')[0];
   this.sizer = this.scroller.getElementsByClassName('md-virtual-repeat-sizer')[0];
@@ -15984,7 +16264,7 @@ function VirtualRepeatContainerController($$rAF, $scope, $element, $attrs) {
     }));
   }
 }
-VirtualRepeatContainerController.$inject = ["$$rAF", "$scope", "$element", "$attrs"];
+VirtualRepeatContainerController.$inject = ["$$rAF", "$parse", "$scope", "$element", "$attrs"];
 
 
 /** Called by the md-virtual-repeat inside of the container at startup. */
@@ -16126,6 +16406,19 @@ VirtualRepeatContainerController.prototype.scrollTo = function(position) {
   this.handleScroll_();
 };
 
+/**
+ * Scrolls the item with the given index to the top of the scroll container.
+ * @param {number} index
+ */
+VirtualRepeatContainerController.prototype.scrollToIndex = function(index) {
+  var itemSize = this.repeater.getItemSize();
+  var itemsLength = this.repeater.itemsLength;
+  if(index > itemsLength) {
+    index = itemsLength - 1;
+  }
+  this.scrollTo(itemSize * index);
+};
+
 VirtualRepeatContainerController.prototype.resetScroll = function() {
   this.scrollTo(0);
 };
@@ -16146,6 +16439,15 @@ VirtualRepeatContainerController.prototype.handleScroll_ = function() {
   this.scrollOffset = offset;
   this.offsetter.style.webkitTransform = transform;
   this.offsetter.style.transform = transform;
+
+  if (this.bindTopIndex) {
+    var topIndex = Math.floor(offset / itemSize);
+    if (topIndex !== this.topIndex && topIndex < this.repeater.itemsLength) {
+      this.topIndex = topIndex;
+      this.bindTopIndex.assign(this.$scope, topIndex);
+      if (!this.$scope.$root.$$phase) this.$scope.$digest();
+    }
+  }
 
   this.repeater.containerUpdated();
 };
@@ -16176,22 +16478,22 @@ VirtualRepeatContainerController.prototype.handleScroll_ = function() {
  * </md-virtual-repeat-container>
  * </hljs>
  *
- * @param {number=} md-item-size The height or width of the repeated elements (which
- *     must be identical for each element). Optional. Will attempt to read the size
- *     from the dom if missing, but still assumes that all repeated nodes have same
- *     height or width.
- * @param {string=} md-extra-name Evaluates to an additional name to which
- *     the current iterated item can be assigned on the repeated scope. (Needed
- *     for use in md-autocomplete).
- * @param {boolean=} md-on-demand When present, treats the md-virtual-repeat argument
- *     as an object that can fetch rows rather than an array.
- *     NOTE: This object must implement the following interface with two (2) methods:
- *     getItemAtIndex: function(index) -> item at that index or null if it is not yet
- *         loaded (It should start downloading the item in that case).
- *     getLength: function() -> number The data legnth to which the repeater container
- *         should be sized. Ideally, when the count is known, this method should return it.
- *         Otherwise, return a higher number than the currently loaded items to produce an
- *         infinite-scroll behavior.
+ * @param {number=} md-item-size The height or width of the repeated elements (which must be
+ *   identical for each element). Optional. Will attempt to read the size from the dom if missing,
+ *   but still assumes that all repeated nodes have same height or width.
+ * @param {string=} md-extra-name Evaluates to an additional name to which the current iterated item
+ *   can be assigned on the repeated scope (needed for use in `md-autocomplete`).
+ * @param {boolean=} md-on-demand When present, treats the md-virtual-repeat argument as an object
+ *   that can fetch rows rather than an array.
+ *
+ *   **NOTE:** This object must implement the following interface with two (2) methods:
+ *
+ *   - `getItemAtIndex: function(index) [object]` The item at that index or null if it is not yet
+ *     loaded (it should start downloading the item in that case).
+ *   - `getLength: function() [number]` The data length to which the repeater container
+ *     should be sized. Ideally, when the count is known, this method should return it.
+ *     Otherwise, return a higher number than the currently loaded items to produce an
+ *     infinite-scroll behavior.
  */
 function VirtualRepeatDirective($parse) {
   return {
@@ -16401,19 +16703,19 @@ VirtualRepeatController.prototype.getItemSize = function() {
  * @private
  */
 VirtualRepeatController.prototype.virtualRepeatUpdate_ = function(items, oldItems) {
-  var itemsLength = items ? items.length : 0;
+  var itemsLength = items && items.length || 0;
   var lengthChanged = false;
-
-  if (itemsLength !== this.itemsLength) {
-    lengthChanged = true;
-    this.itemsLength = itemsLength;
-  }
 
   // If the number of items shrank, scroll up to the top.
   if (this.items && itemsLength < this.items.length && this.container.getScrollOffset() !== 0) {
     this.items = items;
     this.container.resetScroll();
     return;
+  }
+
+  if (itemsLength !== this.itemsLength) {
+    lengthChanged = true;
+    this.itemsLength = itemsLength;
   }
 
   this.items = items;
@@ -16429,8 +16731,10 @@ VirtualRepeatController.prototype.virtualRepeatUpdate_ = function(items, oldItem
 
   if (this.isFirstRender) {
     this.isFirstRender = false;
-    var startIndex = this.$attrs.mdStartIndex ? this.$scope.$eval(this.$attrs.mdStartIndex) : 0;
-    this.container.scrollTo(startIndex * this.itemSize);
+    var startIndex = this.$attrs.mdStartIndex ?
+      this.$scope.$eval(this.$attrs.mdStartIndex) :
+      this.container.topIndex;
+    this.container.scrollToIndex(startIndex);
   }
 
   // Detach and pool any blocks that are no longer in the viewport.
@@ -16701,6 +17005,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
   ctrl.id         = $mdUtil.nextUid();
   ctrl.isDisabled = null;
   ctrl.isRequired = null;
+  ctrl.hasNotFound = false;
 
   //-- public methods
   ctrl.keydown                       = keydown;
@@ -16715,6 +17020,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
   ctrl.registerSelectedItemWatcher   = registerSelectedItemWatcher;
   ctrl.unregisterSelectedItemWatcher = unregisterSelectedItemWatcher;
   ctrl.notFoundVisible               = notFoundVisible;
+  ctrl.loadingIsVisible              = loadingIsVisible;
 
   return init();
 
@@ -16748,6 +17054,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
         bot    = root.bottom - vrect.top,
         left   = hrect.left - root.left,
         width  = hrect.width,
+        offset = getVerticalOffset(),
         styles = {
           left:     left + 'px',
           minWidth: width + 'px',
@@ -16758,13 +17065,29 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
       styles.bottom    = bot + 'px';
       styles.maxHeight = Math.min(MAX_HEIGHT, hrect.top - root.top - MENU_PADDING) + 'px';
     } else {
-      styles.top       = top + 'px';
+      styles.top       = (top - offset) + 'px';
       styles.bottom    = 'auto';
       styles.maxHeight = Math.min(MAX_HEIGHT, root.bottom - hrect.bottom - MENU_PADDING) + 'px';
     }
 
     elements.$.scrollContainer.css(styles);
     $mdUtil.nextTick(correctHorizontalAlignment, false);
+
+    /**
+     * Calculates the vertical offset for floating label examples to account for ngMessages
+     * @returns {number}
+     */
+    function getVerticalOffset () {
+      var offset = 0;
+      var inputContainer = $element.find('md-input-container');
+      if (inputContainer.length) {
+        var input = inputContainer.find('input');
+        offset = inputContainer.prop('offsetHeight');
+        offset -= input.prop('offsetTop');
+        offset -= input.prop('offsetHeight');
+      }
+      return offset;
+    }
 
     /**
      * Makes sure that the menu doesn't go off of the screen on either side.
@@ -16876,19 +17199,16 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
     if (!hidden && oldHidden) {
       positionDropdown();
 
-      if (elements)
+      if (elements) {
         $mdUtil.nextTick(function () {
-
           $mdUtil.disableScrollAround(elements.ul);
-
-        }, false, $scope);
-      } else if (hidden && !oldHidden) {
-        $mdUtil.nextTick(function () {
-
-          $mdUtil.enableScrolling();
-
         }, false, $scope);
       }
+    } else if (hidden && !oldHidden) {
+      $mdUtil.nextTick(function () {
+        $mdUtil.enableScrolling();
+      }, false, $scope);
+    }
   }
 
   /**
@@ -16903,7 +17223,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
    */
   function onListLeave () {
     noBlur = false;
-    if (!hasFocus) ctrl.hidden = true;
+    ctrl.hidden = shouldHide();
   }
 
   /**
@@ -16994,9 +17314,8 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
 
         // cancel results if search text is not long enough
         if (!isMinLengthMet()) {
-          ctrl.loading = false;
           ctrl.matches = [];
-          ctrl.hidden  = shouldHide();
+          setLoading(false);
           updateMessages();
         } else {
           handleQuery();
@@ -17010,8 +17329,19 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
    * Handles input blur event, determines if the dropdown should hide.
    */
   function blur () {
-    hasFocus = false;
-    if (!noBlur) ctrl.hidden = true;
+    if (!noBlur) {
+      hasFocus = false;
+      ctrl.hidden = shouldHide();
+    }
+  }
+
+  /**
+   * Force blur on input element
+   * @param forceBlur
+   */
+  function doBlur(forceBlur) {
+    if (forceBlur) noBlur = false;
+    elements.input.blur();
   }
 
   /**
@@ -17021,7 +17351,6 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
     hasFocus = true;
     //-- if searchText is null, let's force it to be a string
     if (!angular.isString($scope.searchText)) $scope.searchText = '';
-    if ($scope.minLength > 0) return;
     ctrl.hidden = shouldHide();
     if (!ctrl.hidden) handleQuery();
   }
@@ -17049,19 +17378,23 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
         updateMessages();
         break;
       case $mdConstant.KEY_CODE.TAB:
-      case $mdConstant.KEY_CODE.ENTER:
         if (ctrl.hidden || ctrl.loading || ctrl.index < 0 || ctrl.matches.length < 1) return;
+        select(ctrl.index);
+        break;
+      case $mdConstant.KEY_CODE.ENTER:
         event.stopPropagation();
         event.preventDefault();
+        if (ctrl.hidden || ctrl.loading || ctrl.index < 0 || ctrl.matches.length < 1) return;
         select(ctrl.index);
         break;
       case $mdConstant.KEY_CODE.ESCAPE:
         event.stopPropagation();
         event.preventDefault();
         clearValue();
-        ctrl.matches = [];
-        ctrl.hidden  = true;
-        ctrl.index   = getDefaultIndex();
+
+        // Force the component to blur if they hit escape
+        doBlur(true);
+
         break;
       default:
     }
@@ -17117,11 +17450,60 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
   }
 
   /**
+   * Sets the loading parameter and updates the hidden state.
+   * @param value {boolean} Whether or not the component is currently loading.
+   */
+  function setLoading(value) {
+    if (ctrl.loading != value) {
+      ctrl.loading = value;
+    }
+
+    // Always refresh the hidden variable as something else might have changed
+    ctrl.hidden = shouldHide();
+  }
+
+  /**
    * Determines if the menu should be hidden.
    * @returns {boolean}
    */
   function shouldHide () {
-    if (!isMinLengthMet() || !ctrl.matches.length) return true;
+    if ((ctrl.loading && !hasMatches()) || hasSelection() || !hasFocus) {
+      return true;
+    }
+
+    return !shouldShow();
+  }
+
+  /**
+   * Determines if the menu should be shown.
+   * @returns {boolean}
+   */
+  function shouldShow() {
+    return (isMinLengthMet() && hasMatches()) || notFoundVisible();
+  }
+
+  /**
+   * Returns true if the search text has matches.
+   * @returns {boolean}
+   */
+  function hasMatches() {
+    return ctrl.matches.length ? true : false;
+  }
+
+  /**
+   * Returns true if the autocomplete has a valid selection.
+   * @returns {boolean}
+   */
+  function hasSelection() {
+    return ctrl.scope.selectedItem ? true : false;
+  }
+
+  /**
+   * Returns true if the loading indicator is, or should be, visible.
+   * @returns {boolean}
+   */
+  function loadingIsVisible() {
+    return ctrl.loading && !hasSelection();
   }
 
   /**
@@ -17137,7 +17519,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
    * @returns {*}
    */
   function isMinLengthMet () {
-    return angular.isDefined($scope.searchText) && $scope.searchText.length >= getMinLength();
+    return ($scope.searchText || '').length >= getMinLength();
   }
 
   //-- actions
@@ -17172,10 +17554,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
         ngModel.$render();
       }).finally(function () {
         $scope.selectedItem = ctrl.matches[ index ];
-        ctrl.loading        = false;
-        ctrl.hidden         = true;
-        ctrl.index          = 0;
-        ctrl.matches        = [];
+        setLoading(false);
       });
     }, false);
   }
@@ -17184,7 +17563,15 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
    * Clears the searchText value and selected item.
    */
   function clearValue () {
+    // Set the loading to true so we don't see flashes of content
+    setLoading(true);
+
+    // Reset our variables
+    ctrl.index = 0;
+    ctrl.matches = [];
     $scope.searchText = '';
+
+    // Tell the select to fire and select nothing
     select(-1);
 
     // Per http://www.w3schools.com/jsref/event_oninput.asp
@@ -17205,16 +17592,18 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
     if (angular.isArray(items)) {
       handleResults(items);
     } else if (items) {
+      setLoading(true);
       $mdUtil.nextTick(function () {
-        ctrl.loading = true;
         if (items.success) items.success(handleResults);
         if (items.then)    items.then(handleResults);
-        if (items.finally) items.finally(function () { ctrl.loading = false; });
+        if (items.finally) items.finally(function () {
+          setLoading(false);
+        });
       },true, $scope);
     }
     function handleResults (matches) {
       cache[ term ] = matches;
-      if (searchText !== $scope.searchText) return; //-- just cache the results if old request
+      if ((searchText || '') !== ($scope.searchText || '')) return; //-- just cache the results if old request
       ctrl.matches = matches;
       ctrl.hidden  = shouldHide();
       if ($scope.selectOnMatch) selectItemOnMatch();
@@ -17271,7 +17660,9 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
   }
 
   function notFoundVisible () {
-    return !ctrl.matches.length && !ctrl.loading && ctrl.scope.searchText && hasFocus && !ctrl.scope.selectedItem;
+    var textLength = (ctrl.scope.searchText || '').length;
+
+    return ctrl.hasNotFound && !hasMatches() && !ctrl.loading && textLength >= getMinLength() && hasFocus && !hasSelection();
   }
 
   /**
@@ -17288,7 +17679,8 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
     } else {
       fetchResults(searchText);
     }
-    if (hasFocus) ctrl.hidden = shouldHide();
+
+    ctrl.hidden = shouldHide();
   }
 
   /**
@@ -17353,9 +17745,9 @@ angular
  *     selected
  * @param {expression=} md-search-text-change An expression to be run each time the search text
  *     updates
- * @param {string=} md-search-text A model to bind the search query text to
+ * @param {expression=} md-search-text A model to bind the search query text to
  * @param {object=} md-selected-item A model to bind the selected item to
- * @param {string=} md-item-text An expression that will convert your object to a single string.
+ * @param {expression=} md-item-text An expression that will convert your object to a single string.
  * @param {string=} placeholder Placeholder text that will be forwarded to the input.
  * @param {boolean=} md-no-cache Disables the internal caching that happens in autocomplete
  * @param {boolean=} ng-disabled Determines whether or not to disable the input field
@@ -17377,7 +17769,7 @@ angular
  *     the item if the search text is an exact match
  *
  * @usage
- * ###Basic Example
+ * ### Basic Example
  * <hljs lang="html">
  *   <md-autocomplete
  *       md-selected-item="selectedItem"
@@ -17388,7 +17780,7 @@ angular
  *   </md-autocomplete>
  * </hljs>
  *
- * ###Example with "not found" message
+ * ### Example with "not found" message
  * <hljs lang="html">
  * <md-autocomplete
  *     md-selected-item="selectedItem"
@@ -17432,6 +17824,8 @@ angular
  */
 
 function MdAutocomplete () {
+  var hasNotFoundTemplate = false;
+
   return {
     controller:   'MdAutocompleteCtrl',
     controllerAs: '$mdAutocompleteCtrl',
@@ -17456,10 +17850,23 @@ function MdAutocomplete () {
       menuClass:      '@?mdMenuClass',
       inputId:        '@?mdInputId'
     },
+    link: function(scope, element, attrs, controller) {
+      controller.hasNotFound = hasNotFoundTemplate;
+    },
     template:     function (element, attr) {
       var noItemsTemplate = getNoItemsTemplate(),
           itemTemplate    = getItemTemplate(),
-          leftover        = element.html();
+          leftover        = element.html(),
+          tabindex        = attr.tabindex;
+
+      if (noItemsTemplate) {
+        hasNotFoundTemplate = true;
+      }
+
+      if (attr.hasOwnProperty('tabindex')) {
+        element.attr('tabindex', '-1');
+      }
+
       return '\
         <md-autocomplete-wrap\
             layout="row"\
@@ -17467,12 +17874,12 @@ function MdAutocomplete () {
             role="listbox">\
           ' + getInputElement() + '\
           <md-progress-linear\
-              ng-if="$mdAutocompleteCtrl.loading && !$mdAutocompleteCtrl.hidden"\
+              ng-if="$mdAutocompleteCtrl.loadingIsVisible()"\
               md-mode="indeterminate"></md-progress-linear>\
           <md-virtual-repeat-container\
               md-auto-shrink\
               md-auto-shrink-min="1"\
-              ng-hide="$mdAutocompleteCtrl.hidden && !$mdAutocompleteCtrl.notFoundVisible()"\
+              ng-hide="$mdAutocompleteCtrl.hidden"\
               class="md-autocomplete-suggestions-container md-whiteframe-z1"\
               role="presentation">\
             <ul class="md-autocomplete-suggestions"\
@@ -17520,6 +17927,7 @@ function MdAutocomplete () {
             <md-input-container flex ng-if="floatingLabel">\
               <label>{{floatingLabel}}</label>\
               <input type="search"\
+                  ' + (tabindex != null ? 'tabindex="' + tabindex + '"' : '') + '\
                   id="{{ inputId || \'fl-input-\' + $mdAutocompleteCtrl.id }}"\
                   name="{{inputName}}"\
                   autocomplete="off"\
@@ -17542,6 +17950,7 @@ function MdAutocomplete () {
         } else {
           return '\
             <input flex type="search"\
+                ' + (tabindex != null ? 'tabindex="' + tabindex + '"' : '') + '\
                 id="{{ inputId || \'input-\' + $mdAutocompleteCtrl.id }}"\
                 name="{{inputName}}"\
                 ng-if="!floatingLabel"\
@@ -17691,11 +18100,11 @@ angular
  *
  * @param {string} md-highlight-text A model to be searched for
  * @param {string=} md-highlight-flags A list of flags (loosely based on JavaScript RexExp flags).
- *     #### **Supported flags**:
- *     - `g`: Find all matches within the provided text
- *     - `i`: Ignore case when searching for matches
- *     - `$`: Only match if the text ends with the search term
- *     - `^`: Only match if the text begins with the search term
+ * #### **Supported flags**:
+ * - `g`: Find all matches within the provided text
+ * - `i`: Ignore case when searching for matches
+ * - `$`: Only match if the text ends with the search term
+ * - `^`: Only match if the text begins with the search term
  *
  * @usage
  * <hljs lang="html">
@@ -18314,9 +18723,12 @@ MdChipsCtrl.prototype.hasFocus = function () {
    * displayed as 'chips'. This component can make use of an `<input>` element or an
    * `<md-autocomplete>` element.
    *
-   * <strong>Custom `<md-chip-template>` template</strong>
+   * ### Custom templates
    * A custom template may be provided to render the content of each chip. This is achieved by
-   * specifying an `<md-chip-template>` element as a child of `<md-chips>`. Note: Any attributes on
+   * specifying an `<md-chip-template>` element containing the custom content as a child of
+   * `<md-chips>`.
+   *
+   * Note: Any attributes on
    * `<md-chip-template>` will be dropped as only the innerHTML is used for the chip template. The
    * variables `$chip` and `$index` are available in the scope of `<md-chip-template>`, representing
    * the chip object and its index in the list of chips, respectively.
@@ -18714,7 +19126,8 @@ var MD_CONTACT_CHIPS_TEMPLATE = '\
             <div class="md-contact-suggestion">\
               <img \
                   ng-src="{{item[$mdContactChipsCtrl.contactImage]}}"\
-                  alt="{{item[$mdContactChipsCtrl.contactName]}}" />\
+                  alt="{{item[$mdContactChipsCtrl.contactName]}}"\
+                  ng-if="item[$mdContactChipsCtrl.contactImage]" />\
               <span class="md-contact-name" md-highlight-text="$mdContactChipsCtrl.searchText"\
                     md-highlight-flags="{{$mdContactChipsCtrl.highlightFlags}}">\
                 {{item[$mdContactChipsCtrl.contactName]}}\
@@ -18726,7 +19139,8 @@ var MD_CONTACT_CHIPS_TEMPLATE = '\
             <div class="md-contact-avatar">\
               <img \
                   ng-src="{{$chip[$mdContactChipsCtrl.contactImage]}}"\
-                  alt="{{$chip[$mdContactChipsCtrl.contactName]}}" />\
+                  alt="{{$chip[$mdContactChipsCtrl.contactName]}}"\
+                  ng-if="$chip[$mdContactChipsCtrl.contactImage]" />\
             </div>\
             <div class="md-contact-name">\
               {{$chip[$mdContactChipsCtrl.contactName]}}\
@@ -18883,7 +19297,8 @@ angular
  * nor a label on the parent element, a warning will be logged to the console.
  * @param {string=} alt Labels icon for accessibility. If an empty string is provided, icon
  * will be hidden from accessibility layer with `aria-hidden="true"`. If there's no alt on the icon
- * nor a label on the parent element, a warning will be logged to the console. *
+ * nor a label on the parent element, a warning will be logged to the console.
+ *
  * @usage
  * When using SVGs:
  * <hljs lang="html">
@@ -19013,25 +19428,12 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
       return false;
     }
 
-    function prepareForFontIcon () {
+    function prepareForFontIcon() {
       if (!scope.svgIcon && !scope.svgSrc) {
-
         if (scope.fontIcon) {
           element.addClass('md-font ' + scope.fontIcon);
         }
-
-        if (scope.fontSet) {
-          element.addClass($mdIcon.fontSet(scope.fontSet));
-        }
-
-        if (shouldUseDefaultFontSet()) {
-          element.addClass($mdIcon.fontSet());
-        }
-
-      }
-
-      function shouldUseDefaultFontSet() {
-        return !scope.fontIcon && !scope.fontSet;
+        element.addClass($mdIcon.fontSet(scope.fontSet));
       }
     }
   }
@@ -19055,7 +19457,7 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
     * icons and icon sets to be pre-registered and associated with source URLs **before** the `<md-icon />`
     * directives are compiled.
     *
-    * If using font-icons, the developer is repsonsible for loading the fonts.
+    * If using font-icons, the developer is responsible for loading the fonts.
     *
     * If using SVGs, loading of the actual svg files are deferred to on-demand requests and are loaded
     * internally by the `$mdIcon` service using the `$http` service. When an SVG is requested by name/ID,
@@ -19541,7 +19943,7 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
     *  Define the Icon class
     */
    function Icon(el, config) {
-     if (el.tagName != 'svg') {
+     if (el && el.tagName != 'svg') {
        el = angular.element('<svg xmlns="http://www.w3.org/2000/svg">').append(el)[0];
      }
 
@@ -19665,7 +20067,7 @@ function MenuController($mdMenu, $attrs, $element, $scope, $mdUtil, $timeout) {
           nestedMenu.open();
         }
       }, nestedMenu ? 100 : 250);
-      var focusableTarget = event.currentTarget.querySelector('[tabindex]');
+      var focusableTarget = event.currentTarget.querySelector('button:not([disabled])');
       focusableTarget && focusableTarget.focus();
     });
     menuItems.on('mouseleave', function(event) {
@@ -19737,7 +20139,8 @@ function MenuController($mdMenu, $attrs, $element, $scope, $mdUtil, $timeout) {
     if ( !self.isOpen ) return;
     self.isOpen = false;
 
-    $scope.$emit('$mdMenuClose', $element);
+    var eventDetails = angular.extend({}, closeOpts, { skipFocus: skipFocus });
+    $scope.$emit('$mdMenuClose', $element, eventDetails);
     $mdMenu.hide(null, closeOpts);
 
     if (!skipFocus) {
@@ -19910,7 +20313,7 @@ MenuController.$inject = ["$mdMenu", "$attrs", "$element", "$scope", "$mdUtil", 
  * </md-menu>
  * </hljs>
  *
- * @param {string} md-po*ition-mode The position mode in the form of
+ * @param {string} md-position-mode The position mode in the form of
  *           `x`, `y`. Default value is `target`,`target`. Right now the `x` axis
  *           also suppports `target-right`.
  * @param {string} md-offset An offset to apply to the dropdown after positioning
@@ -20218,10 +20621,10 @@ function MenuProvider($$interimElementProvider) {
 
         // kick off initial focus in the menu on the first element
         var focusTarget = opts.menuContentEl[0].querySelector('[md-menu-focus-target]');
-        if ( !focusTarget && firstChild ) {
+        if ( !focusTarget ) {
           var firstChild = opts.menuContentEl[0].firstElementChild;
 
-          focusTarget = firstChild.querySelector('[tabindex]') || firstChild.firstElementChild;
+          focusTarget = firstChild && (firstChild.querySelector('.md-button:not([disabled])') || firstChild.firstElementChild);
         }
 
         focusTarget && focusTarget.focus();
@@ -20239,10 +20642,9 @@ function MenuProvider($$interimElementProvider) {
 
         function onMenuKeyDown(ev) {
           var handled;
-          var keyCodes = $mdConstant.KEY_CODE;
           switch (ev.keyCode) {
             case $mdConstant.KEY_CODE.ESCAPE:
-              opts.mdMenuCtrl.close(true, { closeAll: true });
+              opts.mdMenuCtrl.close(false, { closeAll: true });
               handled = true;
               break;
             case $mdConstant.KEY_CODE.UP_ARROW:
@@ -20568,23 +20970,25 @@ MenuBarController.prototype.init = function() {
     }
   });
 
-  $scope.$on('$mdMenuClose', function(event, el) {
+  $scope.$on('$mdMenuClose', function(event, el, opts) {
     var rootMenus = self.getMenus();
     if (rootMenus.indexOf(el[0]) != -1) {
       $element[0].classList.remove('md-open');
       el[0].classList.remove('md-open');
     }
 
-    if ($element[0].contains(el[0])) {
-      var parentMenu = el[0];
-      while (parentMenu && rootMenus.indexOf(parentMenu) == -1) {
-        parentMenu = $mdUtil.getClosest(parentMenu, 'MD-MENU', true);
-      }
-      if (parentMenu) {
-        parentMenu.querySelector('button').focus();
-        self.currentlyOpenMenu = undefined;
-        self.disableOpenOnHover();
-        self.setKeyboardMode(true);
+    if (opts.closeAll) {
+      if ($element[0].contains(el[0])) {
+        var parentMenu = el[0];
+        while (parentMenu && rootMenus.indexOf(parentMenu) == -1) {
+          parentMenu = $mdUtil.getClosest(parentMenu, 'MD-MENU', true);
+        }
+        if (parentMenu) {
+          if (!opts.skipFocus) parentMenu.querySelector('button:not([disabled])').focus();
+          self.currentlyOpenMenu = undefined;
+          self.disableOpenOnHover();
+          self.setKeyboardMode(true);
+        }
       }
     }
   });
@@ -20604,8 +21008,6 @@ MenuBarController.prototype.setKeyboardMode = function(enabled) {
 MenuBarController.prototype.enableOpenOnHover = function() {
   if (this.openOnHoverEnabled) return;
   this.openOnHoverEnabled = true;
-
-  var $element = this.$element;
 
   var parentToolbar;
   if (parentToolbar = this.parentToolbar) {
@@ -20652,14 +21054,14 @@ MenuBarController.prototype.scheduleOpenMenu = function(menuCtrl) {
       menuCtrl.open();
     }, 200, false);
   }
-}
+};
 
 MenuBarController.prototype.handleKeyDown = function(e) {
   var keyCodes = this.$mdConstant.KEY_CODE;
   var currentMenu = this.currentlyOpenMenu;
   var wasOpen = currentMenu && currentMenu.isOpen;
   this.setKeyboardMode(true);
-  var handled;
+  var handled, newMenu, newMenuCtrl;
   switch (e.keyCode) {
     case keyCodes.DOWN_ARROW:
       if (currentMenu) {
@@ -20674,17 +21076,17 @@ MenuBarController.prototype.handleKeyDown = function(e) {
       handled = true;
       break;
     case keyCodes.LEFT_ARROW:
-      var newMenu = this.focusMenu(-1);
+      newMenu = this.focusMenu(-1);
       if (wasOpen) {
-        var newMenuCtrl = angular.element(newMenu).controller('mdMenu');
+        newMenuCtrl = angular.element(newMenu).controller('mdMenu');
         this.scheduleOpenMenu(newMenuCtrl);
       }
       handled = true;
       break;
     case keyCodes.RIGHT_ARROW:
-      var newMenu = this.focusMenu(+1);
+      newMenu = this.focusMenu(+1);
       if (wasOpen) {
-        var newMenuCtrl = angular.element(newMenu).controller('mdMenu');
+        newMenuCtrl = angular.element(newMenu).controller('mdMenu');
         this.scheduleOpenMenu(newMenuCtrl);
       }
       handled = true;
@@ -20735,7 +21137,6 @@ MenuBarController.prototype.getFocusedMenu = function() {
 
 MenuBarController.prototype.getFocusedMenuIndex = function() {
   var $mdUtil = this.$mdUtil;
-  var $element = this.$element;
   var focusedEl = $mdUtil.getClosest(
     this.$document[0].activeElement,
     'MD-MENU'
@@ -21108,6 +21509,7 @@ function MenuItemDirective() {
  * @param {boolean=} disabled If present, disabled tab selection.
  * @param {expression=} md-on-deselect Expression to be evaluated after the tab has been de-selected.
  * @param {expression=} md-on-select Expression to be evaluated after the tab has been selected.
+ * @param {boolean=} md-active When true, sets the active tab.  Note: There can only be one active tab at a time.
  *
  *
  * @usage
@@ -21149,12 +21551,11 @@ function MdTab () {
         label = angular.element('<md-tab-label></md-tab-label>');
         if (attr.label) label.text(attr.label);
         else label.append(element.contents());
-      }
-
-      if (body.length == 0) {
-        var contents = element.contents().detach();
-        body         = angular.element('<md-tab-body></md-tab-body>');
-        body.append(contents);
+        if (body.length == 0) {
+          var contents = element.contents().detach();
+          body         = angular.element('<md-tab-body></md-tab-body>');
+          body.append(contents);
+        }
       }
 
       element.append(label);
@@ -21294,7 +21695,7 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
   defineBooleanAttribute('swipeContent');
   defineBooleanAttribute('noDisconnect');
   defineBooleanAttribute('autoselect');
-  defineBooleanAttribute('centerTabs', handleCenterTabs);
+  defineBooleanAttribute('centerTabs', handleCenterTabs, false);
   defineBooleanAttribute('enableDisconnect');
 
   // define public properties
@@ -21749,7 +22150,7 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
   function shouldPaginate () {
     if (ctrl.noPagination || !loaded) return false;
     var canvasWidth = $element.prop('clientWidth');
-    angular.forEach(elements.dummies, function (tab) { canvasWidth -= tab.offsetWidth; });
+    angular.forEach(getElements().dummies, function (tab) { canvasWidth -= tab.offsetWidth; });
     return canvasWidth < 0;
   }
 
@@ -21796,7 +22197,15 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
    * Updates whether or not pagination should be displayed.
    */
   function updatePagination () {
+    if (!shouldStretchTabs()) updatePagingWidth();
+    ctrl.maxTabWidth = getMaxTabWidth();
     ctrl.shouldPaginate = shouldPaginate();
+  }
+
+  function updatePagingWidth() {
+    var width = 1;
+    angular.forEach(getElements().dummies, function (element) { width += element.offsetWidth; });
+    angular.element(elements.paging).css('width', width + 'px');
   }
 
   function getMaxTabWidth () {
@@ -21834,11 +22243,11 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
   }
 
   /**
-   * This is used to forward focus to dummy elements.  This method is necessary to avoid aniation
+   * This is used to forward focus to dummy elements.  This method is necessary to avoid animation
    * issues when attempting to focus an item that is out of view.
    */
   function redirectFocus () {
-    elements.dummies[ ctrl.focusIndex ].focus();
+    getElements().dummies[ ctrl.focusIndex ].focus();
   }
 
   /**
@@ -21890,17 +22299,28 @@ function MdTabsController ($scope, $element, $window, $mdConstant, $mdTabInkRipp
   function updateHeightFromContent () {
     if (!ctrl.dynamicHeight) return $element.css('height', '');
     if (!ctrl.tabs.length) return queue.push(updateHeightFromContent);
+
     var tabContent    = elements.contents[ ctrl.selectedIndex ],
         contentHeight = tabContent ? tabContent.offsetHeight : 0,
         tabsHeight    = elements.wrapper.offsetHeight,
         newHeight     = contentHeight + tabsHeight,
-        currentHeight = $element.prop('clientHeight');
+        currentHeight = $element.prop('offsetHeight');
+
+    // Adjusts calculations for when the buttons are bottom-aligned since this relies on absolute
+    // positioning.  This should probably be cleaned up if a cleaner solution is possible.
+    if ($element.attr('md-align-tabs') === 'bottom') {
+      currentHeight -= tabsHeight;
+      newHeight -= tabsHeight;
+      // Need to include bottom border in these calculations
+      if ($element.attr('md-border-bottom') !== undefined) ++currentHeight;
+    }
+
     if (currentHeight === newHeight) return;
 
     // Lock during animation so the user can't change tabs
     locked = true;
 
-    var fromHeight = { height: currentHeight + 'px'},
+    var fromHeight = { height: currentHeight + 'px' },
         toHeight = { height: newHeight + 'px' };
 
     // Set the height to the current, specific pixel height to fix a bug on iOS where the height
@@ -22060,7 +22480,7 @@ MdTabsController.$inject = ["$scope", "$element", "$window", "$mdConstant", "$md
  *
  * @param {integer=} md-selected Index of the active/selected tab
  * @param {boolean=} md-no-ink If present, disables ink ripple effects.
- * @param {boolean=} md-no-bar If present, disables the selection ink bar.
+ * @param {boolean=} md-no-ink-bar If present, disables the selection ink bar.
  * @param {string=}  md-align-tabs Attribute to indicate position of tab buttons: `bottom` or `top`; default is `top`
  * @param {string=} md-stretch-tabs Attribute to indicate whether or not to stretch tabs: `auto`, `always`, or `never`; default is `auto`
  * @param {boolean=} md-dynamic-height When enabled, the tab wrapper will resize based on the contents of the selected tab
@@ -22255,8 +22675,8 @@ MdTabsTemplate.$inject = ["$compile", "$mdUtil"];
 
 })();
 (function(){ 
-angular.module("material.core").constant("$MD_THEME_CSS", "md-autocomplete.md-THEME_NAME-theme {  background: '{{background-50}}'; }  md-autocomplete.md-THEME_NAME-theme[disabled] {    background: '{{background-100}}'; }  md-autocomplete.md-THEME_NAME-theme button md-icon path {    fill: '{{background-600}}'; }  md-autocomplete.md-THEME_NAME-theme button:after {    background: '{{background-600-0.3}}'; }.md-autocomplete-suggestions-container.md-THEME_NAME-theme {  background: '{{background-50}}'; }  .md-autocomplete-suggestions-container.md-THEME_NAME-theme li {    color: '{{background-900}}'; }    .md-autocomplete-suggestions-container.md-THEME_NAME-theme li .highlight {      color: '{{background-600}}'; }    .md-autocomplete-suggestions-container.md-THEME_NAME-theme li:hover, .md-autocomplete-suggestions-container.md-THEME_NAME-theme li.selected {      background: '{{background-200}}'; }md-backdrop {  background-color: '{{background-900-0.0}}'; }  md-backdrop.md-opaque.md-THEME_NAME-theme {    background-color: '{{background-900-1.0}}'; }md-bottom-sheet.md-THEME_NAME-theme {  background-color: '{{background-50}}';  border-top-color: '{{background-300}}'; }  md-bottom-sheet.md-THEME_NAME-theme.md-list md-list-item {    color: '{{foreground-1}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    background-color: '{{background-50}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    color: '{{foreground-1}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]):hover, .md-button.md-THEME_NAME-theme:not([disabled]):hover {  background-color: '{{background-500-0.2}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme:not([disabled]).md-focused {  background-color: '{{background-500-0.2}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover, .md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover {  background-color: transparent; }a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {  background-color: '{{accent-color}}';  color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab md-icon, .md-button.md-THEME_NAME-theme.md-fab md-icon {    color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {    background-color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {    background-color: '{{accent-A700}}'; }a.md-button.md-THEME_NAME-theme.md-primary, .md-button.md-THEME_NAME-theme.md-primary {  color: '{{primary-color}}'; }  a.md-button.md-THEME_NAME-theme.md-primary.md-raised, a.md-button.md-THEME_NAME-theme.md-primary.md-fab, .md-button.md-THEME_NAME-theme.md-primary.md-raised, .md-button.md-THEME_NAME-theme.md-primary.md-fab {    color: '{{primary-contrast}}';    background-color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon {      color: '{{primary-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover {      background-color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused {      background-color: '{{primary-600}}'; }  a.md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon {    color: '{{primary-color}}'; }a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {  background-color: '{{accent-color}}';  color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon {    color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {    background-color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {    background-color: '{{accent-A700}}'; }a.md-button.md-THEME_NAME-theme.md-raised, .md-button.md-THEME_NAME-theme.md-raised {  color: '{{background-contrast}}';  background-color: '{{background-50}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon {    color: '{{background-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover {    background-color: '{{background-50}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused {    background-color: '{{background-200}}'; }a.md-button.md-THEME_NAME-theme.md-warn, .md-button.md-THEME_NAME-theme.md-warn {  color: '{{warn-color}}'; }  a.md-button.md-THEME_NAME-theme.md-warn.md-raised, a.md-button.md-THEME_NAME-theme.md-warn.md-fab, .md-button.md-THEME_NAME-theme.md-warn.md-raised, .md-button.md-THEME_NAME-theme.md-warn.md-fab {    color: '{{warn-contrast}}';    background-color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon {      color: '{{warn-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover {      background-color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused {      background-color: '{{warn-700}}'; }  a.md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon {    color: '{{warn-color}}'; }a.md-button.md-THEME_NAME-theme.md-accent, .md-button.md-THEME_NAME-theme.md-accent {  color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-accent.md-raised, a.md-button.md-THEME_NAME-theme.md-accent.md-fab, .md-button.md-THEME_NAME-theme.md-accent.md-raised, .md-button.md-THEME_NAME-theme.md-accent.md-fab {    color: '{{accent-contrast}}';    background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused {      background-color: '{{accent-700}}'; }  a.md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon {    color: '{{accent-color}}'; }a.md-button.md-THEME_NAME-theme[disabled], a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], a.md-button.md-THEME_NAME-theme.md-accent[disabled], a.md-button.md-THEME_NAME-theme.md-warn[disabled], .md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-accent[disabled], .md-button.md-THEME_NAME-theme.md-warn[disabled] {  color: '{{foreground-3}}';  cursor: not-allowed; }  a.md-button.md-THEME_NAME-theme[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon, .md-button.md-THEME_NAME-theme[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon {    color: '{{foreground-3}}'; }a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled] {  background-color: '{{foreground-4}}'; }a.md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme[disabled] {  background-color: transparent; }md-card.md-THEME_NAME-theme {  background-color: '{{background-color}}';  border-radius: 2px; }  md-card.md-THEME_NAME-theme .md-card-image {    border-radius: 2px 2px 0 0; }md-chips.md-THEME_NAME-theme .md-chips {  box-shadow: 0 1px '{{background-300}}'; }  md-chips.md-THEME_NAME-theme .md-chips.md-focused {    box-shadow: 0 2px '{{primary-color}}'; }md-chips.md-THEME_NAME-theme .md-chip {  background: '{{background-300}}';  color: '{{background-800}}'; }  md-chips.md-THEME_NAME-theme .md-chip.md-focused {    background: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-chips.md-THEME_NAME-theme .md-chip.md-focused md-icon {      color: '{{primary-contrast}}'; }md-chips.md-THEME_NAME-theme md-chip-remove .md-button md-icon path {  fill: '{{background-500}}'; }.md-contact-suggestion span.md-contact-email {  color: '{{background-400}}'; }md-checkbox.md-THEME_NAME-theme .md-ripple {  color: '{{accent-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked.md-focused .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon {  background-color: '{{accent-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-ripple {  color: '{{primary-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon {  background-color: '{{primary-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked.md-focused .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-ripple {  color: '{{warn-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon {  background-color: '{{warn-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked.md-focused:not([disabled]) .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-icon {  border-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled].md-checked .md-icon {  background-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-label {  color: '{{foreground-3}}'; }md-content.md-THEME_NAME-theme {  color: '{{foreground-1}}';  background-color: '{{background-color}}'; }/** Theme styles for mdCalendar. */.md-calendar.md-THEME_NAME-theme {  color: '{{foreground-1}}'; }  .md-calendar.md-THEME_NAME-theme tr:last-child td {    border-bottom-color: '{{background-200}}'; }.md-THEME_NAME-theme .md-calendar-day-header {  background: '{{background-hue-1}}';  color: '{{foreground-1}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-date-today .md-calendar-date-selection-indicator {  border: 1px solid '{{primary-500}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-date-today.md-calendar-date-disabled {  color: '{{primary-500-0.6}}'; }.md-THEME_NAME-theme .md-calendar-date.md-focus .md-calendar-date-selection-indicator {  background: '{{background-hue-1}}'; }.md-THEME_NAME-theme .md-calendar-date-selection-indicator:hover {  background: '{{background-hue-1}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-selected-date .md-calendar-date-selection-indicator, .md-THEME_NAME-theme .md-calendar-date.md-focus.md-calendar-selected-date .md-calendar-date-selection-indicator {  background: '{{primary-500}}';  color: '{{primary-500-contrast}}';  border-color: transparent; }.md-THEME_NAME-theme .md-calendar-date-disabled, .md-THEME_NAME-theme .md-calendar-month-label-disabled {  color: '{{foreground-3}}'; }/** Theme styles for mdDatepicker. */md-datepicker.md-THEME_NAME-theme {  background: '{{background-color}}'; }.md-THEME_NAME-theme .md-datepicker-input {  color: '{{background-contrast}}';  background: '{{background-color}}'; }  .md-THEME_NAME-theme .md-datepicker-input::-webkit-input-placeholder, .md-THEME_NAME-theme .md-datepicker-input::-moz-placeholder, .md-THEME_NAME-theme .md-datepicker-input:-moz-placeholder, .md-THEME_NAME-theme .md-datepicker-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }.md-THEME_NAME-theme .md-datepicker-input-container {  border-bottom-color: '{{background-300}}'; }  .md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-focused {    border-bottom-color: '{{primary-500}}'; }  .md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-invalid {    border-bottom-color: '{{warn-500}}'; }.md-THEME_NAME-theme .md-datepicker-calendar-pane {  border-color: '{{background-300}}'; }.md-THEME_NAME-theme .md-datepicker-triangle-button .md-datepicker-expand-triangle {  border-top-color: '{{foreground-3}}'; }.md-THEME_NAME-theme .md-datepicker-triangle-button:hover .md-datepicker-expand-triangle {  border-top-color: '{{foreground-2}}'; }.md-THEME_NAME-theme .md-datepicker-open .md-datepicker-calendar-icon {  fill: '{{primary-500}}'; }.md-THEME_NAME-theme .md-datepicker-calendar, .md-THEME_NAME-theme .md-datepicker-input-mask-opaque {  background: '{{background-color}}'; }md-dialog.md-THEME_NAME-theme {  border-radius: 4px;  background-color: '{{background-color}}'; }  md-dialog.md-THEME_NAME-theme.md-content-overflow .md-actions {    border-top-color: '{{foreground-4}}'; }md-divider.md-THEME_NAME-theme {  border-top-color: '{{foreground-4}}'; }md-icon.md-THEME_NAME-theme {  color: '{{foreground-2}}'; }  md-icon.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  md-icon.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  md-icon.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h4, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h4 {  color: '{{foreground-1}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text p, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text p {  color: '{{foreground-2}}'; }md-list.md-THEME_NAME-theme .md-proxy-focus.md-focused div.md-no-style {  background-color: '{{background-100}}'; }md-list.md-THEME_NAME-theme md-list-item > md-icon {  color: '{{foreground-2}}'; }  md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight {    color: '{{primary-color}}'; }    md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight.md-accent {      color: '{{accent-color}}'; }md-list.md-THEME_NAME-theme md-list-item button {  background-color: '{{background-color}}'; }  md-list.md-THEME_NAME-theme md-list-item button.md-button:not([disabled]):hover {    background-color: '{{background-color}}'; }md-input-container.md-THEME_NAME-theme .md-input {  color: '{{foreground-1}}';  border-color: '{{foreground-4}}';  text-shadow: '{{foreground-shadow}}'; }  md-input-container.md-THEME_NAME-theme .md-input::-webkit-input-placeholder, md-input-container.md-THEME_NAME-theme .md-input::-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme > md-icon {  color: '{{foreground-1}}'; }md-input-container.md-THEME_NAME-theme label, md-input-container.md-THEME_NAME-theme .md-placeholder {  text-shadow: '{{foreground-shadow}}';  color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme ng-messages :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [ng-messages] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme ng-message :not(.md-char-counter), md-input-container.md-THEME_NAME-theme data-ng-message :not(.md-char-counter), md-input-container.md-THEME_NAME-theme x-ng-message :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [ng-message] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [data-ng-message] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [x-ng-message] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [ng-message-exp] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [data-ng-message-exp] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [x-ng-message-exp] :not(.md-char-counter) {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-has-value label {  color: '{{foreground-2}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused .md-input {  border-color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused label {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused md-icon {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent .md-input {  border-color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent label {  color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid.md-input-focused label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid data-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid x-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message-exp], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message-exp], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message-exp], md-input-container.md-THEME_NAME-theme.md-input-invalid .md-char-counter {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme .md-input[disabled], [disabled] md-input-container.md-THEME_NAME-theme .md-input {  border-bottom-color: transparent;  color: '{{foreground-3}}';  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-menu-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }  md-menu-content.md-THEME_NAME-theme md-menu-divider {    background-color: '{{foreground-4}}'; }md-menu-bar.md-THEME_NAME-theme > button.md-button {  color: '{{foreground-2}}';  border-radius: 2px; }md-menu-bar.md-THEME_NAME-theme md-menu.md-open > button, md-menu-bar.md-THEME_NAME-theme md-menu > button:focus {  outline: none;  background: '{{background-200}}'; }md-menu-bar.md-THEME_NAME-theme.md-open:not(.md-keyboard-mode) md-menu:hover > button {  background-color: '{{ background-500-0.2}}'; }md-menu-bar.md-THEME_NAME-theme:not(.md-keyboard-mode):not(.md-open) md-menu button:hover, md-menu-bar.md-THEME_NAME-theme:not(.md-keyboard-mode):not(.md-open) md-menu button:focus {  background: transparent; }md-menu-content.md-THEME_NAME-theme .md-menu > .md-button:after {  color: '{{foreground-2}}'; }md-menu-content.md-THEME_NAME-theme .md-menu.md-open > .md-button {  background-color: '{{ background-500-0.2}}'; }md-toolbar.md-THEME_NAME-theme.md-menu-toolbar {  background-color: '{{background-color}}';  color: '{{foreground-1}}'; }  md-toolbar.md-THEME_NAME-theme.md-menu-toolbar md-toolbar-filler {    background-color: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-toolbar.md-THEME_NAME-theme.md-menu-toolbar md-toolbar-filler md-icon {      color: '{{primary-contrast}}'; }md-progress-circular.md-THEME_NAME-theme {  background-color: transparent; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-gap {    border-top-color: '{{primary-color}}';    border-bottom-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-top-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-right-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle {    border-left-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-gap {    border-top-color: '{{warn-color}}';    border-bottom-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-top-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-right-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle {    border-left-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-gap {    border-top-color: '{{accent-color}}';    border-bottom-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-top-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-right-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle {    border-left-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme .md-container {  background-color: '{{primary-100}}'; }md-progress-linear.md-THEME_NAME-theme .md-bar {  background-color: '{{primary-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-container {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-bar {  background-color: '{{warn-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-container {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-bar {  background-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-bar1 {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-dashed:before {  background: radial-gradient('{{warn-100}}' 0%, '{{warn-100}}' 16%, transparent 42%); }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-bar1 {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-dashed:before {  background: radial-gradient('{{accent-100}}' 0%, '{{accent-100}}' 16%, transparent 42%); }md-radio-button.md-THEME_NAME-theme .md-off {  border-color: '{{foreground-2}}'; }md-radio-button.md-THEME_NAME-theme .md-on {  background-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-off {  border-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme .md-container .md-ripple {  color: '{{accent-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-on {  background-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off {  border-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple {  color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple {  color: '{{primary-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-on {  background-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off {  border-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple {  color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple {  color: '{{warn-600}}'; }md-radio-group.md-THEME_NAME-theme[disabled], md-radio-button.md-THEME_NAME-theme[disabled] {  color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-off, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-off {    border-color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-on, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-on {    border-color: '{{foreground-3}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked:not([disabled]).md-primary .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked.md-primary .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-value {  border-bottom-color: transparent;  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-select.md-THEME_NAME-theme .md-select-value {  border-bottom-color: '{{foreground-4}}'; }  md-select.md-THEME_NAME-theme .md-select-value.md-select-placeholder {    color: '{{foreground-3}}'; }md-select.md-THEME_NAME-theme.ng-invalid.ng-dirty .md-select-value {  color: '{{warn-500}}' !important;  border-bottom-color: '{{warn-500}}' !important; }md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-value {  border-bottom-color: '{{primary-color}}';  color: '{{ foreground-1 }}'; }  md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-value.md-select-placeholder {    color: '{{ foreground-1 }}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-accent .md-select-value {  border-bottom-color: '{{accent-color}}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-warn .md-select-value {  border-bottom-color: '{{warn-color}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-value {  color: '{{foreground-3}}'; }  md-select.md-THEME_NAME-theme[disabled] .md-select-value.md-select-placeholder {    color: '{{foreground-3}}'; }md-select-menu.md-THEME_NAME-theme md-option[disabled] {  color: '{{foreground-3}}'; }md-select-menu.md-THEME_NAME-theme md-optgroup {  color: '{{foreground-2}}'; }  md-select-menu.md-THEME_NAME-theme md-optgroup md-option {    color: '{{foreground-1}}'; }md-select-menu.md-THEME_NAME-theme md-option[selected] {  color: '{{primary-500}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected]:focus {    color: '{{primary-600}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent {    color: '{{accent-500}}'; }    md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent:focus {      color: '{{accent-600}}'; }md-select-menu.md-THEME_NAME-theme md-option:focus:not([selected]) {  background: '{{background-200}}'; }md-sidenav.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track {  background-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme .md-track-ticks {  background-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-focus-thumb {  background-color: '{{foreground-2}}'; }md-slider.md-THEME_NAME-theme .md-focus-ring {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-disabled-thumb {  border-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme.md-min .md-thumb:after {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track.md-track-fill {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb:after {  border-color: '{{accent-color}}';  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-sign {  background-color: '{{accent-color}}'; }  md-slider.md-THEME_NAME-theme .md-sign:after {    border-top-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb-text {  color: '{{accent-contrast}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-focus-ring {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-track.md-track-fill {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb:after {  border-color: '{{warn-color}}';  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-sign {  background-color: '{{warn-color}}'; }  md-slider.md-THEME_NAME-theme.md-warn .md-sign:after {    border-top-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb-text {  color: '{{warn-contrast}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-focus-ring {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-track.md-track-fill {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb:after {  border-color: '{{primary-color}}';  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-sign {  background-color: '{{primary-color}}'; }  md-slider.md-THEME_NAME-theme.md-primary .md-sign:after {    border-top-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb-text {  color: '{{primary-contrast}}'; }md-slider.md-THEME_NAME-theme[disabled] .md-thumb:after {  border-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme[disabled]:not(.md-min) .md-thumb:after {  background-color: '{{foreground-3}}'; }.md-subheader.md-THEME_NAME-theme {  color: '{{ foreground-2-0.23 }}';  background-color: '{{background-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme .md-thumb {  background-color: '{{background-50}}'; }md-switch.md-THEME_NAME-theme .md-bar {  background-color: '{{background-500}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-thumb {  background-color: '{{accent-color}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-bar {  background-color: '{{accent-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-focused .md-thumb:before {  background-color: '{{accent-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-thumb {  background-color: '{{primary-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-bar {  background-color: '{{primary-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary.md-focused .md-thumb:before {  background-color: '{{primary-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-thumb {  background-color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-bar {  background-color: '{{warn-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn.md-focused .md-thumb:before {  background-color: '{{warn-color-0.26}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-thumb {  background-color: '{{background-400}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-bar {  background-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: transparent;  border-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme .md-paginator md-icon {  color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{accent-color}}';  background: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme .md-tab {  color: '{{foreground-2}}'; }  md-tabs.md-THEME_NAME-theme .md-tab[disabled] {    color: '{{foreground-3}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-active, md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    background: '{{primary-color-0.1}}'; }  md-tabs.md-THEME_NAME-theme .md-tab .md-ripple-container {    color: '{{accent-100}}'; }md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper {  background-color: '{{accent-color}}'; }  md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{accent-100}}'; }    md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{accent-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{accent-contrast-0.1}}'; }  md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {    color: '{{primary-600-1}}';    background: '{{primary-600-1}}'; }md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper {  background-color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{primary-100}}'; }    md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{primary-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{primary-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper {  background-color: '{{warn-color}}'; }  md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{warn-100}}'; }    md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{warn-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{warn-contrast-0.1}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{primary-color}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{primary-100}}'; }    md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{primary-contrast}}'; }    md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{primary-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{accent-color}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{accent-100}}'; }    md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{accent-contrast}}'; }    md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{accent-contrast-0.1}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {    color: '{{primary-600-1}}';    background: '{{primary-600-1}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{warn-color}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{warn-100}}'; }    md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{warn-contrast}}'; }    md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{warn-contrast-0.1}}'; }md-toast.md-THEME_NAME-theme {  background-color: #323232;  color: '{{background-50}}'; }  md-toast.md-THEME_NAME-theme .md-button {    color: '{{background-50}}'; }    md-toast.md-THEME_NAME-theme .md-button.md-highlight {      color: '{{primary-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-accent {        color: '{{accent-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-warn {        color: '{{warn-A200}}'; }md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) {  background-color: '{{primary-color}}';  color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) md-icon {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) .md-button {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar).md-accent {    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar).md-warn {    background-color: '{{warn-color}}';    color: '{{warn-contrast}}'; }md-tooltip.md-THEME_NAME-theme {  color: '{{background-A100}}'; }  md-tooltip.md-THEME_NAME-theme .md-background {    background-color: '{{foreground-2}}'; }"); 
+angular.module("material.core").constant("$MD_THEME_CSS", "md-autocomplete.md-THEME_NAME-theme {  background: '{{background-50}}'; }  md-autocomplete.md-THEME_NAME-theme[disabled] {    background: '{{background-100}}'; }  md-autocomplete.md-THEME_NAME-theme button md-icon path {    fill: '{{background-600}}'; }  md-autocomplete.md-THEME_NAME-theme button:after {    background: '{{background-600-0.3}}'; }.md-autocomplete-suggestions-container.md-THEME_NAME-theme {  background: '{{background-50}}'; }  .md-autocomplete-suggestions-container.md-THEME_NAME-theme li {    color: '{{background-900}}'; }    .md-autocomplete-suggestions-container.md-THEME_NAME-theme li .highlight {      color: '{{background-600}}'; }    .md-autocomplete-suggestions-container.md-THEME_NAME-theme li:hover, .md-autocomplete-suggestions-container.md-THEME_NAME-theme li.selected {      background: '{{background-200}}'; }md-bottom-sheet.md-THEME_NAME-theme {  background-color: '{{background-50}}';  border-top-color: '{{background-300}}'; }  md-bottom-sheet.md-THEME_NAME-theme.md-list md-list-item {    color: '{{foreground-1}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    background-color: '{{background-50}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    color: '{{foreground-1}}'; }md-backdrop {  background-color: '{{background-900-0.0}}'; }  md-backdrop.md-opaque.md-THEME_NAME-theme {    background-color: '{{background-900-1.0}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]):hover, .md-button.md-THEME_NAME-theme:not([disabled]):hover {  background-color: '{{background-500-0.2}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme:not([disabled]).md-focused {  background-color: '{{background-500-0.2}}'; }a.md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover, .md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover {  background-color: transparent; }a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {  background-color: '{{accent-color}}';  color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab md-icon, .md-button.md-THEME_NAME-theme.md-fab md-icon {    color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {    background-color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {    background-color: '{{accent-A700}}'; }a.md-button.md-THEME_NAME-theme.md-primary, .md-button.md-THEME_NAME-theme.md-primary {  color: '{{primary-color}}'; }  a.md-button.md-THEME_NAME-theme.md-primary.md-raised, a.md-button.md-THEME_NAME-theme.md-primary.md-fab, .md-button.md-THEME_NAME-theme.md-primary.md-raised, .md-button.md-THEME_NAME-theme.md-primary.md-fab {    color: '{{primary-contrast}}';    background-color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon {      color: '{{primary-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover {      background-color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused {      background-color: '{{primary-600}}'; }  a.md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon {    color: '{{primary-color}}'; }a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {  background-color: '{{accent-color}}';  color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon {    color: '{{accent-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {    background-color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {    background-color: '{{accent-A700}}'; }a.md-button.md-THEME_NAME-theme.md-raised, .md-button.md-THEME_NAME-theme.md-raised {  color: '{{background-contrast}}';  background-color: '{{background-50}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon {    color: '{{background-contrast}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover {    background-color: '{{background-50}}'; }  a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused {    background-color: '{{background-200}}'; }a.md-button.md-THEME_NAME-theme.md-warn, .md-button.md-THEME_NAME-theme.md-warn {  color: '{{warn-color}}'; }  a.md-button.md-THEME_NAME-theme.md-warn.md-raised, a.md-button.md-THEME_NAME-theme.md-warn.md-fab, .md-button.md-THEME_NAME-theme.md-warn.md-raised, .md-button.md-THEME_NAME-theme.md-warn.md-fab {    color: '{{warn-contrast}}';    background-color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon {      color: '{{warn-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover {      background-color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused {      background-color: '{{warn-700}}'; }  a.md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon {    color: '{{warn-color}}'; }a.md-button.md-THEME_NAME-theme.md-accent, .md-button.md-THEME_NAME-theme.md-accent {  color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme.md-accent.md-raised, a.md-button.md-THEME_NAME-theme.md-accent.md-fab, .md-button.md-THEME_NAME-theme.md-accent.md-raised, .md-button.md-THEME_NAME-theme.md-accent.md-fab {    color: '{{accent-contrast}}';    background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused {      background-color: '{{accent-700}}'; }  a.md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon {    color: '{{accent-color}}'; }a.md-button.md-THEME_NAME-theme[disabled], a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], a.md-button.md-THEME_NAME-theme.md-accent[disabled], a.md-button.md-THEME_NAME-theme.md-warn[disabled], .md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-accent[disabled], .md-button.md-THEME_NAME-theme.md-warn[disabled] {  color: '{{foreground-3}}';  cursor: not-allowed; }  a.md-button.md-THEME_NAME-theme[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon, .md-button.md-THEME_NAME-theme[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon {    color: '{{foreground-3}}'; }a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled] {  background-color: '{{foreground-4}}'; }a.md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme[disabled] {  background-color: transparent; }md-card.md-THEME_NAME-theme {  background-color: '{{background-color}}';  border-radius: 2px; }  md-card.md-THEME_NAME-theme .md-card-image {    border-radius: 2px 2px 0 0; }md-checkbox.md-THEME_NAME-theme .md-ripple {  color: '{{accent-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked.md-focused .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme .md-ink-ripple {  color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon {  background-color: '{{accent-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-ripple {  color: '{{primary-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-ink-ripple {  color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple {  color: '{{primary-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon {  background-color: '{{primary-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked.md-focused .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-ripple {  color: '{{warn-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-ink-ripple {  color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple {  color: '{{warn-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon {  background-color: '{{warn-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked.md-focused:not([disabled]) .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-icon {  border-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled].md-checked .md-icon {  background-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-label {  color: '{{foreground-3}}'; }md-chips.md-THEME_NAME-theme .md-chips {  box-shadow: 0 1px '{{background-300}}'; }  md-chips.md-THEME_NAME-theme .md-chips.md-focused {    box-shadow: 0 2px '{{primary-color}}'; }md-chips.md-THEME_NAME-theme .md-chip {  background: '{{background-300}}';  color: '{{background-800}}'; }  md-chips.md-THEME_NAME-theme .md-chip.md-focused {    background: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-chips.md-THEME_NAME-theme .md-chip.md-focused md-icon {      color: '{{primary-contrast}}'; }md-chips.md-THEME_NAME-theme md-chip-remove .md-button md-icon path {  fill: '{{background-500}}'; }.md-contact-suggestion span.md-contact-email {  color: '{{background-400}}'; }md-content.md-THEME_NAME-theme {  color: '{{foreground-1}}';  background-color: '{{background-color}}'; }/** Theme styles for mdCalendar. */.md-calendar.md-THEME_NAME-theme {  color: '{{foreground-1}}'; }  .md-calendar.md-THEME_NAME-theme tr:last-child td {    border-bottom-color: '{{background-200}}'; }.md-THEME_NAME-theme .md-calendar-day-header {  background: '{{background-hue-1}}';  color: '{{foreground-1}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-date-today .md-calendar-date-selection-indicator {  border: 1px solid '{{primary-500}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-date-today.md-calendar-date-disabled {  color: '{{primary-500-0.6}}'; }.md-THEME_NAME-theme .md-calendar-date.md-focus .md-calendar-date-selection-indicator {  background: '{{background-hue-1}}'; }.md-THEME_NAME-theme .md-calendar-date-selection-indicator:hover {  background: '{{background-hue-1}}'; }.md-THEME_NAME-theme .md-calendar-date.md-calendar-selected-date .md-calendar-date-selection-indicator, .md-THEME_NAME-theme .md-calendar-date.md-focus.md-calendar-selected-date .md-calendar-date-selection-indicator {  background: '{{primary-500}}';  color: '{{primary-500-contrast}}';  border-color: transparent; }.md-THEME_NAME-theme .md-calendar-date-disabled, .md-THEME_NAME-theme .md-calendar-month-label-disabled {  color: '{{foreground-3}}'; }/** Theme styles for mdDatepicker. */md-datepicker.md-THEME_NAME-theme {  background: '{{background-color}}'; }.md-THEME_NAME-theme .md-datepicker-input {  color: '{{background-contrast}}';  background: '{{background-color}}'; }  .md-THEME_NAME-theme .md-datepicker-input::-webkit-input-placeholder, .md-THEME_NAME-theme .md-datepicker-input::-moz-placeholder, .md-THEME_NAME-theme .md-datepicker-input:-moz-placeholder, .md-THEME_NAME-theme .md-datepicker-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }.md-THEME_NAME-theme .md-datepicker-input-container {  border-bottom-color: '{{background-300}}'; }  .md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-focused {    border-bottom-color: '{{primary-500}}'; }  .md-THEME_NAME-theme .md-datepicker-input-container.md-datepicker-invalid {    border-bottom-color: '{{warn-500}}'; }.md-THEME_NAME-theme .md-datepicker-calendar-pane {  border-color: '{{background-300}}'; }.md-THEME_NAME-theme .md-datepicker-triangle-button .md-datepicker-expand-triangle {  border-top-color: '{{foreground-3}}'; }.md-THEME_NAME-theme .md-datepicker-triangle-button:hover .md-datepicker-expand-triangle {  border-top-color: '{{foreground-2}}'; }.md-THEME_NAME-theme .md-datepicker-open .md-datepicker-calendar-icon {  fill: '{{primary-500}}'; }.md-THEME_NAME-theme .md-datepicker-calendar, .md-THEME_NAME-theme .md-datepicker-input-mask-opaque {  background: '{{background-color}}'; }md-dialog.md-THEME_NAME-theme {  border-radius: 4px;  background-color: '{{background-color}}'; }  md-dialog.md-THEME_NAME-theme.md-content-overflow .md-actions {    border-top-color: '{{foreground-4}}'; }md-divider.md-THEME_NAME-theme {  border-top-color: '{{foreground-4}}'; }md-icon.md-THEME_NAME-theme {  color: '{{foreground-2}}'; }  md-icon.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  md-icon.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  md-icon.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h4, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h4 {  color: '{{foreground-1}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text p, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text p {  color: '{{foreground-2}}'; }md-list.md-THEME_NAME-theme .md-proxy-focus.md-focused div.md-no-style {  background-color: '{{background-100}}'; }md-list.md-THEME_NAME-theme md-list-item > .md-avatar-icon {  background-color: '{{foreground-3}}';  color: '{{background-color}}'; }md-list.md-THEME_NAME-theme md-list-item > md-icon {  color: '{{foreground-2}}'; }  md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight {    color: '{{primary-color}}'; }    md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight.md-accent {      color: '{{accent-color}}'; }md-list.md-THEME_NAME-theme md-list-item button {  background-color: '{{background-color}}'; }  md-list.md-THEME_NAME-theme md-list-item button.md-button:not([disabled]):hover {    background-color: '{{background-color}}'; }md-input-container.md-THEME_NAME-theme .md-input {  color: '{{foreground-1}}';  border-color: '{{foreground-4}}';  text-shadow: '{{foreground-shadow}}'; }  md-input-container.md-THEME_NAME-theme .md-input::-webkit-input-placeholder, md-input-container.md-THEME_NAME-theme .md-input::-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme > md-icon {  color: '{{foreground-1}}'; }md-input-container.md-THEME_NAME-theme label, md-input-container.md-THEME_NAME-theme .md-placeholder {  text-shadow: '{{foreground-shadow}}';  color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme ng-messages :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [ng-messages] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme ng-message :not(.md-char-counter), md-input-container.md-THEME_NAME-theme data-ng-message :not(.md-char-counter), md-input-container.md-THEME_NAME-theme x-ng-message :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [ng-message] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [data-ng-message] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [x-ng-message] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [ng-message-exp] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [data-ng-message-exp] :not(.md-char-counter), md-input-container.md-THEME_NAME-theme [x-ng-message-exp] :not(.md-char-counter) {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-has-value label {  color: '{{foreground-2}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused .md-input {  border-color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused label {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused md-icon {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent .md-input {  border-color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent label {  color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid.md-input-focused label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid data-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid x-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message-exp], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message-exp], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message-exp], md-input-container.md-THEME_NAME-theme.md-input-invalid .md-char-counter {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme .md-input[disabled], md-input-container.md-THEME_NAME-theme .md-input [disabled] {  border-bottom-color: transparent;  color: '{{foreground-3}}';  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-menu-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }  md-menu-content.md-THEME_NAME-theme md-menu-divider {    background-color: '{{foreground-4}}'; }md-menu-bar.md-THEME_NAME-theme > button.md-button {  color: '{{foreground-2}}';  border-radius: 2px; }md-menu-bar.md-THEME_NAME-theme md-menu.md-open > button, md-menu-bar.md-THEME_NAME-theme md-menu > button:focus {  outline: none;  background: '{{background-200}}'; }md-menu-bar.md-THEME_NAME-theme.md-open:not(.md-keyboard-mode) md-menu:hover > button {  background-color: '{{ background-500-0.2}}'; }md-menu-bar.md-THEME_NAME-theme:not(.md-keyboard-mode):not(.md-open) md-menu button:hover, md-menu-bar.md-THEME_NAME-theme:not(.md-keyboard-mode):not(.md-open) md-menu button:focus {  background: transparent; }md-menu-content.md-THEME_NAME-theme .md-menu > .md-button:after {  color: '{{foreground-2}}'; }md-menu-content.md-THEME_NAME-theme .md-menu.md-open > .md-button {  background-color: '{{ background-500-0.2}}'; }md-toolbar.md-THEME_NAME-theme.md-menu-toolbar {  background-color: '{{background-color}}';  color: '{{foreground-1}}'; }  md-toolbar.md-THEME_NAME-theme.md-menu-toolbar md-toolbar-filler {    background-color: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-toolbar.md-THEME_NAME-theme.md-menu-toolbar md-toolbar-filler md-icon {      color: '{{primary-contrast}}'; }md-progress-circular.md-THEME_NAME-theme {  background-color: transparent; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-gap {    border-top-color: '{{primary-color}}';    border-bottom-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-top-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-right-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle {    border-left-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-gap {    border-top-color: '{{warn-color}}';    border-bottom-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-top-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-right-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle {    border-left-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-gap {    border-top-color: '{{accent-color}}';    border-bottom-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-top-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-right-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle {    border-left-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme .md-container {  background-color: '{{primary-100}}'; }md-progress-linear.md-THEME_NAME-theme .md-bar {  background-color: '{{primary-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-container {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-bar {  background-color: '{{warn-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-container {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-bar {  background-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-bar1 {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-dashed:before {  background: radial-gradient('{{warn-100}}' 0%, '{{warn-100}}' 16%, transparent 42%); }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-bar1 {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-dashed:before {  background: radial-gradient('{{accent-100}}' 0%, '{{accent-100}}' 16%, transparent 42%); }md-radio-button.md-THEME_NAME-theme .md-off {  border-color: '{{foreground-2}}'; }md-radio-button.md-THEME_NAME-theme .md-on {  background-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-off {  border-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme .md-container .md-ripple {  color: '{{accent-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-on {  background-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off {  border-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple {  color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple {  color: '{{primary-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-on {  background-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off {  border-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple {  color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple {  color: '{{warn-600}}'; }md-radio-group.md-THEME_NAME-theme[disabled], md-radio-button.md-THEME_NAME-theme[disabled] {  color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-off, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-off {    border-color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-on, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-on {    border-color: '{{foreground-3}}'; }md-radio-group.md-THEME_NAME-theme .md-checked .md-ink-ripple {  color: '{{accent-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-primary .md-checked:not([disabled]) .md-ink-ripple, md-radio-group.md-THEME_NAME-theme .md-checked:not([disabled]).md-primary .md-ink-ripple {  color: '{{primary-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme .md-checked.md-primary .md-ink-ripple {  color: '{{warn-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked:not([disabled]).md-primary .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked.md-primary .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-value {  border-bottom-color: transparent;  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-select.md-THEME_NAME-theme .md-select-value {  border-bottom-color: '{{foreground-4}}'; }  md-select.md-THEME_NAME-theme .md-select-value.md-select-placeholder {    color: '{{foreground-3}}'; }md-select.md-THEME_NAME-theme.ng-invalid.ng-dirty .md-select-value {  color: '{{warn-500}}' !important;  border-bottom-color: '{{warn-500}}' !important; }md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-value {  border-bottom-color: '{{primary-color}}';  color: '{{ foreground-1 }}'; }  md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-value.md-select-placeholder {    color: '{{ foreground-1 }}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-accent .md-select-value {  border-bottom-color: '{{accent-color}}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-warn .md-select-value {  border-bottom-color: '{{warn-color}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-value {  color: '{{foreground-3}}'; }  md-select.md-THEME_NAME-theme[disabled] .md-select-value.md-select-placeholder {    color: '{{foreground-3}}'; }md-select-menu.md-THEME_NAME-theme md-option[disabled] {  color: '{{foreground-3}}'; }md-select-menu.md-THEME_NAME-theme md-optgroup {  color: '{{foreground-2}}'; }  md-select-menu.md-THEME_NAME-theme md-optgroup md-option {    color: '{{foreground-1}}'; }md-select-menu.md-THEME_NAME-theme md-option[selected] {  color: '{{primary-500}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected]:focus {    color: '{{primary-600}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent {    color: '{{accent-500}}'; }    md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent:focus {      color: '{{accent-600}}'; }md-select-menu.md-THEME_NAME-theme md-option:focus:not([selected]) {  background: '{{background-200}}'; }md-sidenav.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track {  background-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme .md-track-ticks {  background-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-focus-thumb {  background-color: '{{foreground-2}}'; }md-slider.md-THEME_NAME-theme .md-focus-ring {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-disabled-thumb {  border-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme.md-min .md-thumb:after {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track.md-track-fill {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb:after {  border-color: '{{accent-color}}';  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-sign {  background-color: '{{accent-color}}'; }  md-slider.md-THEME_NAME-theme .md-sign:after {    border-top-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb-text {  color: '{{accent-contrast}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-focus-ring {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-track.md-track-fill {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb:after {  border-color: '{{warn-color}}';  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-sign {  background-color: '{{warn-color}}'; }  md-slider.md-THEME_NAME-theme.md-warn .md-sign:after {    border-top-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb-text {  color: '{{warn-contrast}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-focus-ring {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-track.md-track-fill {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb:after {  border-color: '{{primary-color}}';  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-sign {  background-color: '{{primary-color}}'; }  md-slider.md-THEME_NAME-theme.md-primary .md-sign:after {    border-top-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb-text {  color: '{{primary-contrast}}'; }md-slider.md-THEME_NAME-theme[disabled] .md-thumb:after {  border-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme[disabled]:not(.md-min) .md-thumb:after {  background-color: '{{foreground-3}}'; }.md-subheader.md-THEME_NAME-theme {  color: '{{ foreground-2-0.23 }}';  background-color: '{{background-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme .md-ink-ripple {  color: '{{background-500}}'; }md-switch.md-THEME_NAME-theme .md-thumb {  background-color: '{{background-50}}'; }md-switch.md-THEME_NAME-theme .md-bar {  background-color: '{{background-500}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-thumb {  background-color: '{{accent-color}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-bar {  background-color: '{{accent-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-focused .md-thumb:before {  background-color: '{{accent-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-ink-ripple {  color: '{{primary-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-thumb {  background-color: '{{primary-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-bar {  background-color: '{{primary-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary.md-focused .md-thumb:before {  background-color: '{{primary-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-ink-ripple {  color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-thumb {  background-color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-bar {  background-color: '{{warn-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn.md-focused .md-thumb:before {  background-color: '{{warn-color-0.26}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-thumb {  background-color: '{{background-400}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-bar {  background-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: transparent;  border-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme .md-paginator md-icon {  color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{accent-color}}';  background: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme .md-tab {  color: '{{foreground-2}}'; }  md-tabs.md-THEME_NAME-theme .md-tab[disabled], md-tabs.md-THEME_NAME-theme .md-tab[disabled] md-icon {    color: '{{foreground-3}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-active, md-tabs.md-THEME_NAME-theme .md-tab.md-active md-icon, md-tabs.md-THEME_NAME-theme .md-tab.md-focused, md-tabs.md-THEME_NAME-theme .md-tab.md-focused md-icon {    color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    background: '{{primary-color-0.1}}'; }  md-tabs.md-THEME_NAME-theme .md-tab .md-ripple-container {    color: '{{accent-100}}'; }md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper {  background-color: '{{accent-color}}'; }  md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{accent-100}}'; }    md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{accent-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{accent-contrast-0.1}}'; }  md-tabs.md-THEME_NAME-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {    color: '{{primary-600-1}}';    background: '{{primary-600-1}}'; }md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper {  background-color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{primary-100}}'; }    md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{primary-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-primary > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{primary-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper {  background-color: '{{warn-color}}'; }  md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{warn-100}}'; }    md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{warn-contrast}}'; }    md-tabs.md-THEME_NAME-theme.md-warn > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{warn-contrast-0.1}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{primary-color}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{primary-100}}'; }    md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{primary-contrast}}'; }    md-toolbar > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{primary-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{accent-color}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{accent-100}}'; }    md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{accent-contrast}}'; }    md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{accent-contrast-0.1}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {    color: '{{primary-600-1}}';    background: '{{primary-600-1}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper {  background-color: '{{warn-color}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {    color: '{{warn-100}}'; }    md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-active, md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      color: '{{warn-contrast}}'; }    md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]).md-focused {      background: '{{warn-contrast-0.1}}'; }md-toast.md-THEME_NAME-theme {  background-color: #323232;  color: '{{background-50}}'; }  md-toast.md-THEME_NAME-theme .md-button {    color: '{{background-50}}'; }    md-toast.md-THEME_NAME-theme .md-button.md-highlight {      color: '{{primary-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-accent {        color: '{{accent-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-warn {        color: '{{warn-A200}}'; }md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) {  background-color: '{{primary-color}}';  color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) md-icon {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar) .md-button {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar).md-accent {    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }  md-toolbar.md-THEME_NAME-theme:not(.md-menu-toolbar).md-warn {    background-color: '{{warn-color}}';    color: '{{warn-contrast}}'; }md-tooltip.md-THEME_NAME-theme {  color: '{{background-A100}}'; }  md-tooltip.md-THEME_NAME-theme .md-content {    background-color: '{{foreground-2}}'; }"); 
 })();
 
 
-})(window, window.angular);
+})(window, window.angular);;window.ngMaterial={version:{full: "1.0.0-rc1"}};
