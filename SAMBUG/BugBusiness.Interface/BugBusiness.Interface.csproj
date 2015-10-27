@@ -92,6 +92,7 @@
     <Compile Include="BugScouting\Exceptions\PersistScoutBugException.cs" />
     <Compile Include="BugScouting\IBugScouting.cs" />
     <Compile Include="BugSecurity\DTO\EditUserRoleRequest.cs" />
+    <Compile Include="BugSecurity\DTO\EditUserRoleResponse.cs" />
     <Compile Include="BugSecurity\DTO\LoginRequest.cs" />
     <Compile Include="BugSecurity\DTO\LoginResponse.cs" />
     <Compile Include="BugSecurity\DTO\RecoverAccountRequest.cs" />
@@ -100,7 +101,7 @@
     <Compile Include="BugSecurity\DTO\RegisterResponse.cs" />
     <Compile Include="BugSecurity\DTO\RoleDTO.cs" />
     <Compile Include="BugSecurity\DTO\UserDTO.cs" />
-    <Compile Include="BugSecurity\DTO\ViewEditUserRolesResponse.cs" />
+    <Compile Include="BugSecurity\DTO\GetUsersResponse.cs" />
     <Compile Include="BugSecurity\Exceptions\InvalidInputException.cs" />
     <Compile Include="BugSecurity\Exceptions\NotRegisteredException.cs" />
     <Compile Include="BugSecurity\Exceptions\UserExistsException.cs" />

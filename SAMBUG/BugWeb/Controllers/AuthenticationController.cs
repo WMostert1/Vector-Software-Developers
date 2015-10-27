@@ -121,7 +121,7 @@ namespace BugWeb.Controllers
             if (!SecurityProvider.isAdmin(Session))
                 return View("~/Views/Shared/Error.cshtml");
 
-            ViewEditUserRolesResponse response = _bugSecurity.GetUsers();
+            GetUsersResponse response = _bugSecurity.GetUsers();
 
             //List<UserDTO> userDTOList = AutoMapper.Mapper.Map<List<UserDTO>>(response);
 
@@ -137,7 +137,6 @@ namespace BugWeb.Controllers
             {
                 UserId = editUserRoleViewModel.UserId,
                 IsAdministrator = editUserRoleViewModel.IsAdministrator,
-                IsGrower = editUserRoleViewModel.IsGrower
             });
 
             return RedirectToAction("EditUserRoles","Authentication");

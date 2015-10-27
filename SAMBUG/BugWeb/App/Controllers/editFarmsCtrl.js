@@ -89,7 +89,6 @@
             //-----------------------------------------------------AddFarm--------------------------------------------------------------
             $scope.showAddFarmDialog = function (event, ctrl) {
                 $scope.showDialog("addFarm", event, ctrl, function (newFarmObject) {
-                    console.log(newFarmObject.id);
                     $scope.farms.push({ farmId: newFarmObject.id, farmName: newFarmObject.newFarmName, collapseIcon: "expand_more", blockNames: []});
                 }, null);
             }

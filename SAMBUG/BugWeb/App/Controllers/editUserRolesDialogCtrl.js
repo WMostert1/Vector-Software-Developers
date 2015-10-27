@@ -1,27 +1,28 @@
 ﻿angular.module("appMain")
     .controller("EditUserRolesDialogCtrl", [
-                "$scope", "$rootScope", "$mdDialog", "$mdToast", "$http", function ($scope, $rootScope, $mdDialog, $mdToast, $http) {
-                    $scope.userName = $rootScope.userEmail;
-                    $scope.roles = $rootScope.roles;
-                    var grower = false;
-                     var admin = false;
+                "$scope", "$rootScope", "$mdDialog", "$mdToast", "$http", "user", function ($scope, $rootScope, $mdDialog, $mdToast, $http, user) {
 
-                    for (var x = 0; x < $scope.roles.length; x++) {
-                        if ($scope.roles[x].id === "1") {
+                    var grower = false;
+                    var admin = false;
+
+                    for (var x = 0; x < user.roles.length; x++) {
+                        if (user.roles[x].id === 1) {
                             grower = true;
                         }
-                        if ($scope.roles[x].id === "2") {
+                        if (user.roles[x].id === 2) {
                             admin = true;
                         }
                     }
 
                     $scope.userGrower = grower;
                     $scope.userAdmin = admin;
+                    $scope.userName = user.email;
 
                     $scope.cancel = function () {
                         $mdDialog.cancel();
                     };
 
+                    //The moment the submit button is pressed, this function is called
                     $scope.post = function (event) {
                         event.preventDefault();
 
@@ -30,30 +31,51 @@
                         if (!event.target.checkValidity) {
                             return false;
                         }
+
                         $scope.loading = true;
 
-                        //delete when talking to server
-                        $mdDialog.hide();
+                        var changed = false;
+                        var toastMsg;
 
-                        /*$http.post(event.target.action, {
-                            
-                        }).then(function (response) {
-                            $scope.loading = false;
-                            if (response.data.success === true) {
-                                $mdToast.show(
-                                    $mdToast.simple()
-                                    .content("Block name changed successfully")
-                                    .position("top right")
-                                    .hideDelay(1500)
-                                );
-                                $mdDialog.hide($scope.newBlockName);
-                            } else {
-                                $scope.errorMessage = "The email or password you entered is incorrect";
-                            }
-                        }, function () {
-                            $scope.loading = false;
-                            $scope.errorMessage = "Trouble contacting server. Please try again.";
-                        });*/
+                        //see if the checkbox was changed or not
+                        if (admin !== $scope.userAdmin) {
+                            changed = true;
+                        }
+
+                        //determine toast message based on user action
+                        if ($scope.userAdmin) {
+                            toastMsg = user.email + " is now an administrator";
+                        }
+                        else {
+                            toastMsg = user.email + " is no longer an administrator";
+                        }
+
+                        //if user did actually change a role, we make an http put request to update the roles, and also display a toast
+                        if (changed === true) {
+                            $http.put(event.target.action, {
+                                UserId: user.id,
+                                IsAdministrator: $scope.userAdmin
+                            }).then(function (response) {
+                                $scope.loading = false;
+
+                                if (response.data.Success === true) {
+                                    $mdToast.show(
+                                        $mdToast.simple()
+                                        .content(toastMsg)
+                                        .position("top right")
+                                        .hideDelay(2000));
+                                }
+                                else {
+                                    $scope.errorMessage = "The email or password you entered is incorrect";
+                                }
+                            }, function () {
+                                $scope.loading = false;
+                                $scope.errorMessage = "Trouble contacting server. Please try again.";
+                            });
+                        }
+
+                        //whether or not a user actualy changed the roles, we hide the dialog and return a boolean of whether anything changed or not, to know whether wee should request new data from the server
+                        $mdDialog.hide({ changed: changed });
 
                         return true;
                     }

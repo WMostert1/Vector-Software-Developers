@@ -1,5 +1,5 @@
 ﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Change User Roles" ng-cloak>
-    <form ng-submit="post($event)" action="#" flex layout="column" name="editUserRolesForm">
+    <form ng-submit="post($event)" action="api/users" flex layout="column" name="editUserRolesForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 class="md-title">Edit user roles</h2>
@@ -10,7 +10,9 @@
             </div>
         </md-toolbar>
         <md-content layout-padding flex layout="column">
-            <h4>{{userName}}</h4>
+            <div layout="row" layout-align="center start">
+                <h4>{{userName}}</h4>
+            </div>
             <div layout-fill layout="row">
                 <div flex="30">
                     <md-input-container>
@@ -20,17 +22,16 @@
                     </md-input-container>
                     <md-input-container>
                         <md-checkbox class="md-primary" ng-model="userAdmin" aria-label="Admin Checkbox">
-                            Admin
+                            Administrator
                         </md-checkbox>
-                        <div ng-messages="editBlockForm.blockName.$error" role="alert">
-                            <div ng-message="required">Please enter a block name</div>
-                            <div ng-message="minlength, maxlength">The block name must be between 1 and 50 characters</div>
-                        </div>
                     </md-input-container>
                 </div>
             </div>
         </md-content>
         <div class="md-actions" layout="row">
+            <div class="loaderContainer" layout="row" layout-align="center center">
+                <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="15px"></md-progress-circular>
+            </div>
             <span flex></span>
             <md-button type="submit" class="md-icon-button md-primary" aria-label="Add Roles">
                 <ng-md-icon icon="check"></ng-md-icon>

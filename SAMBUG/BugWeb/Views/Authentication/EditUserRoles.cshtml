@@ -3,7 +3,7 @@
 }
 
 <div layout-fill ng-controller="UserManagementCtrl" layout="row" layout-align="center start">
-    <div layout="column" flex="60">
+    <div layout-padding layout="column" flex="60">
         <md-toolbar class="md-hue-1">
             <div class="md-toolbar-tools">
                 <h3>Users</h3>
@@ -38,6 +38,14 @@
 
 @section scripts
 {
+    <script type="application/javascript">
+        angular.module("appMain").factory("usersUrlService", function(){
+            return {
+                getAllUrl: "@Url.Content("~/api/users/")"
+            };
+        });
+    </script>
+
     @Scripts.Render("~/bundles/authentication/edituserroles")
 }
 
@@ -98,97 +106,97 @@
 
 
 @*@using BugBusiness.Interface.BugSecurity.DTO
-@model BugBusiness.Interface.BugSecurity.DTO.ViewEditUserRolesResponse
+    @model BugBusiness.Interface.BugSecurity.DTO.ViewEditUserRolesResponse
 
-@{
-    ViewBag.Title = "User Roles";
-    ICollection<UserDTO> users = AutoMapper.Mapper.Map<ICollection<UserDTO>>(Model.Users);
-}
+    @{
+        ViewBag.Title = "User Roles";
+        ICollection<UserDTO> users = AutoMapper.Mapper.Map<ICollection<UserDTO>>(Model.Users);
+    }
 
-<h2>@ViewBag.Title</h2>
-<hr/>
-<div>
-    <div class="row">
-        <div style="font-size: 20pt" class="col-sm-4">Email Address</div>
-        <div style="font-size: 20pt" class="col-sm-4">Role</div>
-        
-    </div>
-    <br/>
-    @foreach (var item in users)
-    {
+    <h2>@ViewBag.Title</h2>
+    <hr/>
+    <div>
         <div class="row">
-            <div class="col-sm-4">@Html.DisplayFor(modelItem => item.Email)</div>
-            <div class="col-sm-4">
+            <div style="font-size: 20pt" class="col-sm-4">Email Address</div>
+            <div style="font-size: 20pt" class="col-sm-4">Role</div>
 
-                @foreach (var role in item.Roles)
-                {
+        </div>
+        <br/>
+        @foreach (var item in users)
+        {
+            <div class="row">
+                <div class="col-sm-4">@Html.DisplayFor(modelItem => item.Email)</div>
+                <div class="col-sm-4">
 
-                    <div class="row">
-                        <div class="col-lg-8">@Html.DisplayFor(roleItem => role.RoleDescription)</div>
-                    </div>
+                    @foreach (var role in item.Roles)
+                    {
 
-                    <div id="@Html.Raw("modal" + item.UserID)" class="modal fade" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Edit User Role</h4>
+                        <div class="row">
+                            <div class="col-lg-8">@Html.DisplayFor(roleItem => role.RoleDescription)</div>
+                        </div>
+
+                        <div id="@Html.Raw("modal" + item.UserID)" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Edit User Role</h4>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <p>Please choose roles for @item.Email</p>
+                                        <form id="form_@item.UserID" method="POST" action="./EditUserRoles">
+                                            <input type="number" value="@item.UserID" name="UserId" hidden/>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="checkbox" id="isGrower" name="isGrower" value="true" aria-label="..." >
+
+                                                </span>
+                                                <input type="text" value="Grower" class="form-control" aria-label="..." disabled>
+                                            </div><!-- /input-group -->
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="checkbox" id="isAdministrator" name="isAdministrator" value="true" aria-label="...">
+                                                </span>
+                                                <input type="text" id="role_description_2"  value="Administrator" class="form-control" aria-label="..." disabled>
+                                            </div>
+                                        </form>
+                                        <br/>
+
+                                        <button type="button" class="btn btn-success" onclick=@Html.Raw("validateForm($('#form_"+item.UserID+"'))")>Save</button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
 
-                                    <p>Please choose roles for @item.Email</p>
-                                    <form id="form_@item.UserID" method="POST" action="./EditUserRoles">
-                                        <input type="number" value="@item.UserID" name="UserId" hidden/>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <input type="checkbox" id="isGrower" name="isGrower" value="true" aria-label="..." >
-                
-                                            </span>
-                                            <input type="text" value="Grower" class="form-control" aria-label="..." disabled>
-                                        </div><!-- /input-group -->
-
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <input type="checkbox" id="isAdministrator" name="isAdministrator" value="true" aria-label="...">
-                                            </span>
-                                            <input type="text" id="role_description_2"  value="Administrator" class="form-control" aria-label="..." disabled>
-                                        </div>
-                                    </form>
-                                    <br/>
-                                   
-                                    <button type="button" class="btn btn-success" onclick=@Html.Raw("validateForm($('#form_"+item.UserID+"'))")>Save</button>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
                             </div>
 
                         </div>
+                    }
+                </div>
 
-                    </div>
-                }
+
+                <div class="col-sm-4"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("modal" + item.UserID)">Edit</button>
+                </div>
             </div>
+            <br/>
 
-
-            <div class="col-sm-4"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("modal" + item.UserID)">Edit</button>
-            </div>
-        </div>
-        <br/>
-
-    }
-
-    <script>
-        function validateForm(form) {
-            if (form.find('input[name="isGrower"]').is(':checked') == false && form.find('input[name="isAdministrator"]').is(':checked') == false) {
-                alert("At least one role needs to be selected.");
-            } else {
-                form.submit();
-            }
         }
-    </script>
 
-    <!--Html.Raw("$('#form_"+item.UserUserId+"').submit()")-->
+        <script>
+            function validateForm(form) {
+                if (form.find('input[name="isGrower"]').is(':checked') == false && form.find('input[name="isAdministrator"]').is(':checked') == false) {
+                    alert("At least one role needs to be selected.");
+                } else {
+                    form.submit();
+                }
+            }
+        </script>
+
+        <!--Html.Raw("$('#form_"+item.UserUserId+"').submit()")-->
 
 
 
-</div>*@
+    </div>*@

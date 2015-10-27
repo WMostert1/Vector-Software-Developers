@@ -7,7 +7,7 @@ using DataAccess.Models;
 //Used to list the users in order to edit their roles by an administrator
 namespace BugBusiness.Interface.BugSecurity.DTO
 {
-    public class ViewEditUserRolesResponse
+    public class GetUsersResponse
     {
         public ICollection<UserDTO> Users { get; set; }
     }

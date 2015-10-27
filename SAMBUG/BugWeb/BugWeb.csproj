@@ -158,6 +158,7 @@
     <Compile Include="Controllers\ApiRecordsController.cs" />
     <Compile Include="Controllers\ApiSpeciesController.cs" />
     <Compile Include="Controllers\ApiSynchronizationController.cs" />
+    <Compile Include="Controllers\ApiUsersController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\FarmManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -198,6 +199,7 @@
     <Content Include="App\Controllers\tablesCtrl.js" />
     <Content Include="App\Controllers\userManagementCtrl.js" />
     <Content Include="App\Services\chartService.js" />
+    <Content Include="App\Services\editUserRolesService.js" />
     <Content Include="App\Services\mapService.js" />
     <Content Include="App\Services\commonReportingService.js" />
     <Content Include="App\Services\tableService.js" />
@@ -322,7 +324,6 @@
   <ItemGroup>
     <Folder Include="App\Directives\" />
     <Folder Include="App\Filters\" />
-    <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

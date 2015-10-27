@@ -75,20 +75,24 @@ namespace BugBusiness.BugSecurity
             throw new NotImplementedException();
         }
 
-        public ViewEditUserRolesResponse GetUsers()
+        public GetUsersResponse GetUsers()
         {
             var users = _dbBugSecurity.GetAllUsers();
 
             List<UserDTO> userDTOList = AutoMapper.Mapper.Map<List<UserDTO>>(users);
 
-            return new ViewEditUserRolesResponse { Users = userDTOList };
+            return new GetUsersResponse { Users = userDTOList };
         }
 
-        public void EditUserRoles(EditUserRoleRequest editUserRoleRequest)
+        public EditUserRoleResponse EditUserRoles(EditUserRoleRequest editUserRoleRequest)
         {
 
-            _dbBugSecurity.EditUserRoles(editUserRoleRequest.UserId, editUserRoleRequest.IsGrower,
-                editUserRoleRequest.IsAdministrator);
+           bool result = _dbBugSecurity.EditUserRoles(editUserRoleRequest.UserId, editUserRoleRequest.IsAdministrator);
+
+           return new EditUserRoleResponse()
+           {
+               Success = result
+           };
 
         }
 

@@ -73,25 +73,15 @@ namespace DataAccess.MSSQL
 
         }
 
-        public void EditUserRoles(long userId, bool isGrower, bool isAdministrator)
+        public bool EditUserRoles(long userId, bool isAdministrator)
         {
             //TODO: Remove magic numbers and allow for more roles
             var db = new BugDBEntities();
-            Role grower = db.Roles.SingleOrDefault(rle => rle.RoleType == 1);
             Role admin = db.Roles.SingleOrDefault(rle => rle.RoleType == 2);
 
             User user = db.Users.SingleOrDefault(usr => usr.UserID == userId);
 
-            if (user == null) return;
-
-            if (isGrower && !user.Roles.Contains(grower))
-            {
-                user.Roles.Add(grower);
-            }
-            else if (!isGrower && user.Roles.Contains(grower))
-            {
-                user.Roles.Remove(grower);
-            }
+            if (user == null) return false;
 
             if (isAdministrator && !user.Roles.Contains(admin))
             {
@@ -102,6 +92,8 @@ namespace DataAccess.MSSQL
                 user.Roles.Remove(admin);
             }
             db.SaveChanges();
+
+            return true;
         }
 
 

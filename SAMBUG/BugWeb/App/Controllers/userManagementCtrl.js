@@ -1,59 +1,55 @@
 ﻿angular.module("appMain")
     .controller("UserManagementCtrl", [
-        "$scope", "$rootScope", "$mdDialog", "$mdToast", function ($scope, $rootScope, $mdDialog, $mdToast) {
+        "$scope", "$rootScope", "$mdDialog", "$mdToast", "editUserRolesService", function ($scope, $rootScope, $mdDialog, $mdToast, editUserRolesService) {
 
-            $scope.users = [
-                {
-                    userId: "1",
-                    email: "Lynn@gmail.com",
-                    roles: [
-                        {
-                            id: "1",
-                            name: "grower"
-                        },
-                        {
-                            id: "2",
-                            name: "admin"
-                        }
-                    ]
-                },
-                {
-                    userId: "2",
-                    email: "Phill@gmail.com",
-                    roles: [
-                        {
-                            id: "1",
-                            name: "grower"
-                        }
-                    ]
-                },
-                {
-                    userId: "3",
-                    email: "Jane@gmail.com",
-                    roles: [
-                        {
-                            id: "0",
-                            name: "admin"
-                        }
-                    ]
-                }
-            ];
+            $scope.users = [];
+
+            function initUsers(users) {
+                $scope.users = [];
+                var mail;
+                var id;
+                users.Users.forEach(function(usr) {
+                    var user = new Object();
+                    var rolesArr = new Array();
+                    mail = usr.Email;
+                    id = usr.UserID;
+
+                    usr.Roles.forEach(function(rls) {
+                        var role = new Object();
+                        role.id = rls.RoleType;
+                        role.name = rls.RoleDescription;
+
+                        rolesArr.push(role);
+                    });
+
+                    user.id = id;
+                    user.email = mail;
+                    user.roles = rolesArr;
+                    $scope.users.push(user);
+                });
+            }
+
+            editUserRolesService.loadUsers(initUsers);
 
             //------------------------------------------------EditBlockDialog-----------------------------------------------------------
             $scope.showEditUserRolesDialog = function (event, ctrl, user) {
-                $rootScope.userEmail = user.email;
-                $rootScope.roles = user.roles;
-                $scope.showDialog("editUserRoles", event, ctrl, null, null);
+                $scope.showDialog("editUserRoles", event, ctrl, function (rolesChanged) {
+                    if (rolesChanged.changed === true) {
+                        editUserRolesService.loadUsers(initUsers);
+                    }
+                        
+                } , null, user);
             };
 
             //-------------------------------------------------Common Helper functions-------------------------------------
-            $scope.showDialog = function (type, event, ctrl, hiddenCallback, cancelCallback) {
+            $scope.showDialog = function (type, event, ctrl, hiddenCallback, cancelCallback, user) {
                 $mdDialog.show({
                     templateUrl: "/App/Views/" + type + "Dialog.html",
                     parent: angular.element(document.body),
                     targetEvent: event,
                     clickOutsideToClose: true,
-                    controller: ctrl
+                    controller: ctrl,
+                    locals: {user: user}
                 }).then(hiddenCallback, cancelCallback);
             }
         }

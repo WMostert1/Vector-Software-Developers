@@ -115,7 +115,8 @@ namespace BugWeb
 
             bundles
                 .Add(new ScriptBundle("~/bundles/authentication/edituserroles")
-                    .Include("~/App/Controllers/editUserRolesDialogCtrl.js",
+                    .Include("~/App/Services/editUserRolesService.js",
+                    "~/App/Controllers/editUserRolesDialogCtrl.js",
                     "~/App/Controllers/userManagementCtrl.js"));
 
             bundles

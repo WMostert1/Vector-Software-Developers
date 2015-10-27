@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.BugSecurity.DTO
 {
-    public class EditUserRoleRequest
+    public class EditUserRoleResponse
     {
-        public int UserId;
-        public bool IsAdministrator;
+        public bool Success;
     }
 }
