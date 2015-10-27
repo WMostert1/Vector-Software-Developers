@@ -154,6 +154,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ApiAuthenticationController.cs" />
+    <Compile Include="Controllers\ApiFarmManagementController.cs" />
     <Compile Include="Controllers\ApiSpeciesClassificationController.cs" />
     <Compile Include="Controllers\ApiRecordsController.cs" />
     <Compile Include="Controllers\ApiSpeciesController.cs" />
