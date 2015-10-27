@@ -142,9 +142,9 @@
         var speciesDone = false;
 
         var initMapControls = function () {
+            $scope.loading = false;
             mapService.initMap("map");
             $mdSidenav("right").toggle();
-            $scope.loading = false;
         }
 
         commonReportingService.init(function (farms) {

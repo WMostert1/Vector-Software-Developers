@@ -187,8 +187,8 @@
 
         var initTablesControls = function () {
             $scope.loading = false;
-            $mdSidenav("right").toggle();
             tableService.initTables("#scoutTable", "#treatmentTable");
+            $mdSidenav("right").toggle();
         }
 
         commonReportingService.init(function (farms) {

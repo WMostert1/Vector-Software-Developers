@@ -35,11 +35,11 @@
             grouped: {
                 y: {
                     title: "Y",
-                    selected: { name: "bugsPerTree", aggregate: "average", $$mdSelectId: 1 },
+                    selected: {title: "Pests per Tree", name: "bugsPerTree", aggregate: "Average", $$mdSelectId: 1 },
                     groups: [
                         {
                             title: "Average",
-                            type: "average",
+                            type: "Average",
                             list: [
                                 {
                                     title: "Pests per Tree",
@@ -58,7 +58,7 @@
                         },
                         {
                             title: "Total",
-                            type: "total",
+                            type: "Total",
                             list: [
                                 {
                                     title: "Number of Pests",
@@ -76,23 +76,26 @@
             ungrouped: {
                 x: {
                     title: "X",
-                    selected: {name: "date", type: "line", $$mdSelectId: 6},
+                    selected: {title: "Date", name: "date", type: "line", $$mdSelectId: 6},
                     list: [
                         {
                             title: "Date",
                             name: "date",
-                            type: "line"
+                            type: "Line"
                         },
                         {
                             title: "Block",
-                            name: "block"
+                            name: "blockName",
+                            type: "Bar"
                         }, {
                             title: "Species",
-                            name: "speciesName"
+                            name: "speciesName",
+                            type: "Bar"
                         },
                         {
                             title: "Species Life Stage",
-                            name: "speciesLifeStage"
+                            name: "speciesLifeStage",
+                            type: "Bar"
                         }
                     ]
                 },
@@ -106,7 +109,7 @@
                         },
                         {
                             title: "Block",
-                            name: "block"
+                            name: "blockName"
                         },
                         {
                             title: "Species",
@@ -148,16 +151,32 @@
             }
         }
 
+        var constructChartSettings = function() {
+            return {
+                x: $scope.settings.ungrouped.x.selected.name,
+                y: $scope.settings.grouped.y.selected.name,
+                series: $scope.settings.ungrouped.series.selected.name,
+                aggregate: $scope.settings.grouped.y.selected.aggregate,
+                type: $scope.settings.ungrouped.x.selected.type,
+                xTitle: $scope.settings.ungrouped.x.selected.title,
+                yTitle: $scope.settings.grouped.y.selected.title
+            }
+        }
+
         var updateChart = function () {
+            $scope.chartTitle = $scope.settings.grouped.y.selected.aggregate + " " +
+                $scope.settings.grouped.y.selected.title + " vs " +
+                $scope.settings.ungrouped.x.selected.title;
+
             var filteredScoutStops = commonReportingService.getScoutStops(constructScoutDataFilter());
             var filteredTreatments = [];
 
-            if ($scope.settings.ungrouped.x.selected.name === "date" && $scope.settings.showTreatments)
+            if ($scope.settings.ungrouped.x.selected.type === "Line" && $scope.settings.showTreatments)
                 filteredTreatments = commonReportingService.getTreatments(constructTreatmentDataFilter());
 
             if (filteredScoutStops.length > 0 || filteredTreatments.length > 0) {
                 $scope.someData = true;
-                chartService.updateChart(filteredScoutStops, filteredTreatments);
+                chartService.updateChart("#chart", filteredScoutStops, filteredTreatments, constructChartSettings());
             } else
                 $scope.someData = false;
 
@@ -171,7 +190,7 @@
             $scope.constraints.dates.from = new Date((new XDate()).addWeeks(-2, true));
             $scope.constraints.dates.to = new Date();
             $scope.constraints.dates.all = false;
-            $scope.settings.grouped.y.selected = { name: "bugsPerTree", aggregate: "average", $$mdSelectId: 1 }
+            $scope.settings.grouped.y.selected = { name: "bugsPerTree", aggregate: "Average", $$mdSelectId: 1 }
             $scope.settings.ungrouped.x.selected = { name: "date", type: "line", $$mdSelectId: 6 }
             $scope.settings.ungrouped.series.selected = { name: "none", type: null, $$mdSelectId: 10 }
             $scope.settings.showTreatments = false;
@@ -213,20 +232,20 @@
             updateChart();
         });
 
-        $scope.$watch("settings.grouped.y.selected", function (newValue) {
-
+        $scope.$watch("settings.grouped.y.selected", function () {
+            updateChart();
         });
 
         $scope.$watch("settings.ungrouped.x.selected", function (newValue) {
-
+            updateChart();
         });
 
         $scope.$watch("settings.ungrouped.series.selected", function (newValue) {
-
+            updateChart();
         });
 
         $scope.$watch("settings.showTreatments", function (newValue) {
-
+            updateChart();
         });
 
         //todo incorporate suggestion engine (bloodhound.js?) to order the suggestions
@@ -245,9 +264,8 @@
         var speciesDone = false;
 
         var initChartControls = function () {
-            chartService.initChart("chart");
-            $mdSidenav("right").toggle();
             $scope.loading = false;
+            $mdSidenav("right").toggle();
         }
 
         commonReportingService.init(function (farms) {

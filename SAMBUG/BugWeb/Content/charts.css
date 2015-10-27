@@ -34,8 +34,8 @@
     position: absolute;
     min-width: 5em;
     padding: .5em;
-    background: #453D3F;
-    color: #E6E6E4;
+    background: #8BC34A;
+    color: black;
     font-weight: 700;
     text-align: center;
     pointer-events: none;
@@ -51,12 +51,17 @@
     height: 0;
     margin-left: -15px;
     border: 15px solid transparent;
-    border-top-color: #453D3F;
+    border-top-color: #8BC34A;
 }
 
 .ct-label {
-    color: black !important;
+    color: white !important;
 }
+
+.ct-axis-title {
+    fill: white !important;
+}
+
 
 .ct-series-a .ct-line,
 .ct-series-a .ct-point,
@@ -68,9 +73,4 @@
   stroke-dasharray: 20px;
   stroke-linecap: round;
   fill: hsl(120, 40%, 60%);*/
-}
-
-.errorMessage {
-    position: relative;
-    top: 150px;
 }
