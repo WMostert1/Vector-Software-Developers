@@ -47,7 +47,6 @@ namespace BugBusiness.BugIntelligence
         private static volatile ANNClassifier instance;
         private static object syncRoot = new Object();
        
-
         private Matrix<float> ConcatDescriptors(IList<Matrix<float>> descriptors)
         {
             int cols = descriptors[0].Cols;
@@ -69,17 +68,13 @@ namespace BugBusiness.BugIntelligence
 
         private Image<Bgr, byte> doGrabCut(Image<Bgr, byte> image)
         {
-
             //1. Convert the image to grayscale.
-
             int numberOfIterations = 5;
             Image<Gray, byte> grayImage = image.Convert<Gray, Byte>();
 
             //2. Threshold it using otsu.
-
-
             grayImage = getThresholdedImage(grayImage);
-            // Emgu.CV.UI.ImageViewer.Show(grayImage);
+          
             grayImage._Not();
 
             //3. Extract the contours.
@@ -110,7 +105,6 @@ namespace BugBusiness.BugIntelligence
             #region Asigning output
 
             Image<Gray, byte> mask = image.GrabCut(ROI, numberOfIterations);
-
 
             mask = mask.ThresholdBinary(new Gray(2), new Gray(255));
 
@@ -189,7 +183,6 @@ namespace BugBusiness.BugIntelligence
             return classify(new Image<Bgr,byte>(bmp));
         }
 
-
         public string classify(Image<Bgr, byte> image)  //class labels and dict read from XML docs
         {
             Matrix<float> classification_result = new Matrix<float>(1, class_labels.Count);
@@ -229,8 +222,6 @@ namespace BugBusiness.BugIntelligence
 
         public static ANNClassifier getInstance
         {
-            
-
             get
             {
                 if (instance == null)
