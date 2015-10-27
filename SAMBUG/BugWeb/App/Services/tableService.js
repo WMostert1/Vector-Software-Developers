@@ -35,27 +35,27 @@
         var initScoutTable = function (tableId) {
             var scoutTableOptions = angular.copy(tableOptions);
             scoutTableOptions.columns = [
-                    { "title": "Farm", data: "farmName" },
-                    { "title": "Block", data: "blockName" },
-                    { "title": "Date", data: "date" },
-                    { "title": "Tree Count", data: "numberOfTrees" },
-                    { "title": "Bug Species", data: "speciesName" },
-                    { "title": "Life stage", data: "lifeStage" },
-                    { "title": "Pest", data: "isPest" },
-                    { "title": "Bug Count", data: "numberOfBugs" },
-                    { "title": "Comments", data: "comments" }
-            ]
+                { "title": "Farm", data: "farmName", width: "12%" },
+                { "title": "Block", data: "blockName", width: "10%" },
+                { "title": "Date", data: "date", width: "10%" },
+                { "title": "Tree Count", data: "numberOfTrees", width: "5%" },
+                { "title": "Bug Species", data: "speciesName", width: "13%" },
+                { "title": "Life Stage", data: "lifeStage", width: "10%" },
+                { "title": "Pest", data: "isPest", width: "5%" },
+                { "title": "Bug Count", data: "numberOfBugs", width: "5%" },
+                { "title": "Comments", data: "comments", width: "30%" }
+            ];
             scoutDataTable = $(tableId).DataTable(scoutTableOptions);            
         };
 
         var initTreatmentTable = function (tableId) {
             var treatmentTableOptions = angular.copy(tableOptions);
             treatmentTableOptions.columns = [
-                    { "title": "Farm", data: "farmName" },
-                    { "title": "Block", data: "blockName" },
-                    { "title": "Date", data: "date" },
-                    { "title": "Comments", data: "comments" }
-            ]
+                { "title": "Farm", data: "farmName", width: "20%" },
+                { "title": "Block", data: "blockName", width: "20%" },
+                { "title": "Date", data: "date", width: "20%" },
+                { "title": "Comments", data: "comments", width: "40%" }
+            ];
             treatmentDataTable = $(tableId).DataTable(treatmentTableOptions);
         };
 
