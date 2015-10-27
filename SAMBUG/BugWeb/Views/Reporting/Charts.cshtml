@@ -13,8 +13,8 @@
 }
 <div flex layout-fill layout="column" ng-controller="ChartsCtrl">
     <div flex layout="column" layout-fill layout-align="center center">
-        <div flex layout="column" layout-fill id="chart" layout-align="center center" ng-hide="!someScoutStops"></div>
-        <div ng-if="!someScoutStops && !loading">
+        <div flex layout="column" layout-fill id="chart" layout-align="center center" ng-hide="!someData"></div>
+        <div ng-if="!someData && !loading">
             <p class="md-body-1">No data available. See Chart Settings.</p>
         </div>
         <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="70px"></md-progress-circular>
@@ -24,7 +24,29 @@
         @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuToolbar.cshtml"); }
         <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1">
             @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuBody.cshtml"); }
-            <md-divider></md-divider>
+            <md-divider layout-padding></md-divider>
+
+
+            <md-input-container ng-repeat="option in settings.grouped">
+                <label>{{option.title}}</label>
+                <md-select ng-model="option.selected">
+                    <md-optgroup ng-repeat="group in option.groups" label="{{group.title}}">
+                        <md-option ng-repeat="item in group.list" ng-value="{name:item. name, aggregate: group.type}">{{item.title}}</md-option>
+                    </md-optgroup>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container ng-repeat="option in settings.ungrouped">
+                <label>{{option.title}}</label>
+                <md-select ng-model="option.selected">
+                    <md-option ng-repeat="item in option.list" ng-value="{name: item.name, type: item.type}">{{item.title}}</md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-checkbox class="md-primary" ng-if="settings.ungrouped.x.selected.name === 'date'" ng-model="settings.showTreatments" aria-label="Overlay Treatments Checkbox">
+                Show Spray Data
+            </md-checkbox>
+
         </md-content>
     </md-sidenav>
 </div>

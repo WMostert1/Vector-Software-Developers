@@ -1,8 +1,9 @@
 ﻿angular.module("appMain")
-    .controller("ChartsCtrl", ["$scope", "$mdSidenav", "commonReportingService", "chartService", function ($scope, $mdSidenav, commonReportingService, chartService) {
+    .controller("ChartsCtrl", ["$scope", "$mdSidenav", "commonReportingService", "chartService", function($scope, $mdSidenav, commonReportingService, chartService) {
 
         $scope.loading = true;
-        $scope.someScoutStops = true;
+
+        $scope.someData = true;
 
         $scope.menu = {
             title: "Chart Settings"
@@ -28,16 +29,104 @@
                 to: new Date(),
                 all: false
             }
-
-
         }
 
-        var constructDataFilter = function () {
+        $scope.settings = {
+            grouped: {
+                y: {
+                    title: "Y",
+                    selected: { name: "bugsPerTree", aggregate: "average", $$mdSelectId: 1 },
+                    groups: [
+                        {
+                            title: "Average",
+                            type: "average",
+                            list: [
+                                {
+                                    title: "Pests per Tree",
+                                    name: "bugsPerTree"
+                                },
+                                {
+                                    title: "Number of Pests",
+                                    name: "numberOfBugs"
+                                },
+                                {
+                                    title: "Number of Trees",
+                                    name: "numberOfTrees"
+                                }
+                            ]
+
+                        },
+                        {
+                            title: "Total",
+                            type: "total",
+                            list: [
+                                {
+                                    title: "Number of Pests",
+                                    name: "numberOfBugs"
+                                },
+                                {
+                                    title: "Number of Trees",
+                                    name: "numberOfTrees"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            ungrouped: {
+                x: {
+                    title: "X",
+                    selected: {name: "date", type: "line", $$mdSelectId: 6},
+                    list: [
+                        {
+                            title: "Date",
+                            name: "date",
+                            type: "line"
+                        },
+                        {
+                            title: "Block",
+                            name: "block"
+                        }, {
+                            title: "Species",
+                            name: "speciesName"
+                        },
+                        {
+                            title: "Species Life Stage",
+                            name: "speciesLifeStage"
+                        }
+                    ]
+                },
+                series: {
+                    title: "Series",
+                    selected: {name: "none", type: null, $$mdSelectId: 10},
+                    list: [
+                        {
+                            title: "None",
+                            name: "none"
+                        },
+                        {
+                            title: "Block",
+                            name: "block"
+                        },
+                        {
+                            title: "Species",
+                            name: "speciesName"
+                        },
+                        {
+                            title: "Species Life Stage",
+                            name: "speciesLifeStage"
+                        }
+                    ]
+                }
+            }
+        };
+
+        var constructScoutDataFilter = function () {
             return {
                 farms: $scope.constraints.misc.farms.selected,
                 blocks: $scope.constraints.misc.blocks.selected,
-                species: $scope.constraints.misc.species.selected,
                 isPest: [true],
+                species: $scope.constraints.misc.species.selected,
                 lifeStages: $scope.constraints.misc.lifeStages.selected,
                 dates: {
                     from: $scope.constraints.dates.from,
@@ -47,14 +136,30 @@
             }
         }
 
-        var updateChart = function () {
-            var filteredScoutStops = commonReportingService.getScoutStops(constructDataFilter());
+        var constructTreatmentDataFilter = function () {
+            return {
+                farms: $scope.constraints.misc.farms.selected,
+                blocks: $scope.constraints.misc.blocks.selected,
+                dates: {
+                    from: $scope.constraints.dates.from,
+                    to: $scope.constraints.dates.to,
+                    all: $scope.constraints.dates.all
+                }
+            }
+        }
 
-            if (filteredScoutStops.length > 0) {
-                $scope.someScoutStops = true;
-                chartService.updateChart(filteredScoutStops);
+        var updateChart = function () {
+            var filteredScoutStops = commonReportingService.getScoutStops(constructScoutDataFilter());
+            var filteredTreatments = [];
+
+            if ($scope.settings.ungrouped.x.selected.name === "date" && $scope.settings.showTreatments)
+                filteredTreatments = commonReportingService.getTreatments(constructTreatmentDataFilter());
+
+            if (filteredScoutStops.length > 0 || filteredTreatments.length > 0) {
+                $scope.someData = true;
+                chartService.updateChart(filteredScoutStops, filteredTreatments);
             } else
-                $scope.someScoutStops = false;
+                $scope.someData = false;
 
         }
 
@@ -66,6 +171,10 @@
             $scope.constraints.dates.from = new Date((new XDate()).addWeeks(-2, true));
             $scope.constraints.dates.to = new Date();
             $scope.constraints.dates.all = false;
+            $scope.settings.grouped.y.selected = { name: "bugsPerTree", aggregate: "average", $$mdSelectId: 1 }
+            $scope.settings.ungrouped.x.selected = { name: "date", type: "line", $$mdSelectId: 6 }
+            $scope.settings.ungrouped.series.selected = { name: "none", type: null, $$mdSelectId: 10 }
+            $scope.settings.showTreatments = false;
         };
 
         $scope.$watchCollection("constraints.misc.farms.selected", function (newValue) {
@@ -104,6 +213,21 @@
             updateChart();
         });
 
+        $scope.$watch("settings.grouped.y.selected", function (newValue) {
+
+        });
+
+        $scope.$watch("settings.ungrouped.x.selected", function (newValue) {
+
+        });
+
+        $scope.$watch("settings.ungrouped.series.selected", function (newValue) {
+
+        });
+
+        $scope.$watch("settings.showTreatments", function (newValue) {
+
+        });
 
         //todo incorporate suggestion engine (bloodhound.js?) to order the suggestions
         $scope.filterSuggestions = function (list, selected, searchText) {
@@ -116,7 +240,7 @@
                 return excludingSelected;
             }
         }
-        
+
         var scoutstopsDone = false;
         var speciesDone = false;
 
