@@ -35,7 +35,9 @@ namespace BugBusiness.BugIntelligence
             public double beta { get; set; }
         }
 
-
+        private Matrix<float> dictionary;
+        private List<string> class_labels;
+        private Emgu.CV.ML.ANN_MLP network;
 
         private string dictionary_file_name;
         private string network_file_name;
@@ -44,9 +46,7 @@ namespace BugBusiness.BugIntelligence
 
         private static volatile ANNClassifier instance;
         private static object syncRoot = new Object();
-        private const int DIMENSIONS = 64;
        
-    
 
         private Matrix<float> ConcatDescriptors(IList<Matrix<float>> descriptors)
         {
@@ -140,28 +140,11 @@ namespace BugBusiness.BugIntelligence
 
         private Image<Gray, byte> getThresholdedImage(Image<Gray, byte> Img_Org_Gray)
         {
-            bool useDapative = false;
-            if (useDapative)
-            {
-                Image<Gray, Byte> dst = new Image<Gray, byte>(new Size(Img_Org_Gray.Width, Img_Org_Gray.Height));
-
-                System.IntPtr srcPtr = Img_Org_Gray.Ptr;
-                System.IntPtr dstPtr = dst.Ptr;
-
-                CvInvoke.cvAdaptiveThreshold(srcPtr, dstPtr, 255, Emgu.CV.CvEnum.ADAPTIVE_THRESHOLD_TYPE.CV_ADAPTIVE_THRESH_MEAN_C, Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY_INV, 3, 5);
-                return dst;
-            }
-            else
-            {
                 Image<Gray, byte> Img_Source_Gray = Img_Org_Gray.Copy();
                 Image<Gray, byte> Img_Otsu_Gray = Img_Org_Gray.CopyBlank();
 
-                CvInvoke.cvThreshold(Img_Source_Gray.Ptr, Img_Otsu_Gray.Ptr, 0, 255, Emgu.CV.CvEnum.THRESH.CV_THRESH_OTSU | Emgu.CV.CvEnum.THRESH.CV_THRESH_BINARY);
-
+                CvInvoke.cvThreshold(Img_Source_Gray.Ptr, Img_Otsu_Gray.Ptr, 0, 255, Emgu.CV.CvEnum.THRESH.CV_THRESH_OTSU);
                 return Img_Otsu_Gray;
-            }
-
-
         }
 
         private Image<Bgr, byte> preProcessImage(Image<Bgr, byte> image)
@@ -203,13 +186,12 @@ namespace BugBusiness.BugIntelligence
                 bmp = new Bitmap(ms);
             }
         
-            return classify(new Image<Bgr,byte>(bmp), restoreDictionary(dictionary_file_name), restoreClasses(classes_file_name), restoreNetwork(network_file_name, ann_config_file_name));
+            return classify(new Image<Bgr,byte>(bmp));
         }
 
 
-        public string classify(Image<Bgr, byte> image, Matrix<float> dictionary, List<string> class_labels, Emgu.CV.ML.ANN_MLP network)  //class labels and dict read from XML docs
+        public string classify(Image<Bgr, byte> image)  //class labels and dict read from XML docs
         {
-            //Emgu.CV.UI.ImageViewer.Show(image);
             Matrix<float> classification_result = new Matrix<float>(1, class_labels.Count);
             SURFDetector detector = new SURFDetector(400, false);
             BruteForceMatcher<float> matcher = new BruteForceMatcher<float>(DistanceType.L2);
@@ -218,7 +200,6 @@ namespace BugBusiness.BugIntelligence
             //Store the vocabulary
             bowDE.SetVocabulary(dictionary);
             image = preProcessImage(image);
-            //Emgu.CV.UI.ImageViewer.Show(image);
             Image<Gray, Byte> testImgGray = image.Convert<Gray, byte>();
             VectorOfKeyPoint testKeyPoints = detector.DetectKeyPointsRaw(testImgGray, null);
             Matrix<float> testBOWDescriptor = bowDE.Compute(testImgGray, testKeyPoints);
@@ -240,6 +221,10 @@ namespace BugBusiness.BugIntelligence
             network_file_name = app_data_path+"\\ANN\\network.stat";
             classes_file_name = app_data_path+"\\ANN\\classes.txt";
             ann_config_file_name = app_data_path+"\\ANN\\config.json";
+
+            dictionary = restoreDictionary(dictionary_file_name);
+            class_labels = restoreClasses(classes_file_name);
+            network = restoreNetwork(network_file_name, ann_config_file_name);
         }
 
         public static ANNClassifier getInstance
