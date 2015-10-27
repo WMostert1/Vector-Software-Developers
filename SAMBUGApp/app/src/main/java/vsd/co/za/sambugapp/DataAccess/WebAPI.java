@@ -51,7 +51,7 @@ public class WebAPI {
     private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/Synchronization";
     private static final String CLASSIFICATION_URL= "http://"+HOST+"/api/apiSpeciesClassification";
     private static final int SOCKET_TIMEOUT_MS = 100000; //10 seconds
-
+    private static final int MAX_RETRIES = 3;
 
     private WebAPI() {
     }
@@ -138,7 +138,7 @@ public class WebAPI {
 
             jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
                     SOCKET_TIMEOUT_MS,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
             VolleySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
@@ -172,7 +172,7 @@ public class WebAPI {
 
         @Override
         protected Void doInBackground(ClassificationRequestDTO... classificationRequestDTOs) {
-            JSONObject classificationRequest = new JSONObject();
+            JSONObject classificationRequest;
             try{
                 classificationRequest = new JSONObject(new Gson().toJson(classificationRequestDTOs[0]));
 
@@ -195,13 +195,13 @@ public class WebAPI {
             },new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context,"Could not contact server to classify bug.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context,"Could not contact server to classify bug: "+error.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             });
 
             jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
                     SOCKET_TIMEOUT_MS,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
             VolleySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
@@ -211,7 +211,6 @@ public class WebAPI {
     }
 
     private static class AuthLoginTask extends AsyncTask<String,Void,User>{
-
         private Context context;
 
         public AuthLoginTask(Context _context){

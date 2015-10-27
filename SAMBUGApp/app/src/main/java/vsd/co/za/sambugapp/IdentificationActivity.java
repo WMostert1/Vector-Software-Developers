@@ -219,13 +219,6 @@ public class IdentificationActivity extends AppCompatActivity {
         getPicture(getIntent());
     }
 
-    public Bitmap rotateBitmap(Bitmap source, float angle)
-    {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-    }
-
     /**
      * Called when a new intent is received from the ImagePreview Class
      * @param data
@@ -253,7 +246,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 stream = getContentResolver().openInputStream(data.getData());
                 bitmap = BitmapFactory.decodeStream(stream, null, options);
 
-                //TODO: Rotate the image
+
 
                 mImageView.setImageBitmap(bitmap);
                 if(!isClassified)
@@ -339,8 +332,10 @@ public class IdentificationActivity extends AppCompatActivity {
 
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            bitmap = rotateBitmap(fullPathName,myBitmap);
+            bitmap = Bitmap.createScaledBitmap(bitmap,400,400,false);
+            bitmap = rotateBitmap(fullPathName, myBitmap);
             mImageView.setImageBitmap(bitmap);
+            doAutomaticClassification(null);
         }
     }
 
