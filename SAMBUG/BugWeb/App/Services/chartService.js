@@ -4,6 +4,7 @@
 
         var chart;
         var projectedStops;
+        var stopSeries;
 
         var getProjectedStops = function(settings, scoutStops) {
             return Enumerable.From(scoutStops).Select(function(s) {
@@ -151,7 +152,38 @@
                     showLine: false
                 }
             };
-        } 
+        }
+
+        function addTrendlines(parameters, series) {
+            var i = 0;
+            Enumerable.From(series).ForEach(function(s) {
+                var trendSeries = {
+                    name: "Trend",
+                    className: "trendline-" + ++i,
+                    data: []
+                }
+
+                var vLinePositions = [];
+
+                Enumerable.From(treatments).ForEach(function (t) {
+                    newSeries.data.push({ x: t.date, y: -1 });
+                    vLinePositions.push(t.date.valueOf());
+                });
+
+                parameters.data.series.push(newSeries);
+
+                parameters.options.plugins.push(Chartist.plugins.verticalLines({
+                    positions: vLinePositions
+                }));
+
+                parameters.options.series = {
+                    "Spray Data": {
+                        showLine: false
+                    }
+                };
+            });
+            
+        }
 
         function saveLineChartParameters(parameters, stopSeries, treatments, settings) {
             Enumerable.From(stopSeries).ForEach(function (s) {
@@ -291,7 +323,10 @@
         function setAnimations(c, seriesCount) {
             var totalDuration = 2000;
             var duration = totalDuration / seriesCount;
+
             var pointsEasing = Chartist.Svg.Easing.easeOutQuint;
+            var lineEasing = Chartist.Svg.Easing.easeOutQuint;
+            var barEasing = Chartist.Svg.Easing.easeOutQuint;
 
             c.on("draw", function (data) {
                 if (data.type === "line") {
@@ -301,10 +336,23 @@
                             dur: duration,
                             from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
                             to: data.path.clone().stringify(),
-                            easing: Chartist.Svg.Easing.easeOutQuint
+                            easing: lineEasing
                         }
                     });
                 }
+
+                if (data.type === "bar") {
+                    data.element.animate({
+                        y2: {
+                            begin: duration * data.seriesIndex,
+                            dur: duration,
+                            from: data.y1,
+                            to: data.y2,
+                            easing: barEasing
+                        }
+                    });
+                }
+
                 if (data.type === "point") {
                     data.element.animate({
                         y1: {
@@ -350,12 +398,12 @@
         this.updateChart = function (chartId, scoutStops, treatments, settings) {
             //project the required fields, have accessible by later functions
             projectedStops = getProjectedStops(settings, scoutStops);
-
             //get categorised data (this is the data series)
-            var stopSeries = getStopSeries(settings.series, projectedStops);
+            stopSeries = getStopSeries(settings.series, projectedStops);
             var parameters = determinePlotParameters(stopSeries, treatments, settings);
             chart = new Chartist[settings.type](chartId, parameters.data, parameters.options);
             setAnimations(chart, stopSeries.length);
         }
+        
     }]);
 

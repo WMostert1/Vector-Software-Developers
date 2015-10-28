@@ -260,6 +260,11 @@
             }
         }
 
+        $scope.allItemsButX = function(item) {
+            console.log(item);
+            return true;
+        }
+
         var scoutstopsDone = false;
         var speciesDone = false;
 
@@ -290,5 +295,8 @@
 
         });
 
+        window.onresize = function () {
+            updateChart();
+        }
 
     }]);

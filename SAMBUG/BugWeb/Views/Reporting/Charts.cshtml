@@ -39,7 +39,7 @@
             <md-input-container ng-repeat="option in settings.ungrouped">
                 <label>{{option.title}}</label>
                 <md-select ng-model="option.selected">
-                    <md-option ng-repeat="item in option.list" ng-value="{title: item.title, name: item.name, type: item.type}">{{item.title}}</md-option>
+                    <md-option ng-repeat="item in option.list" ng-hide="settings.ungrouped.x.selected.name === item.name && option.title !== 'X'" ng-value="item">{{item.title}}</md-option>
                 </md-select>
             </md-input-container>
 
