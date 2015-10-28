@@ -26,18 +26,15 @@ import android.graphics.Matrix;
 import android.os.Build;
 
 public class ImagePreview extends AppCompatActivity {
-    byte [] image;
     ImageView imageView;
-    ExifInterface exif;
     String fullPathName;
-    int orientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
+        imageView = (ImageView) findViewById(R.id.ivImage);
         acceptImage(getIntent());
-        imageView = (ImageView)findViewById(R.id.ivImage);
     }
 
     @Override
@@ -74,8 +71,7 @@ public class ImagePreview extends AppCompatActivity {
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             Bitmap rBitmap = rotateBitmap(fullPathName, myBitmap);
-            ImageView myImage = (ImageView) findViewById(R.id.ivImage);
-            myImage.setImageBitmap(rBitmap);
+            imageView.setImageBitmap(rBitmap);
         }
 
     }
@@ -87,9 +83,9 @@ public class ImagePreview extends AppCompatActivity {
     public void deletePhoto(View v){
         File discardedPhoto = new File(fullPathName);
         discardedPhoto.delete();
+        imageView.setImageBitmap(null);
         Intent intent = new Intent(this,CustomCamera.class);
         startActivity(intent);
-
     }
 
     /**

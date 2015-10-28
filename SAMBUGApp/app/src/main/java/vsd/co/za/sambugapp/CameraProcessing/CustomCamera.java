@@ -52,8 +52,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
     private ExifInterface exif;
     private int deviceHeight;
     private int deviceWidth;
-    private FrameLayout flBtnContainer;
-    private String fileName;
     private ImageButton rotatingImage;
     private int degrees = -1;
     private String fullPathName;
@@ -70,7 +68,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
 
         // Getting all the needed elements from the layout
         rotatingImage = (ImageButton) findViewById(R.id.imgbCamera);
-        flBtnContainer = (FrameLayout) findViewById(R.id.flBtnContainer);
 
         // Getting the sensor service.
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -122,7 +119,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
                 parameters.setJpegQuality(100);
                 if (parameters.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
                     parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
                 mCamera.setParameters(parameters);
 
                 cameraConfigured=true;
@@ -286,7 +283,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
 
         public void onPictureTaken(byte[] data, android.hardware.Camera camera) {
 
-            byte[] croppedData = null;
             try {
                 data = getBitmap(data);
             }
@@ -322,6 +318,7 @@ public class CustomCamera extends Activity implements SensorEventListener {
             } catch (IOException e) {
                 Log.d("DG_DEBUG", "Error accessing file: " + e.getMessage());
             }
+
 
             // Adding Exif data for the orientation.
             fullPathName = pictureFile.getAbsolutePath();
@@ -485,6 +482,16 @@ public class CustomCamera extends Activity implements SensorEventListener {
      */
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
+
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode==RESULT_OK) {
+            Bundle bundle = data.getExtras();
+            if (requestCode == NEW_STOP) { //add new stop
+
+            }
+        }
+    }*/
 
 
     private Camera.Size getOptimalSize(List<Camera.Size> sizes, int w, int h) {

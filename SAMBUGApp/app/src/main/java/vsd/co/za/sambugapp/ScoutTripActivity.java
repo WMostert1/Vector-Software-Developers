@@ -196,7 +196,6 @@ public class ScoutTripActivity extends AppCompatActivity {
             ex.printStackTrace();
             return false;
         }
-        Toast.makeText(getApplicationContext(),"You are done. Go home.",Toast.LENGTH_LONG).show();
 
         WebAPI.attemptSyncCachedScoutingData(getApplicationContext());
 
@@ -251,6 +250,7 @@ public class ScoutTripActivity extends AppCompatActivity {
             LinearLayout llBugInfo;
             CheckedTextView tvBlockName;
             CheckedTextView tvTreeCount;
+            CheckedTextView tvTrees;
             ImageView ivSwipeIcon;
 
             ScoutStopViewHolder(View itemView) {
@@ -260,6 +260,7 @@ public class ScoutTripActivity extends AppCompatActivity {
                 tvBlockName = (CheckedTextView) itemView.findViewById(R.id.tvBlockName);
                 tvTreeCount = (CheckedTextView) itemView.findViewById(R.id.tvTreeCount);
                 llBugInfo = (LinearLayout) itemView.findViewById(R.id.llBugInfo);
+                tvTrees = (CheckedTextView) itemView.findViewById(R.id.tvTrees);
                 ivSwipeIcon = (ImageView) itemView.findViewById(R.id.swipeIcon);
             }
         }
@@ -278,7 +279,6 @@ public class ScoutTripActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ScoutStopViewHolder scoutStopViewHolder, int i) {
             if (hasStops) {
-                Log.d("BLAH", "HASSTOPS");
                 ScoutStop stop = scoutStops.get(scoutStopViewHolder.getAdapterPosition());
                 scoutStopViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
                 for (ScoutBug bug : stop.getScoutBugs()) {
@@ -294,6 +294,7 @@ public class ScoutTripActivity extends AppCompatActivity {
 
                 scoutStopViewHolder.llDraggedMenu.setVisibility(View.VISIBLE);
                 scoutStopViewHolder.ivSwipeIcon.setVisibility(View.VISIBLE);
+                scoutStopViewHolder.tvTrees.setVisibility(View.VISIBLE);
 
                 scoutStopViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -313,13 +314,13 @@ public class ScoutTripActivity extends AppCompatActivity {
                 scoutStopViewHolder.slScoutStop.addDrag(SwipeLayout.DragEdge.Right, scoutStopViewHolder.llDraggedMenu);
                 scoutStopViewHolder.slScoutStop.setSwipeEnabled(true);
             } else {
-                Log.d("BLAH", "NOT LOG HASSTOPS");
                 scoutStopViewHolder.tvBlockName.setText("No stops added yet. Click '+'");
                 scoutStopViewHolder.tvTreeCount.setText("");
                 scoutStopViewHolder.llBugInfo.removeAllViews();
                 scoutStopViewHolder.llDraggedMenu.setVisibility(View.INVISIBLE);
                 scoutStopViewHolder.ivSwipeIcon.setVisibility(View.INVISIBLE);
                 scoutStopViewHolder.tvTreeCount.setTextSize(0);
+                scoutStopViewHolder.tvTrees.setVisibility(View.INVISIBLE);
                 scoutStopViewHolder.slScoutStop.setSwipeEnabled(false);
             }
         }

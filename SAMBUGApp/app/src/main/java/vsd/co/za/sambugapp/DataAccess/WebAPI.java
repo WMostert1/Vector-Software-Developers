@@ -169,6 +169,7 @@ public class WebAPI {
             context = _context;
         }
 
+
         @Override
         protected Void doInBackground(ClassificationRequestDTO... classificationRequestDTOs) {
             JSONObject classificationRequest;
@@ -176,7 +177,8 @@ public class WebAPI {
                 classificationRequest = new JSONObject(new Gson().toJson(classificationRequestDTOs[0]));
 
             }catch (JSONException e){
-                Toast.makeText(context, "A JSON conversion error occurred.", Toast.LENGTH_SHORT).show();
+                if (!isCancelled())
+                    Toast.makeText(context, "A JSON conversion error occurred.", Toast.LENGTH_SHORT).show();
                 return null;
             }
 
@@ -185,16 +187,19 @@ public class WebAPI {
             JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,CLASSIFICATION_URL,classificationRequest,new Response.Listener<JSONObject>(){
                 @Override
                 public void onResponse(JSONObject response) {
-                    final Gson gson = new Gson();
-                    ClassificationResultDTO result = gson.fromJson(response.toString(), ClassificationResultDTO.class);
-                    Toast.makeText(context,result.SpeciesName+ " " +result.Lifestage+" "+result.SpeciesID,Toast.LENGTH_SHORT).show();
-                    ((IdentificationActivity)context).changeEntrySelection(result);
-
+                    if (!isCancelled()) {
+                        final Gson gson = new Gson();
+                        ClassificationResultDTO result = gson.fromJson(response.toString(), ClassificationResultDTO.class);
+                        Toast.makeText(context, result.SpeciesName + " " + result.Lifestage + " " + result.SpeciesID, Toast.LENGTH_SHORT).show();
+                        ((IdentificationActivity) context).changeEntrySelection(result);
+                    }
                 }
             },new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context,"Could not contact server to classify bug: "+error.getMessage(),Toast.LENGTH_SHORT).show();
+                    if (!isCancelled()) {
+                        Toast.makeText(context, "Could not contact server to classify bug: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 

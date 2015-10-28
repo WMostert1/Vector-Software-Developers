@@ -6,45 +6,50 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="4dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <CheckedTextView
                 android:id="@+id/tvBlockName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Block Name:"
-                android:layout_gravity="start"/>
-
-            <CheckedTextView
-                android:id="@+id/lblBlockName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp">
+                android:layout_gravity="start"
+                android:textStyle="bold"/>
 
             <CheckedTextView
                 android:id="@+id/tvNumTrees"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Number of Trees:"
-                android:layout_gravity="start"/>
+                android:layout_gravity="start"
+                android:textStyle="bold"
+                android:layout_marginTop="2dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="4dp">
+
+            <CheckedTextView
+                android:id="@+id/lblBlockName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <CheckedTextView
                 android:id="@+id/lblNumTrees"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"/>
         </LinearLayout>
     </LinearLayout>
 

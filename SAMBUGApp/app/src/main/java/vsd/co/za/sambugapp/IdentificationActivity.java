@@ -78,7 +78,9 @@ public class IdentificationActivity extends AppCompatActivity {
         byte[] byteArray = stream.toByteArray();
 
         classifyTask = WebAPI.attemptAPIClassification(byteArray, this);
-        Toast.makeText(this, "Starting classification...", Toast.LENGTH_SHORT).show();
+        if (!classifyTask.isCancelled()) {
+            Toast.makeText(this, "Starting classification...", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -274,24 +276,33 @@ public class IdentificationActivity extends AppCompatActivity {
     }
 
     public void showDialogNumberOfBugs(View v) {
-        NumberPicker np;
-        MaterialDialog dialog = new MaterialDialog.Builder(this)
-                .title("Number of Bugs")
-                .positiveText("Finish")
-                .titleGravity(GravityEnum.CENTER)
-                .customView(R.layout.dialog_number_picker, false)
-                .callback(new MaterialDialog.ButtonCallback() {
-                    @Override
-                    public void onPositive(MaterialDialog dialog) {
-                        NumberPicker np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
-                        sendResultBack(np.getValue());
-                    }
-                })
-                .show();
-        np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
-        np.setMinValue(0);
-        np.setMaxValue(100);
-        np.setWrapSelectorWheel(false);
+        if (currentEntry != null) {
+            NumberPicker np;
+            MaterialDialog dialog = new MaterialDialog.Builder(this)
+                    .title("Number of Bugs")
+                    .positiveText("Finish")
+                    .titleGravity(GravityEnum.CENTER)
+                    .customView(R.layout.dialog_number_picker, false)
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            NumberPicker np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+                            sendResultBack(np.getValue());
+                        }
+                    })
+                    .show();
+            np = (NumberPicker) dialog.getCustomView().findViewById(R.id.dlgNumBugs);
+            np.setMinValue(0);
+            np.setMaxValue(100);
+            np.setWrapSelectorWheel(false);
+        } else {
+            MaterialDialog dialog = new MaterialDialog.Builder(this)
+                    .title("Error")
+                    .positiveText("OK")
+                    .titleGravity(GravityEnum.CENTER)
+                    .content("You must classify the bug either manually or automatically before continuing.")
+                    .show();
+        }
     }
 
     /**
@@ -332,8 +343,8 @@ public class IdentificationActivity extends AppCompatActivity {
 
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            bitmap = Bitmap.createScaledBitmap(bitmap,400,400,false);
-            bitmap = rotateBitmap(fullPathName, myBitmap);
+            bitmap = Bitmap.createScaledBitmap(myBitmap, 400, 400, false);
+            bitmap = rotateBitmap(fullPathName, bitmap);
             mImageView.setImageBitmap(bitmap);
             doAutomaticClassification(null);
         }
