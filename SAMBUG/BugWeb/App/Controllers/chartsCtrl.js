@@ -94,7 +94,7 @@
                         },
                         {
                             title: "Species Life Stage",
-                            name: "speciesLifeStage",
+                            name: "lifeStage",
                             type: "Bar"
                         }
                     ]
@@ -117,7 +117,7 @@
                         },
                         {
                             title: "Species Life Stage",
-                            name: "speciesLifeStage"
+                            name: "lifeStage"
                         }
                     ]
                 }

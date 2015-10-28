@@ -12,12 +12,14 @@
                         return {
                             x: s[settings.x].valueOf(),
                             yB: s.numberOfBugs.valueOf(),
-                            yT: s.numberOfTrees.valueOf()
+                            yT: s.numberOfTrees.valueOf(),
+                            series: "All Data"
                         };
                     } else {
                         return {
                             x: s[settings.x].valueOf(),
-                            y: s[settings.y].valueOf()
+                            y: s[settings.y].valueOf(),
+                            series: "All Data"
                         };
                     }
                 } else {
@@ -42,7 +44,7 @@
         var getStopSeries = function(series, scoutStops) {
             return Enumerable.From(scoutStops).GroupBy(function(s) {
                     return s.series;
-                }).ToArray();
+            }).ToArray();
         }
 
         function aggregate(settings, points) {
@@ -92,7 +94,7 @@
                     axisTitle: settings.xTitle,
                     axisClass: "ct-axis-title",
                     offset: {
-                        x: 0,
+                        x: -25,
                         y: 45
                     },
                     textAnchor: "middle"
@@ -125,7 +127,6 @@
             return seriesName + "<br/>" + y;
         }
 
-        //todo might have to change the name back to treatments
         function addTreatments(parameters, treatments) {
             var newSeries = {
                 name: "Spray Data",
@@ -150,7 +151,7 @@
                     showLine: false
                 }
             };
-        }
+        } 
 
         function saveLineChartParameters(parameters, stopSeries, treatments, settings) {
             Enumerable.From(stopSeries).ForEach(function (s) {
@@ -180,13 +181,67 @@
             parameters.options.axisY = {};
             parameters.options.axisX = {
                 type: Chartist.AutoScaleAxis,
+                scaleMinSpace: 50,
                 labelInterpolationFnc: millisToDateString
             };
 
             parameters.options.tooltipFnc = getLineTooltipText;
+        }
+
+        function getBarSeriesData(xLabels, settings, orderedPoints) {
+            var y = [];
+            var curMatchIndex = 0;
+
+            //A common labels array is used to store all mapped x values, "xLabels"
+            //If a particular series excludes information for a particular x
+            //the mapping for said x should be null
+            //todo might need to check for orderedPoints.length in if, I removed it
+            Enumerable.From(xLabels).ForEach(function (label) {
+                if (curMatchIndex < orderedPoints.length && orderedPoints[curMatchIndex].Key() === label) {
+                    //reduce all the y values according to aggregateType and save into y
+                    y.push(aggregate(settings, orderedPoints[curMatchIndex].source));
+                    ++curMatchIndex;
+                } else {
+                    y.push(null);
+                }
+            });
+
+            return y;
+
+        }
+
+        function saveBarChartParamaters(parameters, stopSeries, settings) {
+            //first extract all x-labels (a particular series might not include a mapping for all x-values)
+            parameters.data.labels = Enumerable.From(projectedStops).Distinct(function(s) {
+                    return s.x;
+                })
+                .Select(function(s) {
+                    return s.x;
+                })
+                .OrderBy()
+                .ToArray();
+            
+            Enumerable.From(stopSeries).ForEach(function (s) {
+                var series = {};
+                series.name = s.Key();
+
+                //group each x value with its corresponding y values, sorting x in ascending order
+                var orderedPoints = Enumerable.From(s.source)
+                    .OrderBy(function (p) {
+                        return p.x;
+                    })
+                    .GroupBy(function (p) {
+                        return p.x;
+                    }).ToArray();
 
 
+                series.data = getBarSeriesData(parameters.data.labels, settings, orderedPoints);
+                parameters.data.series.push(series);
+            });
 
+            parameters.options.axisY = {};
+            parameters.options.axisX = {};
+            parameters.options.tooltipFnc = getBarTooltipText;
         }
 
         function determinePlotParameters(stopSeries, treatments, settings) {
@@ -200,16 +255,16 @@
             if (settings.type === "Line") {
                 saveLineChartParameters(parameters, stopSeries, treatments, settings);
             } else if (settings.type === "Bar") {
-                /*saveBarChartParamaters(parameters, stopSeries, settings);*/
+                saveBarChartParamaters(parameters, stopSeries, settings);
             }
 
             //Add options common to all charts
             
             parameters.options.chartPadding = {
                 top: 25,
-                right: 25,
+                right: 0,
                 bottom: 25,
-                left: 25
+                left: 35
             }
 
             //always start y axis at 0
@@ -218,6 +273,11 @@
             //For all summed data, use integer labels
             if (settings.aggregate === "Total")
                 parameters.options.axisY.onlyInteger = true;
+            else {
+                parameters.options.axisY.labelInterpolationFnc = function(value) {
+                    return value.toFixed(2);
+                }
+            }
 
             //Axis Title Plugin
             setAxesTitles(parameters.options.plugins, settings);
@@ -228,6 +288,65 @@
             return parameters;
         }
 
+        function setAnimations(c, seriesCount) {
+            var totalDuration = 2000;
+            var duration = totalDuration / seriesCount;
+            var pointsEasing = Chartist.Svg.Easing.easeOutQuint;
+
+            c.on("draw", function (data) {
+                if (data.type === "line") {
+                    data.element.animate({
+                        d: {
+                            begin: duration * data.seriesIndex,
+                            dur: duration,
+                            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+                            to: data.path.clone().stringify(),
+                            easing: Chartist.Svg.Easing.easeOutQuint
+                        }
+                    });
+                }
+                if (data.type === "point") {
+                    data.element.animate({
+                        y1: {
+                            begin: duration * data.seriesIndex,
+                            dur: duration,
+                            from: data.y - 20,
+                            to: data.y,
+                            easing: pointsEasing
+                        },
+                        y2: {
+                            begin: duration * data.seriesIndex,
+                            dur: duration,
+                            from: data.y - 20,
+                            to: data.y,
+                            easing: pointsEasing
+                        },
+                        x1: {
+                            begin: duration * data.seriesIndex,
+                            dur: duration,
+                            from: data.x - 20,
+                            to: data.x,
+                            easing: pointsEasing
+                        },
+                        x2: {
+                            begin: duration * data.seriesIndex,
+                            dur: duration,
+                            from: data.x - 20,
+                            to: data.x,
+                            easing: pointsEasing
+                        },
+                        opacity: {
+                            begin: duration * data.seriesIndex,
+                            dur: duration,
+                            from: 0,
+                            to: 1,
+                            easing: pointsEasing
+                        }
+                    });
+                }
+            });
+        }
+
         this.updateChart = function (chartId, scoutStops, treatments, settings) {
             //project the required fields, have accessible by later functions
             projectedStops = getProjectedStops(settings, scoutStops);
@@ -236,117 +355,7 @@
             var stopSeries = getStopSeries(settings.series, projectedStops);
             var parameters = determinePlotParameters(stopSeries, treatments, settings);
             chart = new Chartist[settings.type](chartId, parameters.data, parameters.options);
+            setAnimations(chart, stopSeries.length);
         }
-        
-        
-
-        function saveBarChartParamaters(parameters, stopSeries, settings) {
-            var xLabels = [];
-
-            //first extract all x-labels (a particular series might not include a mapping for all x-values)
-            $.each(stopSeries, function (i, c) {
-
-                //group each x value with its corresponding y values
-                //add unique x values to xLabels
-                //ignore the series name stored at position 0
-                addUniqueLabel(groupBy(xMemberName, c.slice(1)).sort(sortByFirstElement), xLabels);
-
-            });
-
-            parameters.data.labels = xLabels;
-
-            $.each(stopSeries, function (i, c) {
-                var s = {};
-
-                //series name is the first element of c
-                s.name = c.shift();
-
-                //group each x value with its corresponding y values, sorting x in ascending order
-                var sortedXCategorisedPoints = groupBy(xMemberName, c).sort(sortByFirstElement);
-
-                s.data = getBarSeriesData(xLabels, yMemberName, aggregateType, sortedXCategorisedPoints);
-
-                parameters.data.series.push(s);
-
-            });
-
-
-            parameters.options.axisY = {};
-            parameters.options.axisX = {};
-            parameters.options.tooltipFnc = getBarTooltipText;
-        }
-
-        function addUniqueLabel(series, labels) {
-            $.each(series, function (index, points) {
-                if ($.grep(labels, function (d) {
-                    return points[0].valueOf() === d.valueOf();
-                }).length === 0) {
-                    labels.push(points[0]);
-                }
-            });
-        }
-
-       
-
-        function getBarSeriesData(xLabels, yMember, aggregateType, points) {
-            var y = [];
-            var curMatchIndex = 0;
-
-            //A common labels array is used to store all mapped x values, "xLabels"
-            //If a particular series excludes information for a particular x
-            //the mapping for said x should be null
-            $.each(xLabels, function (i, label) {
-
-                if (points.length && curMatchIndex < points.length && points[curMatchIndex][0] === label) {
-                    //remove the x value from the array
-                    points[curMatchIndex].shift();
-
-                    //reduce all the y values according to aggregateType and save into y
-                    y.push(aggregate(yMember, aggregateType, points[curMatchIndex]));
-
-                    ++curMatchIndex;
-
-                } else {
-                    y.push(null);
-                }
-
-            });
-
-            return y;
-
-        }
-
-        
-
-        function groupBy(memberName, stops) {
-            //note that the first element of each subarray is used to store the category name
-            var stopSeries = [];
-
-            //don't categorise the stops
-            if (memberName === "All Data") {
-                stops.unshift(memberName);
-                stopSeries.push(stops);
-                return stopSeries;
-            }
-
-            //acquire unique entries to form categories
-            var categories = getUniqueEntries(memberName, stops);
-
-            $.each(categories, function (i, c) {
-                var category = $.grep(stops, function (s) {
-                    return s[memberName].valueOf() === c.valueOf();
-                });
-
-                category.unshift(c);
-                stopSeries.push(category);
-            });
-
-            return stopSeries;
-        }
-
-        
-
-        
-        
     }]);
 

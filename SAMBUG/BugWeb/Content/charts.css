@@ -34,8 +34,8 @@
     position: absolute;
     min-width: 5em;
     padding: .5em;
-    background: #8BC34A;
-    color: black;
+    background: #9E9E9E;
+    color: white;
     font-weight: 700;
     text-align: center;
     pointer-events: none;
@@ -51,17 +51,82 @@
     height: 0;
     margin-left: -15px;
     border: 15px solid transparent;
-    border-top-color: #8BC34A;
+    border-top-color: #9E9E9E;
 }
 
 .ct-label {
-    color: white !important;
+    color: lightgray !important;
+    font-size: 1em;
 }
 
 .ct-axis-title {
     fill: white !important;
+    font-size: 1.5em;
 }
 
+.ct-series-a .ct-line,
+.ct-series-a .ct-point,
+.ct-series-a .ct-bar {
+  stroke: #9CCC65
+;
+}
+
+.ct-series-b .ct-line,
+.ct-series-b .ct-point,
+.ct-series-b .ct-bar {
+    stroke: #FFCA28;
+}
+
+.ct-series-c .ct-line,
+.ct-series-c .ct-point,
+.ct-series-c .ct-bar {
+  stroke: #F57C00;
+}
+
+.ct-series-d .ct-line,
+.ct-series-d .ct-point,
+.ct-series-d .ct-bar {
+  stroke: #BDBDBD
+;
+}
+
+.ct-series-e .ct-line,
+.ct-series-e .ct-point,
+.ct-series-e .ct-bar {
+  stroke: #EF5350;
+}
+
+.ct-series-f .ct-line,
+.ct-series-f .ct-point,
+.ct-series-f .ct-bar {
+  stroke: #8D6E63;
+}
+
+.ct-series-g .ct-line,
+.ct-series-g .ct-point,
+.ct-series-g .ct-bar {
+  stroke: #42A5F5;
+}
+
+.ct-series-h .ct-line,
+.ct-series-h .ct-point,
+.ct-series-h .ct-bar {
+  stroke: #FAFAFA;
+}
+
+.ct-series-i .ct-line,
+.ct-series-i .ct-point,
+.ct-series-i .ct-bar {
+  stroke: #B2FF59
+;
+}
+
+.ct-series-j .ct-line,
+.ct-series-j .ct-point,
+.ct-series-j .ct-bar {
+  stroke: #EA80FC
+;
+}
 
 .ct-series-a .ct-line,
 .ct-series-a .ct-point,
