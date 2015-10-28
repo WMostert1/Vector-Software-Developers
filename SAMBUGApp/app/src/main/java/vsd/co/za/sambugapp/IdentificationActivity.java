@@ -173,7 +173,10 @@ public class IdentificationActivity extends AppCompatActivity {
         try {
             speciesDAO.open();
             currentEntry = speciesDAO.getSpeciesByID(id);
-            Toast.makeText(getApplicationContext(), currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_SHORT).show();
+            if (currentEntry.getLifestage() != 0)
+                Toast.makeText(getApplicationContext(), currentEntry.getSpeciesName() + " at instar " + currentEntry.getLifestage(), Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getApplicationContext(), currentEntry.getSpeciesName() + " at Adult", Toast.LENGTH_LONG).show();
             ImageView comparisonImage = (ImageView) findViewById(R.id.ivCompareImage);
             byte[] imgData = currentEntry.getIdealPicture();
             comparisonImage.setImageBitmap(BitmapFactory.decodeByteArray(imgData, 0, imgData.length));

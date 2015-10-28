@@ -190,7 +190,6 @@ public class WebAPI {
                     if (!isCancelled()) {
                         final Gson gson = new Gson();
                         ClassificationResultDTO result = gson.fromJson(response.toString(), ClassificationResultDTO.class);
-                        Toast.makeText(context, result.SpeciesName + " " + result.Lifestage + " " + result.SpeciesID, Toast.LENGTH_SHORT).show();
                         ((IdentificationActivity) context).changeEntrySelection(result);
                     }
                 }
