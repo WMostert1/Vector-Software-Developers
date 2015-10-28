@@ -5,7 +5,7 @@
 \usepackage{titling}
 \usepackage{graphicx}
 \usepackage{titlesec}
-\usepackage[hidelinks]{hyperref}
+\PassOptionsToPackage{hyphens}{url}\usepackage[hidelinks]{hyperref}
 \usepackage{datetime}
 
 \graphicspath{ {./Images/} }
@@ -87,24 +87,24 @@
 \section{Architectural Requirements}
 	\subsection{Quality Requirements}
 		\subsubsection{Maintainability}
-			As a standard requirement for all projects, SAMBUG needs to be maintainable. This is especially due to the fact that the project has very high expansion potential. SUBTROP has shown interest in further maintaining the project after completion.
-			Since development on the project is split among 5 members, we have to ensure that the code is as readable as possible and this includes using good documentation of code in the form of comments and Javadoc descriptions.
+			As a standard requirement for all projects, SAMBUG needs to be maintainable. This is especially important due to the fact that the project has a very high expansion potential. SUBTROP has shown interest in further maintaining the project after completion.
+			Since development on the project is split among 5 members, we have to ensure that the code is as readable as possible and this includes using good documentation of code in the form of comments and inline comment descriptions.
 		\subsubsection{Scalability}
-			Since the user base for the system will be comparatively small, scalability is not a great issue. The load on the system will not under any foreseeable circumstances be extremely high. 
+			Since the user base for the system will be comparatively small, scalability is not a great issue at this moment in time. The load on the system will not under any foreseeable circumstances be extremely high in the near future. However, it is good practice to cater for the fact that any project, no matter how small, has the potential to grow. Due to this fact, scalable solutions are of high importance. 
 		\subsubsection{Performance Requirements}
-			Performance is a very important requirement for the system. The goal of the system is to provide an efficient service rendered. Users of the system will be subject to high pressure environments where time is an issue. Using phone memory effectively is also a must as the phones used by the users might not be latest models, and therefore may struggle with some of the more graphical parts of the app.
+			Performance is a very important requirement for the system. The goal of the system is to provide an efficiently rendered service. Users of the system will be subject to high pressure environments where time is a limiting factor. Using phone memory effectively is also a must as the phones used by the users might not be latest models, and therefore may struggle with some of the more computationally expensive sub sections of the application.
 		\subsubsection{Reliability and Availability}
-			Since users will be relying heavily on this system to make important business decisions the system must be available to be used at all times. As such, a reliable system is of paramount importance. The storing of data and persistence of said data to the server must be completely reliable since this is the essential part of the project goal.
+			Since users will be relying heavily on this system to make important business decisions the system must be available to be used at all times. As such, a reliable system is of paramount importance. The storing of data and persistence of said data to the server must be completely reliable since this is the essential part of the project objectives. 
 		\subsubsection{Security}
-			As specified by the client, for the sake of reducing usage complexity of the system, the security may be relaxed in this case due to the fact that the users are generally not comfortable with using technological products. However, security measures should be put in place to help the user navigate through the app in order to complete the data entry process.
+			As specified by the client, for the sake of reducing usage complexity of the system, the security may be relaxed in this case due to the fact that the users are generally not comfortable with using technological products. However, security measures should be put in place  to provide for a fundamental level of data protection.
 		\subsubsection{Auditability}
-			There is no specific auditability requirement for the system since there will be no business value in tracking user activity, but for some traceability the user details of someone who edits the database is stored.
+			Since there is business value in tracking user activity in the form of checking that scouters actually covered a specific area of a farm, auditability is therefore paramount. Auditibility in this case is implicitly obtained by finding the user's coordinates which relates to the specific user who is logged in at the time. 
 		\subsubsection{Testability}
 			Every service offered by the system should be testable via:\\
 			1. Unit tests\\
 			2. Integration tests
 		\subsubsection{Usability}
-			Usability is the main quality requirement for the system. In order for the system to have any actual business value it should be easy to use and effective. As far as possible, the user should be able to use the app without needing textual instructions.
+			Usability is the main quality requirement for the system. In order for the system to have any actual business value it should be easy to use and effective. As far as possible, the user should be able to use the Application without needing textual instructions. Symbolic icons for action controls are used and to cater for the modernised user, a very well-known interaction flow is used as is common with applications from Google.
 		\subsubsection{Deployability}
 			The system must be deployable to any cloud hosted, Windows based, virtual machine or locally hosted server.
 	\subsection{Architecture responsibilities}
@@ -147,70 +147,82 @@
 	\subsection{Infrastructure Layout}
 		\includegraphics[width=\linewidth]{SystemComponents}	
 	\subsection{Database Design}
-	\includegraphics[width=\linewidth]{ERD}	
+	\begin{center}
+		\includegraphics[scale=1.0]{ERD}
+	\end{center}
 	\subsection{Process Flow}
-		\includegraphics[width=\linewidth]{ProcessFlow}	
+	\begin{center}
+		\includegraphics[scale=0.4]{ProcessFlow}	
+	\end{center}
 	\subsection{Technologies}
 		\subsubsection{Mobile Application}
 			\paragraph{Android Studio}
 				 We chose to use this development suite because of the following:
 				\begin{itemize}
-				\item It is the industry standard for Android app development.
-				\item The IDE provides lots of code analysis with the tool named Lint. It also has a very good dynamic layout preview to design the interfaces for specific screen variations.
-				\item Furthermore, we decided to develop the app natively instead of using a cross-platform alternative like Titanium because the client specified that only an Android app would be required and therefore it seems pointless to deal with hassles that may arise in cross-platform development. 
-				\item A large focus for our group, specifically in the mobile app, is a high quality user interface. This particular aspect is something we stand to lose if we develop for cross-platform since we would only be able to use common controls between Android and iOS, for example.\end{itemize} 
-				For more information regarding Native vs. Cross-platform development, click \href{https://yalantis.com/blog/native-vs-cross-platform-app-development-shouldnt-work-cross-platform/}{here}.
+				\item It is the industry standard for Android application development.
+				\item The IDE provides various code analysis and optimisation tools which helps to structure the code in a readable and efficient manner. Furthermore, it has a very visual and dynamic layout preview which helps design the interfaces for specific screen variations.
+				\item It was decided to develop the application natively instead of using a cross-platform alternative like Titanium Studio which makes use of JavaScript.  Client specifications are such that only an application is needed which runs on the Android operating system. Since Performance is important quality requirements, native-development was chosen since it is faster than the alternatives in the general case. 
+				\item A good quality user interface is of high importance within the scope of this project. This particular aspect is something which may sufffer if developed cross-platform since only common controls between Android and iOS would be available.
+\end{itemize} 
+				For more information regarding Native vs. Cross-platform development, visit the following website:  \url{https://yalantis.com/blog/native-vs-cross-platform-app-development-shouldnt-work-cross-platform/}.
 			\paragraph{Mockito}
-		There are many Mocking Frameworks available for Android App development. 
+		There are many Mocking Frameworks available for Android Application development. 
 		Mockito stands out from the others in the following respects:
 			\begin{itemize}
-				\item Mockito is simple to use, implement and is a lot more readable, especially when compared to the likes of RhinoMock, JMockit and EasyMock. These other frameworks are are old, unpleasant and difficult to find documentation for.
+				\item Mockito is simple to use and is more readable, especially when compared to the likes of RhinoMock, JMockit and EasyMock.
 				\item Mockito not only allows interfaces to be mocked, but also allows abstract and concrete classes to be mocked. Furthermore, this can be done without any extensions (e.g. EasyMock requires class extentions.)
 				\item Since it is a single Jar file, it is easy to setup. 
 				\item Mockito supports spies (to create partial mocks), in order to gather indirect output from a test, meaning functions can be tested and verified without giving the test input. 
 				\end{itemize}
-				For more information regarding Mockito vs. EasyMock, click \href{https://code.google.com/p/mockito/wiki/MockitoVSEasyMock}{here}. \newline
-				For more information regarding the pros and cons of Mockito, click \href{http://hamletdarcy.blogspot.com/2010/09/mockito-pros-cons-and-best-practices.html}{here}. \newline
-				For more information regarding Mockito vs. PowerMock/JMockit, click \href{http://www.coderanch.com/t/524265/Testing/TestNG-JUnit-mockito-Powermock-jmockit}{here}. \newline
+				For more information regarding Mockito vs. EasyMock, go to the following website:  \url{https://code.google.com/p/mockito/wiki/MockitoVSEasyMock}. \newline
+				\hfill\\
+				For more information regarding the pros and cons of Mockito, go to the following website:  \url{http://hamletdarcy.blogspot.com/2010/09/mockito-pros-cons-and-best-practices.html}. \newline
+\hfill\\
+				For more information regarding Mockito vs. PowerMock/JMockit, go to the following website:  \url{http://www.coderanch.com/t/524265/Testing/TestNG-JUnit-mockito-Powermock-jmockit}. \newline
 
 			\paragraph{SQLite}
 				SQLite is a relational database management system which is contained in a C programming library. It was selected because of the following: 
 					\begin{itemize}	
-						\item It is available for free. 
-						\item It is Portable, because the whole database is located on a single file making easy to transfer.
-						\item It is easy to query data, because data is stored in a simple structured way.
-						\item SQLite has higher performance than many other relational db management systems and uses a low amount memory.
+						\item It is free to use. 
+						\item It is portable, because the whole database is located in a single file.
+						\item SQLite performs better than many other comparative relational database management systems and uses a low amount memory.
 						\item It is easier to manage since there is no file parsing and generated code that needs to be debugged. 
 						\item The content can easily be viewed using various third-party tools.
+						\item It is the most widely deployed RDBMS in the industry currently.
+						
 					\end{itemize}
-For more information regarding a comparison of SQLite and other relational db management systems, click \href{https://www.digitalocean.com/community/tutorials/sqlite-vs-mysql-vs-postgresql-a-comparison-of-relational-database-management-systems}{here}. \newline
-For more information regarding why SQLite is used in Android App Development, click \href{http://www.quora.com/Why-should-we-use-SQLite-in-Android-development}{here}. \newline
+For more information regarding a comparison of SQLite and other relational db management systems, see :  \url{https://www.digitalocean.com/community/tutorials/sqlite-vs-mysql-vs-postgresql-a-comparison-of-relational-database-management-systems}. \newline
+For more information regarding why SQLite is used in Android application Development, see :  \url{http://www.quora.com/Why-should-we-use-SQLite-in-Android-development}. 
+		\paragraph{Volley by Google}
+		Volley is used as a networking library to do POST requests to the back-end Web API.
+		\paragraph{Google Play Services}
+		It is utilised to obtain GPS location and to use map services.
+
 		\subsubsection{Web Backend}
 			\paragraph{.NET WebAPI}
 				The Microsoft .NET framework was chosen as a backend framework for hosting RESTful services. The following factors contributed to this decision:
 				\begin{itemize}
 					\item The .NET framework is a tried and tested industry standard technology which adds value to the Reliability component of the 
 							quality requirements.
-					\item The .NET framework and packages used within the project became open source as announced by Microsoft at the Build 214 conference thus freeing the client from licensing fees. See the \href{http://www.dotnetfoundation.org/projects}{.NET Foundation}  for further details on open source Microsoft Packages.
+					\item The .NET framework and packages used within the project became open source as announced by Microsoft at the Build 214 conference thus freeing the client from licensing fees. See \url{http://www.dotnetfoundation.org/projects} for further details on open source Microsoft Packages.
 					\item The main alternative to the .NET framework was the Java EE reference framework. Since Performance and Scalability is a very important quality requirement .NET was deemed superior due to case studies consulted:
 							\begin{itemize}
-								\item  \href{http://www.slideshare.net/tejasvirastogi/java-vs-net-24443514}{Testing .NET vs Java EE with basic web pages}
-								\item  \href{http://www.seguetech.com/blog/2013/06/03/dotnet-vs-java-how-to-pick}{How to pick between Java and .NET}
-								\item  \href{http://stackoverflow.com/questions/18088/are-there-any-studies-comparing-java-ee-vs-net}{.NET vs Java Discussion}
+								\item  \url{http://www.slideshare.net/tejasvirastogi/java-vs-net-24443514} - Testing .NET vs Java EE with basic web pages
+								\item  \url{http://www.seguetech.com/blog/2013/06/03/dotnet-vs-java-how-to-pick} - How to pick between Java and .NET
+								\item  \url{http://stackoverflow.com/questions/18088/are-there-any-studies-comparing-java-ee-vs-net} - .NET vs Java Discussion
 							\end{itemize}
 							It is worth noting that Java EE and .NET are very closely matched in many aspects. The difference between the two frameworks are nearly negligible in terms of performance.
 					\item The .NET framework provides seamless integration with the other technologies utilised
 					\item The .NET framework provides for quick and easy set-up for REST services and web front ends using MVC5		
 				\end{itemize}
 			\paragraph{AutoMapper}
-				AutoMapper is used to do automated maping from DTO's (Domain Transfer Objects) to Domain (or Data) objects, and vice versa. This is simply used to promote code reusability and readability.
+				AutoMapper is used to do automated mapping from DTO's (Domain Transfer Objects) to Domain (or Data) objects, and vice versa. This is simply used to promote code reusability and readability.
 			\paragraph{.NET MVC 5}
-				For the same reasons mentioned for the choice of .NET WebAPI. MVC 5 was chosen as a pattern at a lower level of granularity due to the built in support for it in the .NET framework and it can be viewed in most cases as a industry standard for web applications.
-			\paragraph{MSSQL Express}
-					Express is the free version of the Microsoft RDBMS which caters for all the data needs of the system. This technology can easily be swopped out for other free database technologies such as MySQL
-					due to the technology neutral architecural design.
+				For the same reasons mentioned for the choice of .NET WebAPI, MVC 5 was chosen as a pattern at a lower level of granularity due to the built-in support for it in the .NET framework and it can be viewed in most cases as a industry standard for web applications.
+			\paragraph{MSSQL}
+					MSSQL is the Microsoft RDBMS which caters for all the data needs of the system. This technology can easily be swopped out for other free database technologies such as MySQL due to the technology neutral architecural design.
 			\paragraph{AutoFac}
-					AutoFac is used as a mocking framework for unit testing as well as for dependency injection in order to fascilitate more effective unit testing and pluggability. Using this dependency injection framework code maintainability is also improved.
+					AutoFac is used as a mocking framework for unit testing as well as for dependency injection in order to facilitate more effective unit testing and pluggability. Using this dependency injection framework code maintainability is also improved.
 		\subsubsection{Web Frontend}
 			\paragraph{DataTables}
 				DataTables is a plug-in for the popular jQuery Javascript library. It enables powerful DOM manipulation and data-binding specifically for data-driven web pages. Since the SAMBUG Website mainly features a dashboard that enables growers to peer into their bug collection and treatment history, tables and charts will be at the heart of the Web front-end. This library is specifically for dynamic table creation from multiple data sources.
@@ -243,7 +255,7 @@ For more information on why JUnit was chosen compared to other Testing Framework
 		
 	\subsubsection{Artifical Intelligence and Computer Vision}
 		\paragraph{OpenCV}
-			OpenCV is a open source library which focuses on computer vision applications and artifical intelligence. It is believed to be the most popular and reliable open source library in the field. The OpenCV library was used for preprocessing of images for the neural network which is also supplied via OpenCV. EmguCV was used as .NET bindings for the OpenCV library. 
+			OpenCV is a open source library which focuses on computer vision applications and artifical intelligence. It is believed to be the most popular and reliable open source library in the field. The OpenCV library was used for pre-processing of images for the neural network which is also supplied via OpenCV. EmguCV was used as .NET bindings for the OpenCV library. 
 
 	\subsubsection{Additional Technologies}
 		\paragraph{Fiddler 4}
@@ -256,8 +268,13 @@ For more information on why JUnit was chosen compared to other Testing Framework
 			Angular Material will be used on the web interface. Angular material is an implementation of Material Design.  
 		\paragraph{Misc. Javascript Frameworks and Libraries}
 			Various, mostly JavaScript, libraries are utilised for the reporting services and user interface.
-%\section{Open Issues}
-
+\section{Open Issues}
+These are the current open issues throughout the system:
+\begin{itemize}
+	\item Client side classification can not currently be done due to the fact that the Java bindings for OpenCV doesn not provide functionality for the Bag of Words Descriptor Extractor.
+	\item Due to the fact that classification needs to be done via an API, network latency is an issue.
+	\item There is additional functionality that the client requested for phase 2 of the project.
+\end{itemize}
 
 %\pagebreak
 %\section{Notifications and Messages Domain}
