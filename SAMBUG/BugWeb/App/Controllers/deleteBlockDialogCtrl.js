@@ -1,40 +1,42 @@
 ﻿angular.module("appMain")
     .controller("DeleteBlockDialogCtrl", [
-                "$scope", "$rootScope", "$mdDialog", "$mdToast", "$http", function ($scope, $rootScope, $mdDialog, $mdToast, $http) {
-                    $scope.blockName = $rootScope.blockToDelete;
+                "$scope", "$mdDialog", "$mdToast", "$http", "rootObj", function ($scope, $mdDialog, $mdToast, $http, rootObj) {
+                    $scope.blockName = rootObj.name;
 
                     $scope.cancel = function () {
                         $mdDialog.cancel();
                     };
 
                     $scope.post = function (event) {
+                        event.preventDefault();
 
                         $scope.errorMessage = "";
 
+                        if (!event.target.checkValidity) {
+                            return false;
+                        }
+
                         $scope.loading = true;
-
-                        //delete when talking to server
-                        $mdDialog.hide();
-
-                        /*$http.post(event.target.action, {
-                            
-                        }).then(function (response) {
-                            $scope.loading = false;
-                            if (response.data.success === true) {
+                        $http.delete(event.target.action + "/" + rootObj.id)
+                            .then(function (response) {
+                                $scope.loading = false;
                                 $mdToast.show(
                                     $mdToast.simple()
-                                    .content("Block name changed successfully")
+                                    .content(rootObj.name + " was deleted successfully")
                                     .position("top right")
                                     .hideDelay(1500)
                                 );
-                                $mdDialog.hide($scope.newBlockName);
-                            } else {
-                                $scope.errorMessage = "The email or password you entered is incorrect";
-                            }
-                        }, function () {
-                            $scope.loading = false;
-                            $scope.errorMessage = "Trouble contacting server. Please try again.";
-                        });*/
+                                $mdDialog.hide();
+                            }, function (response) {
+                                $scope.loading = false;
+                                if (response.status === 404) {
+                                    $scope.errorMessage = { blockNotFound: true };
+                                }
+                                if (response.status === 400) {
+                                    $scope.errorMessage = { invalidInput: true };
+                                }
+
+                            });
 
                         return true;
                     }

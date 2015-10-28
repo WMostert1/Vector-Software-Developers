@@ -1,47 +1,22 @@
 ﻿angular.module("appMain")
     .controller("EditFarmsCtrl", [
-        "$scope", "$rootScope", "$mdDialog", "$mdToast", function($scope, $rootScope, $mdDialog, $mdToast) {
+        "$scope", "$mdDialog", "$mdToast", "farmManagementService", function ($scope, $mdDialog, $mdToast, farmManagementService) {
 
-            $scope.farms = [
-                {
-                    farmId: "1",
-                    collapseIcon: "expand_more",
-                    farmName: "Farm 1",
-                    blockNames: [
-                    {
-                        id: "1",
-                        name: "Block 1"
-                    },
-                    {
-                        id: "2",
-                        name: "Block 2"
-                    },
-                    {
-                         id: "3",
-                         name: "Block 3"
-                    }
-                    ]
-                },
-                {
-                    farmId: "2",
-                    collapseIcon: "expand_more",
-                    farmName: "Farm 2",
-                    blockNames: [
-                    {
-                        id: "1",
-                        name: "Block A"
-                    },
-                    {
-                        id: "2",
-                        name: "Block B"
-                    },
-                    {
-                        id: "3",
-                        name: "Block C"
-                    }
-                    ]
-                }
-            ];
+            $scope.farms = [];
+
+            function initFarms(farms) {
+                $scope.farms = [];
+                farms.Farms.forEach(function(frm) {
+                    var blocks = new Array();
+
+                    frm.Blocks.forEach(function(blck) {
+                        blocks.push({ id: blck.BlockID, name: blck.BlockName });
+                    });
+                    $scope.farms.push({ farmId: frm.FarmID, collapseIcon: "expand_more", farmName: frm.FarmName, blockNames: blocks });
+                });
+            }
+
+            farmManagementService.loadFarms(initFarms);
 
             //Toggle the icon for collapsing toolbar content
             $scope.toggleCollapseIcon = function(item) {
@@ -51,56 +26,53 @@
                     item.collapseIcon = "expand_more";
             };
 
-            //--------------------------------------------Deleting a farm-------------------------------------------
+            //--------------------------------------------Deleting a farm dialog-------------------------------------------
             $scope.showDeleteFarmDialog = function (event, ctrl, farm) {
-                $rootScope.farmToDelete = farm.farmName;
                 $scope.showDialog("deleteFarm", event, ctrl, function() {
-                    var i = $scope.farms.indexOf(farm);
-                    $scope.farms.splice(i, 1);
-                }, null);
+                        farmManagementService.loadFarms(initFarms);
+                }, null, farm);
             }
 
-            //-----------------------------------------------Deleteing a block--------------------------------------------
-            $scope.showDeleteBlockDialog = function (event, ctrl, blockIndex, farm) {
-                $rootScope.blockToDelete = farm.blockNames[blockIndex].name;
+            //-----------------------------------------------Deleteing a block dialog--------------------------------------------
+            $scope.showDeleteBlockDialog = function (event, ctrl, block) {
                 $scope.showDialog("deleteBlock", event, ctrl, function () {
-                    farm.blockNames.splice(blockIndex, 1);
-                }, null);
+                    farmManagementService.loadFarms(initFarms);
+                }, null, block);
             }
 
 
             //------------------------------------------------EditBlockDialog-----------------------------------------------------------
-            $scope.showEditBlockDialog = function (event, ctrl, blockIndex, farm) {
-                $rootScope.currentBlockName = farm.blockNames[blockIndex].name;
-                $scope.showDialog("editBlock", event, ctrl, function(newBlockName) {
-                    farm.blockNames[blockIndex].name = newBlockName;
-                }, null);
+            $scope.showEditBlockDialog = function (event, ctrl, block) {
+                $scope.showDialog("editBlock", event, ctrl, function() {
+                    farmManagementService.loadFarms(initFarms);
+                }, null, block);
             };
 
             //todo:hardcoded block idin controller
-            //------------------------------------------------AddBlock------------------------------------------------------------------
+            //------------------------------------------------AddBlock dialog------------------------------------------------------------------
             $scope.showAddBlockDialog = function(event, ctrl, farm) {
-                $scope.showDialog("addBlock", event, ctrl, function (newBlockObject) {
-                    farm.blockNames.push({id: newBlockObject.id, name: newBlockObject.newBlockName});
-                }, null);
+                $scope.showDialog("addBlock", event, ctrl, function () {
+                        farmManagementService.loadFarms(initFarms);
+                }, null, farm);
             }
 
             //todo: hardcoded farm id in controller
-            //-----------------------------------------------------AddFarm--------------------------------------------------------------
+            //-----------------------------------------------------AddFarm dialog--------------------------------------------------------------
             $scope.showAddFarmDialog = function (event, ctrl) {
-                $scope.showDialog("addFarm", event, ctrl, function (newFarmObject) {
-                    $scope.farms.push({ farmId: newFarmObject.id, farmName: newFarmObject.newFarmName, collapseIcon: "expand_more", blockNames: []});
-                }, null);
+                $scope.showDialog("addFarm", event, ctrl, function () {
+                        farmManagementService.loadFarms(initFarms);
+                }, null, null);
             }
 
             //-------------------------------------------------Common Helper functions-------------------------------------
-            $scope.showDialog = function(type, event, ctrl, hiddenCallback, cancelCallback) {
+            $scope.showDialog = function(type, event, ctrl, hiddenCallback, cancelCallback, obj) {
                 $mdDialog.show({
                     templateUrl: "/App/Views/" + type + "Dialog.html",
                     parent: angular.element(document.body),
                     targetEvent: event,
                     clickOutsideToClose: true,
-                    controller: ctrl
+                    controller: ctrl,
+                    locals: {rootObj : obj}
                 }).then(hiddenCallback, cancelCallback);
             }
         }

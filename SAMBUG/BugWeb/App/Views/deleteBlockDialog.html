@@ -1,5 +1,6 @@
-﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Delete Block" ng-cloak>
- <md-toolbar>
+﻿<md-dialog flex="40" layout="column" class="custom-dialog" aria-label="Delete block" ng-cloak>
+    <form ng-submit="post($event)" action="api/blocks" flex layout="column" name="deleteBlockForm">
+        <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 class="md-title">Delete Block</h2>
                 <span flex></span>
@@ -9,15 +10,25 @@
             </div>
         </md-toolbar>
         <md-content layout-padding flex layout="column">
-            <h2>
+            <h3>
                 Are you sure you want to delete {{blockName}}?
-            </h2>
-            <p>All data ssociated with this block will be deleted</p>
+            </h3>
+            <p>All data associated with this block will be deleted</p>
+            <div class="errorMessageContainer" flex layout="row" layout-align="center center">
+                <div ng-messages="errorMessage" role="alert">
+                    <div ng-message="invalidInput">Invalid block input.</div>
+                    <div ng-message="blockNotFound">This block was not found.</div>
+                </div>
+            </div>
         </md-content>
         <div class="md-actions" layout="row">
+            <div class="loaderContainer" layout="row" layout-align="center center">
+                <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="15px"></md-progress-circular>
+            </div>
             <span flex></span>
-            <md-button ng-click="cancel()" class="md-primary" aria-label="Reject Delete Block">No</md-button>
-            <md-button ng-click="post($event)"  class="md-primary" aria-label="Confirm Delete Block">Yes</md-button>
+            <md-button type="button" ng-click="cancel()" aria-label="Reject Delete Block">No</md-button>
+            <md-button type="submit" class="md-icon-button" aria-label="Delete Block">Yes</md-button>
         </div>
+    </form>
 </md-dialog>
 

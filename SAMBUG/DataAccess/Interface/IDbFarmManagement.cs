@@ -7,9 +7,9 @@ namespace DataAccess.Interface
     {
         long InsertNewFarm(long id, string farmname);
         bool InsertNewBlock(long id, string blockname);
-        ICollection<Models.Block> GetBlocksByFarm(long id);
-        Models.Block GetBlockByID(long id);
-        Models.Farm GetFarmByID(long id);
+/*        ICollection<Models.Block> GetBlocksByFarm(long id);
+        Models.Block GetBlockByID(long id);*/
+        ICollection<Models.Farm> GetFarmsByID(long id);
         long UpdateBlock(long id, string blockname);
         bool DeleteFarm(long id);
         bool DeleteBlock(long id);

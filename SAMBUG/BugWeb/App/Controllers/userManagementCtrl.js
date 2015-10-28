@@ -1,6 +1,6 @@
 ﻿angular.module("appMain")
     .controller("UserManagementCtrl", [
-        "$scope", "$rootScope", "$mdDialog", "$mdToast", "editUserRolesService", function ($scope, $rootScope, $mdDialog, $mdToast, editUserRolesService) {
+        "$scope", "$mdDialog", "$mdToast", "editUserRolesService", function ($scope, $mdDialog, $mdToast, editUserRolesService) {
 
             $scope.users = [];
 

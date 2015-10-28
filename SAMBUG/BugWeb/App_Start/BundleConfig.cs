@@ -92,7 +92,8 @@ namespace BugWeb
 
             bundles
                 .Add(new ScriptBundle("~/bundles/farmmanagement/editFarms")
-                    .Include("~/App/Controllers/editBlockDialogCtrl.js",
+                    .Include("~/App/Services/farmManagementService.js",
+                    "~/App/Controllers/editBlockDialogCtrl.js",
                     "~/App/Controllers/deleteBlockDialogCtrl.js",
                     "~/App/Controllers/deleteFarmDialogCtrl.js",
                         "~/App/Controllers/addBlockDialogCtrl.js",

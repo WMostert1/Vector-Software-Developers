@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
-    public class AddBlockResult
+    public class DeleteFarmByIDResponse
     {
     }
 }

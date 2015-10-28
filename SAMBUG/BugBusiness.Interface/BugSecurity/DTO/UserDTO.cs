@@ -11,6 +11,6 @@ namespace BugBusiness.Interface.BugSecurity.DTO
         public long UserID { get; set; }
         public string Email { get; set; }
         public List<RoleDTO> Roles { get; set; }
-        public List<FarmManagement.DTO.FarmDTO> Farms { get; set; }
+        public List<FarmManagement.DTO.FarmForFarmManDto> Farms { get; set; }
     }
 }

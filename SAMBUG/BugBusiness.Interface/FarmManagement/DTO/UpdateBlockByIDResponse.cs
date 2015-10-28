@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
-    public class UpdateBlockByIDResult
+    public class UpdateBlockByIDResponse
     {
         public long FarmID { get; set; }
     }

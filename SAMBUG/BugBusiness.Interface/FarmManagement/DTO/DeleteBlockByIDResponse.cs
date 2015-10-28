@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
-    public class GetBlockByIDRequest
+    public class DeleteBlockByIDResponse
     {
-        public long BlockID;
     }
 }

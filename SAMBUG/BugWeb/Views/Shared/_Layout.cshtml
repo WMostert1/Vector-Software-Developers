@@ -109,15 +109,16 @@
 
 <script type="text/javascript">
 
-   angular.module("appMain").factory("userDetails", function() {
+    angular.module("appMain").factory("userDetails", function() {
         return {
             isLoggedIn: @Json.Encode(SecurityProvider.isLoggedIn(Session)),
             isGrower: @Json.Encode(SecurityProvider.isGrower(Session)),
             isAdmin: @Json.Encode(SecurityProvider.isAdmin(Session)),
-            returnUrl: "@ViewBag.ReturnUrl"
+            returnUrl: "@ViewBag.ReturnUrl",
+            id: "@( Session["UserInfo"] != null ? ((UserDTO) Session["UserInfo"]).UserID.ToString() : "")"
         };
     });
-    
+
 
     /*todo remove the patch below when Angular Material prevents browser default invalid messages*/
     document.addEventListener("invalid", (function() {

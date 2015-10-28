@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
-    public class GetPestsPerTreeByBlockRequest
+    public class BlockSprayDto
     {
         public long BlockID { get; set; }
+        public string BlockName { get; set; }
+        public double PestsPerTree { get; set; }
+        public string LastTreatment { get; set; }
+        public string NextTreatment { get; set; }
     }
 }

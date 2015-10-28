@@ -52,57 +52,13 @@ namespace DataAccess.MSSQL
             return true;
         }
 
-        public ICollection<Block> GetBlocksByFarm(long id){
-            var db=new BugDBEntities();
-
-            var farm=db.Farms.SingleOrDefault(frm => frm.FarmID.Equals(id));
-
-            if (farm==null)
-            {
-                return null;
-            }
-
-            var blocks = farm.Blocks.Select(blk =>
-                new Block() { BlockID = blk.BlockID, BlockName = blk.BlockName }).ToList();
-
-            return blocks;
-        }
-
-        public Block GetBlockByID(long id)
+        public ICollection<Farm> GetFarmsByID(long id)
         {
             var db = new BugDBEntities();
 
-            var block = db.Blocks.SingleOrDefault(blk => blk.BlockID.Equals(id));
+            var farms = db.Farms.Where(frm => frm.UserID.Equals(id)).ToList();
 
-            if (block != null)
-            {
-                return new Block() { BlockID = block.BlockID, BlockName = block.BlockName };
-            }
-
-            return null;
-        }
-
-        public Farm GetFarmByID(long id)
-        {
-            var db=new BugDBEntities();
-
-            var farm = db.Farms.SingleOrDefault(frm => frm.FarmID.Equals(id));
-
-            if (farm != null)
-            {
-                return new Farm()
-                {
-                    FarmID=farm.FarmID,
-                    FarmName=farm.FarmName,
-                    Blocks=farm.Blocks.Select(blk =>
-                        new Block() 
-                        { BlockID = blk.BlockID, 
-                          BlockName = blk.BlockName 
-                        }).ToList()
-                };
-            }
-
-            return null;
+            return farms;
         }
 
         public long UpdateBlock(long id, string blockname)

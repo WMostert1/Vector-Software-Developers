@@ -121,11 +121,7 @@ namespace BugWeb.Controllers
             if (!SecurityProvider.isAdmin(Session))
                 return View("~/Views/Shared/Error.cshtml");
 
-            GetUsersResponse response = _bugSecurity.GetUsers();
-
-            //List<UserDTO> userDTOList = AutoMapper.Mapper.Map<List<UserDTO>>(response);
-
-            return View(response);
+            return View();
         }
 
         [HttpPost]
@@ -133,11 +129,6 @@ namespace BugWeb.Controllers
         {
             if (!SecurityProvider.isAdmin(Session))
                 return View("~/Views/Shared/Error.cshtml");
-            _bugSecurity.EditUserRoles(new EditUserRoleRequest
-            {
-                UserId = editUserRoleViewModel.UserId,
-                IsAdministrator = editUserRoleViewModel.IsAdministrator,
-            });
 
             return RedirectToAction("EditUserRoles","Authentication");
         }

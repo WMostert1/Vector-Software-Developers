@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
-    public class DeleteFarmByIDResult
+    public class GetFarmsByUserIDResponse
     {
+        public List<FarmForFarmManDto> Farms { get; set; }
     }
 }

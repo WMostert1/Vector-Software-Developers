@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Edit Farms";
+    ViewBag.Reporting = "false";
 }
 
 <div layout-fill ng-controller="EditFarmsCtrl" layout="row" layout-align="center start">
@@ -29,13 +30,13 @@
                             <md-item-content layout="row" flex>
                                 <p>{{bName.name}}</p>
                                 <span flex></span>
-                                <md-button ng-click="showEditBlockDialog($event, 'EditBlockDialogCtrl', $index, farm)" class="md-icon-button" aria-label="Edit">
+                                <md-button ng-click="showEditBlockDialog($event, 'EditBlockDialogCtrl', bName)" class="md-icon-button" aria-label="Edit">
                                     <ng-md-icon icon="edit"></ng-md-icon>
                                     <md-tooltip>
                                         Edit Block
                                     </md-tooltip>
                                 </md-button>
-                                <md-button ng-click="showDeleteBlockDialog($event, 'DeleteBlockDialogCtrl', $index, farm)" class="md-icon-button" aria-label="Delete block">
+                                <md-button ng-click="showDeleteBlockDialog($event, 'DeleteBlockDialogCtrl', bName)" class="md-icon-button" aria-label="Delete block">
                                     <ng-md-icon icon="delete"></ng-md-icon>
                                     <md-tooltip>
                                         Delete Block
@@ -55,7 +56,7 @@
                                 </md-tooltip>
                             </md-button>
                         </md-item-content>
-                </md-list-item>
+                    </md-list-item>
                 </md-list>
             </md-content>
         </div>
@@ -72,5 +73,13 @@
 
 @section scripts
 {
+
+    <script type="application/javascript">
+        angular.module("appMain").factory("farmsUrlService", ["userDetails", function(userDetails){
+            return {
+                getAllFarmsUrl: "@Url.Content("~/api/farms/")" + userDetails.id
+            };
+        }]);
+    </script>
     @Scripts.Render("~/bundles/farmmanagement/editFarms")
 }

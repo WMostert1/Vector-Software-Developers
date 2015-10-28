@@ -1,6 +1,8 @@
 ﻿angular.module("appMain")
     .controller("AddBlockDialogCtrl", [
-                "$scope", "$mdDialog", "$mdToast", "$http", function ($scope, $mdDialog, $mdToast, $http) {
+                "$scope", "$mdDialog", "$mdToast", "$http", "rootObj", function ($scope, $mdDialog, $mdToast, $http, rootObj) {
+
+            console.log(rootObj);
 
                     $scope.cancel = function () {
                         $mdDialog.cancel();
@@ -17,28 +19,28 @@
 
                         $scope.loading = true;
 
-                        //delete when talking to server
-                        $mdDialog.hide({newBlockName: $scope.newBlockName, id:"6"});
-
-                        /*$http.post(event.target.action, {
-                            
+                        $http.post(event.target.action, {
+                            farmID: rootObj.farmId,
+                            blockName: $scope.newBlockName
                         }).then(function (response) {
                             $scope.loading = false;
-                            if (response.data.success === true) {
                                 $mdToast.show(
                                     $mdToast.simple()
-                                    .content("Block name changed successfully")
+                                    .content($scope.newBlockName + " has been added successfully")
                                     .position("top right")
                                     .hideDelay(1500)
                                 );
-                                $mdDialog.hide($scope.newBlockName);
-                            } else {
-                                $scope.errorMessage = "The email or password you entered is incorrect";
-                            }
+                                $mdDialog.hide();
                         }, function () {
                             $scope.loading = false;
-                            $scope.errorMessage = "Trouble contacting server. Please try again.";
-                        });*/
+                            if (response.status === 409) {
+                                $scope.errorMessage = { blockExists: true };
+                            }
+                            if (response.status === 400) {
+                                $scope.errorMessage = { invalidInput: true };
+                            }
+
+                        });
 
                         return true;
                     }

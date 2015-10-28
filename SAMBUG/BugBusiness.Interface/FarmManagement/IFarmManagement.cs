@@ -9,15 +9,13 @@ namespace BugBusiness.Interface.FarmManagement
 {
     public interface IFarmManagement
     {
-        AddFarmResult AddFarm(AddFarmRequest addfarmRequest);
-        AddBlockResult AddBlock(AddBlockRequest addblockRequest);
-        GetBlocksByFarmResult GetBlocksByFarm(GetBlocksByFarmRequest getblocksbyfarmRequest);
-        GetBlockByIDResult GetBlockByID(GetBlockByIDRequest getblockybyidRequest);
-        GetFarmByIDResult GetFarmByID(GetFarmByIDRequest getfarmbyidRequest);
-        UpdateBlockByIDResult UpdateBlockByID(UpdateBlockByIDRequest updateblockbyidRequest);
-        DeleteFarmByIDResult DeleteFarmByID(DeleteFarmByIDRequest deletefarmbyidRequest);
-        DeleteBlockByIDResult DeleteBlockByID(DeleteBlockByIDRequest deleteblockbyidRequest);
-        GetPestsPerTreeByBlockResult GetPestsPerTreeByBlock(GetPestsPerTreeByBlockRequest getpestspertreebyblockRequest);
-        AddTreatmentResult AddTreatment(AddTreatmentRequest addtreatmentRequest);
+        AddFarmResponse AddFarm(AddFarmRequest addfarmRequest);
+        AddBlockResponse AddBlock(AddBlockRequest addblockRequest);
+        GetFarmsByUserIDResponse GetFarmsByUserID(GetFarmsByUserIDRequest getfarmbyidRequest);
+        UpdateBlockByIDResponse UpdateBlockByID(UpdateBlockByIDRequest updateblockbyidRequest);
+        DeleteFarmByIDResponse DeleteFarmByID(long id);
+        DeleteBlockByIDResponse DeleteBlockByID(long id);
+        BlockSprayDto GetPestsPerTreeByBlock(GetTreatmentInfoRequest getpestspertreebyblockRequest);
+        AddTreatmentResponse AddTreatment(AddTreatmentRequest addtreatmentRequest);
     }
 }
