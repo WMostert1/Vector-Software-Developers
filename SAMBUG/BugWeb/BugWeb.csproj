@@ -242,7 +242,9 @@
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\DataTables\pdf.svg" />
     <Content Include="Content\Images\DataTables\printer.svg" />
+    <Content Include="Content\Images\samac_logo.png" />
     <Content Include="Content\Images\two_spot_inst_4.jpg" />
+    <Content Include="Content\Images\vsd.png" />
     <Content Include="Content\Images\yellow_edged_inst_4.jpg" />
     <Content Include="Content\jquery.dataTables.css" />
     <Content Include="Content\reporting.css" />
