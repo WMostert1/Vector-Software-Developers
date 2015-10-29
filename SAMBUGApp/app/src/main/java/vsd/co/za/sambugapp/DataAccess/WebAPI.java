@@ -129,7 +129,7 @@ public class WebAPI {
                             .positiveText("Finish")
                             .titleGravity(GravityEnum.CENTER)
                             .show();*/
-                    Toast.makeText(context, "Error connecting to server.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error connecting to server. After next scout trip, data will synchronise.", Toast.LENGTH_LONG).show();
                     Log.e("NetworkingError:", error.toString());
                     error.printStackTrace();
                 }
@@ -197,7 +197,7 @@ public class WebAPI {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if (!isCancelled()) {
-                        Toast.makeText(context, "Could not contact server to classify bug: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Could not classify bug. Please choose manually.", Toast.LENGTH_LONG).show();
                     }
                 }
             });
