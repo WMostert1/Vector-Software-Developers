@@ -95,5 +95,10 @@ namespace BugBusiness.BugSecurity
         public bool ChangeUserPassword(string username1, string password1){
             return _dbBugSecurity.ChangeUserPassword(username1, password1); 
         }
+
+        public string GetPassword(string username1)
+        {
+            return _dbBugSecurity.GetPassword(username1);
+        }
     }
 }

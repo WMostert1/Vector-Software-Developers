@@ -16,5 +16,6 @@ namespace BugBusiness.Interface.BugSecurity
         ViewEditUserRolesResponse GetUsers();
         void EditUserRoles(EditUserRoleRequest editUserRoleRequest);
         bool ChangeUserPassword(string username, string password);
+        String GetPassword(string username);
     }
 }

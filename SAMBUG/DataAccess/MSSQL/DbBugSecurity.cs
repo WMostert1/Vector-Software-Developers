@@ -31,7 +31,7 @@ namespace DataAccess.MSSQL
                         {
                             BlockID = block.BlockID,
                             BlockName = block.BlockName,
-                            ScoutStops=block.ScoutStops
+                            ScoutStops = block.ScoutStops
                         }).ToList()
                 }).ToList();
 
@@ -148,9 +148,10 @@ namespace DataAccess.MSSQL
         public bool ChangeUserPassword(string username, string password)
         {
             var db = new BugDBEntities();
-            try { 
-            User user = db.Users.SingleOrDefault(usr => usr.Email == username);
-            user.Password = password;
+            try
+            {
+                User user = db.Users.SingleOrDefault(usr => usr.Email == username);
+                user.Password = password;
             }
             catch (Exception)
             {
@@ -160,5 +161,20 @@ namespace DataAccess.MSSQL
             return true;
         }
 
+        public string GetPassword(string username)
+        {
+            var db = new BugDBEntities();
+            String password;
+            try
+            {
+                User user = db.Users.SingleOrDefault(usr => usr.Email == username);
+                password = user.Password;
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+            return password;
+        }
     }
 }
