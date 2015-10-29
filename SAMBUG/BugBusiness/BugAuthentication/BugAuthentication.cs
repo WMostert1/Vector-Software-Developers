@@ -27,22 +27,6 @@ namespace BugBusiness.BugAuthentication
 
         }
 
-
-        public RecoverAccountResult RecoverAccount(RecoverAccountRequest recoverAccountRequest)
-        {
-              EmailSender _Email = new EmailSender(recoverAccountRequest.From,recoverAccountRequest.FromPassword, recoverAccountRequest.EmailTo);
-             _Email.setEmail("Recover Password", _bugSecurity.GetPassword(recoverAccountRequest.EmailTo));
-
-
-            if (_Email.sendEmail() == false)
-            {
-                throw new FailedEmailSendException();
-            }
-
-            return new RecoverAccountResult();
-            
-        }
-
         public ChangePasswordResult ChangePassword(ChangePasswordRequest changePasswordRequest)
         {
 

@@ -1,6 +1,11 @@
 ﻿angular.module("appMain").controller("LoginDialogCtrl", [
     "$scope", "$mdDialog", "$mdToast", "$http", "userDetails", function($scope, $mdDialog, $mdToast, $http, userDetails) {
-        $scope.cancel = function() {
+
+        $scope.emailPassword = function () {
+
+        }
+
+        $scope.cancel = function () {
             $mdDialog.cancel();
         };
 

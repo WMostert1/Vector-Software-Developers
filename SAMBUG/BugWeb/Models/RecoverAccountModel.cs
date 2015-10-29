@@ -8,6 +8,5 @@ namespace BugWeb.Models
     public class RecoverAccountModel
     {
         public string EmailTo { get; set; }
-        public string Link { get; set; }
     }
 }

@@ -70,7 +70,6 @@
     <Compile Include="BugAuthentication\DTO\ChangePasswordRequest.cs" />
     <Compile Include="BugAuthentication\DTO\ChangePasswordResult.cs" />
     <Compile Include="BugAuthentication\DTO\RecoverAccountResult.cs" />
-    <Compile Include="BugAuthentication\DTO\RecoverAccountRequest.cs" />
     <Compile Include="BugAuthentication\Exceptions\FailedEmailSendException.cs" />
     <Compile Include="BugAuthentication\Exceptions\FailedChangePasswordException.cs" />
     <Compile Include="BugAuthentication\IBugAuthentication.cs" />

@@ -133,24 +133,7 @@ namespace BugWeb.Controllers
             return RedirectToAction("EditUserRoles","Authentication");
         }
 
-       // [HttpPost]
-        public ActionResult RecoverAccount(RecoverAccountModel recoverAccountModel)
-        {
-            String ipAddress = "http://localhost:53249/Home/ChangePassword";
-            recoverAccountModel.Link = ipAddress;
-            //recoverAccountModel.Link = string.Format("Click <a href='{0}'>here</a> to recover account", ipAddress);
-            BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest recoverAccountRequest = new BugBusiness.Interface.BugAuthentication.DTO.RecoverAccountRequest()
-            {
-                From = "do.not.reply.sambug.vsd@gmail.com",
-                FromPassword = "SambugVSD4321",
-                EmailTo = recoverAccountModel.EmailTo,
-                Link = recoverAccountModel.Link
-            };
-
-            _bugAuthentication.RecoverAccount(recoverAccountRequest);
-            return RedirectToAction("CheckEmail", "Authentication");
-            
-       }
+      
         //[HttpGet]
         public ActionResult CheckEmail()
         {

@@ -224,7 +224,7 @@ namespace BugBusiness.Tests
             AddTreatmentResponse addTreatmentResult = farmManagement.AddTreatment(new AddTreatmentRequest()
             {
                 BlockID = 1,
-                TreatmentDate = DateTime.Today,
+                TreatmentDate = DateTime.Today.ToString(),
                 TreatmentComments="Testing Treatment Addition"
             });
 
@@ -246,7 +246,7 @@ namespace BugBusiness.Tests
             farmManagement.AddTreatment(new AddTreatmentRequest()
             {
                 BlockID = 0,
-                TreatmentDate=DateTime.Today,
+                TreatmentDate=DateTime.Today.ToString(),
                 TreatmentComments = ""
             });
 

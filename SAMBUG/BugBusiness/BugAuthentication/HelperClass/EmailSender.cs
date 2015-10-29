@@ -9,18 +9,20 @@ namespace BugCentral.HelperClass
 {
     public class EmailSender
     {
+        private static String From = "do.not.reply.sambug.vsd@gmail.com";
+        private static String FromPassword = "SambugVSD4321";
         public String Result { get; set; }
         public MailAddress fromAddress { get; set; }
         public MailAddress toAddress { get; set; }
         public string fromPassword { get; set; }
         public string subject { get; set; }
         public string body { get; set; }
-        public EmailSender(String from,String Password, String To)
+        public EmailSender(String To)
         {
 
-            fromAddress = new MailAddress(from, "Admin");
+            fromAddress = new MailAddress(From, "Admin");
             toAddress = new MailAddress(To, "User");
-            fromPassword = Password; 
+            fromPassword = FromPassword; 
         } 
 
         public void setEmail(String Subject , String Body){

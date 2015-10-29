@@ -9,7 +9,7 @@ namespace BugBusiness.Interface.BugAuthentication
 {
     public interface IBugAuthentication
     {
-        RecoverAccountResult RecoverAccount(RecoverAccountRequest recoverAccountRequest);
+        //RecoverAccountResponse RecoverAccount(RecoverAccountRequest recoverAccountRequest);
         ChangePasswordResult ChangePassword(ChangePasswordRequest changePasswordRequest);
     }
 }

@@ -9,6 +9,9 @@ using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using DataAccess.Interface;
 using DataAccess.Models;
+using BugCentral.HelperClass;
+using BugBusiness.Interface.BugAuthentication.Exceptions;
+using BugBusiness.Interface.BugAuthentication.DTO;
 
 
 namespace BugBusiness.BugSecurity
@@ -72,7 +75,18 @@ namespace BugBusiness.BugSecurity
 
         public RecoverAccountResponse RecoverAccount(RecoverAccountRequest recoverAccountRequest)
         {
-            throw new NotImplementedException();
+              EmailSender _Email = new EmailSender(recoverAccountRequest.EmailTo);
+              _Email.setEmail("Recover Password", GetPassword(recoverAccountRequest.EmailTo));
+
+
+            if (_Email.sendEmail() == false)
+            {
+                throw new FailedEmailSendException();
+            }
+
+            return new RecoverAccountResponse();
+            
+        
         }
 
         public GetUsersResponse GetUsers()
