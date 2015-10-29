@@ -15,8 +15,7 @@ namespace BugBusiness.BugAuthentication
 {
     public class BugAuthentication : IBugAuthentication
     {
-        //const string from = "kaleabtessera@gmail.com";
-        //const string fromPassword = "27ATEHBruKal1129";
+
 
         private readonly IBugSecurity _bugSecurity;
 
