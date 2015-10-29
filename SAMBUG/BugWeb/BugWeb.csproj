@@ -278,6 +278,7 @@
     <None Include="Properties\PublishProfiles\sambug - Web Deploy %282%29.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bspline.js" />
     <Content Include="Scripts\chartist-plugin-axistitle.js" />
     <Content Include="Scripts\chartist-plugin-tooltip.js" />
     <Content Include="Scripts\chartist-plugin-vertical-line.js" />

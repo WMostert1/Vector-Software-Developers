@@ -4,8 +4,7 @@
 
         var chart;
         var projectedStops;
-        var stopSeries;
-
+        
         var getProjectedStops = function(settings, scoutStops) {
             return Enumerable.From(scoutStops).Select(function(s) {
                 if (settings.series === "none") {
@@ -81,7 +80,7 @@
                     y: aggregate(settings, p.source)
                 });
             });
-
+            
             return xy;
         }
 
@@ -147,48 +146,44 @@
                 positions: vLinePositions
             }));
 
-            parameters.options.series = {
-                "Spray Data": {
+            parameters.options.series = parameters.options.series || {}
+            parameters.options.series["Spray Data"] = {
                     showLine: false
-                }
-            };
-        }
-
-        function addTrendlines(parameters, series) {
-            var i = 0;
-            Enumerable.From(series).ForEach(function(s) {
-                var trendSeries = {
-                    name: "Trend",
-                    className: "trendline-" + ++i,
-                    data: []
-                }
-
-                var vLinePositions = [];
-
-                Enumerable.From(treatments).ForEach(function (t) {
-                    newSeries.data.push({ x: t.date, y: -1 });
-                    vLinePositions.push(t.date.valueOf());
-                });
-
-                parameters.data.series.push(newSeries);
-
-                parameters.options.plugins.push(Chartist.plugins.verticalLines({
-                    positions: vLinePositions
-                }));
-
-                parameters.options.series = {
-                    "Spray Data": {
-                        showLine: false
-                    }
-                };
-            });
+            }
             
         }
 
+        function addTrendline(settings, parameters, points) {
+                var seriesName = "Trend for " + settings.seriesName;
+                var trendSeries = {
+                    name: seriesName,
+                    className: "trendline-" + settings.trendNumber,
+                    data: []
+                }
+
+                //initialise bspline algorithm with degree 5
+                var spline = new BSpline(points, 5);
+
+                for (var t = 0; t <= 1; t += 0.001) {
+                    var p = spline.calcAt(t);
+                    p[0] = Math.floor(p[0]);
+                    trendSeries.data.push({ x: p[0], y: p[1] });
+                }
+
+                parameters.data.series.push(trendSeries);
+                parameters.options.series = parameters.options.series || {}
+                parameters.options.series[seriesName] = {
+                    showLine: true,
+                    showPoint: false
+                }
+        }
+
         function saveLineChartParameters(parameters, stopSeries, treatments, settings) {
+            var seriesIndex = 1;
             Enumerable.From(stopSeries).ForEach(function (s) {
                 var series = {};
                 series.name = s.Key();
+                series.className = "ct-series-" + seriesIndex;
 
                 //group each x value with its corresponding y values, sorting x in ascending order
                 var orderedPoints = Enumerable.From(s.source)
@@ -199,21 +194,33 @@
                         return p.x;
                     }).ToArray();
 
-
-                series.data = getLineSeriesData(settings, orderedPoints, treatments);
+                series.data = getLineSeriesData(settings, orderedPoints);
                 parameters.data.series.push(series);
+
+                //map series.data to vector array for regression analysis
+                var points = Enumerable.From(series.data).Select(function(d) {
+                    return [d.x,d.y];
+                }).ToArray();
+
+                var trendSettings = {
+                    seriesName: series.name,
+                    trendNumber:  seriesIndex++
+                }
+
+                //add trend for the data series
+                addTrendline(trendSettings, parameters, points);
             });
 
             if (treatments.length > 0){
                 addTreatments(parameters, treatments);
             }
 
-            parameters.options.lineSmooth = Chartist.Interpolation.none();
+            parameters.options.showLine = false;
             parameters.options.showPoint = true;
             parameters.options.axisY = {};
             parameters.options.axisX = {
                 type: Chartist.AutoScaleAxis,
-                scaleMinSpace: 50,
+                scaleMinSpace: 100,
                 labelInterpolationFnc: millisToDateString
             };
 
@@ -227,7 +234,6 @@
             //A common labels array is used to store all mapped x values, "xLabels"
             //If a particular series excludes information for a particular x
             //the mapping for said x should be null
-            //todo might need to check for orderedPoints.length in if, I removed it
             Enumerable.From(xLabels).ForEach(function (label) {
                 if (curMatchIndex < orderedPoints.length && orderedPoints[curMatchIndex].Key() === label) {
                     //reduce all the y values according to aggregateType and save into y
@@ -399,7 +405,7 @@
             //project the required fields, have accessible by later functions
             projectedStops = getProjectedStops(settings, scoutStops);
             //get categorised data (this is the data series)
-            stopSeries = getStopSeries(settings.series, projectedStops);
+            var stopSeries = getStopSeries(settings.series, projectedStops);
             var parameters = determinePlotParameters(stopSeries, treatments, settings);
             chart = new Chartist[settings.type](chartId, parameters.data, parameters.options);
             setAnimations(chart, stopSeries.length);
