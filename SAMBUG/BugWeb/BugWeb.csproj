@@ -268,6 +268,8 @@
     <Content Include="Content\Images\Wiki\Two Spotted Bug\Two Spotted Bug Adult.png" />
     <Content Include="Content\Images\Wiki\Two Spotted Bug\Two Spotted Bug eggs.png" />
     <Content Include="Content\Images\Wiki\Yellow Edged Bug\Yellow Edged Bug.png" />
+    <Content Include="Content\Images\samac_logo.png" />
+    <Content Include="Content\Images\vsd.png" />
     <Content Include="Content\jquery.dataTables.css" />
     <Content Include="Content\reporting.css" />
     <Content Include="Content\tables.css" />

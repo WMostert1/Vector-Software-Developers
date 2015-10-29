@@ -82,6 +82,10 @@
 
             //--------------------------------------//
             
+            $scope.navigateToAboutUs = function () {
+                window.location = "/home/aboutus";
+            }
+
             $scope.toggleSideNav = function(id) {
                 $mdSidenav(id).toggle();
             };

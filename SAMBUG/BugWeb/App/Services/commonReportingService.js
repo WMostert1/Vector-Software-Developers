@@ -158,6 +158,11 @@
                 scoutStops = flattenScoutStops(response.data.ScoutStops);
                 farms = getFarmsBlocks(scoutStops.concat(treatments));
                 callback(farms);
+            },function(response) {
+                treatments = [];
+                scoutStops = [];
+                farms = [];
+                callback(farms);
             });
         }
 
