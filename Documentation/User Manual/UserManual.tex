@@ -142,10 +142,7 @@ For a user to use the system, it is necessary that he/she registers as a user fi
 After registration the user can log in on the Android Application as well as the web page. A user logged in to the Android application will stay logged in if he/she does not explicitly log out. The details used to log in are only the email (as a username) and password.
 
 \subsection{A walk through the system}
-
-%INFORMAL IDEAS
-
-The main flow of the system:\\
+The main flow of the system:
 \begin{itemize}
 \item On the Application: 
 	\begin{itemize}
@@ -164,7 +161,7 @@ The main flow of the system:\\
 
 
 Other aspects:\\
-May change profile settings, may CRUD blocks also.\\\\
+May change profile settings, may CRUD blocks as well.\\
 
 If the user is a subtrop staff member, they will not use the app, but only the web interface. Will also not enter any data. Will only view data.\\
 
@@ -176,8 +173,8 @@ Thus work flow may differ for different users.
 \subsection{Web Page}
 		 The Web Application's main goal is data mining and various management responsibilities. Complete the following walk-through in order to utilise the system:
 	\begin{enumerate}
-		\item Navigate to \url{http://www.sambug.co.za}
-		\item If you are already registered please login, if not click on "here" to register and refer to Step 4 of this section for farm setup instructions. If you have forgotten your password, click on "here" to recover your account. 
+		\item Navigate to \url{http://sambug.azurewebsites.net}
+		\item If you are already registered please login, if not click on "here" to register and refer to Step 4 of this section for farm setup instructions. If you have forgotten your password, click on "here" to recover your account.  %TODO
 	\begin{center}
 		\includegraphics[scale=0.7]{login_page.png}
 	\end{center}
@@ -189,47 +186,34 @@ Thus work flow may differ for different users.
 				%\end{center}
 			\item If you need to recover your account, please enter your email address and click on the link provided in order to reset your password.
 		\end{enumerate}
-\item Once successfully logged in, you should be able to view your farm's historical data by clicking on either "View Graph", "View Table", or "View Map". Use the filters next to the individual representation to change and scale the mined data as per preference. By using these filters various representations may be obtained.
+\item Once successfully logged in, you should be able to view your farm's historical data by clicking on either "Charts", "Tables", or "Maps". Use the filters for the individual representation to change and scale the mined data as per preference. By using these filters various representations may be obtained. To access filters click the three dotted button on the top right of the screen.
 		\begin{enumerate}
 			\item The map as shown below:
 			\begin{center}
-				\includegraphics[scale=0.3]{map.png}
+				\includegraphics[width=\linewidth]{map.png}
 			\end{center}
 \item The graph as shown below:
 			\begin{center}
-				\includegraphics[scale=0.3]{graph.png}
+				\includegraphics[width=\linewidth]{graph.png}
 			\end{center}
 \item The table as shown below:
 			\begin{center}
-				\includegraphics[scale=0.3]{table.png}
+				\includegraphics[width=\linewidth]{table.png}
 			\end{center}
 		\end{enumerate}
 \item Once successfully registered, the Grower will need to enter the block structure that he wishes to organise his farm data into using the following page: 
 	\begin{center}
-		\includegraphics[scale=0.3]{manageblocks.png}
+		\includegraphics[width=\linewidth]{manageblocks.png}
 	\end{center}
-	On this page, the Grower has 3 possible options to edit his/her blocks - Add, Remove or Edit. By clicking appropriate buttons, modal windows (found below) will appear for the user to complete each action.
-	\begin{enumerate}
-		\item Add Block
-		\begin{center}
-			\includegraphics[scale=0.3]{addblock.png}
-		\end{center}
-		\item Remove Block
-		\begin{center}
-			\includegraphics[scale=0.3]{removeblock.png}
-		\end{center}
-		\item Edit Block
-		\begin{center}
-			\includegraphics[scale=0.3]{updateblock.png}
-		\end{center}
-	\end{enumerate}
-\item Should the user logged in happen to be an Admin, he/she will have access to the Edit User Roles function. By clicking on the appropriate link, the following page will appear: 
+	On this page, the Grower has 3 possible options to edit his/her blocks - Add (lower gray plus), Remove (trash can) or Edit (pencil). By clicking appropriate buttons, modal windows will appear for the user to complete each action. Lastly, one may add a new farm to your account by clicking the large green plus.
+	
+\item Should the logged in user happen to be an Admin, he/she will have access to the Edit User Roles function. By clicking on the appropriate link, the following page will appear: 
 	\begin{center}
-		\includegraphics[scale=0.3]{edituserroles.png}
+		\includegraphics[width=\linewidth]{edituserroles.png}
 	\end{center}
 	On this page, a list of all users on the system will be shown with buttons to edit each user's roles. By clicking on the appropriate "Edit" button, the following modal dialog will appear in order for the selected user's roles to be changed:
 		\begin{center}
-			\includegraphics[scale=0.3]{edituserrole.png}
+			\includegraphics[scale=0.3]{edituserrole.png} %TODO
 		\end{center}
 \item Finally, when the user is finished using the system, logout is completed by the simple task of clicking the "Logout" link found in the header bar of every page.
 	\end{enumerate}
