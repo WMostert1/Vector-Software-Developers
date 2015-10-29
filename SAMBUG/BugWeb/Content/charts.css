@@ -1,25 +1,4 @@
-﻿#firstContentRow {
-    margin-top: 25px;
-}
-
-#resetIcon, #collapseIcon {
-    cursor: pointer;
-}
-
-.chartContainerOnLoad {
-    height: 60vh;
-}
-
-.whirly-loader {
-    top: 50%;
-    left: 50%;
-}
-
-.chartLabel {
-    visibility: hidden;
-}
-
-.vertical-line {
+﻿.vertical-line {
     stroke: lightblue;
     stroke-dasharray: 10px 10px;
     stroke-width: 2px;
@@ -64,39 +43,46 @@
     font-size: 1.5em;
 }
 
+.ct-series-0 .ct-line,
+.ct-series-0 .ct-point,
+.ct-series-0 .ct-bar,
+.trendline-0 {
+  stroke: #9CCC65;
+}
+
 .ct-series-1 .ct-line,
 .ct-series-1 .ct-point,
 .ct-series-1 .ct-bar,
 .trendline-1 {
-  stroke: #9CCC65;
+  stroke: #FFCA28;
 }
 
 .ct-series-2 .ct-line,
 .ct-series-2 .ct-point,
 .ct-series-2 .ct-bar,
 .trendline-2 {
-    stroke: #FFCA28;
+    stroke: #F57C00;
 }
 
 .ct-series-3 .ct-line,
 .ct-series-3 .ct-point,
 .ct-series-3 .ct-bar,
 .trendline-3 {
-  stroke: #F57C00;
+  stroke: #BFA582;
 }
 
 .ct-series-4 .ct-line,
 .ct-series-4 .ct-point,
 .ct-series-4 .ct-bar,
 .trendline-4 {
-  stroke: #BDBDBD;
+  stroke: #EF5350;
 }
 
 .ct-series-5 .ct-line,
 .ct-series-5 .ct-point,
 .ct-series-5 .ct-bar,
 .trendline-5 {
-  stroke: #EF5350;
+  stroke: #BDBDBD;
 }
 
 .ct-series-6 .ct-line,
@@ -133,6 +119,14 @@
 .trendline-10 {
   stroke: #EA80FC;
 }
+
+.ct-series-11 .ct-line,
+.ct-series-11 .ct-point,
+.ct-series-11 .ct-bar,
+.trendline-11 {
+  stroke: #BF6592;
+}
+
 
 /*todo add more custom colors for series elements*/
 

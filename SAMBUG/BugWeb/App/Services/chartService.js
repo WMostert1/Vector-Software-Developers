@@ -181,7 +181,7 @@
         }
 
         function saveLineChartParameters(parameters, stopSeries, treatments, settings) {
-            var seriesIndex = 1;
+            var seriesIndex = 0;
             Enumerable.From(stopSeries).ForEach(function (s) {
                 var series = {};
                 series.name = s.Key();

@@ -69,6 +69,10 @@ namespace BugWeb
             bundles
                 .Add(new ScriptBundle("~/bundles/vendor/xdate")
                     .Include("~/Scripts/xdate.js"));
+            
+            bundles
+                .Add(new ScriptBundle("~/bundles/index")
+                    .Include("~/App/Controllers/indexCtrl.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/reporting/common")
