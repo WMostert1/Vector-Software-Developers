@@ -194,5 +194,6 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+Documentation/User Manual/UserManual.pdf
 SAMBUGApp/app/src/androidTest/java/vsd/co/za/sambugapp/EnterDataActivityTests.java
 *.dll
