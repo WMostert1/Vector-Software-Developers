@@ -7,8 +7,6 @@
 
                     $scope.newBlockName = rootObj.name;
 
-                    console.log(rootObj);
-
                     $scope.cancel = function () {
                         $mdDialog.cancel();
                     };

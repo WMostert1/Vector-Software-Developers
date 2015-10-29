@@ -78,7 +78,6 @@
             //todo: get new data from server and set new farms object
             $scope.showAddTreatmentDialog = function (event, ctrl, block) {
                 $scope.showDialog("addTreatment", event, ctrl, function () {
-                    console.log("right");
                     treatmentDataService.loadTreatments(initTreatments);
                 }, null, block);
             }
@@ -97,7 +96,6 @@
                     controller: ctrl,
                     locals: { obj: obj }
                 }).then(hiddenCallback, function() {
-                    console.log("wrong");
                 });
             }
         }

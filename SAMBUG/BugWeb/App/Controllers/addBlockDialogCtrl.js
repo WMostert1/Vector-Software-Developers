@@ -2,8 +2,6 @@
     .controller("AddBlockDialogCtrl", [
                 "$scope", "$mdDialog", "$mdToast", "$http", "rootObj", function ($scope, $mdDialog, $mdToast, $http, rootObj) {
 
-            console.log(rootObj);
-
                     $scope.cancel = function () {
                         $mdDialog.cancel();
                     };

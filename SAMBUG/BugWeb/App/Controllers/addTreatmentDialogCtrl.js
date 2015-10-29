@@ -11,7 +11,6 @@
                         $scope.errorMessage = "";
 
                         if ($scope.newDate == null || $scope.newDate === "" || Object.prototype.toString.call($scope.newDate) !== '[object Date]') {
-                            console.log("Empty");
                             return false;
                         }
 
