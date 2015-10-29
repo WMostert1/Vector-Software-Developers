@@ -40,21 +40,28 @@
       
     \vspace*{-0.5cm}
 	  \huge \textbf {User Manual}\\
-	  
+	  \hfill\\
 	\vspace*{-0.5cm}  
-      \LARGE \textbf {Subtrop}
+      \includegraphics[scale=0.2]{logo}\hfill
+	\includegraphics[scale=0.2]{sambug_logo}
          
     \vskip2cm
           
     \large \textbf{\monthyeardate\today}
   
     \vfill
+\begin{tabular}{lr}
+        	Abrie van Aardt&13178840\\
+		Werner Mostert&13019695\\
+		Kale-ab Tessera&13048423\\
+		Keagan Thompson&13023782\\
+		Michelle Swanepoel&13066294\\
+	\end{tabular}
 \end{titlepage}
 	
 	
 
 \tableofcontents
-\listoffigures
 
 \pagebreak
 
@@ -131,44 +138,34 @@ The design of the system as indicated above lends itself to a number of required
 		\item An Internet Connection - Our application is designed to perform all of its functions even where no mobile/WiFi network reception is available. However, the information you'll be gathering during your scouting trips will have to be uploaded to the server at some point, and for that, you need to be connected to the internet. 		
 	\end{itemize}
 
-
-
 \section{Installation}
-The Android application will be available for download via the Google Play store (in the future). The web application will be permanently available via the internet.
+The Android application will be available for download via the Google Play Store. The web application will be permanently available via the internet at \url{http://sambug.azurewebsites.net}.\\
+
+Alternatively, the full source code may be accessed from the public GitHub repository at \url{https://github.com/WMostert1/Vector-Software-Developers}. In order to build and obtain the source code, some technical knowledge is required. To download the source code directly, navigate to the previously mentioned GitHub URL and click on [Download ZIP].
+
+	\begin{center}
+		\includegraphics[width=\linewidth]{git.png}
+	\end{center}
+
+Once the source code has been downloaded successfully, there are two different projects within the folder. SAMBUG is the web-backend. To open and run the project, install/open Microsoft Visual Studio 2013 and open the .sln file located within the SAMBUG folder.\\
+In order to run the Android Application, open the SAMBUGApp project using Android Studio 1.2.\\
+In both cases, all dependencies should be automatically installed to your computer via Gradle (for Android Studio) and NuGet (for Visual Studio). 
 		
 \section{Getting started}
 \subsection{Requirements to access the system}
-For a user to use the system, it is necessary that he/she registers as a user first. This can only be done on the web page. Only an email address, password and farm name will be asked for at registration. All users are automatically 'normal' users, that is users who do not have the authority of seeing all farms' data (such as Subtrop staff). A user can only become a privileged user if another privileged user authorises him/her. Farmers and scouts will use the same account, and thus the same credentials to use the system.\\
+In order for a user to use the system, it is necessary that he/she registers as a user first. This can only be done on the web page. Only an email address and password will be asked for at registration. A user can only become a privileged user if another privileged user authorises him/her. Farmers and scouts will use the same account, and thus the same credentials to use the system.\\
 After registration the user can log in on the Android Application as well as the web page. A user logged in to the Android application will stay logged in if he/she does not explicitly log out. The details used to log in are only the email (as a username) and password.
 
-\subsection{A walk through the system}
-The main flow of the system:
-\begin{itemize}
-\item On the Application: 
-	\begin{itemize}
-		\item Login
-		\item Enter the scouting data
-	\end{itemize}
-\item Web Page
-	\begin{itemize}
-		\item Register on browser interface.
-		\item Add for the first time all the blocks currently on the farm.
-		\item Log On to browser interface.
-		\item View reports on historical data. There are various reporting mechanisms,such tables, maps and graphs. Each of these mechanisms will allow filters to be applied to only view specific data.
-\item Enter treatment data if pesticide was sprayed.
-	\end{itemize}
-\end{itemize}
+\subsection{System Overview}
 
+\textbf{\textit{Please see Using the System section for detailed system flow and usage.}}\\
 
-Other aspects:\\
-May change profile settings, may CRUD blocks as well.\\
+The general flow of the system:
+	\begin{center}
+		\includegraphics[width=\linewidth]{SystemFlow.jpg}
+	\end{center}
 
-If the user is a subtrop staff member, they will not use the app, but only the web interface. Will also not enter any data. Will only view data.\\
-
-Thus work flow may differ for different users.
-
-
-
+If the user is a subtrop staff member, the mobile application will not be used, only the web interface since administrators will not originate data. Due to this fact, the work flow differs between Growers and Administrators.
 \section{Using the System}
 \subsection{Web Page}
 		 The Web Application's main goal is data mining and various management responsibilities. Complete the following walk-through in order to utilise the system:
@@ -176,7 +173,7 @@ Thus work flow may differ for different users.
 		\item Navigate to \url{http://sambug.azurewebsites.net}
 		\item If you are already registered please login, if not click on "here" to register and refer to Step 4 of this section for farm setup instructions. If you have forgotten your password, click on "here" to recover your account.  %TODO
 	\begin{center}
-		\includegraphics[scale=0.7]{login_page.png}
+		\includegraphics[width=\linewidth]{login_page.png}
 	\end{center}
 		\begin{enumerate}
 			\item If you have logged in continue.
@@ -221,41 +218,59 @@ Thus work flow may differ for different users.
 	The application functions as a simple way for scouters to enter data. Follow these steps in order to use the application for scouting:
 	\begin{enumerate}
 		\item Open the application by clicking on the SAMBUGApp icon on your Android Device
-		\item Once the Application has succesfully been opened please login in with your registered username and password. If you have not yet registered please go to the web page as described in the previous section in order to register. Click on Sign In to continue.
+		\item Once the Application has succesfully opened please login in with your registered username and password. If you have previously logged in, you will be automatically logged in in future. To log out, click on the logout button on the home screen. If you have not yet registered please go to the web page as described in the previous section in order to register. Click on Sign In to continue.
 			\begin{center}
-				\includegraphics[scale=0.13]{shot1}
+				%\includegraphics[scale=0.13]{shot1}
 			\end{center}
-		\item After successful login you will be presented with the following screen:
+		\item After successful login you will be presented with the following screen (The Home Screen):
 			\begin{center}
-				\includegraphics[scale=0.13]{shot2}
+				\includegraphics[scale=0.3]{home_nf}
 			\end{center}
 			Click on the [+] button on the top right hand corner of the screen in order to enter new scouting data.
 
-	\item After being directed, select the block in which you are currently situated from the dropdown list at the top. After selecting the block, select the number of trees you have scouted in total. For each individual pile/species of bugs that you have found, select the number of bugs and click on [ADD BUG]. This will redirect you to a different screen in order to identify the specific species of the bug. You will first however be asked to take a photo of the bug.
+	\item After being directed, select the block in which you are currently situated from the dropdown list at the top. After selecting the block, select the number of trees you have scouted in total. After entering the requested data, click on [ADD BUGS] to continue.
+\begin{center}
+				\includegraphics[scale=0.3]{enterdatainitial}
+			\end{center}
+
+
+ \item To start recording the different species of bugs that were found, click the [+] button in the middle lower area of the screen. In order to change the number of trees or block selection, click on the pencil button on the top right corner of the screen.
 		\begin{center}
-				\includegraphics[scale=0.13]{shot3}
+				\includegraphics[scale=0.3]{enterdataempty}
 			\end{center}
 
-	\item Once a picture of the bug has been taken, your picture will appear on the left hand - top side of the screen. To have the application determine the species automatically, click on the [CHOOSE AUTOMATICALLY] button at the top left corner. If you believe the choice was not accurate or if you prefer to choose the species yourself, select the specific bug type for the gallery from the bottom half of the screen. Once you are satisfied with your selection, click on [DONE].\\
-\hfill\\
-\textit{NOTE: In the image below the "camera picture" has been replaced with one of the gallery images}
+\item After click the [+], you will be requested to take a picture of a stinkbug. \textbf{\textit{For good results, place the stinkbug with it's back facing the camera on a white paper in natural light. Excessive shadows, blurred images and general bad image quality may affect automatic classification results. Please place the stinkbug in the center of the square drawn on-screen with the bug filling one to three quarters of the square.}}
 	\begin{center}
-				\includegraphics[scale=0.13]{shot4}
+				\includegraphics[scale=0.3]{captureimage}
+	\end{center}
+
+
+	\item Once a picture of the bug has been taken, your picture will appear on the left hand - top side of the screen. The application will immediatly attempt to determine the bug's species and lifestage. To have the application determine the species automatically again, click on the [CHOOSE AUTOMATICALLY] button at the top left corner. If you believe the choice was not accurate or if you prefer to choose the species yourself, select the specific bug type for the gallery from the bottom half of the screen. Once you are satisfied with your selection, click on [DONE].
+	\begin{center}
+				\includegraphics[scale=0.3]{identiftyclassifystart}
 			\end{center}
 
-\item Once you are done with selecting the species, repeat steps 4 and 5 until you have identified and counted all the bugs. Your results may look as below for a single entry:
-
+\item Once [DONE] has been clicked a dialogue will require that the number of bugs are recorded. Please enter this amount and click [FINISH].
 \begin{center}
-				\includegraphics[scale=0.13]{shot5}
+				\includegraphics[scale=0.3]{identifychoosenumber}
 			\end{center}
 
-\item When all the bugs have been identified and counted click on [DONE]. You will be directed to a screen showing your scouting information as below:
+\item Once you are done with selecting the species, repeat until you have identified and counted all the bugs. Your results may look as below for a single entry:
 
 \begin{center}
-				\includegraphics[scale=0.13]{shot6}
+				\includegraphics[scale=0.3]{enterdatafinal}
+			\end{center}
+
+\item When all the bugs have been identified and counted click on [DONE]. One is directed to a screen showing the collective scouting information as below:
+
+\begin{center}
+				\includegraphics[scale=0.3]{scouttripfinal}
 \end{center}
 
 \item If you have moved to a different block and/or wish to continue scouting repeat the steps above. When you are done, click [FINISH] and your data will soon be available to the Farmer on the web page.
+\begin{center}
+				\includegraphics[scale=0.3]{homedatapushed}
+\end{center}
 \end{enumerate}
 
 
@@ -265,14 +280,14 @@ Thus work flow may differ for different users.
 		Suggested Action: Select the option to switch the GPS on. \newline
 		
 		\begin{center}
-				\includegraphics[scale=0.13]{CAPTURE}
+				\includegraphics[scale=0.3]{CAPTURE}
 		\end{center}
 		
 		\item Unable to use flash. Battery too low. - the user needs to have enough battery to take a picture by making use of the camera api. \newline
 		Suggested Action: Charge the phone and try again with more battery life. \newline
 		
 		\begin{center}
-				\includegraphics[scale=0.13]{Battery_Low}
+				\includegraphics[scale=0.3]{Battery_Low}
 		\end{center}
 	\end{itemize}
 
