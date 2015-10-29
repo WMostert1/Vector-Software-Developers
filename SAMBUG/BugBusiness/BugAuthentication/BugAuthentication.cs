@@ -15,8 +15,7 @@ namespace BugBusiness.BugAuthentication
 {
     public class BugAuthentication : IBugAuthentication
     {
-        //const string from = "kaleabtessera@gmail.com";
-        //const string fromPassword = "27ATEHBruKal1129";
+
 
         private readonly IBugSecurity _bugSecurity;
 
@@ -31,11 +30,8 @@ namespace BugBusiness.BugAuthentication
 
         public RecoverAccountResult RecoverAccount(RecoverAccountRequest recoverAccountRequest)
         {
-        
-      
-
               EmailSender _Email = new EmailSender(recoverAccountRequest.From,recoverAccountRequest.FromPassword, recoverAccountRequest.EmailTo);
-             _Email.setEmail("Recover Password", recoverAccountRequest.Link);
+             _Email.setEmail("Recover Password", _bugSecurity.GetPassword(recoverAccountRequest.EmailTo));
 
 
             if (_Email.sendEmail() == false)

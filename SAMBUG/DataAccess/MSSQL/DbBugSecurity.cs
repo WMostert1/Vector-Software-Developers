@@ -103,8 +103,8 @@ namespace DataAccess.MSSQL
             var db = new BugDBEntities();
             try
             {
-                User user = db.Users.SingleOrDefault(usr => usr.Email == username);
-                user.Password = password;
+            User user = db.Users.SingleOrDefault(usr => usr.Email == username);
+            user.Password = password;
             }
             catch (Exception)
             {
@@ -114,5 +114,20 @@ namespace DataAccess.MSSQL
             return true;
         }
 
+        public string GetPassword(string username)
+        {
+            var db = new BugDBEntities();
+            String password;
+            try
+            {
+                User user = db.Users.SingleOrDefault(usr => usr.Email == username);
+                password = user.Password;
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+            return password;
+        }
     }
 }

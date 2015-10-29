@@ -9,5 +9,7 @@ namespace DataAccess.Interface
         ICollection<Models.User> GetAllUsers();
         bool EditUserRoles(long userId, bool isAdministrator);
         bool ChangeUserPassword(string username, string password);
+        string GetPassword(string username);
+
     }
 }
