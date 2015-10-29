@@ -1,4 +1,8 @@
-﻿.reportingAutocompleteTemplate li {
+﻿.md-virtual-repeat-scroller {
+     background-color: #424242 !important;
+}
+
+.reportingAutocompleteTemplate li {
     border-bottom: 1px solid #ccc;
     background-color: #424242;
     height: 65px;
