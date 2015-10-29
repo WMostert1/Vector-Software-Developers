@@ -11,24 +11,22 @@ namespace BugWeb.Controllers
 {
     public class ReportingController : Controller
     {
-        // GET: reporting
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: reporting/tabular
-        public ActionResult Tabular()
+       // GET: reporting/tables
+        [Authenticate(Roles = "1, 2", Alternate = true)]
+        public ActionResult Tables()
         {
             return View(new ReportingViewModel(Session));
         }
 
         // GET: reporting/charts
+        [Authenticate(Roles = "1, 2", Alternate = true)]
         public ActionResult Charts()
         {
             return View(new ReportingViewModel(Session));
 		}
 
+        // GET: reporting/map
+        [Authenticate(Roles = "1, 2", Alternate = true)]
         public ActionResult Map()
         {
             return View(new ReportingViewModel(Session));

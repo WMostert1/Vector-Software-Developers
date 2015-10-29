@@ -1,45 +1,43 @@
 ﻿﻿@{
-    ViewBag.Title = "Home Page";
-}
-<br/>
-<div class="row">
-    <h1 style="text-align:center">Bug Wiki</h1>
-    <hr/>
-    <div class="col-sm-12">
-        <p>
-            Pentatomidae, Greek pente meaning five and tomos meaning section, are a family of insects belonging to order Hemiptera including some of the stink bugs and shield bugs. The scutellum body is typically half of an inch long, green or brown color, usually trapezoidal in shape, giving this family the name "shield bug". The tarsi are 3-segmented. The forewings of stink bugs are called hemelytra, with the basal half thickened while the apex is membranous (as are the hindwings). The stink bug derives its name from its tendency to eject a foul smelling glandular substance secreted from pores in the thorax when disturbed. The chemicals involved include aldehydes, making the smell similar to that of coriander; whether or not a human finds the smell unpleasant or pleasant may be genetic. In some species the liquid contains cyanide compounds with a rancid almond scent. This is a form of antipredator adaptation. Since recent arrival in the USA, populations of the brown marmorated stink bug have grown significantly.
-        </p>
-        <p>
-            The idiomatic term "stink bug" is also applied to distantly related species such as Boisea trivittata, the "boxelder bug", and entirely different types of insects such as beetles in the genus Eleodes ("pinacate beetles").
-        </p>
-        <p>
-            Many stink bugs and shield bugs are considered agricultural pest insects, because they can create large populations which feed on crops (damaging production), and they are resistant to many pesticides. They are a threat to cotton, corn, sorghum, soybeans, native and ornamental trees, shrubs, vines, weeds, and many cultivated crops. However, some genera of Pentatomidae are considered highly beneficial: the anchor bug, which can be distinguished by the red-orange anchor shape on the adult, is one example. It is a predator of other insects, especially Mexican bean beetles, Japanese beetles, and other pest insects.
-        </p>
-        <p>
-            They also are commonly eaten in Laos, and are regarded as delicious due to their extremely strong odor. The insects are sometimes pounded together with spices and a seasoning to prepare cheo, a paste mixed with chilies and herbs.
-        </p>
-        <p>
-            There are several subfamilies, of which the Australian Aphylinae is often given family status, but is here retained as a subfamily, following Grazia et al. (2008).
-        </p>
-        <p>
-            As of October 2014, brown marmorated stink bugs can be found in 41 out of 50 states within the U.S.A.
-        </p>
+     ViewBag.Title = "Home";
+     ViewBag.Reporting = "false";
+ }
 
-            <div class="row">
-                <div class="col-sm-6">
-                    <h4>Coconut Bug</h4>
-                    <img src="~/Content/Images/coconut_inst_4.jpg" class="img-rounded" alt="Coconut Bug" width="200" height="150">
-                    <br />
-                    <h4>Green Vegatable Bug</h4>
-                    <img src="~/Content/Images/green_veg_inst_4.jpg" class="img-rounded" alt="Green Vegatable Bug" width="200" height="150">
-                </div>
-                <div class="col-sm-6">
-                    <h4>Two Spotted Bug</h4>
-                    <img src="~/Content/Images/two_spot_inst_4.jpg" class="img-rounded" alt="Two Spotted Bug" width="200" height="150">
-                    <br />
-                    <h4>Yellow Edged Bug</h4>
-                    <img src="~/Content/Images/yellow_edged_inst_4.jpg" class="img-rounded" alt="Yellow Edged Bug" width="200" height="150">
+<div layout="row" layout-align="center start" ng-controller="IndexCtrl" ng-cloak>
+    <div layout="column" layout-padding layout-margin flex>
+        <div layout="column" ng-repeat="species in speciesList">
+            <div layout="column" layout-align="start center">
+                <h1 class="md-headline">{{species.name}}</h1>
+                <div layout="row" id="carousel-{{$index}}" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        <li ng-repeat="lifeStage in species.lifeStages" data-target="#carousel-{{$parent.$index}}" data-slide-to="{{$index}}" ng-class="$index === 0 ? 'active' : ''"></li>
+                    </ol>
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" role="listbox">
+                        <div ng-repeat="lifeStage in species.lifeStages" ng-class="$index === 0 ? 'item active' : 'item'">
+                            <img style="height: 400px" ng-src="{{lifeStage.image.url}}" ng-alt="{{lifeStage.image.alt}}">
+                            <div class="carousel-caption">
+                                <h3>{{lifeStage.name}}</h3>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div>
+                <h2 class="md-title">{{species.speciesName.heading}}</h2>
+                <p style="color: lightgrey"><i>{{species.speciesName.body}}</i></p>
+            </div>
+            <div ng-repeat="info in species.information">
+                <h2 class="md-title">{{info.heading}}</h2>
+                <p style="color: lightgray" class="md-body-1">{{info.body}}</p>
+            </div>
+            <md-divider></md-divider>
+        </div>
+    </div>
 </div>
-</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/index")
+}

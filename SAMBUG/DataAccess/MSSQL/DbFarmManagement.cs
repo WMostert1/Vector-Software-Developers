@@ -52,57 +52,13 @@ namespace DataAccess.MSSQL
             return true;
         }
 
-        public ICollection<Block> GetBlocksByFarm(long id){
-            var db=new BugDBEntities();
-
-            var farm=db.Farms.SingleOrDefault(frm => frm.FarmID.Equals(id));
-
-            if (farm==null)
-            {
-                return null;
-            }
-
-            var blocks = farm.Blocks.Select(blk =>
-                new Block() { BlockID = blk.BlockID, BlockName = blk.BlockName }).ToList();
-
-            return blocks;
-        }
-
-        public Block GetBlockByID(long id)
+        public ICollection<Farm> GetFarmsByID(long id)
         {
             var db = new BugDBEntities();
 
-            var block = db.Blocks.SingleOrDefault(blk => blk.BlockID.Equals(id));
+            var farms = db.Farms.Where(frm => frm.UserID.Equals(id)).ToList();
 
-            if (block != null)
-            {
-                return new Block() { BlockID = block.BlockID, BlockName = block.BlockName };
-            }
-
-            return null;
-        }
-
-        public Farm GetFarmByID(long id)
-        {
-            var db=new BugDBEntities();
-
-            var farm = db.Farms.SingleOrDefault(frm => frm.FarmID.Equals(id));
-
-            if (farm != null)
-            {
-                return new Farm()
-                {
-                    FarmID=farm.FarmID,
-                    FarmName=farm.FarmName,
-                    Blocks=farm.Blocks.Select(blk =>
-                        new Block() 
-                        { BlockID = blk.BlockID, 
-                          BlockName = blk.BlockName 
-                        }).ToList()
-                };
-            }
-
-            return null;
+            return farms;
         }
 
         public long UpdateBlock(long id, string blockname)
@@ -142,7 +98,7 @@ namespace DataAccess.MSSQL
         {
             var db = new BugDBEntities();
 
-            var block=db.Blocks.SingleOrDefault(blk=>blk.BlockID.Equals(id));
+            var block = db.Blocks.SingleOrDefault(blk=>blk.BlockID.Equals(id));
 
             if (block!=null){
                 db.Blocks.Remove(block);
@@ -153,16 +109,18 @@ namespace DataAccess.MSSQL
             return false;
         }
 
-        public List<Object> GetTreatmentInfoByBlock(long blockID)
+/*        public List<Object> GetTreatmentInfoByUserId(long userId)
         {
             var db=new BugDBEntities();
 
-            Block block=(Block)db.Blocks.SingleOrDefault(blk=>blk.BlockID.Equals(blockID));
+            var farms = db.Farms.Where(frm => frm.UserID.Equals(userId)).ToList();
 
-            if (block == null)
+            if (farms == null)
             {
                 return null;
             }
+
+            foreach(var frm in farms)
             //calculate average, return -1 if no scoutstops
             double average;
             if (!block.ScoutStops.Count.Equals(0))
@@ -196,7 +154,7 @@ namespace DataAccess.MSSQL
             }
 
             return new List<Object>{average,difference};
-        }
+        }*/
 
         public bool InsertNewTreatment(long id, DateTime date, string comments)
         {

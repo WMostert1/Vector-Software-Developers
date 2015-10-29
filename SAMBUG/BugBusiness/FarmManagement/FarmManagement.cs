@@ -20,7 +20,7 @@ namespace BugBusiness.FarmManagement
             _dbFarmManagement = dbFarmManagement;
         }
 
-        public AddFarmResult AddFarm(AddFarmRequest addfarmRequest)
+        public AddFarmResponse AddFarm(AddFarmRequest addfarmRequest)
         {
             if (addfarmRequest.FarmName.Equals(""))
             {
@@ -34,15 +34,10 @@ namespace BugBusiness.FarmManagement
                 throw new FarmExistsException();
             }
 
-            AddFarmResult addfarmResult = new AddFarmResult()
-            {
-                FarmID = queryResult
-            };
-
-            return addfarmResult;
+            return new AddFarmResponse();
         }
 
-        public AddBlockResult AddBlock(AddBlockRequest addblockRequest)
+        public AddBlockResponse AddBlock(AddBlockRequest addblockRequest)
         {
             if (addblockRequest.BlockName.Equals(""))
             {
@@ -56,82 +51,33 @@ namespace BugBusiness.FarmManagement
                 throw new BlockExistsException();
             }
 
-            return new AddBlockResult();
+            return new AddBlockResponse();
         }
 
-        public GetBlocksByFarmResult GetBlocksByFarm(GetBlocksByFarmRequest getblocksbyfarmRequest)
+        public GetFarmsByUserIDResponse GetFarmsByUserID(GetFarmsByUserIDRequest getfarmbyidRequest)
         {
-            if (getblocksbyfarmRequest.FarmID <= 0)
+            if (getfarmbyidRequest.id < 0)
             {
                 throw new InvalidInputException();
             }
 
-            ICollection<Block> blocks = _dbFarmManagement.GetBlocksByFarm(getblocksbyfarmRequest.FarmID);
-
-            if (blocks == null)
-            {
-                throw new NoBlocksException();
-            }
-
-            List<BlockDTO> blockDTOList = AutoMapper.Mapper.Map<List<BlockDTO>>(blocks);
-
-            GetBlocksByFarmResult result = new GetBlocksByFarmResult()
-            {
-                Blocks = blockDTOList
-            };
-
-            return result;
-        }
-
-        public GetBlockByIDResult GetBlockByID(GetBlockByIDRequest getblockybyidRequest)
-        {
-            if (getblockybyidRequest.BlockID <= 0)
-            {
-                throw new InvalidInputException();
-            }
-
-            Block block = _dbFarmManagement.GetBlockByID(getblockybyidRequest.BlockID);
-
-            if (block == null)
-            {
-                throw new NoSuchBlockExistsException();
-            }
-
-            BlockDTO blockDTO = AutoMapper.Mapper.Map<BlockDTO>(block);
-
-            GetBlockByIDResult getblockbyidResult = new GetBlockByIDResult()
-            {
-                Block=blockDTO
-            };
-
-            return getblockbyidResult;
-        }
-
-        public GetFarmByIDResult GetFarmByID(GetFarmByIDRequest getfarmbyidRequest)
-        {
-            if (getfarmbyidRequest.FarmID <= 0)
-            {
-                throw new InvalidInputException();
-            }
-
-            Farm farm = _dbFarmManagement.GetFarmByID(getfarmbyidRequest.FarmID);
-
-            if (farm == null)
+            ICollection<Farm> farms = _dbFarmManagement.GetFarmsByID(getfarmbyidRequest.id);
+            if (farms == null)
             {
                 throw new NoSuchFarmExistsException();
             }
 
-            FarmDTO farmDTO = AutoMapper.Mapper.Map<FarmDTO>(farm);
+            List<FarmForFarmManDto> farmsDto = AutoMapper.Mapper.Map<List<FarmForFarmManDto>>(farms);
 
-            GetFarmByIDResult getfarmbyidResult = new GetFarmByIDResult()
+            GetFarmsByUserIDResponse getfarmbyidResult = new GetFarmsByUserIDResponse()
             {
-                Farm = farmDTO
+                Farms = farmsDto
             };
 
             return getfarmbyidResult;
         }
 
-        public UpdateBlockByIDResult UpdateBlockByID(UpdateBlockByIDRequest updateblockbyidRequest)
+        public UpdateBlockByIDResponse UpdateBlockByID(UpdateBlockByIDRequest updateblockbyidRequest)
         {
             if (updateblockbyidRequest.BlockID <= 0 || updateblockbyidRequest.BlockName.Equals(""))
             {
@@ -145,71 +91,161 @@ namespace BugBusiness.FarmManagement
                 throw new CouldNotUpdateException();
             }
 
-            return new UpdateBlockByIDResult() { FarmID = queryResult };
+            return new UpdateBlockByIDResponse() { FarmID = queryResult };
 
         }
 
-        public DeleteFarmByIDResult DeleteFarmByID(DeleteFarmByIDRequest deletefarmbyidRequest)
+        public DeleteFarmByIDResponse DeleteFarmByID(long id)
         {
-            if (deletefarmbyidRequest.FarmID<=0)
+            if (id<=0)
             {
                 throw new InvalidInputException();
             }
 
-            bool queryResult = _dbFarmManagement.DeleteFarm(deletefarmbyidRequest.FarmID);
+            bool queryResult = _dbFarmManagement.DeleteFarm(id);
 
             if (!queryResult)
             {
                 throw new CouldNotDeleteFarmException();
             }
 
-            return new DeleteFarmByIDResult();
+            return new DeleteFarmByIDResponse();
         }
 
-        public DeleteBlockByIDResult DeleteBlockByID(DeleteBlockByIDRequest deleteblockbyidRequest)
+        public DeleteBlockByIDResponse DeleteBlockByID(long id)
         {
-            if (deleteblockbyidRequest.BlockID <= 0)
+            if (id <= 0)
             {
                 throw new InvalidInputException();
             }
 
-            bool queryResult = _dbFarmManagement.DeleteBlock(deleteblockbyidRequest.BlockID);
+            bool queryResult = _dbFarmManagement.DeleteBlock(id);
 
             if (!queryResult)
             {
                 throw new CouldNotDeleteBlockException();
             }
 
-            return new DeleteBlockByIDResult();
+            return new DeleteBlockByIDResponse();
         }
 
-        public GetPestsPerTreeByBlockResult GetPestsPerTreeByBlock(GetPestsPerTreeByBlockRequest getpestspertreebyblockRequest)
+
+        //-------------------------------------------------------------------Treatment code--------------------------------------------------------------------------------------------
+        public GetTreatmentInfoResponse GetTreatmentInfo(long id)
         {
-            if (getpestspertreebyblockRequest.BlockID <= 0)
+            if (id <= 0)
             {
                 throw new InvalidInputException();
             }
 
-            List<Object> queryResult = _dbFarmManagement.GetTreatmentInfoByBlock(getpestspertreebyblockRequest.BlockID);
+            ICollection<Farm> farms= _dbFarmManagement.GetFarmsByID(id);
 
-            if (queryResult == null)
+
+            if (farms == null)
             {
-                throw new NoSuchBlockExistsException();
+                throw new NoSuchFarmExistsException();;
             }
 
-            return new GetPestsPerTreeByBlockResult() { PestsPerTree = (double)queryResult[0],LastTreatment=queryResult[1].ToString() };
+            List<FarmForTreatmentDto> farmsArray = new List<FarmForTreatmentDto>();
+            FarmForTreatmentDto farm;
+            BlockTreatmentDto block;
+            ScoutStop stop;
+            DateTime latestScoutStop;
+            int numOfBugs;
+            DateTime currentDate = DateTime.Now;
+            DateTime lastDate;
+            DateTime nextDate;
+            
+
+            foreach (var frms in farms)
+            {
+                farm = new FarmForTreatmentDto();
+                farm.Blocks = new List<BlockTreatmentDto>();
+                farm.FarmName = frms.FarmName;
+                farm.FarmID = frms.FarmID;
+
+                foreach (var blck in frms.Blocks)
+                {
+                    block = new BlockTreatmentDto();
+                    block.BlockID = blck.BlockID;
+                    block.BlockName = blck.BlockName;
+
+                    if (blck.ScoutStops.Any())
+                    {
+                        latestScoutStop = blck.ScoutStops.Max(s => s.Date);
+                        stop = blck.ScoutStops.SingleOrDefault(s => s.Date.Equals(latestScoutStop));
+
+                        numOfBugs = stop.ScoutBugs.Where(bugs => bugs.Species.IsPest).Sum(bugs => bugs.NumberOfBugs);
+
+                        block.PestsPerTree = (double) numOfBugs/stop.NumberOfTrees;
+                    }
+                    else
+                    {
+                        block.PestsPerTree = -1;
+                    }
+
+                    if (blck.Treatments.Any())
+                    {
+                        lastDate = DateTime.MinValue;
+                        nextDate = DateTime.MaxValue;
+
+                        foreach (var trtment in blck.Treatments)
+                        {
+                            if (DateTime.Compare(trtment.Date, lastDate) > 0  && DateTime.Compare(trtment.Date, currentDate) < 0)
+                            {
+                                lastDate = trtment.Date;
+                            }
+                            if (DateTime.Compare(trtment.Date, nextDate) < 0 && DateTime.Compare(trtment.Date, currentDate) > 0)
+                            {
+                                nextDate = trtment.Date;
+                            }
+                        }
+
+                        if (lastDate.Equals(DateTime.MinValue))
+                        {
+                            block.LastTreatment = "-";
+                        }
+                        else
+                        {
+                            block.LastTreatment = lastDate.ToString("yyyy-MM-dd");
+                        }
+
+                        if (nextDate.Equals(DateTime.MaxValue))
+                        {
+                            block.NextTreatment = "-";
+                        }
+                        else
+                        {
+                            block.NextTreatment = nextDate.ToString("yyyy-MM-dd");
+                        }
+                        
+                    }
+                    else
+                    {
+                        block.NextTreatment = "-";
+                        block.LastTreatment = "-";
+                    }
+
+                    farm.Blocks.Add(block);
+                }
+
+                farmsArray.Add(farm);
+            }
+
+            //PestsPerTree = (double)queryResult[0],LastTreatment=queryResult[1].ToString()
+            return new GetTreatmentInfoResponse(){Farms = farmsArray};
         }
 
-        public AddTreatmentResult AddTreatment(AddTreatmentRequest addtreatmentRequest)
+        public AddTreatmentResponse AddTreatment(AddTreatmentRequest addtreatmentRequest)
         {
             if (addtreatmentRequest.BlockID <= 0)
             {
                 throw new InvalidInputException();
             }
 
-            _dbFarmManagement.InsertNewTreatment(addtreatmentRequest.BlockID, addtreatmentRequest.TreatmentDate, addtreatmentRequest.TreatmentComments);
+            _dbFarmManagement.InsertNewTreatment(addtreatmentRequest.BlockID, Convert.ToDateTime(addtreatmentRequest.TreatmentDate), addtreatmentRequest.TreatmentComments);
 
-            return new AddTreatmentResult();
+            return new AddTreatmentResponse();
         }
     }
 }

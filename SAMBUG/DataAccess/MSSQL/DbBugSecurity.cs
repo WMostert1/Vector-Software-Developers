@@ -13,60 +13,28 @@ namespace DataAccess.MSSQL
         {
             var db = new BugDBEntities();
 
-            var entityUser = db.Users.SingleOrDefault(usr => usr.Email.Equals(username) && usr.Password.Equals(password));
+            var user = db.Users.SingleOrDefault(usr => usr.Email.Equals(username) && usr.Password.Equals(password, StringComparison.InvariantCulture));
 
-            if (entityUser == default(User))
+            if (user == default(User))
             {
                 return null;
             }
 
-            //map EF Farm to Domain Farm
-            var farms = entityUser.Farms.Select(farm =>
-                new Farm()
-                {
-                    FarmID = farm.FarmID,
-                    FarmName = farm.FarmName,
-                    Blocks = farm.Blocks.Select(block =>
-                        new Block()
-                        {
-                            BlockID = block.BlockID,
-                            BlockName = block.BlockName,
-                            ScoutStops=block.ScoutStops
-                        }).ToList()
-                }).ToList();
-
-            //map EF Role to Domain Role
-            var roles = entityUser.Roles.Select(role =>
-            new Role()
-            {
-                RoleType = role.RoleType,
-                RoleDescription = role.RoleDescription,
-                RoleID = role.RoleID
-            }).ToList();
-
-            //map EF user to Domain User
-            var domainUser = new User()
-            {
-                UserID = entityUser.UserID,
-                Roles = roles,
-                Farms = farms
-            };
-
-            return domainUser;
+            return user;
 
         }
 
         //TODO: Remove magic number => 1
-        public bool InsertNewUser(string username, string password, string farmName)
+        public bool InsertNewUser(string username, string password)
         {
-            var userQuery = GetUserByCredentials(username, password);
+            var db = new BugDBEntities();
 
-            if (userQuery != null)
+            var userQuery = db.Users.SingleOrDefault(usr => usr.Email.Equals(username));
+
+            if (userQuery != default(User))
             {
                 return false;
             }
-
-            var db = new BugDBEntities();
 
             Role role = db.Roles.SingleOrDefault(rle => rle.RoleType == 1);
 
@@ -77,13 +45,6 @@ namespace DataAccess.MSSQL
             };
 
             user.Roles.Add(role);
-
-            Farm farm = new Farm()
-            {
-                FarmName = farmName
-            };
-
-            user.Farms.Add(farm);
             db.Users.Add(user);
             db.SaveChanges();
 
@@ -95,11 +56,12 @@ namespace DataAccess.MSSQL
             var db = new BugDBEntities();
             var db_users = db.Users.ToList();
 
-
+            //todo do not manually map here
             return (from user in db_users
                     let roles = user.Roles.Select(role => new Role()
                     {
                         RoleType = role.RoleType,
+                
                         RoleDescription = role.RoleDescription,
                         RoleID = role.RoleID
                     }).ToList()
@@ -112,26 +74,15 @@ namespace DataAccess.MSSQL
 
         }
 
-        public void EditUserRoles(long userId, bool isGrower, bool isAdministrator)
+        public bool EditUserRoles(long userId, bool isAdministrator)
         {
             //TODO: Remove magic numbers and allow for more roles
             var db = new BugDBEntities();
-            Role grower = db.Roles.SingleOrDefault(rle => rle.RoleType == 1);
             Role admin = db.Roles.SingleOrDefault(rle => rle.RoleType == 2);
 
             User user = db.Users.SingleOrDefault(usr => usr.UserID == userId);
 
-            if (user == null) return;
-
-            if (isGrower && !user.Roles.Contains(grower))
-            {
-                user.Roles.Add(grower);
-            }
-            else if (!isGrower && user.Roles.Contains(grower))
-            {
-                user.Roles.Remove(grower);
-            }
-
+            if (user == null) return false;
 
             if (isAdministrator && !user.Roles.Contains(admin))
             {
@@ -142,15 +93,18 @@ namespace DataAccess.MSSQL
                 user.Roles.Remove(admin);
             }
             db.SaveChanges();
+
+            return true;
         }
 
 
         public bool ChangeUserPassword(string username, string password)
         {
             var db = new BugDBEntities();
-            try { 
-            User user = db.Users.SingleOrDefault(usr => usr.Email == username);
-            user.Password = password;
+            try
+            {
+                User user = db.Users.SingleOrDefault(usr => usr.Email == username);
+                user.Password = password;
             }
             catch (Exception)
             {
@@ -158,7 +112,6 @@ namespace DataAccess.MSSQL
             }
             db.SaveChanges();
             return true;
-            //return true;
         }
 
     }

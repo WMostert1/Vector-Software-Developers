@@ -1,0 +1,49 @@
+﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Login" ng-cloak>
+    <form ng-submit="post($event)" action="/authentication/login" flex layout="column" name="loginForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="md-title">Login</h2>
+                <span flex></span>
+                <md-button type="button" class="md-icon-button" ng-click="cancel()">
+                    <ng-md-icon icon="close" aria-label="Close Dialog"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content flex layout="column" layout-padding>
+            <md-input-container>
+                <label>Email</label>
+                <input required type="email" ng-model="user.email" name="username" minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-autofocus />
+                <div ng-messages="loginForm.username.$error" role="alert">
+                    <div ng-message="required">Please enter an email address</div>
+                    <div ng-message="minlength, maxlength">Your email must be between 10 and 100 characters long</div>
+                    <div ng-message="pattern">You must enter a valid email address</div>
+                </div>
+            </md-input-container>
+            <md-input-container>
+                <label>Password</label>
+                <input required type="password" ng-model="user.password" name="password"/>
+                <div ng-messages="loginForm.password.$error" role="alert">
+                    <div ng-message="required">Please enter your password</div>
+                </div>
+            </md-input-container>
+            <div class="errorMessageContainer" flex layout="row" layout-align="center center">
+                <div ng-messages="errorMessage" role="alert">
+                    <div class="customErrorMessage" ng-message="incorrectCredentials">The email or password you entered is incorrect.</div>
+                    <div class="customErrorMessage" ng-message="connectionError">Trouble contacting server. Please try again.</div>
+                </div>
+            </div>
+        </md-content>
+        <div class="md-actions" layout="row">
+            <div class="loaderContainer" layout="row" layout-align="center center">
+                <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="15px"></md-progress-circular>
+            </div>
+            <span flex></span>
+            <md-button type="submit" class="md-primary">
+                Log In
+            </md-button>
+            <md-button type="button" class="md-primary">
+                Forgot Password?
+            </md-button>
+        </div>
+    </form>
+</md-dialog>

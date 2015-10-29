@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using BugBusiness.Interface.FarmManagement.DTO;
 
 namespace BugBusiness.Interface.BugSecurity.DTO
 {
@@ -11,6 +8,6 @@ namespace BugBusiness.Interface.BugSecurity.DTO
         public long UserID { get; set; }
         public string Email { get; set; }
         public List<RoleDTO> Roles { get; set; }
-        public List<FarmManagement.DTO.FarmDTO> Farms { get; set; }
+        public List<FarmForFarmManDto> Farms { get; set; }
     }
 }

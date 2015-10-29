@@ -2,158 +2,62 @@
 
 @{
     ViewBag.Title = "Map";
-}  
+    ViewBag.Reporting = "true";
+}
 
-<div class="container">
-    <div class="tab-content">
-        <div id="Scout_Data">
-
-            <div id="constraintsDivScout" class="panel-group">
-                <div class="panel panel-default  " style="padding: 0px">
-                    <div class="panel-heading">
-                        <h1 class="panel-title">
-                            <span id="collapseIconScout" data-toggle="collapse" data-target="#collapsibleTableScout" class="glyphicon glyphicon-collapse-down"></span>
-                            <span id="resetIconScout" class="glyphicon glyphicon-refresh pull-right"></span>
-                            <strong> Constraints</strong>
-                        </h1>
-                    </div>
-                    <div id="collapsibleTableScout" class="panel-collapse collapse in">
-                        <table class="table myTable">
-                            <tbody>
-                                <tr>
-                                    <th class="myTable">Farm</th>
-                                    <td class="myTable">
-                                        <select id="farmScout" class="form-control farms">
-                                            <option value="all">All Farms</option>
-                                        </select>
-                                    </td>
-                                    <th class="myTable">Date</th>
-                                    <td class="myTable" rowspan="3">
-                                        <label for="timeFromScout">From:</label>
-                                        <input type="date" id="timeFromScout" class="form-control constraintScout dateFrom">
-
-                                        <label for="timeToScout">To:</label>
-                                        <input type="date" id="timeToScout" class="form-control constraintScout dateTo"><br />
-                                        <input class="constraintScout" id="dateAnyScout" type="checkbox" checked> Any
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="myTable">Blocks</th>
-                                    <td class="myTable">
-                                        <select id="blocksScout" class="form-control constraintScout">
-                                            <option value="all">All Blocks</option>
-                                        </select>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th class="myTable">Species</th>
-                                    <td class="myTable">
-                                        <select id="speciesScout" class="form-control">
-                                            <option value="all">All Species</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="myTable">Species instars</th>
-                                    <td class="myTable">
-                                        <select id="speciesStageScout" class="form-control constraintScout">
-                                            <option value="all">All Instars</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            
-
-        </div>
-    </div>
-</div>
-
-    <div id="map" style="position: relative; height: 35em;width: 100%">
-        <div style="top:50%;left:50%;position:relative" class="whirly-loader">
-            Loading…
-        </div>
-    </div>
-
-<br />
-
-<div class="container">
-    <div id="Map_Options">
-
-        <div id="constraintsMapOptions" class="panel-group">
-            <div class="panel panel-default  " style="padding: 0px">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                        <span id="collapseIconScout" data-toggle="collapse" data-target="#collapsibleMapOptions" class="glyphicon glyphicon-collapse-down"></span>
-                        <span id="resetIconScout" class="glyphicon glyphicon-refresh pull-right"></span>
-                        <strong> Map Options</strong>
-                    </h1>
-                </div>
-                <div id="collapsibleMapOptions" class="panel-collapse collapse in">
-                    <table class="table myTable">
-                        <tbody>
-                            <tr>
-                                <td class="myTable">          
-                                    <label >Default Colours</label>
-                                    
-                                    <br />
-                                        <button class="btn btn-default" onclick="changeGradient()">Toggle Blue</button> 
-                                        <button class="btn btn-default" onclick="changeGradient()">Toggle Green</button> 
-                                    <br />
-                                    <br />
-                                    <label>Custom Colours</label>
-                                    <br />
-                                    <label for="r1">Red</label>
-                                    <input id="r1" class="colour" type="range" min="0" max="255" step="1" value="0" />
-
-                                    <label for="r1">Green</label>
-                                    <input id="g1" class="colour" type="range" min="0" max="255" step="1" value="0" />
-
-                                    <label for="r1">Blue</label>
-                                    <input id="b1"class="colour" type="range" min="0" max="255" step="1" value="0" />
-                                                                         
-                                </td>
-                                <td class="myTable">
-                                    <label id="radius_label" for="radius_slider">Radius : 30</label>
-                                    <input id="radius_slider" type="range" min="10" max="150" step="1" value="30" />
-
-                                </td>
-                          
-           
-                             
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-
-
-    </div>
-</div>
-
-
-    @section scripts
+@section styles
 {
-        <script type="application/javascript">
-        var recordsUrl = "@Url.Content("~/api/records/" + Model.RecordsUrlSuffix)";
-        var speciesUrl = "@Url.Content("~/api/species")";
-        </script>
+    @Styles.Render("~/Content/css/reporting/common")
+}
+<div flex layout-fill layout="column" ng-controller="MapCtrl">
+    <div flex layout="column" layout-fill layout-align="center center">
+        <div flex layout="column" layout-fill id="map" layout-align="center center" ng-hide="!someScoutStops"></div>
+        <div ng-if="!someScoutStops && !loading">
+            <p class="md-body-1">No data available. See Map Settings.</p>
+        </div>
+        <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="70px"></md-progress-circular>
+    </div>
+    <md-sidenav layout="column" class="md-sidenav-right md-whiteframe-z2" md-component-id="right" ng-cloak>
+        @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuToolbar.cshtml"); }
+        <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1">
+            @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuBody.cshtml"); }
+            <md-divider></md-divider>
+            <div layout="row">
+                <md-switch class="md-primary" aria-label="Blue Colour Gradient Switch" ng-model="options.blueColourGradient" ng-disabled="loading">
+                    <h5 flex-offset="15">Blue Colour Gradient</h5>
+                </md-switch>
+            </div>
+            <div layout="row">
+                <md-slider flex-offset="10" flex="40" ng-model="options.radius" min="0.001" max="0.07" step="0.0005" aria-label="Radius" class="md-primary" ng-disabled="loading"></md-slider>
+                <span flex="10"></span>
+                <h5>Heat Radius {{options.radius}}</h5>
+            </div>
 
-        @Scripts.Render("~/bundles/typeahead")
-        @Scripts.Render("~/bundles/bootstrap-tagsinput")
-        @Scripts.Render("~/bundles/mapReporting")
-    }
+        </md-content>
+    </md-sidenav>
+</div>
 
 
-
-    <script async defer
-            src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=visualization&callback=initMap">
+@section scripts
+{
+    <script type="application/javascript">
+        angular.module("appMain").factory("reportingUrlService", function(){
+            return {
+                recordsUrl: "@Url.Content("~/api/records/" + Model.RecordsUrlSuffix)",
+                speciesUrl: "@Url.Content("~/api/species")"
+            };
+        });
     </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?signed_in=true&libraries=visualization"></script>
+
+    @Scripts.Render("~/bundles/vendor/xdate")
+    @Scripts.Render("~/bundles/reporting/common")
+    @Scripts.Render("~/bundles/reporting/map")
+
+
+}
+
+
+
+

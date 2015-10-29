@@ -1,0 +1,65 @@
+﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Register" ng-cloak>
+    <form ng-submit="post($event)" action="/authentication/register" layout="column" name="registerForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="md-title">Register</h2>
+                <span flex></span>
+                <md-button type="button" class="md-icon-button" ng-click="cancel()">
+                    <ng-md-icon icon="close" aria-label="Close Dialog"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content flex layout=column layout-padding>
+            <md-input-container>
+                    <label>Email</label>
+                    <input required type="email" ng-model="user.email" name="email" minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" md-autofocus />
+                    <div ng-messages="registerForm.email.$error" role="alert">
+                        <div ng-message="required">Please enter an email address</div>
+                        <div ng-message="minlength, maxlength">Your email must be between 10 and 100 characters long</div>
+                        <div ng-message="pattern">You must enter a valid email address</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>Confirm Email</label>
+                    <input required type="email" ng-model="user.emailConfirmation" name="usernameConfirmation" minlength="10" maxlength="100" pattern="{{user.email}}" />
+                    <div ng-messages="registerForm.usernameConfirmation.$error" role="alert">
+                        <div ng-message="required">Please reenter your email address</div>
+                        <div ng-message="minlength, maxlength">Your email must be between 10 and 100 characters long</div>
+                        <div ng-message="pattern">Please ensure this address matches the above</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>Password</label>
+                    <input required type="password" ng-model="user.password" name="password" />
+                    <div ng-messages="registerForm.password.$error" role="alert">
+                        <div ng-message="required">Please enter your password</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>Confirm Password</label>
+                    <input required type="password" ng-model="user.passwordConfirmation" name="passwordConfirmation" pattern="{{user.password}}" />
+                    <div ng-messages="registerForm.passwordConfirmation.$error" role="alert">
+                        <div ng-message="required">Please reenter your password</div>
+                        <div ng-message="pattern">Please ensure this password matches the above</div>
+                    </div>
+                </md-input-container>
+            <div class="errorMessageContainer" flex layout="row" layout-align="center center">
+                <div ng-messages="errorMessage" role="alert">
+                    <div class="customErrorMessage" ng-message="alreadyRegistered">This email address is already registered</div>
+                    <div class="customErrorMessage" ng-message="incorrectCredentials">The details you have entered are incorrect</div>
+                    <div class="customErrorMessage" ng-message="connectionError">Trouble contacting server. Please try again.</div>
+                </div>
+            </div>
+        </md-content>
+        <div class="md-actions" layout="row">
+            <div class="loaderContainer" layout="row" layout-align="center center">
+                <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="15px"></md-progress-circular>
+            </div>
+            <span flex></span>
+            <md-button type="submit" class="md-primary">
+                Register
+            </md-button>
+        </div>
+    </form>
+</md-dialog>
+

@@ -1,171 +1,90 @@
-﻿@model ICollection<BugBusiness.Interface.FarmManagement.DTO.FarmDTO>
-@{
-    ViewBag.Title = "EditFarms";
+﻿@{
+    ViewBag.Title = "Edit Farms";
+    ViewBag.Reporting = "false";
 }
 
-<div>
-    <!--Start Add Farm-->
-    <div id="addFarm" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Farm</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Please enter a name for the new farm</p>
-                    <form id="form_addFarm" method="POST" action="./AddFarm">
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <input type="text" id="FarmName" name="FarmName" placeholder="Farm Name" aria-label="...">
-                            </span>
-                        </div>
-                        <input type="Submit" value="Add" />
-                    </form>
-                    <br />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--End Add Farm-->
-    <div class="panel-group" id="farmBlockTable">
-        @foreach (var item in Model)
-        {
-            <!--Start Delete Farm-->
-            <div id="@Html.Raw("deleteFarm" + item.FarmID)" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Remove Block</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you wish to remove @item.FarmName?</p>
-                            <form id="form_@item.FarmID" method="POST" action="./DeleteFarm">
-                                <input type="number" value="@item.FarmID" name="FarmID" hidden />
-                                <input type="Submit" value="Yes" class="btn btn-primary" />
-                                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                            </form>
-                            <br />
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--End Delete Farm-->
-            <!--Start Add Block-->
-            <div id="@Html.Raw("add" + item.FarmID)" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Add Block</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>Please enter a name for the new block</p>
-                            <form id="form_@item.FarmID" method="POST" action="./AddBlock">
-                                <input type="number" value="@item.FarmID" name="FarmID" hidden />
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="text" id="BlockName" name="BlockName" placeholder="Block Name" aria-label="...">
-                                    </span>
-                                </div>
-                                <input type="Submit" value="Add" />
-                            </form>
-                            <br />
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--End Add Block-->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="farmBlockTable" href="@Html.Raw("#farm"+item.FarmID)">@item.FarmName</a>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("deleteFarm" + item.FarmID)">Remove</button>
-                        </h4>
-                </div>
-            </div>
-            <div class="panel-collapse collapse" id="@Html.Raw("farm"+item.FarmID)">
-                <div class="panel-body" id="@Html.Raw("farm"+item.FarmID)">
-                        @foreach (var block in item.Blocks)
-                        {
-                            <!--Start Edit Block-->
-                            <div id="@Html.Raw("edit" + block.BlockID)" class="modal fade" role="dialog">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            <h4 class="modal-title">Edit Block Name</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Please enter a new name for @block.BlockName</p>
-                                            <form id="form_@block.BlockID" method="POST" action="./EditBlock">
-                                                <input type="number" value="@block.BlockID" name="BlockID" hidden />
-                                                <input type="text" id="BlockName" name="BlockName" value="@block.BlockName" aria-label="...">
-                                                <input type="Submit" value="Update" />
-                                            </form>
-                                            <br />
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--End Edit Block-->
-                            <!--Start Delete Block-->
-                            <div id="@Html.Raw("deleteBlock" + block.BlockID)" class="modal fade" role="dialog">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            <h4 class="modal-title">Remove Block</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Are you sure you wish to remove @block.BlockName?</p>
-                                            <form id="form_@block.BlockID" method="POST" action="./DeleteBlock">
-                                                <input type="number" value="@item.FarmID" name="FarmID" hidden />
-                                                <input type="number" value="@block.BlockID" name="BlockID" hidden />
-                                                <input type="Submit" value="Yes" class="btn-primary" />
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                                            </form>
-                                            <br />
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--End Delete Block-->
-                            <div class="row">
-                                <div class="col-sm-8">@block.BlockName</div>
-                                <div class="col-sm-3">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("edit" + block.BlockID)">Edit</button>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("deleteBlock" + block.BlockID)">Remove</button>
-                                </div>
-                            </div>
-                        }
-                    <div class="row farm-table-footer">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@Html.Raw("add" + item.FarmID)">Add</button>
-                    </div>
+@section styles
+{
+    @Styles.Render("~/Content/css/farmManagement/common")
+}
 
+<div layout-fill ng-controller="EditFarmsCtrl" layout="row" layout-align="center start">
+    <div layout="column" flex="60">
+        <div flex layout-padding layout="column" ng-repeat="farm in farms">
+            <md-toolbar class="md-hue-1">
+                <div class="md-toolbar-tools">
+                    <h2>
+                        <span>{{farm.farmName}}</span>
+                    </h2>
+                    <span flex></span>
+                    <md-button ng-click="showDeleteFarmDialog($event, 'DeleteFarmDialogCtrl', farm)" class="md-icon-button" aria-label="Delete farm">
+                        <ng-md-icon icon="delete"></ng-md-icon>
+                        <md-tooltip>
+                            Delete Farm
+                        </md-tooltip>
+                    </md-button>
+                    <md-button ng-click="toggleCollapseIcon(farm)" class="md-icon-button" aria-label="Expand Constraints" data-toggle="collapse" data-target="{{'#'+ farm.farmId}}">
+                        <ng-md-icon icon="{{farm.collapseIcon}}"></ng-md-icon>
+                    </md-button>
                 </div>
-            </div>
-        }
-    </div>
-    <div class="row">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addFarm">Add New Farm</button>
+            </md-toolbar>
+            <md-content flex class="md-hue-1 collapse collapsibleContent" id="{{farm.farmId}}">
+                <md-list>
+                    <div ng-repeat="bName in farm.blockNames">
+                        <md-list-item>
+                            <md-item-content layout="row" flex>
+                                <p>{{bName.name}}</p>
+                                <span flex></span>
+                                <md-button ng-click="showEditBlockDialog($event, 'EditBlockDialogCtrl', bName)" class="md-icon-button" aria-label="Edit">
+                                    <ng-md-icon icon="edit"></ng-md-icon>
+                                    <md-tooltip>
+                                        Edit Block
+                                    </md-tooltip>
+                                </md-button>
+                                <md-button ng-click="showDeleteBlockDialog($event, 'DeleteBlockDialogCtrl', bName)" class="md-icon-button" aria-label="Delete block">
+                                    <ng-md-icon icon="delete"></ng-md-icon>
+                                    <md-tooltip>
+                                        Delete Block
+                                    </md-tooltip>
+                                </md-button>
+                            </md-item-content>
+                        </md-list-item>
+                        <md-divider></md-divider>
+                    </div>
+                    <md-list-item>
+                        <md-item-content layout="row" flex>
+                            <span flex></span>
+                            <md-button ng-click="showAddBlockDialog($event, 'AddBlockDialogCtrl', farm)" class="md-icon-button" aria-label="Add Block">
+                                <ng-md-icon icon="add"></ng-md-icon>
+                                <md-tooltip>
+                                    Add Block
+                                </md-tooltip>
+                            </md-button>
+                        </md-item-content>
+                    </md-list-item>
+                </md-list>
+            </md-content>
+        </div>
+        <div layout-fill layout="row" layout-align="end end">
+            <md-button ng-click="showAddFarmDialog($event, 'AddFarmDialogCtrl')" class="md-fab md-primary" aria-label="Add Farm">
+                <ng-md-icon icon="add"></ng-md-icon>
+                <md-tooltip>
+                    Add Farm
+                </md-tooltip>
+            </md-button>
+        </div>
     </div>
 </div>
 
-    
+@section scripts
+{
+
+    <script type="application/javascript">
+        angular.module("appMain").factory("farmsUrlService", ["userDetails", function(userDetails){
+            return {
+                getAllFarmsUrl: "@Url.Content("~/api/farms/")" + userDetails.id
+            };
+        }]);
+    </script>
+    @Scripts.Render("~/bundles/farmmanagement/editFarms")
+}
