@@ -2,7 +2,6 @@
     .controller("ChartsCtrl", ["$scope", "$mdSidenav", "commonReportingService", "chartService", function($scope, $mdSidenav, commonReportingService, chartService) {
 
         $scope.loading = true;
-
         $scope.someData = true;
 
         $scope.menu = {
@@ -32,6 +31,8 @@
         }
 
         $scope.settings = {
+            showPoints: true,
+            showTrend: true,
             grouped: {
                 y: {
                     title: "Y",
@@ -159,7 +160,9 @@
                 aggregate: $scope.settings.grouped.y.selected.aggregate,
                 type: $scope.settings.ungrouped.x.selected.type,
                 xTitle: $scope.settings.ungrouped.x.selected.title,
-                yTitle: $scope.settings.grouped.y.selected.title
+                yTitle: $scope.settings.grouped.y.selected.title,
+                showPoints: $scope.settings.showPoints,
+                showTrend: $scope.settings.showTrend
             }
         }
 
@@ -194,6 +197,8 @@
             $scope.settings.ungrouped.x.selected = { name: "date", type: "line", $$mdSelectId: 6 }
             $scope.settings.ungrouped.series.selected = { name: "none", type: null, $$mdSelectId: 10 }
             $scope.settings.showTreatments = false;
+            $scope.settings.showPoints = true;
+            $scope.settings.showTrend = true;
         };
 
         $scope.$watchCollection("constraints.misc.farms.selected", function (newValue) {
@@ -236,17 +241,35 @@
             updateChart();
         });
 
-        $scope.$watch("settings.ungrouped.x.selected", function (newValue) {
+        $scope.$watch("settings.ungrouped.x.selected", function () {
             updateChart();
         });
 
-        $scope.$watch("settings.ungrouped.series.selected", function (newValue) {
+        $scope.$watch("settings.ungrouped.series.selected", function () {
             updateChart();
         });
 
         $scope.$watch("settings.showTreatments", function (newValue) {
+            if (newValue === true)
+                $scope.settings.showPoints = true;
             updateChart();
         });
+
+        $scope.$watch("settings.showPoints", function (newValue) {
+            if (newValue === false)
+                $scope.settings.showTreatments = false;
+            updateChart();
+        });
+
+        $scope.$watch("settings.showTrend", function () {
+            updateChart();
+        });
+
+        //it makes no sense to group data into the same groups already formed on the x-axis
+        $scope.shouldHideItem = function(option, item) {
+            return $scope.settings.ungrouped.x.selected.name === item.name && option !== $scope.settings.ungrouped.x ||
+                $scope.settings.ungrouped.series.selected.name === item.name && option !== $scope.settings.ungrouped.series;
+        }
 
         //todo incorporate suggestion engine (bloodhound.js?) to order the suggestions
         $scope.filterSuggestions = function (list, selected, searchText) {
@@ -258,6 +281,11 @@
             } else {
                 return excludingSelected;
             }
+        }
+
+        $scope.allItemsButX = function(item) {
+            console.log(item);
+            return true;
         }
 
         var scoutstopsDone = false;
@@ -290,5 +318,8 @@
 
         });
 
+        window.onresize = function () {
+            updateChart();
+        }
 
     }]);

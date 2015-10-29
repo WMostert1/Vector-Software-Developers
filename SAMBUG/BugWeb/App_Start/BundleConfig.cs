@@ -87,6 +87,10 @@ namespace BugWeb
                     .Include("~/App/Services/chartService.js", "~/App/Controllers/chartsCtrl.js"));
 
             bundles
+                .Add(new ScriptBundle("~/bundles/reporting/vendor/bspline")
+                    .Include("~/Scripts/bspline.js"));
+
+            bundles
                 .Add(new ScriptBundle("~/bundles/reporting/map")
                     .Include("~/App/Services/mapService.js", "~/App/Controllers/mapCtrl.js"));
 

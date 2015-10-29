@@ -24,7 +24,7 @@
                 if (response.data.success === true) {
                     $mdToast.show(
                         $mdToast.simple()
-                        .content("You are now logged in")
+                        .content("Successfully registered. You are now logged in")
                         .position("top right")
                         .hideDelay(1500)
                     );

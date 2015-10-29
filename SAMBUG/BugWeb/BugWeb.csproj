@@ -280,6 +280,7 @@
     <None Include="Properties\PublishProfiles\sambug - Web Deploy %282%29.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bspline.js" />
     <Content Include="Scripts\chartist-plugin-axistitle.js" />
     <Content Include="Scripts\chartist-plugin-tooltip.js" />
     <Content Include="Scripts\chartist-plugin-vertical-line.js" />
@@ -328,6 +329,7 @@
     <Content Include="Views\FarmManagement\SprayData.cshtml" />
     <Content Include="Views\Shared\_ReportingMenuToolbar.cshtml" />
     <Content Include="Views\Shared\_ReportingMenuBody.cshtml" />
+    <Content Include="Views\Home\AboutUs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\Directives\" />
