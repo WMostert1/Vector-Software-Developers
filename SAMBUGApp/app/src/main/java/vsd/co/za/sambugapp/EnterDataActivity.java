@@ -36,7 +36,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-import vsd.co.za.sambugapp.CameraProcessing.CustomCamera;
 import vsd.co.za.sambugapp.DomainModels.Block;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
@@ -132,11 +131,7 @@ public class EnterDataActivity extends AppCompatActivity implements LocationList
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_about) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -487,6 +482,9 @@ public class EnterDataActivity extends AppCompatActivity implements LocationList
                     addedBugViewHolder.tvAddedBugStage.setText("Instar " + lifeStage);
                 addedBugViewHolder.tvAddedBugCount.setText(bug.getNumberOfBugs() + "");
 
+                addedBugViewHolder.llDraggedMenu.setVisibility(View.VISIBLE);
+                addedBugViewHolder.ivSwipeIcon.setVisibility(View.VISIBLE);
+
                 addedBugViewHolder.llDraggedMenu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -497,9 +495,6 @@ public class EnterDataActivity extends AppCompatActivity implements LocationList
                             hasBugs = false;
                             addDefaultBug();
                         }
-
-                        addedBugViewHolder.llDraggedMenu.setVisibility(View.VISIBLE);
-                        addedBugViewHolder.ivSwipeIcon.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -511,6 +506,7 @@ public class EnterDataActivity extends AppCompatActivity implements LocationList
                 addedBugViewHolder.tvAddedBugSpecies.setText("No bugs added yet. Click '+' to add.");
                 addedBugViewHolder.tvAddedBugCount.setText("");
                 addedBugViewHolder.slAddedBug.setSwipeEnabled(false);
+                addedBugViewHolder.tvAddedBugStage.setText("");
                 addedBugViewHolder.llDraggedMenu.setVisibility(View.INVISIBLE);
                 addedBugViewHolder.ivSwipeIcon.setVisibility(View.INVISIBLE);
             }

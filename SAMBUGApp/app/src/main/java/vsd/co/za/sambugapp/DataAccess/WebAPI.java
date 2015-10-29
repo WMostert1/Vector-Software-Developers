@@ -6,25 +6,19 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.GravityEnum;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import vsd.co.za.sambugapp.DataAccess.DTO.CacheSyncDTO;
@@ -33,13 +27,11 @@ import vsd.co.za.sambugapp.DataAccess.DTO.ClassificationResultDTO;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
-import vsd.co.za.sambugapp.DomainModels.Species;
 import vsd.co.za.sambugapp.DomainModels.User;
 import vsd.co.za.sambugapp.HomeScreenActivity;
 import vsd.co.za.sambugapp.IdentificationActivity;
 import vsd.co.za.sambugapp.LoginActivity;
 import vsd.co.za.sambugapp.R;
-import vsd.co.za.sambugapp.ScoutTripActivity;
 
 /**
  * Created by Aeolus on 2015-07-20.

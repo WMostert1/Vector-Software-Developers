@@ -1,7 +1,6 @@
 package vsd.co.za.sambugapp.DomainModels;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import vsd.co.za.sambugapp.DomainModels.ScoutStop;
