@@ -15,7 +15,7 @@ namespace BugBusiness.Interface.FarmManagement
         UpdateBlockByIDResponse UpdateBlockByID(UpdateBlockByIDRequest updateblockbyidRequest);
         DeleteFarmByIDResponse DeleteFarmByID(long id);
         DeleteBlockByIDResponse DeleteBlockByID(long id);
-        BlockSprayDto GetPestsPerTreeByBlock(GetTreatmentInfoRequest getpestspertreebyblockRequest);
+        GetTreatmentInfoResponse GetTreatmentInfo(long id);
         AddTreatmentResponse AddTreatment(AddTreatmentRequest addtreatmentRequest);
     }
 }

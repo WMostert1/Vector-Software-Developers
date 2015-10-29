@@ -131,21 +131,109 @@ namespace BugBusiness.FarmManagement
 
 
         //-------------------------------------------------------------------Treatment code--------------------------------------------------------------------------------------------
-        public BlockSprayDto GetPestsPerTreeByBlock(GetTreatmentInfoRequest getpestspertreebyblockRequest)
+        public GetTreatmentInfoResponse GetTreatmentInfo(long id)
         {
-            if (getpestspertreebyblockRequest.BlockID <= 0)
+            if (id <= 0)
             {
                 throw new InvalidInputException();
             }
 
-            List<Object> queryResult = _dbFarmManagement.GetTreatmentInfoByBlock(getpestspertreebyblockRequest.BlockID);
+            ICollection<Farm> farms= _dbFarmManagement.GetFarmsByID(id);
 
-            if (queryResult == null)
+
+            if (farms == null)
             {
-                throw new NoSuchBlockExistsException();
+                throw new NoSuchFarmExistsException();;
             }
 
-            return new BlockSprayDto() { PestsPerTree = (double)queryResult[0],LastTreatment=queryResult[1].ToString() };
+            List<FarmForTreatmentDto> farmsArray = new List<FarmForTreatmentDto>();
+            FarmForTreatmentDto farm;
+            BlockTreatmentDto block;
+            ScoutStop stop;
+            DateTime latestScoutStop;
+            int numOfBugs;
+            DateTime currentDate = DateTime.Now;
+            DateTime lastDate;
+            DateTime nextDate;
+            
+
+            foreach (var frms in farms)
+            {
+                farm = new FarmForTreatmentDto();
+                farm.Blocks = new List<BlockTreatmentDto>();
+                farm.FarmName = frms.FarmName;
+                farm.FarmID = frms.FarmID;
+
+                foreach (var blck in frms.Blocks)
+                {
+                    block = new BlockTreatmentDto();
+                    block.BlockID = blck.BlockID;
+                    block.BlockName = blck.BlockName;
+
+                    if (blck.ScoutStops.Any())
+                    {
+                        latestScoutStop = blck.ScoutStops.Max(s => s.Date);
+                        stop = blck.ScoutStops.SingleOrDefault(s => s.Date.Equals(latestScoutStop));
+
+                        numOfBugs = stop.ScoutBugs.Where(bugs => bugs.Species.IsPest).Sum(bugs => bugs.NumberOfBugs);
+
+                        block.PestsPerTree = (double) numOfBugs/stop.NumberOfTrees;
+                    }
+                    else
+                    {
+                        block.PestsPerTree = -1;
+                    }
+
+                    if (blck.Treatments.Any())
+                    {
+                        lastDate = DateTime.MinValue;
+                        nextDate = DateTime.MaxValue;
+
+                        foreach (var trtment in blck.Treatments)
+                        {
+                            if (DateTime.Compare(trtment.Date, lastDate) > 0  && DateTime.Compare(trtment.Date, currentDate) < 0)
+                            {
+                                lastDate = trtment.Date;
+                            }
+                            if (DateTime.Compare(trtment.Date, nextDate) < 0 && DateTime.Compare(trtment.Date, currentDate) > 0)
+                            {
+                                nextDate = trtment.Date;
+                            }
+                        }
+
+                        if (lastDate.Equals(DateTime.MinValue))
+                        {
+                            block.LastTreatment = "-";
+                        }
+                        else
+                        {
+                            block.LastTreatment = lastDate.ToString("yyyy-MM-dd");
+                        }
+
+                        if (nextDate.Equals(DateTime.MaxValue))
+                        {
+                            block.NextTreatment = "-";
+                        }
+                        else
+                        {
+                            block.NextTreatment = nextDate.ToString("yyyy-MM-dd");
+                        }
+                        
+                    }
+                    else
+                    {
+                        block.NextTreatment = "-";
+                        block.LastTreatment = "-";
+                    }
+
+                    farm.Blocks.Add(block);
+                }
+
+                farmsArray.Add(farm);
+            }
+
+            //PestsPerTree = (double)queryResult[0],LastTreatment=queryResult[1].ToString()
+            return new GetTreatmentInfoResponse(){Farms = farmsArray};
         }
 
         public AddTreatmentResponse AddTreatment(AddTreatmentRequest addtreatmentRequest)
@@ -155,7 +243,7 @@ namespace BugBusiness.FarmManagement
                 throw new InvalidInputException();
             }
 
-            _dbFarmManagement.InsertNewTreatment(addtreatmentRequest.BlockID, addtreatmentRequest.TreatmentDate, addtreatmentRequest.TreatmentComments);
+            _dbFarmManagement.InsertNewTreatment(addtreatmentRequest.BlockID, Convert.ToDateTime(addtreatmentRequest.TreatmentDate), addtreatmentRequest.TreatmentComments);
 
             return new AddTreatmentResponse();
         }

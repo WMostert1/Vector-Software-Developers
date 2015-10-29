@@ -120,11 +120,11 @@
     <Compile Include="FarmManagement\DTO\DeleteFarmByIDRequest.cs" />
     <Compile Include="FarmManagement\DTO\DeleteFarmByIDResponse.cs" />
     <Compile Include="FarmManagement\DTO\FarmForFarmManDto.cs" />
-    <Compile Include="FarmManagement\DTO\FarmForSprayDto.cs" />
+    <Compile Include="FarmManagement\DTO\FarmForTreatmentDto.cs" />
     <Compile Include="FarmManagement\DTO\GetFarmsByUserIDRequest.cs" />
     <Compile Include="FarmManagement\DTO\GetFarmsByUserIDResponse.cs" />
     <Compile Include="FarmManagement\DTO\GetTreatmentInfoRequest.cs" />
-    <Compile Include="FarmManagement\DTO\BlockSprayDto.cs" />
+    <Compile Include="FarmManagement\DTO\BlockTreatmentDto.cs" />
     <Compile Include="FarmManagement\DTO\GetTreatmentInfoResponse.cs" />
     <Compile Include="FarmManagement\DTO\UpdateBlockByIDRequest.cs" />
     <Compile Include="FarmManagement\DTO\UpdateBlockByIDResponse.cs" />

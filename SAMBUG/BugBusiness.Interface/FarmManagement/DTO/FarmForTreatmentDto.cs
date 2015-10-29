@@ -2,10 +2,10 @@
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
-    public class FarmForSprayDto
+    public class FarmForTreatmentDto
     {
         public long FarmID { get; set; }
         public string FarmName { get; set; }
-        public List<BlockSprayDto> Blocks { get; set; }
+        public List<BlockTreatmentDto> Blocks { get; set; }
     }
 }

@@ -27,11 +27,11 @@ namespace BugWeb.Controllers
             {
                 return _farmManagement.AddBlock(addBlockRequest);
             }
-            catch (InvalidInputException exp)
+            catch (InvalidInputException)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            catch (BlockExistsException exp)
+            catch (BlockExistsException)
             {
                 throw new HttpResponseException(HttpStatusCode.Conflict);
             }
@@ -45,11 +45,11 @@ namespace BugWeb.Controllers
             {
                 return _farmManagement.DeleteBlockByID(id);
             }
-            catch (InvalidInputException exp)
+            catch (InvalidInputException)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            catch (CouldNotDeleteBlockException exp)
+            catch (CouldNotDeleteBlockException)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -63,11 +63,11 @@ namespace BugWeb.Controllers
             {
                 return _farmManagement.UpdateBlockByID(updateBlockByIdRequest);
             }
-            catch (InvalidInputException exp)
+            catch (InvalidInputException)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            catch (CouldNotUpdateException exp)
+            catch (CouldNotUpdateException)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }

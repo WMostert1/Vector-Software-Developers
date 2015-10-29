@@ -98,7 +98,7 @@ namespace DataAccess.MSSQL
         {
             var db = new BugDBEntities();
 
-            var block=db.Blocks.SingleOrDefault(blk=>blk.BlockID.Equals(id));
+            var block = db.Blocks.SingleOrDefault(blk=>blk.BlockID.Equals(id));
 
             if (block!=null){
                 db.Blocks.Remove(block);
@@ -109,16 +109,18 @@ namespace DataAccess.MSSQL
             return false;
         }
 
-        public List<Object> GetTreatmentInfoByBlock(long blockID)
+/*        public List<Object> GetTreatmentInfoByUserId(long userId)
         {
             var db=new BugDBEntities();
 
-            Block block=(Block)db.Blocks.SingleOrDefault(blk=>blk.BlockID.Equals(blockID));
+            var farms = db.Farms.Where(frm => frm.UserID.Equals(userId)).ToList();
 
-            if (block == null)
+            if (farms == null)
             {
                 return null;
             }
+
+            foreach(var frm in farms)
             //calculate average, return -1 if no scoutstops
             double average;
             if (!block.ScoutStops.Count.Equals(0))
@@ -152,7 +154,7 @@ namespace DataAccess.MSSQL
             }
 
             return new List<Object>{average,difference};
-        }
+        }*/
 
         public bool InsertNewTreatment(long id, DateTime date, string comments)
         {

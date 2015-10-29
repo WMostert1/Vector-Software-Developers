@@ -160,6 +160,7 @@
     <Compile Include="Controllers\ApiRecordsController.cs" />
     <Compile Include="Controllers\ApiSpeciesController.cs" />
     <Compile Include="Controllers\ApiSynchronizationController.cs" />
+    <Compile Include="Controllers\ApiTreatmentController.cs" />
     <Compile Include="Controllers\ApiUsersController.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\FarmManagementController.cs" />
@@ -197,7 +198,7 @@
     <Content Include="App\Controllers\editBlockDialogCtrl.js" />
     <Content Include="App\Controllers\editFarmsCtrl.js" />
     <Content Include="App\Controllers\mapCtrl.js" />
-    <Content Include="App\Controllers\sprayDataCtrl.js" />
+    <Content Include="App\Controllers\treatmentDataCtrl.js" />
     <Content Include="App\Controllers\tablesCtrl.js" />
     <Content Include="App\Controllers\userManagementCtrl.js" />
     <Content Include="App\Services\chartService.js" />
@@ -205,6 +206,7 @@
     <Content Include="App\Services\farmManagementService.js" />
     <Content Include="App\Services\mapService.js" />
     <Content Include="App\Services\commonReportingService.js" />
+    <Content Include="App\Services\treatmentDataService.js" />
     <Content Include="App\Services\tableService.js" />
     <Content Include="App\Vendor\xdate.js" />
     <Content Include="App\Views\addBlockDialog.html" />

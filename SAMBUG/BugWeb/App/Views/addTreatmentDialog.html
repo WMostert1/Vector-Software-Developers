@@ -1,5 +1,5 @@
 ﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Add Spray" ng-cloak>
-    <form ng-submit="post($event)" action="#" flex layout="column" name="addSprayForm">
+    <form ng-submit="post($event)" action="api/treatments" flex layout="column" name="addSprayForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 class="md-title">Add Spray Data</h2>
@@ -14,14 +14,19 @@
             <div ng-messages="addSprayForm.newDate.$error" role="alert">
                 <div class="customErrorMessage" ng-message="required">Please select a date</div>
             </div>
-                <md-input-container>
-                    <label>Comments</label>
-                    <textarea ng-model="comments" name="comments" aria-label="Comments"></textarea>
-                </md-input-container>
+            <md-input-container>
+                <label>Comments</label>
+                <textarea ng-model="comments" name="comments" aria-label="Comments"></textarea>
+            </md-input-container>
+            <div class="errorMessageContainer" flex layout="row" layout-align="center center">
+                <div ng-messages="errorMessage" role="alert">
+                    <div ng-message="invalidInput">The data you have entered is invalid.</div>
+                </div>
+            </div>
         </md-content>
         <div class="md-actions" layout="row">
             <span flex></span>
-            <md-button type="submit" class="md-icon-button md-primary" aria-label="Add Block">
+            <md-button type="submit" class="md-icon-button md-primary" aria-label="Add Spray">
                 <ng-md-icon icon="check"></ng-md-icon>
             </md-button>
         </div>

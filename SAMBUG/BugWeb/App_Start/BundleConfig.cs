@@ -101,9 +101,10 @@ namespace BugWeb
                         "~/App/Controllers/editFarmsCtrl.js"));
 
             bundles
-                .Add(new ScriptBundle("~/bundles/farmmanagement/spraydata")
-                    .Include("~/App/Controllers/addTreatmentDialogCtrl.js",
-                    "~/App/Controllers/sprayDataCtrl.js"));
+                .Add(new ScriptBundle("~/bundles/farmmanagement/treatmentinfo")
+                    .Include("~/App/Services/treatmentDataService.js",
+                    "~/App/Controllers/addTreatmentDialogCtrl.js",
+                    "~/App/Controllers/treatmentDataCtrl.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/authentication/edituserroles")

@@ -37,11 +37,11 @@ namespace BugWeb.Controllers
                 {
                     return _farmManagement.AddFarm(addFarmRequest);
                 }
-                catch (InvalidInputException exp)
+                catch (InvalidInputException)
                 {
                     throw new HttpResponseException(HttpStatusCode.BadRequest);
                 }
-                catch (FarmExistsException exp)
+                catch (FarmExistsException)
                 {
                     throw new HttpResponseException(HttpStatusCode.Conflict);
                 }
@@ -55,11 +55,11 @@ namespace BugWeb.Controllers
                 {
                     return _farmManagement.DeleteFarmByID(id);
                 }
-                catch (InvalidInputException exp)
+                catch (InvalidInputException)
                 {
                     throw new HttpResponseException(HttpStatusCode.BadRequest);
                 }
-                catch (CouldNotDeleteFarmException exp)
+                catch (CouldNotDeleteFarmException)
                 {
                     throw new HttpResponseException(HttpStatusCode.NotFound);
                 }

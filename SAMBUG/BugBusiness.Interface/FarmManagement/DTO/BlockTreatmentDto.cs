@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BugBusiness.Interface.FarmManagement.DTO
 {
-    public class BlockSprayDto
+    public class BlockTreatmentDto
     {
         public long BlockID { get; set; }
         public string BlockName { get; set; }
