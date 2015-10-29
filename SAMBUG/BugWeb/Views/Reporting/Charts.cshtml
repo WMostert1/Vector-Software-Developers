@@ -39,12 +39,20 @@
             <md-input-container ng-repeat="option in settings.ungrouped">
                 <label>{{option.title}}</label>
                 <md-select ng-model="option.selected">
-                    <md-option ng-repeat="item in option.list" ng-hide="settings.ungrouped.x.selected.name === item.name && option.title !== 'X'" ng-value="item">{{item.title}}</md-option>
+                    <md-option ng-repeat="item in option.list" ng-hide="$parent.shouldHideItem(option, item)" ng-value="item">{{item.title}}</md-option>
                 </md-select>
             </md-input-container>
 
             <md-checkbox class="md-primary" ng-if="settings.ungrouped.x.selected.type === 'Line'" ng-model="settings.showTreatments" aria-label="Overlay Treatments Checkbox">
-                Show Spray Data
+                Spray Data
+            </md-checkbox>
+
+            <md-checkbox class="md-primary" ng-if="settings.ungrouped.x.selected.type === 'Line'" ng-model="settings.showPoints" aria-label="Show Points Checkbox">
+                Points
+            </md-checkbox>
+
+            <md-checkbox class="md-primary" ng-if="settings.ungrouped.x.selected.type === 'Line'" ng-model="settings.showTrend" aria-label="Show Trend Checkbox">
+                Trend
             </md-checkbox>
 
         </md-content>

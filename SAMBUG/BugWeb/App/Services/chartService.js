@@ -195,8 +195,7 @@
                     }).ToArray();
 
                 series.data = getLineSeriesData(settings, orderedPoints);
-                parameters.data.series.push(series);
-
+                
                 //map series.data to vector array for regression analysis
                 var points = Enumerable.From(series.data).Select(function(d) {
                     return [d.x,d.y];
@@ -208,7 +207,10 @@
                 }
 
                 //add trend for the data series
-                addTrendline(trendSettings, parameters, points);
+                if (settings.showTrend)
+                    addTrendline(trendSettings, parameters, points);
+
+                parameters.data.series.push(series);
             });
 
             if (treatments.length > 0){
@@ -216,7 +218,7 @@
             }
 
             parameters.options.showLine = false;
-            parameters.options.showPoint = true;
+            parameters.options.showPoint = settings.showPoints;
             parameters.options.axisY = {};
             parameters.options.axisX = {
                 type: Chartist.AutoScaleAxis,
@@ -258,10 +260,12 @@
                 })
                 .OrderBy()
                 .ToArray();
-            
+
+            var seriesIndex = 1;
             Enumerable.From(stopSeries).ForEach(function (s) {
                 var series = {};
                 series.name = s.Key();
+                series.className = "ct-series-" + seriesIndex++;
 
                 //group each x value with its corresponding y values, sorting x in ascending order
                 var orderedPoints = Enumerable.From(s.source)
@@ -327,7 +331,7 @@
         }
 
         function setAnimations(c, seriesCount) {
-            var totalDuration = 2000;
+            var totalDuration = 1000;
             var duration = totalDuration / seriesCount;
 
             var pointsEasing = Chartist.Svg.Easing.easeOutQuint;
@@ -361,34 +365,6 @@
 
                 if (data.type === "point") {
                     data.element.animate({
-                        y1: {
-                            begin: duration * data.seriesIndex,
-                            dur: duration,
-                            from: data.y - 20,
-                            to: data.y,
-                            easing: pointsEasing
-                        },
-                        y2: {
-                            begin: duration * data.seriesIndex,
-                            dur: duration,
-                            from: data.y - 20,
-                            to: data.y,
-                            easing: pointsEasing
-                        },
-                        x1: {
-                            begin: duration * data.seriesIndex,
-                            dur: duration,
-                            from: data.x - 20,
-                            to: data.x,
-                            easing: pointsEasing
-                        },
-                        x2: {
-                            begin: duration * data.seriesIndex,
-                            dur: duration,
-                            from: data.x - 20,
-                            to: data.x,
-                            easing: pointsEasing
-                        },
                         opacity: {
                             begin: duration * data.seriesIndex,
                             dur: duration,
