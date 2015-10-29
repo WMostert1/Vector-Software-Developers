@@ -36,12 +36,10 @@
                                     <p>{{block.pestsPerTree}}</p>
                                 </div>
                                 <div flex="20">
-                                    <p ng-if="block.lastSpray === '-'">-</p>
-                                    <p ng-if="block.lastSpray !== '-'">{{block.lastSpray}} week(s) ago</p>
+                                    <p>{{block.lastSpray}}</p>
                                 </div>
                                 <div flex="20">
-                                    <p ng-if="block.nextSpray === '-'">-</p>
-                                    <p ng-if="block.nextSpray !== '-'"> In {{block.nextSpray}} week(s)</p>
+                                    <p>{{block.nextSpray}}</p>
                                 </div>
                                 <span flex></span>
                                 <md-button ng-click="showAddTreatmentDialog($event, 'AddTreatmentDialogCtrl', block)" class="md-fab md-mini md-primary" aria-label="Add Spray Data">
@@ -50,7 +48,7 @@
                                         Spray this block
                                     </md-tooltip>
                                 </md-button>
-                                <md-button ng-click="" class="md-fab md-mini md-primary" aria-label="Spray history">
+                                <md-button ng-click="goToHistory()" class="md-fab md-mini md-primary" aria-label="Spray history">
                                     <ng-md-icon icon="history"></ng-md-icon>
                                     <md-tooltip>
                                         View History

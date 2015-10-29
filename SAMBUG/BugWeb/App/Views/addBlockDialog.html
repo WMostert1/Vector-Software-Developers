@@ -26,6 +26,9 @@
             </div>
         </md-content>
         <div class="md-actions" layout="row">
+            <div class="loaderContainer" layout="row" layout-align="center center">
+                <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="15px"></md-progress-circular>
+            </div>
             <span flex></span>
             <md-button type="submit" class="md-icon-button md-primary" aria-label="Add Block">
                 <ng-md-icon icon="check"></ng-md-icon>

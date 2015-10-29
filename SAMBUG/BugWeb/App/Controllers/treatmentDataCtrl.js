@@ -5,24 +5,22 @@
             $scope.farms = [];
 
             function initTreatments(treatments) {
-                console.log(treatments);
                 $scope.farms = [];
                 var nextDate;
                 var lastDate;
                 var pests;
+                
                 treatments.Farms.forEach(function (frm) {
                     var blocks = new Array();
 
                     frm.Blocks.forEach(function (blck) {
                         if (blck.BlockName === "Test W") {
-                            console.log(blck.LastTreatment);
-                            console.log(blck.NextTreatment);
                         }
                             
                         if (blck.LastTreatment === "-") {
                             lastDate = "-";
                         } else {
-                            lastDate = Math.round(new XDate(blck.LastTreatment).diffWeeks(new XDate()));
+                            lastDate = Math.floor(new XDate(blck.LastTreatment).diffWeeks(new XDate()));
                         }
 
                         if (blck.NextTreatment === "-") {
@@ -30,7 +28,7 @@
                         }
                         else
                         {
-                            nextDate = Math.round(new XDate().diffWeeks(new XDate(blck.NextTreatment)));
+                            nextDate = Math.floor(new XDate().diffWeeks(new XDate(blck.NextTreatment)));
                         }
 
                         if (blck.PestsPerTree === -1) {
@@ -38,9 +36,30 @@
                         } else {
                             pests = blck.PestsPerTree.toFixed(2);
                         }
+                            
+                        if (lastDate === 0) {
+                            lastDate = "This week";
+                        }
+                        else if (lastDate === 1) {
+                            lastDate = "Last week";
+                        }
+                        else if (lastDate !== "-") {
+                            lastDate = lastDate + " weeks ago";
+                        }
+
+                        if (nextDate === 0) {
+                            nextDate = "This week";
+                        }
+                        else if (nextDate === 1) {
+                            nextDate = "Next week";
+                        }
+                        else if (nextDate !== "-") {
+                            nextDate = "In " + nextDate + " weeks";
+                        }
 
                         blocks.push({ id: blck.BlockID, name: blck.BlockName, pestsPerTree: pests, lastSpray: lastDate, nextSpray: nextDate });
                     });
+
                     $scope.farms.push({ farmId: frm.FarmID, collapseIcon: "expand_more", farmName: frm.FarmName, blocks: blocks });
                 });
             }
@@ -62,6 +81,10 @@
                     console.log("right");
                     treatmentDataService.loadTreatments(initTreatments);
                 }, null, block);
+            }
+
+            $scope.goToHistory = function () {
+                window.location = "/reporting/tables";
             }
 
             //-------------------------------------------------Common Helper functions-------------------------------------

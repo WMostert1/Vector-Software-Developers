@@ -66,7 +66,7 @@
                                         .hideDelay(2000));
                                 }
                                 else {
-                                    $scope.errorMessage = "The email or password you entered is incorrect";
+                                    $scope.errorMessage = "Could not change user roles";
                                 }
                             }, function () {
                                 $scope.loading = false;

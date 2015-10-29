@@ -15,10 +15,11 @@
                             return false;
                         }
 
-                        $scope.loading = true;
                         if (!event.target.checkValidity) {
                             return false;
                         }
+
+                        $scope.loading = true;
 
                         $http.post(event.target.action, {
                             BlockID: obj.id,
