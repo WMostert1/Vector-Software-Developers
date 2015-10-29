@@ -2,6 +2,11 @@
     ViewBag.Title = "Spray Data";
 }
 
+@section styles
+{
+    @Styles.Render("~/Content/css/farmManagement/common")
+}
+
 <div layout-fill ng-controller="SprayDataCtrl" layout="row" layout-align="center start">
     <div layout="column" flex="70">
         <div flex layout-padding layout="column" ng-repeat="farm in farms">
@@ -16,7 +21,7 @@
                     </md-button>
                 </div>
             </md-toolbar>
-            <md-content flex class="md-hue-1 collapse" id="{{farm.farmId}}">
+            <md-content flex class="md-hue-1 collapse collapsibleContent" id="{{farm.farmId}}">
                 <div layout="row" layout-align="center center">
                     <h3 flex="20">Block Name</h3>
                     <h3 flex="25">Latest Pests Per Tree</h3>

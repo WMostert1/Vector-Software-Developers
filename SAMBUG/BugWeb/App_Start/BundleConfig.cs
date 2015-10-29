@@ -144,6 +144,14 @@ namespace BugWeb
                     .Include("~/Content/bootstrap.css"));
 
             bundles
+                .Add(new StyleBundle("~/Content/css/authentication/common")
+                    .Include("~/Content/authentication.css")); 
+            
+            bundles
+                .Add(new StyleBundle("~/Content/css/farmManagement/common")
+                    .Include("~/Content/farmManagement.css")); 
+            
+            bundles
                 .Add(new StyleBundle("~/Content/css/reporting/common")
                     .Include("~/Content/reporting.css"));
             

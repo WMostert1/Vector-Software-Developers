@@ -2,6 +2,11 @@
     ViewBag.Title = "Edit User Roles";
 }
 
+@section styles
+{
+    @Styles.Render("~/Content/css/authentication/common")
+}
+
 <div layout-fill ng-controller="UserManagementCtrl" layout="row" layout-align="center start">
     <div layout-padding layout="column" flex="60">
         <md-toolbar class="md-hue-1">
@@ -10,7 +15,7 @@
                 <span flex></span>
             </div>
         </md-toolbar>
-        <md-content flex class="md-hue-1" id="users">
+        <md-content flex class="md-hue-1 userContent" id="users">
             <md-list>
                 <div layout-padding ng-repeat="user in users">
                     <md-list-item layout="row" flex>

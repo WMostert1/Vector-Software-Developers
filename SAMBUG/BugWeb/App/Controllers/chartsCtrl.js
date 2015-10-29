@@ -4,6 +4,9 @@
         $scope.loading = true;
         $scope.someData = true;
 
+        //initChart(maxClassNumber, splineDegree)
+        chartService.initChart(10, 5);
+
         $scope.menu = {
             title: "Chart Settings"
         }

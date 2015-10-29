@@ -4,6 +4,8 @@
 
         var chart;
         var projectedStops;
+        var totalTrendClasses = 10;//default
+        var bsplineDegree = 5;//default
         
         var getProjectedStops = function(settings, scoutStops) {
             return Enumerable.From(scoutStops).Select(function(s) {
@@ -161,8 +163,8 @@
                     data: []
                 }
 
-                //initialise bspline algorithm with degree 5
-                var spline = new BSpline(points, 5);
+                //initialise bspline algorithm
+                var spline = new BSpline(points, bsplineDegree);
 
                 for (var t = 0; t <= 1; t += 0.001) {
                     var p = spline.calcAt(t);
@@ -183,7 +185,7 @@
             Enumerable.From(stopSeries).ForEach(function (s) {
                 var series = {};
                 series.name = s.Key();
-                series.className = "ct-series-" + seriesIndex;
+                series.className = "ct-series-" + (seriesIndex % totalTrendClasses);
 
                 //group each x value with its corresponding y values, sorting x in ascending order
                 var orderedPoints = Enumerable.From(s.source)
@@ -203,8 +205,10 @@
 
                 var trendSettings = {
                     seriesName: series.name,
-                    trendNumber:  seriesIndex++
+                    trendNumber:  seriesIndex % totalTrendClasses
                 }
+
+                seriesIndex++;
 
                 //add trend for the data series
                 if (settings.showTrend)
@@ -265,7 +269,8 @@
             Enumerable.From(stopSeries).ForEach(function (s) {
                 var series = {};
                 series.name = s.Key();
-                series.className = "ct-series-" + seriesIndex++;
+                series.className = "ct-series-" + seriesIndex % totalTrendClasses;
+                seriesIndex++;
 
                 //group each x value with its corresponding y values, sorting x in ascending order
                 var orderedPoints = Enumerable.From(s.source)
@@ -385,6 +390,11 @@
             var parameters = determinePlotParameters(stopSeries, treatments, settings);
             chart = new Chartist[settings.type](chartId, parameters.data, parameters.options);
             setAnimations(chart, stopSeries.length);
+        }
+
+        this.initChart = function(trendClasses, degree){
+            totalTrendClasses = trendClasses;
+            bsplineDegree = degree;
         }
         
     }]);

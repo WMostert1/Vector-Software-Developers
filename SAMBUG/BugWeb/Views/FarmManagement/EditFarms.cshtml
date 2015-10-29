@@ -3,6 +3,11 @@
     ViewBag.Reporting = "false";
 }
 
+@section styles
+{
+    @Styles.Render("~/Content/css/farmManagement/common")
+}
+
 <div layout-fill ng-controller="EditFarmsCtrl" layout="row" layout-align="center start">
     <div layout="column" flex="60">
         <div flex layout-padding layout="column" ng-repeat="farm in farms">
@@ -23,7 +28,7 @@
                     </md-button>
                 </div>
             </md-toolbar>
-            <md-content flex class="md-hue-1 collapse" id="{{farm.farmId}}">
+            <md-content flex class="md-hue-1 collapse collapsibleContent" id="{{farm.farmId}}">
                 <md-list>
                     <div ng-repeat="bName in farm.blockNames">
                         <md-list-item>
