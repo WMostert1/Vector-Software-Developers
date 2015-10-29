@@ -14,8 +14,8 @@
 <div flex layout-fill layout="column" ng-controller="ChartsCtrl">
     <div flex layout="column" layout-padding layout-fill layout-align="center center">
         <div class="md-headline" ng-hide="!someData">{{chartTitle}}</div>
-        <div flex layout="column" layout-fill id="chart" class="ct-chart ct-minor-seventh" layout-align="center center" ng-hide="!someData"></div>
-        <div ng-if="!someData && !loading">
+        <div flex layout="column" layout-fill layout-padding id="chart" class="ct-chart ct-minor-seventh" layout-align="center center" ng-hide="!someData"></div>
+        <div ng-hide="someData || loading">
             <p class="md-body-1">No data available. See Chart Settings.</p>
         </div>
         <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="70px"></md-progress-circular>

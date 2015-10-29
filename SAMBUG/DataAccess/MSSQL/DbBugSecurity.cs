@@ -27,14 +27,14 @@ namespace DataAccess.MSSQL
         //TODO: Remove magic number => 1
         public bool InsertNewUser(string username, string password)
         {
-            var userQuery = GetUserByCredentials(username, password);
+            var db = new BugDBEntities();
 
-            if (userQuery != null)
+            var userQuery = db.Users.SingleOrDefault(usr => usr.Email.Equals(username));
+
+            if (userQuery != default(User))
             {
                 return false;
             }
-
-            var db = new BugDBEntities();
 
             Role role = db.Roles.SingleOrDefault(rle => rle.RoleType == 1);
 
@@ -56,11 +56,12 @@ namespace DataAccess.MSSQL
             var db = new BugDBEntities();
             var db_users = db.Users.ToList();
 
-
+            //todo do not manually map here
             return (from user in db_users
                     let roles = user.Roles.Select(role => new Role()
                     {
                         RoleType = role.RoleType,
+                
                         RoleDescription = role.RoleDescription,
                         RoleID = role.RoleID
                     }).ToList()

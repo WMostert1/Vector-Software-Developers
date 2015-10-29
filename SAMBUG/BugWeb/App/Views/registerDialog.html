@@ -45,9 +45,9 @@
                 </md-input-container>
             <div class="errorMessageContainer" flex layout="row" layout-align="center center">
                 <div ng-messages="errorMessage" role="alert">
-                    <div ng-message="alreadyRegistered">This email address is already registered</div>
-                    <div ng-message="incorrectCredentials">The details you have entered are incorrect</div>
-                    <div ng-message="connectionError">Trouble contacting server. Please try again.</div>
+                    <div class="customErrorMessage" ng-message="alreadyRegistered">This email address is already registered</div>
+                    <div class="customErrorMessage" ng-message="incorrectCredentials">The details you have entered are incorrect</div>
+                    <div class="customErrorMessage" ng-message="connectionError">Trouble contacting server. Please try again.</div>
                 </div>
             </div>
         </md-content>

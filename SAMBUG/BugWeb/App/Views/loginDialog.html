@@ -28,8 +28,8 @@
             </md-input-container>
             <div class="errorMessageContainer" flex layout="row" layout-align="center center">
                 <div ng-messages="errorMessage" role="alert">
-                    <div ng-message="incorrectCredentials">The email or password you entered is incorrect.</div>
-                    <div ng-message="connectionError">Trouble contacting server. Please try again.</div>
+                    <div class="customErrorMessage" ng-message="incorrectCredentials">The email or password you entered is incorrect.</div>
+                    <div class="customErrorMessage" ng-message="connectionError">Trouble contacting server. Please try again.</div>
                 </div>
             </div>
         </md-content>

@@ -20,8 +20,8 @@
             </md-input-container>
             <div class="errorMessageContainer" flex layout="row" layout-align="center center">
                 <div ng-messages="errorMessage" role="alert">
-                    <div ng-message="invalidInput">Invalid block input.</div>
-                    <div ng-message="blockExists">This block already exists.</div>
+                    <div class="customErrorMessage" ng-message="invalidInput">Invalid block input.</div>
+                    <div class="customErrorMessage" ng-message="blockExists">This block already exists.</div>
                 </div>
             </div>
         </md-content>

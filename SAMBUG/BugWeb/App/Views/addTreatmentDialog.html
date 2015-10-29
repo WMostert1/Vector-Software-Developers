@@ -12,7 +12,7 @@
         <md-content layout-padding flex layout="column">
                 <md-datepicker required name="newDate" ng-model="newDate" aria-label="Pick Date"></md-datepicker>
             <div ng-messages="addSprayForm.newDate.$error" role="alert">
-                <div class="customErrorMessage" ng-message="required">Please select a date</div>
+                <div ng-message="required">Please select a date</div>
             </div>
             <md-input-container>
                 <label>Comments</label>
