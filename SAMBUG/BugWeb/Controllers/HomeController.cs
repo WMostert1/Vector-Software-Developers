@@ -33,6 +33,11 @@ namespace BugWeb.Controllers
         {
             return View("~/Views/Authentication/ChangePassword.cshtml");
         }
+
+        public ActionResult AboutUs()
+        {
+            return View();
+        }
         
     }
 }

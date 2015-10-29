@@ -327,6 +327,7 @@
     <Content Include="Views\FarmManagement\SprayData.cshtml" />
     <Content Include="Views\Shared\_ReportingMenuToolbar.cshtml" />
     <Content Include="Views\Shared\_ReportingMenuBody.cshtml" />
+    <Content Include="Views\Home\AboutUs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App\Directives\" />
