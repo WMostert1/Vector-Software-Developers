@@ -38,6 +38,16 @@ namespace BugWeb.Controllers
         {
             return View();
         }
+
+        public FileResult Download()
+        {
+            string app_data_path = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
+            string fileName = "UserManual.pdf";
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(app_data_path+"\\Documents\\"+fileName);
+            
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
         
     }
 }
