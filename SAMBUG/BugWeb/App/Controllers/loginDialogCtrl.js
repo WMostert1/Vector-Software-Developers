@@ -1,8 +1,29 @@
 ﻿angular.module("appMain").controller("LoginDialogCtrl", [
     "$scope", "$mdDialog", "$mdToast", "$http", "userDetails", function($scope, $mdDialog, $mdToast, $http, userDetails) {
 
-        $scope.emailPassword = function () {
-
+        $scope.sendPassword = function () {
+            if ($scope.user != null && $scope.user.email != null) {
+                $scope.loading = true;
+                $http.post("/api/authentication/recoveraccount", {
+                    EmailTo: $scope.user.email
+                }).then(function () {
+                    $scope.loading = false;
+                    $mdToast.show(
+                        $mdToast.simple()
+                        .content("Your password has been sent to " + $scope.user.email)
+                        .position("top right")
+                        .hideDelay(2000)
+                    );
+                }, function () {
+                    $scope.loading = false;
+                    $mdToast.show(
+                        $mdToast.simple()
+                        .content("Failed to send password, please try again")
+                        .position("top right")
+                        .hideDelay(2000)
+                    );
+                });
+            }
         }
 
         $scope.cancel = function () {

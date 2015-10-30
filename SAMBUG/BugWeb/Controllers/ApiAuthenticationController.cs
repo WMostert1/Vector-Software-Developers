@@ -53,6 +53,7 @@ namespace BugWeb.Controllers
         }
 
         [HttpPost]
+        [Route("recoveraccount")]
         public void RecoverAccount(RecoverAccountRequest recoverAccountRequest)
         {
             _bugSecurity.RecoverAccount(recoverAccountRequest);
