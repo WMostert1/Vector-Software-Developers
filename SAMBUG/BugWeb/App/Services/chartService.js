@@ -4,7 +4,7 @@
 
         var chart;
         var projectedStops;
-        var totalTrendClasses = 10;//default
+        var totalTrendClasses = 12;//default
         var bsplineDegree = 5;//default
         
         var getProjectedStops = function(settings, scoutStops) {
