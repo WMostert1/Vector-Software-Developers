@@ -47,8 +47,15 @@ namespace BugBusiness.BugReporting
             List<ScoutStop> scoutStops = _dbBugReporting.GetAllScoutStops();
             List<Treatment> treatments = _dbBugReporting.GetAllTreatments();
 
+            foreach (var stop in scoutStops)
+                foreach (var bug in stop.ScoutBugs)
+                    bug.FieldPicture = null;
+
             if (!scoutStops.Any() && !treatments.Any())
                 return null;
+
+            foreach (var treatment in treatments)
+                treatment.Comments = null;
 
             List<ScoutStopDto> scoutStopsDto = AutoMapper.Mapper.Map<List<ScoutStopDto>>(scoutStops);
             List<TreatmentDto> treatmentsDto = AutoMapper.Mapper.Map<List<TreatmentDto>>(treatments);
