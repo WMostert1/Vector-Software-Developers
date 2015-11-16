@@ -109,53 +109,6 @@ namespace DataAccess.MSSQL
             return false;
         }
 
-/*        public List<Object> GetTreatmentInfoByUserId(long userId)
-        {
-            var db=new BugDBEntities();
-
-            var farms = db.Farms.Where(frm => frm.UserID.Equals(userId)).ToList();
-
-            if (farms == null)
-            {
-                return null;
-            }
-
-            foreach(var frm in farms)
-            //calculate average, return -1 if no scoutstops
-            double average;
-            if (!block.ScoutStops.Count.Equals(0))
-            {
-                double bugs, trees;
-                bugs = 0;
-                trees = 0;
-                foreach (ScoutStop stop in block.ScoutStops)
-                {
-                    bugs += stop.ScoutBugs.Sum(bug => bug.NumberOfBugs);
-                    trees += stop.NumberOfTrees;
-                }
-                average = Math.Round(bugs / trees, 2);
-            }
-            else
-            {
-                average = -1;
-            }
-
-            //TODO: maybe include months if weeks>4?
-            string difference;
-            if (!block.Treatments.Count.Equals(0))
-            {
-                DateTime lastTreatment = block.Treatments.Max(trt => trt.Date);
-                DateTime today = DateTime.Today;
-                difference = ((int)today.Subtract(lastTreatment).TotalDays / 7) + " weeks ago";
-            }
-            else
-            {
-                difference = "N/A";
-            }
-
-            return new List<Object>{average,difference};
-        }*/
-
         public bool InsertNewTreatment(long id, DateTime date, string comments)
         {
             var db = new BugDBEntities();
