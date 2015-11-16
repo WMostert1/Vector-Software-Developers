@@ -173,7 +173,7 @@ namespace BugBusiness.FarmManagement
                     if (blck.ScoutStops.Any())
                     {
                         latestScoutStop = blck.ScoutStops.Max(s => s.Date);
-                        stop = blck.ScoutStops.SingleOrDefault(s => s.Date.Equals(latestScoutStop));
+                        stop = blck.ScoutStops.Select(s => s).Where(s => s.Date.Equals(latestScoutStop)).ElementAt(0);
 
                         numOfBugs = stop.ScoutBugs.Where(bugs => bugs.Species.IsPest).Sum(bugs => bugs.NumberOfBugs);
 
