@@ -3,12 +3,8 @@ package vsd.co.za.sambugapp.DataAccess;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DomainModels.ScoutBug;

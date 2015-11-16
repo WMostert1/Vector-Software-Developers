@@ -2,8 +2,6 @@ package vsd.co.za.sambugapp.DomainModels;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 
 /**
  * Created by keaganthompson on 7/8/15.

@@ -1,10 +1,6 @@
 package vsd.co.za.sambugapp.DomainModels;
 
 import java.io.Serializable;
-import java.security.SecureRandom;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Created by Aeolus on 2015-07-13.

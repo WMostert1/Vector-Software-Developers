@@ -1,12 +1,6 @@
 package vsd.co.za.sambugapp;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.widget.Button;
-
-import java.util.Date;
-
-import vsd.co.za.sambugapp.DomainModels.ScoutStop;
-import org.mockito.*;
 
 /**
  * Created by keaganthompson on 7/14/15.

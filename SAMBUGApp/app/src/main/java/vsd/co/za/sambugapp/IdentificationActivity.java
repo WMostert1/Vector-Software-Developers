@@ -1,15 +1,11 @@
 package vsd.co.za.sambugapp;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.os.Bundle;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Matrix;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import com.afollestad.materialdialogs.GravityEnum;
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -39,6 +33,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import vsd.co.za.sambugapp.CameraProcessing.CustomCamera;
+import vsd.co.za.sambugapp.CameraProcessing.ImagePreview;
 import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
 import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.Species;
@@ -200,17 +195,7 @@ public class IdentificationActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_about) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     /**
@@ -231,9 +216,9 @@ public class IdentificationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         InputStream stream = null;
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK)
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
 
-            try {
+            /*try {
                 //Recycle unused bitmaps
                 if (bitmap != null) {
                     bitmap.recycle();
@@ -251,10 +236,7 @@ public class IdentificationActivity extends AppCompatActivity {
                 stream = getContentResolver().openInputStream(data.getData());
                 bitmap = BitmapFactory.decodeStream(stream, null, options);
 
-
-
-                mImageView.setImageBitmap(bitmap);
-                if(!isClassified)
+                if (!isClassified)
                     doAutomaticClassification(null);
 
             } catch (FileNotFoundException e) {
@@ -266,7 +248,24 @@ public class IdentificationActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-            }
+            }*/
+            getPicture(data);
+        }
+        else{
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeResource(getResources(),R.drawable.sambug_logo,options);
+
+            // Calculate inSampleSize
+            options.inSampleSize = ImageAdapter.calculateInSampleSize(options, 150, 150);
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sambug_logo, options);
+        }
+
+        mImageView.setImageBitmap(bitmap);
+
         }
 
     /**
@@ -274,8 +273,8 @@ public class IdentificationActivity extends AppCompatActivity {
      */
     private void dispatchTakePictureIntent(){
         classifyTask = null;
-        Intent takePictureIntent = new Intent(this,CustomCamera.class);
-        startActivityForResult(takePictureIntent, 0);
+        Intent takePictureIntent = new Intent(this,ImagePreview.class);
+        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
     }
 
     public void showDialogNumberOfBugs(View v) {

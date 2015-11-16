@@ -4,45 +4,26 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import org.json.*;
-import android.content.Loader;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import vsd.co.za.sambugapp.DataAccess.DBHelper;
 import vsd.co.za.sambugapp.DataAccess.UserWrapper;
 import vsd.co.za.sambugapp.DataAccess.WebAPI;
-import vsd.co.za.sambugapp.DomainModels.Block;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 
 

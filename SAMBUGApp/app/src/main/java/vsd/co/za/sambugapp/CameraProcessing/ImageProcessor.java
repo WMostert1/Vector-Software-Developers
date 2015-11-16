@@ -3,14 +3,9 @@ package vsd.co.za.sambugapp.CameraProcessing;
 /**
  * Created by Kale-ab on 2015/09/30.
  */
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Environment;
-import android.view.Window;
-
-import vsd.co.za.sambugapp.R;
 
 
 public class ImageProcessor {

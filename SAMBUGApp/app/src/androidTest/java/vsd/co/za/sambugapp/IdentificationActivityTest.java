@@ -1,13 +1,6 @@
 package vsd.co.za.sambugapp;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.TouchUtils;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.util.ArrayList;
-
-import vsd.co.za.sambugapp.DataAccess.SpeciesDAO;
 
 /**
  * Created by Aeolus on 2015-07-15.

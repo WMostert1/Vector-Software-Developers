@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +12,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,7 +32,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -186,7 +182,8 @@ public class CustomCamera extends Activity implements SensorEventListener {
 
         for (Camera.Size size : parameters.getSupportedPictureSizes()) {
             if (result == null) {
-                result=size;
+                if (size.width*size.height<maxArea)
+                    result=size;
             }
             else {
                 int resultArea=result.width * result.height;
@@ -374,8 +371,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
         int[] pixels = new int[squareLength*squareLength];
         Bitmap bitmap = BitmapFactory.decodeByteArray(data , 0, data.length);
 
-
-
         bitmap.getPixels(pixels, 0, squareLength,minX,  minY,maxX-minX, maxY-minY);
         bitmap = Bitmap.createBitmap(pixels, 0, squareLength,2*padding, 2*padding, Bitmap.Config.ARGB_8888);//ARGB_8888 is a good quality configuration
 
@@ -392,11 +387,12 @@ public class CustomCamera extends Activity implements SensorEventListener {
      * @param p
      */
     private void sendToCameraPreview(String p){
-        Intent intent=new Intent(this,ImagePreview.class);
+        Intent intent=new Intent();
         Bundle b = new Bundle();
-        b.putSerializable(CAMERA, p);
+        b.putString(CAMERA, p);
         intent.putExtras(b);
-        startActivity(intent);
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
     @Override

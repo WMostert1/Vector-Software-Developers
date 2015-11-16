@@ -62,14 +62,14 @@
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gvIdentification_gallery"
         android:layout_below="@id/ivFieldPicture"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
         android:numColumns="4"
         android:verticalSpacing="0dp"
         android:horizontalSpacing="0dp"
-        android:stretchMode="columnWidth" android:gravity="center"
-        android:background="#FFF"/>
+        android:stretchMode="columnWidth"
+              android:gravity="center"
+        />
 
 
 

@@ -2,9 +2,6 @@ package vsd.co.za.sambugapp;
 
 import android.test.AndroidTestCase;
 
-import com.google.gson.Gson;
-
-
 
 /**
  * Created by Aeolus on 2015-09-06.

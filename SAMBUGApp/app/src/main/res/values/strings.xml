@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SAMBUGApp</string>
+    <string name="app_name">SAMBUG</string>
 
     <string name="title_activity_enter_scouting_data">enterScoutingData</string>
     <string name="dummy_button">Dummy Button</string>
@@ -22,13 +22,6 @@
     <string name="logged_in_user">logged_in_user</string>
     <string name="logged_in_user_default">{"User":null}</string>
     <string name="preference_file_key">za.co.sambugapp.PREFERENCE_FILE_KEY</string>
-
-    <string-array name="arrBlocks">
-        <item>Piesang</item>
-        <item>Nda</item>
-        <item>BuildMeBoy</item>
-        <item>WeWantAMichelle</item>
-    </string-array>
     <string name="title_activity_test">test</string>
     <string name="numBugs">Number of Bugs</string>
     <string name="bugType">Bug Type</string>
@@ -42,6 +35,6 @@
     <string name="sOk">Ok</string>
     <string name="title_activity_cam">cam</string>
     <string name="title_activity_camera3">Camera3</string>
-    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="title_activity_splash_screen">SAMBUG</string>
     <string name="title_activity_home_screen">HomeScreen</string>
 </resources>

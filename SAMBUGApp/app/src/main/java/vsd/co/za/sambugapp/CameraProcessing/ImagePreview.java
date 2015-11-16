@@ -1,9 +1,9 @@
 package vsd.co.za.sambugapp.CameraProcessing;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +17,7 @@ import java.io.IOException;
 import vsd.co.za.sambugapp.IdentificationActivity;
 import vsd.co.za.sambugapp.R;
 
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -46,17 +47,7 @@ public class ImagePreview extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_about) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     /**
@@ -65,13 +56,18 @@ public class ImagePreview extends AppCompatActivity {
      */
     private void acceptImage(Intent intent){
         Bundle b=intent.getExtras();
-        fullPathName= (String)b.get(CustomCamera.CAMERA);
-        File imgFile = new File(fullPathName);
+        if (b!=null) {
+            fullPathName = (String) b.get(CustomCamera.CAMERA);
+            File imgFile = new File(fullPathName);
 
-        if(imgFile.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            Bitmap rBitmap = rotateBitmap(fullPathName, myBitmap);
-            imageView.setImageBitmap(rBitmap);
+            if (imgFile.exists()) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                Bitmap rBitmap = rotateBitmap(fullPathName, myBitmap);
+                imageView.setImageBitmap(rBitmap);
+            }
+        } else {
+            Intent i = new Intent(getApplicationContext(),CustomCamera.class);
+            startActivityForResult(i,0);
         }
 
     }
@@ -83,6 +79,7 @@ public class ImagePreview extends AppCompatActivity {
     public void deletePhoto(View v){
         File discardedPhoto = new File(fullPathName);
         discardedPhoto.delete();
+        fullPathName="";
         imageView.setImageBitmap(null);
         Intent intent = new Intent(this,CustomCamera.class);
         startActivity(intent);
@@ -192,14 +189,21 @@ public class ImagePreview extends AppCompatActivity {
      * @param v
      */
     public void SendToIdentificationActivity(View v){
-            Intent intent = new Intent(this, IdentificationActivity.class);
+            Intent intent = new Intent();
             Bundle b = new Bundle();
             b.putSerializable(CustomCamera.CAMERA, fullPathName);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtras(b);
-            startActivity(intent);
+            setResult(RESULT_OK,intent);
+            finish();
         }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            acceptImage(data);
+        }
+    }
     }
 
 

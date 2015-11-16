@@ -5,16 +5,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 
 import java.io.ByteArrayOutputStream;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import vsd.co.za.sambugapp.DomainModels.Species;
@@ -90,7 +83,7 @@ public class SpeciesDAO extends DataSourceAdapter {
                 "Yellow Edged Bug"
         };
 
-        Integer [] lifestages = {0,0,0,1,2,3,4,5,0,5,0,0,2,3,4,5,0,4};
+        Integer [] lifestages = {0,0,0,1,2,3,4,5,0,0,5,0,2,3,4,5,0,4};
 
         for(int i = 0; i < mThumbIds.length; i++){
             Species speciesEntry = new Species();
