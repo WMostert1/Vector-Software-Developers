@@ -2,6 +2,7 @@
 using System.Linq;
 using DataAccess.Interface;
 using DataAccess.Models;
+using System.Data.Entity;
 
 namespace DataAccess.MSSQL
 {
@@ -52,7 +53,7 @@ namespace DataAccess.MSSQL
         {
             var db = new BugDBEntities();
 
-            List<ScoutStop> scoutStops = db.ScoutStops.ToList();
+            List<ScoutStop> scoutStops = db.ScoutStops.Include(stp => stp.ScoutBugs.Select(bg => bg.Species)).Include(stp => stp.Block).ToList();
 
             return scoutStops;
         }
@@ -61,7 +62,7 @@ namespace DataAccess.MSSQL
         {
             var db = new BugDBEntities();
 
-            List<Treatment> treatments = db.Treatments.ToList();
+            List<Treatment> treatments = db.Treatments.Include(trtm => trtm.Block).Include(trtm => trtm.Block.Farm).ToList();
 
             return treatments;
         }

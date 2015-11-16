@@ -3,6 +3,7 @@ using System.Linq;
 using DataAccess.Interface;
 using DataAccess.Models;
 using System;
+using System.Data.Entity;
 
 namespace DataAccess.MSSQL
 {
@@ -13,7 +14,7 @@ namespace DataAccess.MSSQL
         {
             var db = new BugDBEntities();
 
-            var user = db.Users.SingleOrDefault(usr => usr.Email.Equals(username) && usr.Password.Equals(password, StringComparison.InvariantCulture));
+            var user = db.Users.Include(usr => usr.Roles).Include(usr => usr.Farms.Select(frm => frm.Blocks)).SingleOrDefault(usr => usr.Email.Equals(username) && usr.Password.Equals(password, StringComparison.InvariantCulture));
 
             if (user == default(User))
             {
