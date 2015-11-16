@@ -1,0 +1,13 @@
+﻿@{
+    Layout = null;
+}
+
+<md-toolbar class="md-primary md-hue-1 md-whiteframe-z1">
+    <md-toolbar-tools layout="row" flex layout-align="center center">
+        <h2 flex-offset="5" class="md-title">{{menu.title}}</h2>
+        <span flex></span>
+        <md-button ng-click="defaultSettings()" class="md-icon-button" aria-label="Setting Defaults">
+            <ng-md-icon icon="refresh"></ng-md-icon>
+        </md-button>
+    </md-toolbar-tools>
+</md-toolbar>

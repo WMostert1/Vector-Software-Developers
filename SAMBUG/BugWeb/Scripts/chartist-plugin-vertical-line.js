@@ -1,16 +1,16 @@
 (function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
+  if (typeof define === "function" && define.amd) {
     // AMD. Register as an anonymous module.
     define([], function () {
       return (root.returnExportsGlobal = factory());
     });
-  } else if (typeof exports === 'object') {
+  } else if (typeof exports === "object") {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like enviroments that support module.exports,
     // like Node.
     module.exports = factory();
   } else {
-    root['Chartist.plugins.verticalLine'] = factory();
+    root["Chartist.plugins.verticalLine"] = factory();
   }
 }(this, function () {
 
@@ -20,30 +20,30 @@
    */
   /* global Chartist */
   (function (window, document, Chartist) {
-    'use strict';
+    "use strict";
 
     var defaultOptions = {
       position: undefined,
       label: undefined,
-      className: 'vertical-line'
+      className: "vertical-line"
     };
 
     var VerticalLine = function (chart, chartRect, options) {
 
-      var labelClassName = options.className + '-label';
+      var labelClassName = options.className + "-label";
       
-      var  $label = $('<span class="' + labelClassName + '" style="position: absolute"></span>')
+      var  $label = $("<span class=\"" + labelClassName + "\" style=\"position: absolute\"></span>")
           .appendTo(chart.container)
           .hide();
 
       this.show = function (x) {
 
         $label
-          .html(options.label || '')
+          .html(options.label || "")
           .css({ left: x - $label.width() / 2 })
           .show();
 
-        chart.svg.elem('line', {
+        chart.svg.elem("line", {
           x1: x,
           x2: x,
           y1: chartRect.y1,
@@ -66,15 +66,14 @@
 
         var positions = [];
 
-        chart.on('draw', function (data) {
-            
-            if (data.type === 'point' && ($.inArray(data.value.x.valueOf(), options.positions)) >= 0 && data.value.y === -1) {
+        chart.on("draw", function (data) {
+            if (data.type === "point" && ($.inArray(data.value.x.valueOf(), options.positions)) >= 0 && data.value.y === -1) {
                 positions.push(data.x);
                 data.element.remove();
             }
         });
 
-        chart.on('created', function (data) {
+        chart.on("created", function (data) {
             $.each(positions, function(i, pos) {
                 var verticalLine = new VerticalLine(chart, data.chartRect, options);
                 verticalLine.show(pos);

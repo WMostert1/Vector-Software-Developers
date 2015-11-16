@@ -10,23 +10,10 @@ namespace BugWeb.Controllers
     public class HomeController : Controller
     {
         
-        //TODO: Still need to check if user is logged in before returning view. Redirects to login page if not
-        public ActionResult Index()
+        public ActionResult Index(string returnUrl)
         {
-           if (!SecurityProvider.isGrower(Session) && !SecurityProvider.isAdmin(Session))
-               return RedirectToAction("login","home");
-
-                return View();
-        }
-
-        public ActionResult Login()
-        {
-            return View("~/Views/Authentication/Login.cshtml");
-        }
-
-        public ActionResult Register()
-        {    
-            return View("~/Views/Authentication/Register.cshtml");
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
         }
 
         public ActionResult BlockEdit()
@@ -34,12 +21,6 @@ namespace BugWeb.Controllers
             if (!SecurityProvider.isGrower(Session)) 
                 return View("~/Views/Shared/Error.cshtml");
                 return RedirectToAction("index", "farmmanagement");
-        }
-
-        public ActionResult Logout()
-        {
-            Session.Abandon();
-            return RedirectToAction("login", "home");
         }
 
         public ActionResult RecoverAccount()
@@ -53,10 +34,20 @@ namespace BugWeb.Controllers
             return View("~/Views/Authentication/ChangePassword.cshtml");
         }
 
-
-        public ActionResult viewMap()
+        public ActionResult AboutUs()
         {
-            return PartialView("_HeatMap");
+            return View();
         }
+
+        public FileResult Download()
+        {
+            string app_data_path = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
+            string fileName = "UserManual.pdf";
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(app_data_path+"\\Documents\\"+fileName);
+            
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+        
     }
 }

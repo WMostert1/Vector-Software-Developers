@@ -191,22 +191,22 @@ VALUES	('Anolcus Campestris', 0, CAST ('testPic0' AS varbinary(MAX)), 0),
 		('Coconut Bug', 3, CAST ('testPic5' AS varbinary(MAX)), 1),
 		('Coconut Bug', 4, CAST ('testPic6' AS varbinary(MAX)), 1),
 		('Coconut Bug', 5, CAST ('testPic7' AS varbinary(MAX)), 1),
-		('Coenomorpha Nervosa', 0, CAST ('testPic8' AS varbinary(MAX)), 0),
+		/*('Coenomorpha Nervosa', 0, CAST ('testPic8' AS varbinary(MAX)), 0),*/
 		('Green vegetable bug', 0, CAST ('testPic9' AS varbinary(MAX)), 1),
-		('Nezara Prunasis', 0, CAST ('testPic10' AS varbinary(MAX)), 0),
-		('Pseudatelus Raptoria', 5, CAST ('testPic11' AS varbinary(MAX)), 0),
+		/*('Nezara Prunasis', 0, CAST ('testPic10' AS varbinary(MAX)), 0),*/
 		('Pseudatelus Raptoria', 0, CAST ('testPic12' AS varbinary(MAX)), 0),
-		('Small Brown Bug', 0, CAST ('testPic13' AS varbinary(MAX)), 0),
+		('Pseudatelus Raptoria', 5, CAST ('testPic11' AS varbinary(MAX)), 0),
+		/*('Small Brown Bug', 0, CAST ('testPic13' AS varbinary(MAX)), 0),*/
 		('Two Spotted Bug', 0, CAST ('testPic14' AS varbinary(MAX)), 1),
-		('Two Spotted Bug', 1, CAST ('testPic15' AS varbinary(MAX)), 1),
+		/*('Two Spotted Bug', 1, CAST ('testPic15' AS varbinary(MAX)), 1),*/
 		('Two Spotted Bug', 2, CAST ('testPic16' AS varbinary(MAX)), 1),
 		('Two Spotted Bug', 3, CAST ('testPic17' AS varbinary(MAX)), 1),
 		('Two Spotted Bug', 4, CAST ('testPic18' AS varbinary(MAX)), 1),
 		('Two Spotted Bug', 5, CAST ('testPic19' AS varbinary(MAX)), 1),
-		('Unknown Brown Bug', 0, CAST ('testPic20' AS varbinary(MAX)), 0),
+		/*('Unknown Brown Bug', 0, CAST ('testPic20' AS varbinary(MAX)), 0),*/
 		('Yellow Edged Bug', 0, CAST ('testPic21' AS varbinary(MAX)), 1),
-		('Yellow Edged Bug', 4, CAST ('testPic22' AS varbinary(MAX)), 1),
-		('Yellow Edged Bug', 5, CAST ('testPic23' AS varbinary(MAX)), 1);
+		('Yellow Edged Bug', 4, CAST ('testPic22' AS varbinary(MAX)), 1);
+		/*('Yellow Edged Bug', 5, CAST ('testPic23' AS varbinary(MAX)), 1);*/
 
 INSERT INTO [dbo].[ScoutBug] (ScoutStopID, SpeciesID, NumberOfBugs, FieldPicture, Comments)
 VALUES	(1, 10, 2, CAST ('testPic' AS varbinary(MAX)), 'Venenatis massa, etiam augue vestibulum, curabitur nec sed'),

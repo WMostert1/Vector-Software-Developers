@@ -1,63 +1,135 @@
-﻿﻿<!DOCTYPE html>
+﻿@using BugBusiness.Interface.BugSecurity.DTO
+@using BugWeb.Security
+
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAMBUG</title>
-    <link rel="stylesheet" href="http://css-spinners.com/css/spinner/whirly.css" type="text/css">
+    <base href="@Url.Content("~")">
+
+    <title>@ViewBag.Title</title>
+
     @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/css/spinner")
+    @Styles.Render("~/Content/css/bootstrap")
+    @Styles.Render("~/Content/css/angular")
+    @Styles.Render("~/Content/css/angular-icons")
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/Scripts/xdate.js")
     @RenderSection("JavaScript", required: false)
     @RenderSection("styles", required: false)
 </head>
-<body>
-  
-    <div style="background-color:#A3DCA3" class="navmenu navmenu-default navmenu-fixed-left offcanvas">
-        <a style="background-color:#4DB870" class="navmenu-brand" href="~/Home/Index">SAMBUG</a>
-        <ul class="nav navmenu-nav">
-            <li><a href="~/Home/Index">Home</a></li>
-            <!--<li><a href="#">Login</a></li>-->
-            <!-- <li><a href="#">Register</a></li>-->
-           
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Farm Management<b class="caret"></b></a>
-                <ul class="dropdown-menu navmenu-nav">
-                    <li><a href="~/FarmManagement/EditFarms">Edit My Farms</a></li>
-                    <li><a href="~/FarmManagement/Treatments">Enter Treatment Data</a></li>
-                </ul>
-            </li>
+<body layout="row" ng-app="appMain" ng-controller="AppCtrl">
 
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reporting<b class="caret"></b></a>
-                <ul class="dropdown-menu navmenu-nav">
-                    <li><a href="~/Reporting/Charts">View Chart</a></li>
-                    <li><a href="~/Reporting/Tabular">View Table</a></li>
-                    <li><a href="~/Reporting/Map">View Heat Map</a></li>
-                </ul>
-            </li>
-            <li><a href="~/Authentication/EditUserRoles">Manage Users</a></li>
-            <li><a href="~/Home/Logout">Logout</a></li>
-            <li><a href="#">About Us</a></li>
-        </ul>
-    </div>
+<md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" ng-cloak>
+    <md-toolbar layout="column" layout-align="center center" class="md-primary md-hue-1 md-whiteframe-z1 md-tall">
+            <img id="logo" src="@Url.Content("~/Content/Images/logo.png")" alt="sambug logo" />
+    </md-toolbar>
+    <md-content layout="row" flex class="md-hue-1">
+        <md-list layout-fill flex ng-cloak>
+            <md-list-item flex ng-repeat="item in navMenu.items | filter: onlyApplicableItems" ng-click="$parent.navMenu.actions[item.actionName]($event)">
+                    <md-item-content flex layout="row">
+                        <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+                        <h1 flex flex-offset="10" class="md-body-2">{{item.title}}</h1>
+                    </md-item-content>
+            </md-list-item>
 
-    <div class="navbar navbar-default navbar-fixed-top">
-        <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-    </div>
+            <md-divider ng-if="user.isLoggedIn"></md-divider>
 
-    <div class="container">
+            <div ng-repeat="item in managementMenu.items | filter: onlyApplicableItems">
+                <md-list-item ng-click="$parent.managementMenu.actions[item.actionName](item)" data-toggle="collapse" data-target="{{'#'+ item.collapseTargetId}}">
+                    <md-item-content flex layout="row">
+                        <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+                        <h1 flex flex-offset="10" class="md-body-2">{{item.title}}</h1>
+                        <ng-md-icon icon="{{item.collapseIcon}}"></ng-md-icon>
+                    </md-item-content>
+                </md-list-item>
+
+                <div id="{{item.collapseTargetId}}" class="collapse">
+                    <md-list flex layout-fill>
+                        <md-list-item ng-repeat="subItem in item.subList" ng-click="$parent.managementMenu.actions[subItem.actionName]($event)">
+                            <md-item-content flex layout="row">
+                                <h1 flex flex-offset="10" class="md-body-1">{{subItem.title}}</h1>
+                            </md-item-content>
+                        </md-list-item>
+                    </md-list>
+                </div>
+            </div>
+
+            <md-list-item ng-if="user.isLoggedIn && user.isAdmin" flex ng-click="managementMenu.actions[managementMenu.userManagement.actionName]($event)">
+                <md-item-content flex layout="row">
+                    <ng-md-icon icon="{{managementMenu.userManagement.icon}}"></ng-md-icon>
+                    <h1 flex flex-offset="10" class="md-body-2">{{managementMenu.userManagement.title}}</h1>
+                </md-item-content>
+            </md-list-item>
+
+            <md-divider></md-divider>
+
+            <md-list-item flex ng-click="navigateToAboutUs()">
+                <md-item-content flex layout="row">
+                    <ng-md-icon icon="info_outline"></ng-md-icon>
+                    <h1 flex flex-offset="10" class="md-body-2">About Us</h1>
+                </md-item-content>
+            </md-list-item>
+        </md-list>
+    </md-content>
+</md-sidenav>
+
+<div flex layout="column" ng-cloak>
+    <!--todo add md-scroll-shrink when AM bugs are fixed-->
+    <md-toolbar ng-if="true">
+        <div class="md-toolbar-tools">
+            <md-button ng-click="toggleSideNav('left')" class="md-icon-button" hide-gt-md aria-label="Menu">
+                <ng-md-icon icon="menu"></ng-md-icon>
+            </md-button>
+            <h2 class="md-title">
+                @ViewBag.Title
+            </h2>
+            <span flex></span>
+            <md-button ng-click="toggleSideNav('right')" class="md-icon-button" aria-label="Settings" ng-if="@ViewBag.Reporting">
+                <ng-md-icon icon="more_vert"></ng-md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <md-content flex class="bodyContent md-body-1" layout="column">
         @RenderBody()
-    </div>
+    </md-content>
+
+</div>
+
+@*todo wrap vendor scripts in Angular Modules. Look at lazy loading using RequireJS.*@
+
+@Scripts.Render("~/bundles/linqjs")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@Scripts.Render("~/bundles/angular")
+@Scripts.Render("~/bundles/angular-icons")
+@Scripts.Render("~/bundles/angular-icons-morpheus")
+@Scripts.Render("~/bundles/app")
+
+<script type="text/javascript">
+
+    angular.module("appMain").factory("userDetails", function() {
+        return {
+            isLoggedIn: @Json.Encode(SecurityProvider.isLoggedIn(Session)),
+            isGrower: @Json.Encode(SecurityProvider.isGrower(Session)),
+            isAdmin: @Json.Encode(SecurityProvider.isAdmin(Session)),
+            returnUrl: "@ViewBag.ReturnUrl",
+            id: "@( Session["UserInfo"] != null ? ((UserDTO) Session["UserInfo"]).UserID.ToString() : "")"
+        };
+    });
 
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    /*todo remove the patch below when Angular Material prevents browser default invalid messages*/
+    document.addEventListener("invalid", (function() {
+        return function(e) {
+            e.defaultPrevented();
+        };
+    })(), true);
+
+</script>
+
+@RenderSection("scripts", required: false)
+
 </body>
 </html>

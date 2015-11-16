@@ -9,6 +9,9 @@ using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using DataAccess.Interface;
 using DataAccess.Models;
+using BugCentral.HelperClass;
+using BugBusiness.Interface.BugAuthentication.Exceptions;
+using BugBusiness.Interface.BugAuthentication.DTO;
 
 
 namespace BugBusiness.BugSecurity
@@ -59,7 +62,7 @@ namespace BugBusiness.BugSecurity
                 throw new InvalidInputException();
             }
 
-            bool queryResult = _dbBugSecurity.InsertNewUser(registerRequest.Username, registerRequest.Password, registerRequest.FarmName);
+            bool queryResult = _dbBugSecurity.InsertNewUser(registerRequest.Username, registerRequest.Password);
 
             if (queryResult == false)
             {
@@ -72,28 +75,48 @@ namespace BugBusiness.BugSecurity
 
         public RecoverAccountResponse RecoverAccount(RecoverAccountRequest recoverAccountRequest)
         {
-            throw new NotImplementedException();
+              EmailSender _Email = new EmailSender(recoverAccountRequest.EmailTo);
+              _Email.setEmail("Recover Password", GetPassword(recoverAccountRequest.EmailTo));
+
+
+            if (_Email.sendEmail() == false)
+            {
+                throw new FailedEmailSendException();
+            }
+
+            return new RecoverAccountResponse();
+            
+        
         }
 
-        public ViewEditUserRolesResponse GetUsers()
+        public GetUsersResponse GetUsers()
         {
             var users = _dbBugSecurity.GetAllUsers();
 
             List<UserDTO> userDTOList = AutoMapper.Mapper.Map<List<UserDTO>>(users);
 
-            return new ViewEditUserRolesResponse { Users = userDTOList };
+            return new GetUsersResponse { Users = userDTOList };
         }
 
-        public void EditUserRoles(EditUserRoleRequest editUserRoleRequest)
+        public EditUserRoleResponse EditUserRoles(EditUserRoleRequest editUserRoleRequest)
         {
 
-            _dbBugSecurity.EditUserRoles(editUserRoleRequest.UserId, editUserRoleRequest.IsGrower,
-                editUserRoleRequest.IsAdministrator);
+           bool result = _dbBugSecurity.EditUserRoles(editUserRoleRequest.UserId, editUserRoleRequest.IsAdministrator);
+
+           return new EditUserRoleResponse()
+           {
+               Success = result
+           };
 
         }
 
         public bool ChangeUserPassword(string username1, string password1){
             return _dbBugSecurity.ChangeUserPassword(username1, password1); 
+        }
+
+        public string GetPassword(string username1)
+        {
+            return _dbBugSecurity.GetPassword(username1);
         }
     }
 }

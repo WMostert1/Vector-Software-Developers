@@ -1,0 +1,39 @@
+﻿<md-dialog flex="30" layout="column" class="custom-dialog" aria-label="Add block" ng-cloak>
+    <form ng-submit="post($event)" action="api/blocks" flex layout="column" name="addBlockForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 class="md-title">Add Block</h2>
+                <span flex></span>
+                <md-button type="button" class="md-icon-button" ng-click="cancel()">
+                    <ng-md-icon icon="close" aria-label="Close Dialog"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content layout-padding flex layout="column">
+            <md-input-container>
+                <label>Block Name</label>
+                <input required type="text" name="blockName" ng-model="newBlockName" minlength="1" maxlength="50" md-autofocus/>
+                <div ng-messages="addBlockForm.blockName.$error" role="alert">
+                    <div ng-message="required">Please enter a block name</div>
+                    <div ng-message="minlength, maxlength">The block name must be between 1 and 50 characters</div>
+                </div>
+            </md-input-container>
+            <div class="errorMessageContainer" flex layout="row" layout-align="center center">
+                <div ng-messages="errorMessage" role="alert">
+                    <div class="customErrorMessage" ng-message="invalidInput">Invalid block input.</div>
+                    <div class="customErrorMessage" ng-message="blockExists">This block already exists.</div>
+                </div>
+            </div>
+        </md-content>
+        <div class="md-actions" layout="row">
+            <div class="loaderContainer" layout="row" layout-align="center center">
+                <md-progress-circular md-mode="indeterminate" ng-show="loading" md-diameter="15px"></md-progress-circular>
+            </div>
+            <span flex></span>
+            <md-button type="submit" class="md-icon-button md-primary" aria-label="Add Block">
+                <ng-md-icon icon="check"></ng-md-icon>
+            </md-button>
+        </div>
+    </form>
+</md-dialog>
+

@@ -52,10 +52,14 @@ namespace BugWeb.Controllers
             }
         }
 
-        /* [Route("recover")]
-         public void Post([FromBody] RecoverAccountRequest recoverAccountRequest)
-         {
-             EmailSender es = new EmailSender("kaleabtessera@gmail.com");
-         }*/
+        [HttpPost]
+        [Route("recoveraccount")]
+        public void RecoverAccount(RecoverAccountRequest recoverAccountRequest)
+        {
+            _bugSecurity.RecoverAccount(recoverAccountRequest);
+
+        }
+
+       
     }
 }

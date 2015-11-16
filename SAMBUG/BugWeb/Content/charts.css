@@ -1,25 +1,4 @@
-﻿#firstContentRow {
-    margin-top: 25px;
-}
-
-#resetIcon, #collapseIcon {
-    cursor: pointer;
-}
-
-.chartContainerOnLoad {
-    height: 60vh;
-}
-
-.whirly-loader {
-    top: 50%;
-    left: 50%;
-}
-
-.chartLabel {
-    visibility: hidden;
-}
-
-.vertical-line {
+﻿.vertical-line {
     stroke: lightblue;
     stroke-dasharray: 10px 10px;
     stroke-width: 2px;
@@ -34,8 +13,8 @@
     position: absolute;
     min-width: 5em;
     padding: .5em;
-    background: #453D3F;
-    color: #E6E6E4;
+    background: #9E9E9E;
+    color: white;
     font-weight: 700;
     text-align: center;
     pointer-events: none;
@@ -51,12 +30,105 @@
     height: 0;
     margin-left: -15px;
     border: 15px solid transparent;
-    border-top-color: #453D3F;
+    border-top-color: #9E9E9E;
 }
 
 .ct-label {
-    color: black !important;
+    color: lightgray !important;
+    font-size: 1em;
 }
+
+.ct-axis-title {
+    fill: white !important;
+    font-size: 1.5em;
+}
+
+.ct-series-0 .ct-line,
+.ct-series-0 .ct-point,
+.ct-series-0 .ct-bar,
+.trendline-0 {
+  stroke: #9CCC65;
+}
+
+.ct-series-1 .ct-line,
+.ct-series-1 .ct-point,
+.ct-series-1 .ct-bar,
+.trendline-1 {
+  stroke: #FFCA28;
+}
+
+.ct-series-2 .ct-line,
+.ct-series-2 .ct-point,
+.ct-series-2 .ct-bar,
+.trendline-2 {
+    stroke: #F57C00;
+}
+
+.ct-series-3 .ct-line,
+.ct-series-3 .ct-point,
+.ct-series-3 .ct-bar,
+.trendline-3 {
+  stroke: #BFA582;
+}
+
+.ct-series-4 .ct-line,
+.ct-series-4 .ct-point,
+.ct-series-4 .ct-bar,
+.trendline-4 {
+  stroke: #EF5350;
+}
+
+.ct-series-5 .ct-line,
+.ct-series-5 .ct-point,
+.ct-series-5 .ct-bar,
+.trendline-5 {
+  stroke: #BDBDBD;
+}
+
+.ct-series-6 .ct-line,
+.ct-series-6 .ct-point,
+.ct-series-6 .ct-bar,
+.trendline-6 {
+  stroke: #8D6E63;
+}
+
+.ct-series-7 .ct-line,
+.ct-series-7 .ct-point,
+.ct-series-7 .ct-bar,
+.trendline-7 {
+  stroke: #42A5F5;
+}
+
+.ct-series-8 .ct-line,
+.ct-series-8 .ct-point,
+.ct-series-8 .ct-bar,
+.trendline-8 {
+  stroke: #FAFAFA;
+}
+
+.ct-series-9 .ct-line,
+.ct-series-9 .ct-point,
+.ct-series-9 .ct-bar,
+.trendline-9 {
+  stroke: #B2FF59;
+}
+
+.ct-series-10 .ct-line,
+.ct-series-10 .ct-point,
+.ct-series-10 .ct-bar,
+.trendline-10 {
+  stroke: #EA80FC;
+}
+
+.ct-series-11 .ct-line,
+.ct-series-11 .ct-point,
+.ct-series-11 .ct-bar,
+.trendline-11 {
+  stroke: #BF6592;
+}
+
+
+/*todo add more custom colors for series elements*/
 
 .ct-series-a .ct-line,
 .ct-series-a .ct-point,
@@ -68,9 +140,4 @@
   stroke-dasharray: 20px;
   stroke-linecap: round;
   fill: hsl(120, 40%, 60%);*/
-}
-
-.errorMessage {
-    position: relative;
-    top: 150px;
 }

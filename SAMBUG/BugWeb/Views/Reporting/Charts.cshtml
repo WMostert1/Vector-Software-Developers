@@ -2,155 +2,80 @@
 
 @{
     ViewBag.Title = "Charts";
+    ViewBag.Reporting = "true";
 }
 
 @section styles
 {
-    @Styles.Render("~/Content/css/chartist")
-    @Styles.Render("~/Content/css/typeahead")
-    @Styles.Render("~/Content/css/bootstrap-tagsinput")
-    @Styles.Render("~/Content/css/reporting")
+    @Styles.Render("~/Content/css/reporting/common")
+    @Styles.Render("~/Content/css/reporting/vendor/chartist")
+    @Styles.Render("~/Content/css/reporting/charts")
 }
-
-
-<div id="firstContentRow" class="row">
-    <div class="col-sm-4">
-
-
-        <!--Y-axis options for chart-->
-        <label for="view">View</label>
-        <select id="view" class="form-control chartControl">
-            <optgroup label="Average">
-                <option value="Bugs per Tree">Bugs per Tree</option>
-                <option value="Number of Bugs">Number of Bugs</option>
-                <option value="Number of Trees">Number of Trees</option>
-            </optgroup>
-            <optgroup label="Total">
-                <option value="Number of Bugs">Number of Bugs</option>
-                <option value="Number of Trees">Number of Trees</option>
-            </optgroup>
-        </select><br />
-
-
-        <!--X-axis options for chart-->
-        <label for="against">Against</label>
-        <select id="against" class="form-control chartControl">
-            <option value="Date">Date</option>
-            <option value="Block">Block</option>
-            <option value="Species">Species</option>
-            <option value="Species Life Stage">Species Life Stage</option>
-        </select><br />
-
-
-        <!--Grouping options to determine chart type and series-->
-        <label for="grouping">Group By</label>
-        <select id="grouping" class="form-control chartControl">
-            <option value="None">None</option>
-            <option value="Block">Block</option>
-            <option value="Species">Species</option>
-            <option value="Species Life Stage">Species Life Stage</option>
-        </select><br />
-
-
-        <!--table of constraints for chart data-->
-        <div id="constraintsDiv" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h1 class="panel-title">
-                        <span id="collapseIcon" data-toggle="collapse" data-target="#collapsibleTable" class="glyphicon glyphicon-expand"></span>
-                        <span id="resetIcon" class="glyphicon glyphicon-refresh pull-right"></span>
-                        <strong> Constraints</strong>
-                    </h1>
-                </div>
-                <div id="collapsibleTable" class="panel-collapse collapse">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Settings</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Date</th>
-                                <td>
-                                    <label for="constraintDateFrom">From:</label>
-                                    <input type="date" id="constraintDateFrom" class="form-control chartControl">
-                                    <label for="constraintDateTo">To:</label>
-                                    <input type="date" id="constraintDateTo" class="form-control chartControl"><br />
-                                    <input id="constraintDateAny" type="checkbox" class="chartControl"> Any
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Farms</th>
-                                <td>
-                                    <input id="constraintFarms" class="form-control chartControl" type="text" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Blocks</th>
-                                <td>
-                                    <input id="constraintBlocks" class="form-control chartControl" type="text" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Species</th>
-                                <td>
-                                    <input id="constraintSpecies" class="form-control chartControl" type="text" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Species Life Stages</th>
-                                <td>
-                                    <input id="constraintLifeStage" class="form-control chartControl" type="text" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Number of Trees</th>
-                                <td>
-                                    <label for="constraintTreesLower">From:</label>
-                                    <input id="constraintTreesLower" class="form-control chartControl" type="number" min="1" value="1" />
-                                    <label for="constraintTreesUpper">To:</label>
-                                    <input id="constraintTreesUpper" class="form-control chartControl" type="number" min="1" value="10" /><br />
-                                    <input id="constraintTreesAny" type="checkbox" class="chartControl" checked> Any
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Treatments</th>
-                                <td>
-                                    <input id="constraintShowTreatments" type="checkbox" class="chartControl"> Overlay
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<div flex style="overflow: hidden" layout-fill layout="column" ng-controller="ChartsCtrl">
+    <div flex layout="column" layout-padding layout-fill layout-align="center center">
+        <div class="md-headline" ng-hide="!someData">{{chartTitle}}</div>
+        <div flex="100" layout="column" layout-fill layout-padding id="chart" class="ct-chart ct-minor-seventh" layout-align="center center" ng-hide="!someData"></div>
+        <div ng-hide="someData || loading">
+            <p class="md-body-1">No data available. See Chart Settings.</p>
         </div>
+        <md-progress-circular md-mode="indeterminate" ng-if="loading" md-diameter="70px"></md-progress-circular>
+
     </div>
-    <div class="col-sm-8">
-        <!--Container for chart and axes titles-->
-        <div id="chartContainerOnLoad" class="chartContainerOnLoad">
-           <div id="chartContainer" class="whirly-loader">
-                <div id="chartTitle" class="chartLabel text-center">
-                    <h1></h1>
-                </div>
-                <div id="chart" class="ct-chart ct-minor-seventh"></div>
-            </div>
-        </div>
-    </div>
+    <md-sidenav layout="column" class="md-sidenav-right md-whiteframe-z2" md-component-id="right" ng-cloak>
+        @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuToolbar.cshtml"); }
+        <md-content layout-padding flex layout="column" class="settingsNavContent md-hue-1">
+            @{ Html.RenderPartial("~/Views/Shared/_ReportingMenuBody.cshtml"); }
+            <md-divider layout-padding></md-divider>
+
+            <md-input-container ng-repeat="option in settings.grouped">
+                <label>{{option.title}}</label>
+                <md-select ng-model="option.selected">
+                    <md-optgroup ng-repeat="group in option.groups" label="{{group.title}}">
+                        <md-option ng-repeat="item in group.list" ng-value="{title: item.title, name:item. name, aggregate: group.type}">{{item.title}}</md-option>
+                    </md-optgroup>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container ng-repeat="option in settings.ungrouped">
+                <label>{{option.title}}</label>
+                <md-select ng-model="option.selected">
+                    <md-option ng-repeat="item in option.list" ng-hide="$parent.shouldHideItem(option, item)" ng-value="item">{{item.title}}</md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-checkbox class="md-primary" ng-if="settings.ungrouped.x.selected.type === 'Line'" ng-model="settings.showTreatments" aria-label="Overlay Treatments Checkbox">
+                Spray Data
+            </md-checkbox>
+
+            <md-checkbox class="md-primary" ng-if="settings.ungrouped.x.selected.type === 'Line'" ng-model="settings.showPoints" aria-label="Show Points Checkbox">
+                Points
+            </md-checkbox>
+
+            <md-checkbox class="md-primary" ng-if="settings.ungrouped.x.selected.type === 'Line'" ng-model="settings.showTrend" aria-label="Show Trend Checkbox">
+                Trend
+            </md-checkbox>
+
+        </md-content>
+    </md-sidenav>
 </div>
 
 
 @section scripts
 {
     <script type="application/javascript">
-        var recordsUrl = "@Url.Content("~/api/records/" + Model.RecordsUrlSuffix)";
-        var pestsUrl = "@Url.Content("~/api/species")";
+        angular.module("appMain").factory("reportingUrlService", function(){
+            return {
+                recordsUrl: "@Url.Content("~/api/records/" + Model.RecordsUrlSuffix)",
+                speciesUrl: "@Url.Content("~/api/species")"
+            };
+        });
     </script>
-    @Scripts.Render("~/bundles/chartist")
-    @Scripts.Render("~/bundles/chartist-plugins")
-    @Scripts.Render("~/bundles/typeahead")
-    @Scripts.Render("~/bundles/bootstrap-tagsinput")
-    @Scripts.Render("~/bundles/reporting")
-}
 
+    @Scripts.Render("~/bundles/vendor/xdate")
+    @Scripts.Render("~/bundles/reporting/vendor/bspline")
+    @Scripts.Render("~/bundles/reporting/vendor/chartist")
+    @Scripts.Render("~/bundles/reporting/vendor/chartist-plugins")
+    @Scripts.Render("~/bundles/reporting/common")
+    @Scripts.Render("~/bundles/reporting/charts")
+
+}

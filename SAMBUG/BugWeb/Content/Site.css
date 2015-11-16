@@ -1,4 +1,67 @@
-﻿html, body{
+﻿/* 
+  Allow angular.js to be loaded in body, hiding cloaked elements until 
+  templates compile.  The !important is important given that there may be 
+  other selectors that are more specific or come later and might alter display.  
+ */
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+/*todo remove overflow: hidden when Angular extra scrollbar bug is fixed*/
+html {
+    overflow: hidden !important;
+}
+
+body {
+    overflow: hidden !important;
+}
+
+.bodyContent {
+    overflow-x: hidden;
+}
+
+.settingsNavContent {
+    overflow-x: hidden;
+}
+
+.errorMessageContainer {
+    height: 15px;
+}
+
+.loaderContainer {
+    height: 20px;
+}
+
+#logo {
+   height: 100%;
+}
+
+md-sidenav .md-title {
+    font-size: 1em !important;
+}
+
+.md-tall{
+    height: 160px !important;
+    min-height: 160px !important;
+    max-height: 160px !important;
+}
+
+
+*:focus {
+     outline: none;
+}
+
+md-list-item a{
+ text-decoration: none !important; 
+ color: inherit !important;   
+}
+
+.customErrorMessage{
+    color: #F44336 !important;
+}
+
+/*todo: the below code was meant for bootstrap it seems, just make sure before completely removing*/
+/*html, body{
     height : 100%;
 }
 
@@ -8,7 +71,7 @@ body {
     font-family: Calibri,Candara,Segoe,"Segoe UI",Optima,Arial,sans-serif
 }
 
-/* Set padding to keep content from hitting the edges */
+/* Set padding to keep content from hitting the edges !1!
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
@@ -16,19 +79,19 @@ body {
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
-*/
+!1!
 .dl-horizontal dt {
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
+/* Set width on the form input elements since they're 100% wide by default !1!
 input,
 select,
 textarea {
     max-width: 280px;
 }
 
-/* This is for the heat map */
+/* This is for the heat map !1!
     #panel {
     background-color: #fff;
     border: 1px solid #999;
@@ -39,7 +102,7 @@ textarea {
     z-index: 5;
     }
 
-/* Jasny stles for navbar*/
+/* Jasny stles for navbar!1!
  .navbar-toggle {
   float: left;
   margin-left: 15px;
@@ -47,7 +110,7 @@ textarea {
 
 @media (min-width: 0) {
   .navbar-toggle {
-    display: block; /* force showing the toggle */
+    display: block; /* force showing the toggle !1!
   }
 }
 
@@ -64,4 +127,4 @@ textarea {
 
 #radiusSlider .slider-selection {
 	background: #BABABA;
-}
+}*/

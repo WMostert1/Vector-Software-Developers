@@ -9,13 +9,13 @@ using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugAuthentication;
 using BugBusiness.Interface.BugAuthentication.DTO;
 using BugBusiness.Interface.BugAuthentication.Exceptions;
+using System.Net.Mail;
 
 namespace BugBusiness.BugAuthentication
 {
     public class BugAuthentication : IBugAuthentication
     {
-        //const string from = "kaleabtessera@gmail.com";
-        //const string fromPassword = "27ATEHBruKal1129";
+
 
         private readonly IBugSecurity _bugSecurity;
 
@@ -25,22 +25,6 @@ namespace BugBusiness.BugAuthentication
             _bugSecurity = bugSecurity;
             
 
-        }
-
-
-        public RecoverAccountResult RecoverAccount(RecoverAccountRequest recoverAccountRequest)
-        {
-            EmailSender _Email = new EmailSender(recoverAccountRequest.From,recoverAccountRequest.FromPassword, recoverAccountRequest.EmailTo);
-            _Email.setEmail("Recover Password", recoverAccountRequest.Link);
-
-
-            if (_Email.sendEmail() == false)
-            {
-                throw new FailedEmailSendException();
-            }
-
-            return new RecoverAccountResult();
-            
         }
 
         public ChangePasswordResult ChangePassword(ChangePasswordRequest changePasswordRequest)

@@ -12,5 +12,6 @@ namespace BugBusiness.Interface.BugReporting.DTO
     {
         public string SpeciesName { get; set; }
         public int Lifestage { get; set; }
+        public bool IsPest { get; set; }
     }
 }

@@ -136,8 +136,9 @@ namespace BugBusiness.BugIntelligence
         {
                 Image<Gray, byte> Img_Source_Gray = Img_Org_Gray.Copy();
                 Image<Gray, byte> Img_Otsu_Gray = Img_Org_Gray.CopyBlank();
-
+                
                 CvInvoke.cvThreshold(Img_Source_Gray.Ptr, Img_Otsu_Gray.Ptr, 0, 255, Emgu.CV.CvEnum.THRESH.CV_THRESH_OTSU);
+               // Emgu.CV.UI.ImageViewer.Show(Img_Otsu_Gray);
                 return Img_Otsu_Gray;
         }
 
@@ -189,10 +190,11 @@ namespace BugBusiness.BugIntelligence
             SURFDetector detector = new SURFDetector(400, false);
             BruteForceMatcher<float> matcher = new BruteForceMatcher<float>(DistanceType.L2);
             BOWImgDescriptorExtractor<float> bowDE = new BOWImgDescriptorExtractor<float>(detector, matcher);
-
+            //Emgu.CV.UI.ImageViewer.Show(image);
             //Store the vocabulary
             bowDE.SetVocabulary(dictionary);
             image = preProcessImage(image);
+            //Emgu.CV.UI.ImageViewer.Show(image);
             Image<Gray, Byte> testImgGray = image.Convert<Gray, byte>();
             VectorOfKeyPoint testKeyPoints = detector.DetectKeyPointsRaw(testImgGray, null);
             Matrix<float> testBOWDescriptor = bowDE.Compute(testImgGray, testKeyPoints);
