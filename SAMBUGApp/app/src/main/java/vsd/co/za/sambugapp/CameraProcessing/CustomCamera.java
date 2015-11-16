@@ -182,7 +182,8 @@ public class CustomCamera extends Activity implements SensorEventListener {
 
         for (Camera.Size size : parameters.getSupportedPictureSizes()) {
             if (result == null) {
-                result=size;
+                if (size.width*size.height<maxArea)
+                    result=size;
             }
             else {
                 int resultArea=result.width * result.height;
@@ -370,8 +371,6 @@ public class CustomCamera extends Activity implements SensorEventListener {
         int[] pixels = new int[squareLength*squareLength];
         Bitmap bitmap = BitmapFactory.decodeByteArray(data , 0, data.length);
 
-
-
         bitmap.getPixels(pixels, 0, squareLength,minX,  minY,maxX-minX, maxY-minY);
         bitmap = Bitmap.createBitmap(pixels, 0, squareLength,2*padding, 2*padding, Bitmap.Config.ARGB_8888);//ARGB_8888 is a good quality configuration
 
@@ -388,11 +387,12 @@ public class CustomCamera extends Activity implements SensorEventListener {
      * @param p
      */
     private void sendToCameraPreview(String p){
-        Intent intent=new Intent(this,ImagePreview.class);
+        Intent intent=new Intent();
         Bundle b = new Bundle();
-        b.putSerializable(CAMERA, p);
+        b.putString(CAMERA, p);
         intent.putExtras(b);
-        startActivity(intent);
+        setResult(RESULT_OK,intent);
+        finish();
     }
 
     @Override

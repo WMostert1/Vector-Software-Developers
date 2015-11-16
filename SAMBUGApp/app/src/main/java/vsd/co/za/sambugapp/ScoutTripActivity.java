@@ -267,6 +267,7 @@ public class ScoutTripActivity extends AppCompatActivity {
             if (hasStops) {
                 ScoutStop stop = scoutStops.get(scoutStopViewHolder.getAdapterPosition());
                 scoutStopViewHolder.tvBlockName.setText(stop.getBlock().getBlockName());
+                scoutStopViewHolder.llBugInfo.removeAllViews();
                 for (ScoutBug bug : stop.getScoutBugs()) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bug.getFieldPicture(), 0, bug.getFieldPicture().length);
                     bitmap = Bitmap.createScaledBitmap(bitmap, 75, 75, true);

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import java.util.HashSet;
 
+import vsd.co.za.sambugapp.DataAccess.WebAPI;
 import vsd.co.za.sambugapp.DomainModels.Farm;
 
 public class HomeScreenActivity extends AppCompatActivity {
@@ -42,7 +43,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     }
 
     public void openWebsite(View v) {
-        Uri webpage = Uri.parse("http://sambug.apphb.com");
+        Uri webpage = Uri.parse("http://"+WebAPI.HOST);
         Intent i = new Intent(Intent.ACTION_VIEW, webpage);
         startActivity(i);
     }

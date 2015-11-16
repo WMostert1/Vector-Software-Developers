@@ -83,7 +83,7 @@ public class SpeciesDAO extends DataSourceAdapter {
                 "Yellow Edged Bug"
         };
 
-        Integer [] lifestages = {0,0,0,1,2,3,4,5,0,5,0,0,2,3,4,5,0,4};
+        Integer [] lifestages = {0,0,0,1,2,3,4,5,0,0,5,0,2,3,4,5,0,4};
 
         for(int i = 0; i < mThumbIds.length; i++){
             Species speciesEntry = new Species();
