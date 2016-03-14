@@ -232,6 +232,7 @@
     <Content Include="Content\chartist.min.css" />
     <Content Include="Content\charts.css" />
     <Content Include="Content\farmManagement.css" />
+    <Content Include="Content\flickity.css" />
     <Content Include="Content\Images\DataTables\sort_asc.png" />
     <Content Include="Content\Images\DataTables\sort_asc_disabled.png" />
     <Content Include="Content\Images\DataTables\sort_both.png" />
@@ -304,8 +305,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="App_Data\ANN\config.json" />
     <Content Include="App_Data\ANN\network.stat" />
-    <None Include="Properties\PublishProfiles\sambug - FTP %282%29.pubxml" />
-    <None Include="Properties\PublishProfiles\sambug - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\sambug - Prod Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bspline.js" />
@@ -314,6 +314,7 @@
     <Content Include="Scripts\chartist-plugin-vertical-line.js" />
     <Content Include="Scripts\chartist.js" />
     <Content Include="Scripts\charts.js" />
+    <Content Include="Scripts\flickity.pkgd.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />

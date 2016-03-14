@@ -21,7 +21,6 @@ namespace BugBusiness.BugIntelligence
 
         public BugIntelligence(IDbBugReporting dbBugReporting)
         {
-           
             _dbBugReporting = dbBugReporting;
         }
 

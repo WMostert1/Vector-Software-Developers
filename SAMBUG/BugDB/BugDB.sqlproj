@@ -82,4 +82,7 @@
   <ItemGroup>
     <PostDeploy Include="Initialisation.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="BugDB.publish.xml" />
+  </ItemGroup>
 </Project>

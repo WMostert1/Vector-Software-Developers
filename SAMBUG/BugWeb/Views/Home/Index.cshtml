@@ -3,41 +3,63 @@
      ViewBag.Reporting = "false";
  }
 
+@section styles
+{
+    @Styles.Render("~/Content/css/vendor/flickity")
+}
+
 <div layout="row" layout-align="center start" ng-controller="IndexCtrl" ng-cloak>
-    <div layout="column" layout-padding layout-margin flex>
+    <div layout="column" flex>
         <div layout="column" ng-repeat="species in speciesList">
-            <div layout="column" layout-align="start center">
-                <h1 class="md-headline">{{species.name}}</h1>
-                <div layout="row" id="carousel-{{$index}}" class="carousel slide" data-ride="carousel">
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                        <li ng-repeat="lifeStage in species.lifeStages" data-target="#carousel-{{$parent.$index}}" data-slide-to="{{$index}}" ng-class="$index === 0 ? 'active' : ''"></li>
-                    </ol>
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner" role="listbox">
-                        <div ng-repeat="lifeStage in species.lifeStages" ng-class="$index === 0 ? 'item active' : 'item'">
-                            <img style="height: 400px" ng-src="{{lifeStage.image.url}}" ng-alt="{{lifeStage.image.alt}}">
-                            <div class="carousel-caption">
-                                <h3>{{lifeStage.name}}</h3>
-                            </div>
-                        </div>
+            @*Carousel*@
+            <div layout="column">
+                <h1 style="text-align: center" class="md-headline">{{species.name}}</h1>
+                <div class="main-gallery js-flickity" data-flickity-options='{ "cellAlign": "center", "contain": false, "wrapAround": false, "autoPlay": true, "prevNextButtons": false, "freeScroll":true, "freeScrollFriction": 0.03}'>
+                    <div ng-repeat="lifeStage in species.lifeStages" class="gallery-cell">
+                        <img style="height: 400px; width: 400px" ng-src="{{lifeStage.image.url}}" ng-alt="{{lifeStage.image.alt}}">
+                        <h3 style="text-align: center">{{lifeStage.name}}</h3>
                     </div>
                 </div>
             </div>
-            <div>
-                <h2 class="md-title">{{species.speciesName.heading}}</h2>
-                <p style="color: lightgrey"><i>{{species.speciesName.body}}</i></p>
+            @*Carousel*@
+
+            @*Bub Information*@
+            <div layout-margin>
+                <div style="margin-top: 25px">
+                    <h2 class="md-title">{{species.speciesName.heading}}</h2>
+                    <p style="color: lightgrey">
+                        <i>{{species.speciesName.body}}</i>
+                    </p>
+                </div>
+                <div ng-repeat="info in species.information">
+                    <h2 class="md-title">{{info.heading}}</h2>
+                    <p style="color: lightgray" class="md-body-1">{{info.body}}</p>
+                </div>
             </div>
-            <div ng-repeat="info in species.information">
-                <h2 class="md-title">{{info.heading}}</h2>
-                <p style="color: lightgray" class="md-body-1">{{info.body}}</p>
-            </div>
+            @*Bub Information*@
             <md-divider></md-divider>
         </div>
     </div>
 </div>
 
+@*<div layout="row" id="carousel-{{$index}}" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li ng-repeat="lifeStage in species.lifeStages" data-target="#carousel-{{$parent.$index}}" data-slide-to="{{$index}}" ng-class="$index === 0 ? 'active' : ''"></li>
+        </ol>
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+            <div ng-repeat="lifeStage in species.lifeStages" ng-class="$index === 0 ? 'item active' : 'item'">
+                <img style="height: 400px" ng-src="{{lifeStage.image.url}}" ng-alt="{{lifeStage.image.alt}}">
+                <div class="carousel-caption">
+                    <h3>{{lifeStage.name}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
 @section scripts
 {
+    @Scripts.Render("~/bundles/vendor/flickity")
     @Scripts.Render("~/bundles/index")
 }

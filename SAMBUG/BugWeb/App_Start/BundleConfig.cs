@@ -1,6 +1,4 @@
-﻿using System;
-using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace BugWeb
 {
@@ -40,10 +38,6 @@ namespace BugWeb
                 .Add(new ScriptBundle("~/bundles/jquery")
                     .Include("~/Scripts/jquery-{version}.js"));
 
-            /*bundles
-                .Add(new ScriptBundle("~/bundles/jqueryval")
-                    .Include("~/Scripts/jquery.validate*"));*/
-
             bundles
                .Add(new ScriptBundle("~/bundles/linqjs")
                    .Include("~/Scripts/linq.js"));
@@ -66,6 +60,10 @@ namespace BugWeb
                     "~/App/Controllers/appCtrl.js"
                     ));
 
+            bundles
+                .Add(new ScriptBundle("~/bundles/vendor/flickity")
+                    .Include("~/Scripts/flickity.pkgd.min.js"));
+            
             bundles
                 .Add(new ScriptBundle("~/bundles/vendor/xdate")
                     .Include("~/Scripts/xdate.js"));
@@ -131,6 +129,10 @@ namespace BugWeb
                         "~/Scripts/chartist-plugin-axistitle.js"));
 
             bundles
+                .Add(new StyleBundle("~/Content/css/vendor/flickity")
+                    .Include("~/Content/flickity.css"));
+
+            bundles
                 .Add(new StyleBundle("~/Content/css/angular")
                     .Include("~/Content/angular-material.css",
                         "~/Content/angular-material.layouts.css"));
@@ -174,6 +176,8 @@ namespace BugWeb
             bundles
                 .Add(new StyleBundle("~/Content/css/reporting/vendor/dataTables", cdnCssDataTables)
                     .Include("~/Content/jquery.dataTables.css"));
+
+            BundleTable.EnableOptimizations = false;
         }
     }
 }
