@@ -42,22 +42,6 @@
     </div>
 </div>
 
-@*<div layout="row" id="carousel-{{$index}}" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li ng-repeat="lifeStage in species.lifeStages" data-target="#carousel-{{$parent.$index}}" data-slide-to="{{$index}}" ng-class="$index === 0 ? 'active' : ''"></li>
-        </ol>
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner" role="listbox">
-            <div ng-repeat="lifeStage in species.lifeStages" ng-class="$index === 0 ? 'item active' : 'item'">
-                <img style="height: 400px" ng-src="{{lifeStage.image.url}}" ng-alt="{{lifeStage.image.alt}}">
-                <div class="carousel-caption">
-                    <h3>{{lifeStage.name}}</h3>
-                </div>
-            </div>
-        </div>
-    </div>*@
-
 @section scripts
 {
     @Scripts.Render("~/bundles/vendor/flickity")
