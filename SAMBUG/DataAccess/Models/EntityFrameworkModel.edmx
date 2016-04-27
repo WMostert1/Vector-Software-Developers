@@ -4,7 +4,13 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BugDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BugDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__RefactorLog">
+          <Key>
+            <PropertyRef Name="OperationKey" />
+          </Key>
+          <Property Name="OperationKey" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="Block">
           <Key>
             <PropertyRef Name="BlockID" />
@@ -14,6 +20,14 @@
           <Property Name="BlockName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="LastModifiedID" Type="nvarchar" MaxLength="128" Nullable="false" StoreGeneratedPattern="Computed" />
           <Property Name="TMStamp" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="DevicePushNotification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="bigint" Nullable="false" />
+          <Property Name="RegID" Type="text" Nullable="false" />
         </EntityType>
         <EntityType Name="Farm">
           <Key>
@@ -102,6 +116,18 @@
           <Property Name="UserID" Type="bigint" Nullable="false" />
           <Property Name="RoleID" Type="bigint" Nullable="false" />
         </EntityType>
+        <Association Name="FK_DevicePushNotification_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="DevicePushNotification" Type="Self.DevicePushNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="DevicePushNotification">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Farm_ToBlock">
           <End Role="Farm" Type="Self.Farm" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -209,7 +235,9 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BugDBModelStoreContainer">
+          <EntitySet Name="__RefactorLog" EntityType="Self.__RefactorLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Block" EntityType="Self.Block" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DevicePushNotification" EntityType="Self.DevicePushNotification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Farm" EntityType="Self.Farm" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ScoutBug" EntityType="Self.ScoutBug" Schema="dbo" store:Type="Tables" />
@@ -218,6 +246,10 @@
           <EntitySet Name="Treatment" EntityType="Self.Treatment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRole" EntityType="Self.UserRole" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_DevicePushNotification_ToUser" Association="Self.FK_DevicePushNotification_ToUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="DevicePushNotification" EntitySet="DevicePushNotification" />
+          </AssociationSet>
           <AssociationSet Name="FK_Farm_ToBlock" Association="Self.FK_Farm_ToBlock">
             <End Role="Farm" EntitySet="Farm" />
             <End Role="Block" EntitySet="Block" />
@@ -256,7 +288,9 @@
     <edmx:ConceptualModels>
       <Schema Namespace="BugDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="BugDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__RefactorLog" EntityType="BugDBModel.C__RefactorLog" />
           <EntitySet Name="Blocks" EntityType="BugDBModel.Block" />
+          <EntitySet Name="DevicePushNotifications" EntityType="BugDBModel.DevicePushNotification" />
           <EntitySet Name="Farms" EntityType="BugDBModel.Farm" />
           <EntitySet Name="Roles" EntityType="BugDBModel.Role" />
           <EntitySet Name="ScoutBugs" EntityType="BugDBModel.ScoutBug" />
@@ -276,6 +310,10 @@
             <End Role="Block" EntitySet="Blocks" />
             <End Role="Treatment" EntitySet="Treatments" />
           </AssociationSet>
+          <AssociationSet Name="FK_DevicePushNotification_ToUser" Association="BugDBModel.FK_DevicePushNotification_ToUser">
+            <End Role="User" EntitySet="Users" />
+            <End Role="DevicePushNotification" EntitySet="DevicePushNotifications" />
+          </AssociationSet>
           <AssociationSet Name="FK_Farm_ToUser" Association="BugDBModel.FK_Farm_ToUser">
             <End Role="User" EntitySet="Users" />
             <End Role="Farm" EntitySet="Farms" />
@@ -293,6 +331,12 @@
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="C__RefactorLog">
+          <Key>
+            <PropertyRef Name="OperationKey" />
+          </Key>
+          <Property Name="OperationKey" Type="Guid" Nullable="false" />
+        </EntityType>
         <EntityType Name="Block">
           <Key>
             <PropertyRef Name="BlockID" />
@@ -305,6 +349,15 @@
           <NavigationProperty Name="Farm" Relationship="BugDBModel.FK_Farm_ToBlock" FromRole="Block" ToRole="Farm" />
           <NavigationProperty Name="ScoutStops" Relationship="BugDBModel.FK_ScoutStop_ToBlock" FromRole="Block" ToRole="ScoutStop" />
           <NavigationProperty Name="Treatments" Relationship="BugDBModel.FK_Treatment_ToBlock" FromRole="Block" ToRole="Treatment" />
+        </EntityType>
+        <EntityType Name="DevicePushNotification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int64" Nullable="false" />
+          <Property Name="RegID" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="User" Relationship="BugDBModel.FK_DevicePushNotification_ToUser" FromRole="DevicePushNotification" ToRole="User" />
         </EntityType>
         <EntityType Name="Farm">
           <Key>
@@ -391,8 +444,9 @@
           <Property Name="UserID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Password" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="LastModifiedID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="LastModifiedID" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" DefaultValue="(None)" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="TMStamp" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="DevicePushNotifications" Relationship="BugDBModel.FK_DevicePushNotification_ToUser" FromRole="User" ToRole="DevicePushNotification" />
           <NavigationProperty Name="Farms" Relationship="BugDBModel.FK_Farm_ToUser" FromRole="User" ToRole="Farm" />
           <NavigationProperty Name="Roles" Relationship="BugDBModel.UserRole" FromRole="User" ToRole="Role" />
         </EntityType>
@@ -435,6 +489,18 @@
             </Principal>
             <Dependent Role="Treatment">
               <PropertyRef Name="BlockID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DevicePushNotification_ToUser">
+          <End Type="BugDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="BugDBModel.DevicePushNotification" Role="DevicePushNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="DevicePushNotification">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -488,6 +554,13 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BugDBModelStoreContainer" CdmEntityContainer="BugDBEntities">
+          <EntitySetMapping Name="C__RefactorLog">
+            <EntityTypeMapping TypeName="BugDBModel.C__RefactorLog">
+              <MappingFragment StoreEntitySet="__RefactorLog">
+                <ScalarProperty Name="OperationKey" ColumnName="OperationKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Blocks">
             <EntityTypeMapping TypeName="BugDBModel.Block">
               <MappingFragment StoreEntitySet="Block">
@@ -496,6 +569,15 @@
                 <ScalarProperty Name="BlockName" ColumnName="BlockName" />
                 <ScalarProperty Name="FarmID" ColumnName="FarmID" />
                 <ScalarProperty Name="BlockID" ColumnName="BlockID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DevicePushNotifications">
+            <EntityTypeMapping TypeName="BugDBModel.DevicePushNotification">
+              <MappingFragment StoreEntitySet="DevicePushNotification">
+                <ScalarProperty Name="RegID" ColumnName="RegID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -8,7 +8,8 @@ using BugBusiness.Interface.BugSecurity;
 using BugBusiness.Interface.BugSecurity.DTO;
 using BugBusiness.Interface.BugSecurity.Exceptions;
 using Newtonsoft.Json.Linq;
-
+using System.IO;
+using System.Text;
 
 namespace BugWeb.Controllers
 {
@@ -60,6 +61,38 @@ namespace BugWeb.Controllers
 
         }
 
-       
+        [HttpPost]
+        [Route("registerdevice")]
+        public RegisterDeviceResponse RegisterDevice([FromBody] RegisterDeviceRequest request)
+        {
+
+            try
+            {
+
+                return _bugSecurity.RegisterDevice(request);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+                return new RegisterDeviceResponse() { Registered = false };
+            }
+        }
+
+        [HttpPost]
+        [Route("updateuserdevice")]
+        public UpdateUserDeviceResponse UpdateUserDevice(UpdateUserDeviceRequest updateuserdevicerequest)
+        {
+            try
+            {
+                return _bugSecurity.UpdateUserDevice(updateuserdevicerequest);
+            }
+            catch(Exception ex)
+            {
+                Console.Write(ex.StackTrace);
+                return new UpdateUserDeviceResponse { Result = -1 };
+            }
+        }
+
+
     }
 }

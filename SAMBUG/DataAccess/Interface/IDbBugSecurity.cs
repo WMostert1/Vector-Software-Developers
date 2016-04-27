@@ -10,6 +10,8 @@ namespace DataAccess.Interface
         bool EditUserRoles(long userId, bool isAdministrator);
         bool ChangeUserPassword(string username, string password);
         string GetPassword(string username);
-
+        bool RegisterDevice(long id, string token);
+        List<Models.DevicePushNotification> GetUserDevices(long id);
+        Models.User GetUserByID(long id);
     }
 }

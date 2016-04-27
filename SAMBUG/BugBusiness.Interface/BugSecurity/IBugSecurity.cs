@@ -17,5 +17,7 @@ namespace BugBusiness.Interface.BugSecurity
         EditUserRoleResponse EditUserRoles(EditUserRoleRequest editUserRoleRequest);
         bool ChangeUserPassword(string username, string password);
         String GetPassword(string username);
+        RegisterDeviceResponse RegisterDevice(RegisterDeviceRequest request);
+        UpdateUserDeviceResponse UpdateUserDevice(UpdateUserDeviceRequest updateUserDeviceRequest);
     }
 }

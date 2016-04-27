@@ -14,8 +14,11 @@ namespace DataAccess.Models
     
     public partial class User
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
+            this.LastModifiedID = "(None)";
+            this.DevicePushNotifications = new HashSet<DevicePushNotification>();
             this.Farms = new HashSet<Farm>();
             this.Roles = new HashSet<Role>();
         }
@@ -26,7 +29,11 @@ namespace DataAccess.Models
         public string LastModifiedID { get; set; }
         public System.DateTime TMStamp { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DevicePushNotification> DevicePushNotifications { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Farm> Farms { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Role> Roles { get; set; }
     }
 }

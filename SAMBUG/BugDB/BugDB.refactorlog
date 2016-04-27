@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="434fbf3a-bd12-47b8-becc-8a2067882b4e" ChangeDateTime="04/24/2016 14:41:31">
+    <Property Name="ElementName" Value="[dbo].[FK_DevicePushNotification_ToTable]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[DevicePushNotification]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_DevicePushNotification_ToUser]" />
+  </Operation>
+</Operations>
