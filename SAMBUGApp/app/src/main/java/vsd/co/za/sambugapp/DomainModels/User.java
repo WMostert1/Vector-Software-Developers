@@ -12,16 +12,16 @@ public class User implements Serializable {
         this.Farms = new HashSet<>();
     }
 
-    public int UserId;
+    public int UserID;
     public HashSet<Farm> Farms;
 
 
     public int getUserID() {
-        return UserId;
+        return UserID;
     }
 
     public void setUserID(int userID) {
-        UserId = userID;
+        UserID = userID;
     }
 
     public HashSet<Farm> getFarms() {
