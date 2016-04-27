@@ -74,6 +74,13 @@
             </md-button>
         </div>
     </div>
+    <md-button ng-click="updateUserDevice(uid)" class="md-fab md-primary" aria-label="Update Devices">
+        <ng-md-icon icon="done"></ng-md-icon>
+        <md-tooltip>
+            Add Farm
+        </md-tooltip>
+    </md-button>
+    
 </div>
 
 @section scripts
@@ -82,7 +89,8 @@
     <script type="application/javascript">
         angular.module("appMain").factory("farmsUrlService", ["userDetails", function(userDetails){
             return {
-                getAllFarmsUrl: "@Url.Content("~/api/farms/")" + userDetails.id
+                getAllFarmsUrl: "@Url.Content("~/api/farms/")" + userDetails.id,
+                uid: userDetails.id
             };
         }]);
     </script>

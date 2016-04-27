@@ -14,6 +14,7 @@ namespace DataAccess.Models
     
     public partial class Farm
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Farm()
         {
             this.Blocks = new HashSet<Block>();
@@ -25,6 +26,7 @@ namespace DataAccess.Models
         public string LastModifiedID { get; set; }
         public System.DateTime TMStamp { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Block> Blocks { get; set; }
         public virtual User User { get; set; }
     }

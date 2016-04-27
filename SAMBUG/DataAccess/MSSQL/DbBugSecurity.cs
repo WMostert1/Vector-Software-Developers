@@ -130,5 +130,31 @@ namespace DataAccess.MSSQL
             }
             return password;
         }
+
+        public bool RegisterDevice(long id, string token)
+        {
+            var db = new BugDBEntities();
+            DevicePushNotification device = new DevicePushNotification()
+            {
+                UserID = id,
+                RegID = token
+            };
+            db.DevicePushNotifications.Add(device);
+            db.SaveChanges();
+            return true;
+        }
+
+        public List<Models.DevicePushNotification> GetUserDevices(long id)
+        {
+            var db = new BugDBEntities();
+            return db.DevicePushNotifications.Where(dev => dev.UserID == id).ToList();
+        }
+
+        public User GetUserByID(long id)
+        {
+            var db = new BugDBEntities();
+            var user = db.Users.Include(usr => usr.Roles).Include(usr => usr.Farms.Select(frm => frm.Blocks)).SingleOrDefault(usr => usr.UserID.Equals(id));
+            return user;
+        }
     }
 }

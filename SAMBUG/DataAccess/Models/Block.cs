@@ -14,6 +14,7 @@ namespace DataAccess.Models
     
     public partial class Block
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Block()
         {
             this.ScoutStops = new HashSet<ScoutStop>();
@@ -27,7 +28,9 @@ namespace DataAccess.Models
         public System.DateTime TMStamp { get; set; }
     
         public virtual Farm Farm { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ScoutStop> ScoutStops { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Treatment> Treatments { get; set; }
     }
 }

@@ -247,5 +247,10 @@ namespace BugBusiness.FarmManagement
 
             return new AddTreatmentResponse();
         }
+
+        public void UpdateUserDevice()
+        {
+
+        }
     }
 }

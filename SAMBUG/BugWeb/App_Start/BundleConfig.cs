@@ -106,7 +106,8 @@ namespace BugWeb
                     "~/App/Controllers/deleteFarmDialogCtrl.js",
                         "~/App/Controllers/addBlockDialogCtrl.js",
                         "~/App/Controllers/addFarmDialogCtrl.js",
-                        "~/App/Controllers/editFarmsCtrl.js"));
+                        "~/App/Controllers/editFarmsCtrl.js",
+                        "~/App/Controllers/updateUserDeviceCtrl.js"));
 
             bundles
                 .Add(new ScriptBundle("~/bundles/farmmanagement/treatmentinfo")

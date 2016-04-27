@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,8 +67,8 @@
       <HintPath>..\packages\Moq.4.2.1312.1622\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.2.1\lib\net45\NLog.dll</HintPath>
@@ -201,6 +202,7 @@
     <Content Include="App\Controllers\mapCtrl.js" />
     <Content Include="App\Controllers\treatmentDataCtrl.js" />
     <Content Include="App\Controllers\tablesCtrl.js" />
+    <Content Include="App\Controllers\updateUserDeviceCtrl.js" />
     <Content Include="App\Controllers\userManagementCtrl.js" />
     <Content Include="App\Services\chartService.js" />
     <Content Include="App\Services\editUserRolesService.js" />
