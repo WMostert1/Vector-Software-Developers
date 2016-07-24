@@ -78,11 +78,13 @@
     <Build Include="trg_ScoutStopStamp.sql" />
     <Build Include="trg_SpeciesStamp.sql" />
     <Build Include="trg_TreatmentStamp.sql" />
+    <Build Include="DevicePushNotification.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Initialisation.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BugDB.publish.xml" />
+  <None Include="BugDB.publish.xml" />
+  <RefactorLog Include="BugDB.refactorlog" />
   </ItemGroup>
 </Project>

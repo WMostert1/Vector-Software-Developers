@@ -28,6 +28,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.GravityEnum;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.swipe.SwipeLayout;
 
 import java.io.ByteArrayOutputStream;
@@ -236,15 +238,38 @@ public class EnterDataActivity extends AppCompatActivity implements LocationList
     }
 
     public void sendToScoutTripActivity(View view) {
-        Intent output = new Intent();
-        Bundle b = new Bundle();
-        if (!hasBugs)
-            listAddedBugs.clear();
-        scoutStop.setScoutBugs(listAddedBugs);
-        b.putSerializable(ScoutTripActivity.SCOUT_STOP, scoutStop);
-        output.putExtras(b);
-        setResult(RESULT_OK, output);
-        finish();
+        if (hasBugs){
+            Intent output = new Intent();
+            Bundle b = new Bundle();
+            scoutStop.setScoutBugs(listAddedBugs);
+            b.putSerializable(ScoutTripActivity.SCOUT_STOP, scoutStop);
+            output.putExtras(b);
+            setResult(RESULT_OK, output);
+            finish();
+        } else {
+            new MaterialDialog.Builder(this)
+                    .title("Error")
+                    .content("You must add bugs to complete this stop")
+                    .neutralText("OK")
+                    .buttonsGravity(GravityEnum.CENTER)
+                    .show();
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .content("This stop will not be added to the scout trip. \nAre you sure?")
+                .positiveText("Yes")
+                .negativeText("No")
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        finish();
+                    }
+                })
+                .show();
     }
 
     public void startIdentificationActivity(View view) {

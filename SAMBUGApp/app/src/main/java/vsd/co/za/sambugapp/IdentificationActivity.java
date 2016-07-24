@@ -160,7 +160,7 @@ public class IdentificationActivity extends AppCompatActivity {
         isClassified = true;
         //Possibly validate that ID's are correct in future
         Toast.makeText(getApplicationContext(),"Species Identified!",Toast.LENGTH_SHORT).show();
-        changeEntrySelection(currentEntry.SpeciesID+1);
+        changeEntrySelection(currentEntry.SpeciesID + 1);
     }
 
     public void changeEntrySelection(int id){
@@ -252,7 +252,7 @@ public class IdentificationActivity extends AppCompatActivity {
             getPicture(data);
         }
         else{
-            final BitmapFactory.Options options = new BitmapFactory.Options();
+           /* final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeResource(getResources(),R.drawable.sambug_logo,options);
 
@@ -261,7 +261,8 @@ public class IdentificationActivity extends AppCompatActivity {
 
             // Decode bitmap with inSampleSize set
             options.inJustDecodeBounds = false;
-            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sambug_logo, options);
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sambug_logo, options);*/
+            finish();
         }
 
         mImageView.setImageBitmap(bitmap);
@@ -328,6 +329,14 @@ public class IdentificationActivity extends AppCompatActivity {
         bundle.putInt(BUG_COUNT, numBugs);
         output.putExtras(bundle);
         setResult(RESULT_OK, output);
+        if (classifyTask != null) {
+            classifyTask.cancel(true);
+        }
+        finish();
+    }
+
+    @Override
+    public void onBackPressed(){
         if (classifyTask != null) {
             classifyTask.cancel(true);
         }

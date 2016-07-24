@@ -25,7 +25,9 @@ namespace DataAccess.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<C__RefactorLog> C__RefactorLog { get; set; }
         public virtual DbSet<Block> Blocks { get; set; }
+        public virtual DbSet<DevicePushNotification> DevicePushNotifications { get; set; }
         public virtual DbSet<Farm> Farms { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<ScoutBug> ScoutBugs { get; set; }

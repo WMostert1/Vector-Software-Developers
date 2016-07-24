@@ -82,7 +82,7 @@ public class ImagePreview extends AppCompatActivity {
         fullPathName="";
         imageView.setImageBitmap(null);
         Intent intent = new Intent(this,CustomCamera.class);
-        startActivity(intent);
+        startActivityForResult(intent,0);
     }
 
     /**
@@ -200,8 +200,12 @@ public class ImagePreview extends AppCompatActivity {
         }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            acceptImage(data);
+        if (requestCode == 0) {
+            if (resultCode == Activity.RESULT_OK){
+                acceptImage(data);
+            } else {
+                finish();
+            }
         }
     }
     }

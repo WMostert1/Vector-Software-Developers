@@ -169,8 +169,9 @@ public class ScoutTripActivity extends AppCompatActivity {
      */
     public void finishTrip(View v){
         persistData();
-        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+        //startActivity(intent);
+        finish();
     }
 
     /**

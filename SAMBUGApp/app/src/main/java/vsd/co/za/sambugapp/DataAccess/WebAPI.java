@@ -3,8 +3,11 @@ package vsd.co.za.sambugapp.DataAccess;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,8 +41,9 @@ import vsd.co.za.sambugapp.R;
  *
  */
 public class WebAPI {
-    public static final String HOST = "sambug.azurewebsites.net";
+    public static final String HOST = "192.168.0.11:53249";
     private static final String AUTHENTICATION_URL = "http://"+HOST+"/api/authentication/login";
+    private static final String REGISTER_URL = "http://"+HOST+"/api/authentication/registerdevice";
     private static final String SYNC_SERVICE_URL = "http://"+HOST+"/api/synchronization";
     private static final String CLASSIFICATION_URL= "http://"+"sambug.azurewebsites.net"+"/api/apiSpeciesClassification";
     private static final int SOCKET_TIMEOUT_MS = 100000; //10 seconds
@@ -60,6 +64,14 @@ public class WebAPI {
 
     public static void attemptLogin(String username, String password, Context context) {
         (new AuthLoginTask(context)).execute(username, password);
+    }
+
+    public static void attemptDeviceRegistration(String id, String token, Context context) {
+        (new RegisterDeviceTask(context)).execute(id, token);
+    }
+
+    public static void attemptUpload(Context context){
+        (new UploadTask(context)).execute();
     }
 
     private static class CachedPersistenceTask extends AsyncTask<Void, Void, Void> {
@@ -230,8 +242,7 @@ public class WebAPI {
                     UserWrapper userWrapper = gson.fromJson(response.toString(), UserWrapper.class);
                     User user = userWrapper.User;
 
-                    SharedPreferences sharedPref = context.getSharedPreferences(
-                            context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString(context.getString(R.string.logged_in_user), response.toString());
@@ -263,6 +274,83 @@ public class WebAPI {
 
             VolleySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
 
+            return null;
+        }
+    }
+
+    private static class RegisterDeviceTask extends AsyncTask<String,Void,User>{
+        private Context context;
+
+        public RegisterDeviceTask(Context _context){
+            context = _context;
+        }
+
+        @Override
+        protected User doInBackground(String... params) {
+            JSONObject devRegRequest = new JSONObject();
+            try {
+                devRegRequest.put("UserID", Integer.valueOf(params[0]));
+                devRegRequest.put("DeviceToken",params[1]);
+            }catch (JSONException e){
+                Toast.makeText(context, "A JSON conversion error occurred.", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,REGISTER_URL,devRegRequest,new Response.Listener<JSONObject>(){
+                @Override
+                public void onResponse(JSONObject response) {
+                    boolean registered=false;
+                    try {
+                        registered = response.getBoolean("Registered");
+                    }catch (org.json.JSONException ex){
+                        ex.printStackTrace();
+                        registered=false;
+                    }
+                    //SharedPreferences sharedPref = context.getSharedPreferences(
+                      //      context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+                    pref.edit().putBoolean("dev_server_reg",registered).commit();
+                    if (registered){
+                        Toast.makeText(context,"Device successfully registered with server",Toast.LENGTH_LONG);
+                    } else {
+                        Toast.makeText(context,"Device could not be registered with server",Toast.LENGTH_LONG);
+                    }
+                }
+            },new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                    Toast.makeText(context,"An error occurred while registering device on server",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            VolleySingleton.getInstance(context).addToRequestQueue(jsObjRequest);
+
+            return null;
+        }
+    }
+
+    private static class UploadTask extends AsyncTask<Void, Void, Void> {
+
+        private Context context;
+
+        public UploadTask(Context _context){
+            context = _context;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            ConnectivityManager cm =
+                    (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
             return null;
         }
     }

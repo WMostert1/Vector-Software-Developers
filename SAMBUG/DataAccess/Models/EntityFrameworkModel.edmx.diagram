@@ -4,22 +4,25 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5cd33880400245f79890c8dfadee9b5c" Name="Diagram1" ZoomLevel="63">
-        <EntityTypeShape EntityType="BugDBModel.Block" Width="1.5" PointX="7.5" PointY="2.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugDBModel.Farm" Width="1.5" PointX="5.25" PointY="3" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugDBModel.Role" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugDBModel.ScoutBug" Width="1.5" PointX="12" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugDBModel.ScoutStop" Width="1.5" PointX="9.75" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugDBModel.Species" Width="1.5" PointX="9.75" PointY="8.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugDBModel.Treatment" Width="1.5" PointX="9.75" PointY="4.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="BugDBModel.User" Width="1.5" PointX="3" PointY="3" IsExpanded="true" />
-        <AssociationConnector Association="BugDBModel.FK_Farm_ToBlock" ManuallyRouted="false" />
-        <AssociationConnector Association="BugDBModel.FK_ScoutStop_ToBlock" ManuallyRouted="false" />
-        <AssociationConnector Association="BugDBModel.FK_Treatment_ToBlock" ManuallyRouted="false" />
-        <AssociationConnector Association="BugDBModel.FK_Farm_ToUser" ManuallyRouted="false" />
-        <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToScoutStop" ManuallyRouted="false" />
-        <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToSpecies" ManuallyRouted="false" />
-        <AssociationConnector Association="BugDBModel.UserRole" ManuallyRouted="false" />
+      <Diagram DiagramId="4396e679f63d4c16b8038f501ef86e12" Name="Diagram1" ZoomLevel="82">
+        <EntityTypeShape EntityType="BugDBModel.C__RefactorLog" Width="1.5" PointX="0.75" PointY="1.5" />
+        <EntityTypeShape EntityType="BugDBModel.Block" Width="1.5" PointX="7.5" PointY="6.25" />
+        <EntityTypeShape EntityType="BugDBModel.DevicePushNotification" Width="1.5" PointX="5.25" PointY="2" />
+        <EntityTypeShape EntityType="BugDBModel.Farm" Width="1.5" PointX="5.25" PointY="6.375" />
+        <EntityTypeShape EntityType="BugDBModel.Role" Width="1.5" PointX="0.75" PointY="5.25" />
+        <EntityTypeShape EntityType="BugDBModel.ScoutBug" Width="1.5" PointX="12" PointY="4.5" />
+        <EntityTypeShape EntityType="BugDBModel.ScoutStop" Width="1.5" PointX="9.75" PointY="4.5" />
+        <EntityTypeShape EntityType="BugDBModel.Species" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="BugDBModel.Treatment" Width="1.5" PointX="9.75" PointY="8.25" />
+        <EntityTypeShape EntityType="BugDBModel.User" Width="1.5" PointX="3" PointY="5" />
+        <AssociationConnector Association="BugDBModel.FK_Farm_ToBlock" />
+        <AssociationConnector Association="BugDBModel.FK_ScoutStop_ToBlock" />
+        <AssociationConnector Association="BugDBModel.FK_Treatment_ToBlock" />
+        <AssociationConnector Association="BugDBModel.FK_DevicePushNotification_ToUser" />
+        <AssociationConnector Association="BugDBModel.FK_Farm_ToUser" />
+        <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToScoutStop" />
+        <AssociationConnector Association="BugDBModel.FK_ScoutBug_ToSpecies" />
+        <AssociationConnector Association="BugDBModel.UserRole" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

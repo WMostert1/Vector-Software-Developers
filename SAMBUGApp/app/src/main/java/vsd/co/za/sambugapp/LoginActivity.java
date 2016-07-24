@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,8 +75,7 @@ public class LoginActivity extends Activity {
         //------------------------------------------------------------------------------------------
         //See if already logged in
         Context context = getApplicationContext();
-        SharedPreferences sharedPref = context.getSharedPreferences(
-                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
 
         final Gson gson = new Gson();
@@ -93,6 +93,7 @@ public class LoginActivity extends Activity {
             Bundle bundle = new Bundle();
             HashSet<Farm> activeFarms = userWrapper.User.getFarms();
             bundle.putSerializable(USER_FARMS, activeFarms);
+            bundle.putInt("UserID",userWrapper.User.UserID);
             intent.putExtras(bundle);
             startActivity(intent);
         }
@@ -172,12 +173,11 @@ public class LoginActivity extends Activity {
     }
 
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
@@ -197,12 +197,12 @@ public class LoginActivity extends Activity {
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
-        } else {
+        } else {*/
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+        //}
     }
 
 }
