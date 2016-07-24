@@ -14,7 +14,7 @@
             @*Carousel*@
             <div layout="column">
                 <h1 style="text-align: center" class="md-headline">{{species.name}}</h1>
-                <div class="main-gallery js-flickity" data-flickity-options='{ "cellAlign": "center", "contain": false, "wrapAround": false, "autoPlay": true, "prevNextButtons": false, "freeScroll":true, "freeScrollFriction": 0.03}'>
+                <div class="main-gallery js-flickity" data-flickity-options='{ "cellAlign": "center", "contain": false, "wrapAround": false, "autoPlay": true, "prevNextButtons": false, "freeScroll":false, "freeScrollFriction": 0.03}'>
                     <div ng-repeat="lifeStage in species.lifeStages" class="gallery-cell">
                         <img style="height: 400px; width: 400px" ng-src="{{lifeStage.image.url}}" ng-alt="{{lifeStage.image.alt}}">
                         <h3 style="text-align: center">{{lifeStage.name}}</h3>
